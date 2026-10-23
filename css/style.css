@@ -75,3 +75,20 @@ button {
 }
 
 .message { min-height: 1.5em; font-size: 1.1rem; }
+
+.puck {
+  display: inline-block;
+  padding: 6px 16px;
+  border-radius: 999px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+.puck.off { background: #222; color: #aaa; }
+.puck.on { background: #fff; color: #111; }
+
+.bet-row { display: flex; gap: 12px; }
+.bet-row .bet-area { flex: 1; }
+@media (max-width: 520px) { .bet-row { flex-direction: column; gap: 0; } }
+
+.bet-area.locked { border-style: dashed; }
+.bet-area.disabled { opacity: 0.4; }

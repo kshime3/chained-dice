@@ -26,6 +26,16 @@ const CONFIG = {
   comeOutWinners: [7, 11],
   comeOutLosers: [2, 3, 12], // "craps"
 
-  // Odds limits ("3-4-5x"). Used starting in Milestone 2.
+  // Numbers that become the point on a come-out roll.
+  pointNumbers: [4, 5, 6, 8, 9, 10],
+
+  // Odds limits ("3-4-5x"): max odds bet = Pass Line bet x this number.
   oddsMaxMultiple: { 4: 3, 5: 4, 6: 5, 8: 5, 9: 4, 10: 3 },
+
+  // Odds pay "true odds", written as [win, per bet].
+  // [3, 2] means win $3 for every $2 bet. Half dollars round down.
+  oddsPayouts: { 4: [2, 1], 5: [3, 2], 6: [6, 5], 8: [6, 5], 9: [3, 2], 10: [2, 1] },
+
+  // A seven during the point phase ends the shooter's turn.
+  sevenOut: 7,
 };

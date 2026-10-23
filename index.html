@@ -20,6 +20,7 @@
       <span id="die2" class="die">⚀</span>
     </div>
     <div id="total" class="total">Place a bet, then roll.</div>
+    <div id="puck" class="puck off"></div>
 
     <div class="bet-area" id="field">
       <div class="bet-title">FIELD</div>
@@ -27,10 +28,19 @@
       <div class="bet-amount" id="field-amount"></div>
     </div>
 
-    <div class="bet-area" id="pass-line">
-      <div class="bet-title">PASS LINE</div>
-      <div class="bet-hint">Come-out: 7 or 11 wins · 2, 3, 12 loses</div>
-      <div class="bet-amount" id="pass-amount"></div>
+    <div class="bet-row">
+      <div class="bet-area" id="pass-line">
+        <div class="bet-title">PASS LINE</div>
+        <div class="bet-hint">Come-out: 7 or 11 wins · 2, 3, 12 loses<br>Point on: point wins · 7 loses</div>
+        <div class="bet-amount" id="pass-amount"></div>
+        <div class="bet-hint" id="pass-lock"></div>
+      </div>
+
+      <div class="bet-area" id="odds">
+        <div class="bet-title">ODDS</div>
+        <div class="bet-hint">Pays 2:1 on 4/10 · 3:2 on 5/9 · 6:5 on 6/8</div>
+        <div class="bet-amount" id="odds-amount"></div>
+      </div>
     </div>
   </div>
 

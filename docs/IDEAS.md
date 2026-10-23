@@ -23,3 +23,7 @@ Parked ideas and later features. Not in v1 unless moved into the design.
 - Owner wants the game fully 3D eventually, first-person at the table like Clover Pit.
 - Keeping rules (dice, bets, crew, shop) separate from display code means a 3D version can reuse the logic files and only replace the display.
 - Will need a library decision when we get there (for example Three.js in the browser, or a game engine). Ask the owner first.
+
+## Teaching the game (owner priority, later)
+- Craps is confusing for newcomers. Balatro and Clover Pit explain themselves well. Add simple instructions at the start, maybe a guided first few rolls.
+- Ideas: hover/tap a bet to see what it does; highlight which numbers win or lose right now.
