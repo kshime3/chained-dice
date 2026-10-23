@@ -30,3 +30,9 @@ Dated log of every decision and why. Newest at the bottom.
 - **Odds over the limit are capped:** clicking a chip bigger than the room left adds only up to the max.
 - **Winning Odds come back to you** (bet plus winnings) when the point is hit. Pass Line and Field winners stay on the table.
 - **Keep it beginner-friendly:** craps is hard for first-timers. On-screen messages explain each roll in plain words for now. A proper how-to-play intro comes later (see IDEAS.md).
+- **Seats use the real crew names now, all with normal dice** (Lefty, Dealer Dee, Hot Rod, Ghost, Jinx, You). Quirks come in Milestone 4. Owner's choice.
+- **The shift ends the moment you reach the target** (Balatro-style), counting money in hand plus everything on the table. Owner's choice.
+- **The Pass Line must be played:** you can't roll a come-out without at least the $5 minimum on it. Owner's choice. Why: forces the decision and keeps it simple for new players.
+- **Broke = on a come-out, your total money (hand + table) is below the $5 minimum Pass Line bet.** Instant fall.
+- **If the last shooter sevens out before the target, you fall.**
+- **Testing shortcut:** `?target=300` in the page address sets a smaller target, so the win screen is easy to test.

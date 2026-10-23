@@ -34,7 +34,10 @@ css/style.css      colors and layout
 js/config.js       ALL tunable numbers
 js/dice.js         logic: rolling dice
 js/bets.js         logic: settling bets
+js/shift.js        logic: shift turns, target, win/fall checks
 js/ui.js           display: drawing the screen
 js/main.js         wires buttons to logic and display
 ```
+Testing shortcut: add `?target=300` to the page address for a smaller shift target.
+
 Scripts load with plain `<script>` tags in a set order (config, logic, display, main), not ES modules, so double-clicking index.html works.

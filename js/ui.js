@@ -22,6 +22,10 @@ function renderChips(selectedChip, onPick) {
 function renderState(state) {
   const b = state.bets;
   document.getElementById("bankroll").textContent = money(state.bankroll);
+  document.getElementById("target").textContent = money(CONFIG.shiftTarget);
+  const progress = Math.min(100, (totalMoney(state) / CONFIG.shiftTarget) * 100);
+  document.getElementById("progress-fill").style.width = progress + "%";
+  renderCrew(state);
   document.getElementById("on-table").textContent = money(b.pass + b.odds + b.field);
   document.getElementById("pass-amount").textContent = money(b.pass);
   document.getElementById("field-amount").textContent = money(b.field);
@@ -46,6 +50,40 @@ function renderState(state) {
     document.getElementById("die2").textContent = DIE_FACES[state.lastRoll.dice[1]];
     document.getElementById("total").textContent = "Total: " + state.lastRoll.total;
   }
+}
+
+// The seats around the table. Finished shooters are dimmed.
+function renderCrew(state) {
+  const box = document.getElementById("crew");
+  box.innerHTML = "";
+  CONFIG.crew.forEach((name, i) => {
+    const seat = document.createElement("div");
+    seat.className = "seat" + (i === state.shooterIndex ? " shooting" : "") + (i < state.shooterIndex ? " done" : "");
+    seat.innerHTML = "⛓<br>" + name;
+    box.appendChild(seat);
+  });
+  const shooter = CONFIG.crew[state.shooterIndex];
+  document.getElementById("shooter").textContent = shooter
+    ? "Now shooting: " + shooter + " (shooter " + (state.shooterIndex + 1) + " of " + CONFIG.crew.length + ")"
+    : "Every shooter has had a turn.";
+}
+
+// Show the win or fall screen when the shift is over.
+function renderEndScreen(state) {
+  const screen = document.getElementById("end-screen");
+  if (state.status === "playing") {
+    screen.classList.add("hidden");
+    return;
+  }
+  const texts = {
+    "won": ["The chains hold.", "You reached " + money(CONFIG.shiftTarget) + ". The pit boss nods. You live to roll another shift."],
+    "fell-broke": ["You fall.", "You couldn't cover the " + money(CONFIG.tableMinimum) + " Pass Line. The chains release and the floor opens."],
+    "fell-short": ["You fall.", "Every shooter has sevened out and you finished with " + money(totalMoney(state)) + ", short of " + money(CONFIG.shiftTarget) + ". The chains release."],
+  };
+  const [title, body] = texts[state.status];
+  document.getElementById("end-title").textContent = title;
+  document.getElementById("end-body").textContent = body;
+  screen.className = state.status === "won" ? "won" : "fell";
 }
 
 // Turn one roll into plain-language sentences.

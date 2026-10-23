@@ -12,7 +12,12 @@
   <div class="money">
     <div>Bankroll: <strong id="bankroll"></strong></div>
     <div>On table: <strong id="on-table"></strong></div>
+    <div>Target: <strong id="target"></strong></div>
   </div>
+  <div class="progress"><div id="progress-fill" class="progress-fill"></div></div>
+
+  <div id="crew" class="crew"></div>
+  <div id="shooter" class="shooter"></div>
 
   <div class="table">
     <div class="dice">
@@ -50,12 +55,21 @@
     <button id="clear-button">Clear bets</button>
   </div>
 
-  <p id="message" class="message">Pick a chip, click a bet area to place it, then press Roll.</p>
+  <p id="message" class="message">You wake up chained to the table. Pick a chip, put it on the Pass Line, then press Roll.</p>
+
+  <div id="end-screen" class="hidden">
+    <div class="end-box">
+      <h2 id="end-title"></h2>
+      <p id="end-body"></p>
+      <button id="play-again" class="big-button">Play again</button>
+    </div>
+  </div>
 
   <!-- Load order matters: config first, then logic, then display, then main. -->
   <script src="js/config.js"></script>
   <script src="js/dice.js"></script>
   <script src="js/bets.js"></script>
+  <script src="js/shift.js"></script>
   <script src="js/ui.js"></script>
   <script src="js/main.js"></script>
 </body>

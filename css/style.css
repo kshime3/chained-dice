@@ -92,3 +92,38 @@ button {
 
 .bet-area.locked { border-style: dashed; }
 .bet-area.disabled { opacity: 0.4; }
+
+.progress {
+  height: 10px;
+  background: #333;
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+.progress-fill { height: 100%; width: 0; background: #ffd84d; transition: width 0.3s; }
+
+.crew { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
+.seat {
+  background: #333;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 0.85rem;
+  min-width: 64px;
+}
+.seat.shooting { background: #ffd84d; color: #111; font-weight: bold; }
+.seat.done { opacity: 0.35; text-decoration: line-through; }
+.shooter { margin: 8px 0 12px; }
+
+#end-screen {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+#end-screen.hidden { display: none; }
+.end-box { background: #222; border-radius: 16px; padding: 24px; max-width: 420px; }
+#end-screen.won .end-box { border: 4px solid #ffd84d; }
+#end-screen.fell .end-box { border: 4px solid #c0392b; }

@@ -2,9 +2,14 @@
 // Change a value, save, and refresh the browser to try it.
 
 const CONFIG = {
+  // The shift
+  buyIn: 200,        // money you wake up with
+  shiftTarget: 2000, // reach this and the chains hold (see testing shortcut at the bottom)
+  // Seat order. Each seat shoots until they seven out, then the dice pass on.
+  crew: ["Lefty", "Dealer Dee", "Hot Rod", "Ghost", "Jinx", "You"],
+
   // Money
-  startingBankroll: 200, // testing value for now; becomes the buy-in in Milestone 3
-  tableMinimum: 5,
+  tableMinimum: 5, // also the smallest Pass Line bet, which is required to roll
   chipValues: [5, 25, 100],
 
   // Pass Line pays even money (bet $10, win $10).
@@ -39,3 +44,7 @@ const CONFIG = {
   // A seven during the point phase ends the shooter's turn.
   sevenOut: 7,
 };
+
+// Testing shortcut: add ?target=300 to the page address to play with a smaller target.
+const testTarget = Number(new URLSearchParams(location.search).get("target"));
+if (testTarget > 0) CONFIG.shiftTarget = testTarget;

@@ -2,6 +2,28 @@
 
 Dated session log. Newest at the top.
 
+## 2026-10-23: Session 1, continued (Milestone 3)
+
+**Done**
+- Owner tested Milestone 2: works great.
+- **Built Milestone 3:** $200 buy-in, $2,000 target with progress bar, six seats (Lefty, Dealer Dee, Hot Rod, Ghost, Jinx, You) with normal dice, "Now shooting" label, seven-out passes the dice. Pass Line required to roll a come-out. Instant win at target; fall when broke or when the last shooter sevens out. Win/fall screens with Play again. New `js/shift.js`. Testing shortcut `?target=300`. tests.html: 68 checks, all passing.
+
+**Works**
+- All three endings checked in a headless browser: win (small target), fall short, fall broke. Play again resets.
+
+**Broken**
+- Nothing known.
+
+**Notes for later**
+- Balance: with flat bets and no multipliers, $200 to $2,000 is very hard. Expected; modifiers, crew, and the shop should change that. Watch it in playtesting.
+- You press Roll for every shooter, including the crew.
+
+**Waiting on the owner**
+- Testing Milestone 3 and feedback.
+
+**Exact next step**
+- After feedback: plan Milestone 4 (crew weighted dice, dice odds shown on screen, synergies). Settle Dealer Dee's "always ends on a seven-out" question and seat order first.
+
 ## 2026-10-23: Session 1, continued (Milestone 2)
 
 **Done**
