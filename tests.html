@@ -139,6 +139,12 @@
     const brokeRoll = newShiftState(); brokeRoll.onBreak = false; brokeRoll.kitty = 0;
     afterRoll(brokeRoll, false);
     check("Going broke on a come-out: fall", brokeRoll.status, "fell-broke");
+    const zero = newShiftState(); zero.onBreak = false; zero.kitty = 0; zero.shooterIndex = 1;
+    afterRoll(zero, true);
+    check("Seven-out with $0: fall at once, no Dealer break", [zero.status, zero.onBreak], ["fell-broke", false]);
+    const low = newShiftState(); low.onBreak = false; low.kitty = 20; low.shooterIndex = 1;
+    afterRoll(low, true);
+    check("Seven-out with $20: Dealer break as usual", [low.status, low.onBreak], ["playing", true]);
     const brokeBreak = newShiftState(); brokeBreak.kitty = 3; brokeBreak.shooterIndex = 2;
     endBreak(brokeBreak);
     check("Leaving a break unable to cover $5: fall", brokeBreak.status, "fell-broke");
@@ -230,7 +236,10 @@
     check("5 cards: slots are full", buyCard(b2, 0), "full");
     check("Sell Snake Eyes for $50", [sellCard(b2, "snakeEyes"), b2.cards.length, b2.kitty], [50, 4, 5050]);
     const sf = newShiftState(); sf.kitty = 1000;
-    check("Shuffle costs $100, then $150", [shuffleCost(sf), shuffleStock(sf), shuffleCost(sf), sf.kitty], [100, true, 150, 900]);
+    check("Shuffle costs 5% of the debt every time ($100, then $100)", [shuffleCost(sf), shuffleStock(sf), shuffleCost(sf), sf.kitty], [100, true, 100, 900]);
+    check("Shop is closed before the first shooter", isShopOpen(newShiftState()), false);
+    const open1 = newShiftState(); open1.shooterIndex = 1;
+    check("Shop opens after the first shooter", isShopOpen(open1), true);
 
     // Cards in play. Helper: a state that owns the given cards.
     const withCards = (...ids) => { const st = newShiftState(); st.onBreak = false; st.kitty = 1000; st.cards = ids; return st; };

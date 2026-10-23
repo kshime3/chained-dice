@@ -24,6 +24,7 @@ function newShiftState() {
     pityUsed: false, // Pit Boss's Pity works once a shift
     muggsyPending: false, // the next shooter gets Muggsy's x2
     rollsSincePoint: 0, // for Muggsy's point-7
+    sevenOutBy: null, // who just sevened out (shown on the Dealer break)
   };
   state.stock = newStock(state);
   return state;
@@ -101,7 +102,13 @@ function fundPassLine(state, amount) {
 function afterRoll(state, sevenOut) {
   if (sevenOut) {
     const prevName = CONFIG.crew[state.shooterIndex];
+    state.sevenOutBy = prevName;
     state.shooterIndex += 1;
+    // Broke with no way to pay off the debt: fall right away, no break.
+    if (isBroke(state) && state.kitty < amountOwed(state)) {
+      state.status = "fell-broke";
+      return;
+    }
     state.onBreak = true;
     if (!isFinalBreak(state)) setupTurn(state, prevName, state.mult);
     state.stock = newStock(state); // fresh cards at every Dealer break

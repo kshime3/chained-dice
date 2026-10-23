@@ -54,6 +54,7 @@ Long term, it becomes a first-person 3D room like Clover Pit: chained at the tab
 
 - **Broke:** on a come-out, your kitty plus money on the table can't cover the $5 minimum Pass Line bet.
 - **Short:** you leave the final Dealer break still owing.
+- A seven-out that leaves you broke (and unable to pay off the debt) is an instant fall, with no Dealer break.
 - [Planned] The floor opens and everyone drops, then the run restarts.
 
 ## Craps Rules  [Built]
@@ -94,8 +95,8 @@ Seat order: **Lefty, Dealer Dee, Hot Rod, Jinx, Ghost, You.** Dice are lists of 
 
 ## The Shop (the Stickman)  [Built: Milestone 5a]
 
-- At every Dealer break, a **Tip the dealer** section shows **3 random cards**.
-- **Shuffle** replaces the stock for a price that rises each time in a shift.
+- From the **second** Dealer break on (after the first shooter), a **Tip the dealer** section shows **3 random cards**. The first time, it explains how the shop works.
+- **Shuffle** replaces the stock for a flat 5% of the debt.
 - **Prices are a share of the current shift's debt,** rounded to the nearest $5:
 
 | Rarity | Price | Chance per slot |

@@ -188,7 +188,21 @@ button:disabled { opacity: 0.4; cursor: not-allowed; }
 .card.legendary { border-color: #d4ac0d; }
 .card.sold-out { background: #333; color: #888; align-items: center; justify-content: center; min-height: 120px; }
 .card-name { font-weight: bold; }
-.card-rarity { font-size: 0.75rem; text-transform: uppercase; opacity: 0.6; }
+.card-rarity {
+  display: inline-block;
+  align-self: flex-start;
+  font-size: 0.7rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #fff;
+  background: #7f8c8d;
+  border-radius: 4px;
+  padding: 1px 6px;
+  margin: 2px 0;
+}
+.card.uncommon .card-rarity { background: #27ae60; }
+.card.rare .card-rarity { background: #2980b9; }
+.card.legendary .card-rarity { background: #d4ac0d; color: #222; }
 .card-text { font-size: 0.85rem; flex: 1; margin: 4px 0; }
 .card button { background: #ffd84d; font-weight: bold; }
 
@@ -207,3 +221,15 @@ button:disabled { opacity: 0.4; cursor: not-allowed; }
 .card-badge.rare { border-left-color: #2980b9; }
 .card-badge .tooltip { display: none; position: absolute; top: 110%; left: 50%; transform: translateX(-50%); width: 220px; background: #fff; color: #111; text-align: left; padding: 8px 10px; border-radius: 8px; z-index: 10; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); }
 .card-badge:hover .tooltip { display: block; }
+
+.hidden { display: none; }
+.seven-out-banner { color: #ff5c5c; font-weight: bold; }
+.seven-out-banner .big, .seven-out-text {
+  font-size: 2.6rem;
+  font-weight: 900;
+  color: #ff3b30;
+  letter-spacing: 2px;
+  text-shadow: 0 0 12px rgba(255, 59, 48, 0.6);
+}
+.shop-intro { background: #33302a; border: 2px solid #ffd84d; border-radius: 8px; padding: 8px; text-align: left; }
+.shop-intro:empty { display: none; }

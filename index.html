@@ -62,24 +62,28 @@
 
   <div id="break-screen" class="overlay hidden">
     <div class="end-box">
+      <div id="seven-out-banner" class="seven-out-banner"></div>
       <h2>Dealer break</h2>
       <p id="break-intro"></p>
       <p>Still owed: <strong id="break-owed"></strong> · Your kitty: <strong id="break-kitty"></strong></p>
 
       <h3>Pay the dealer</h3>
       <div>
-        $<input id="deposit-amount" type="number" min="1" step="1" placeholder="amount">
+        $<input id="deposit-amount" type="number" min="5" step="5" value="5">
         <button id="pay-typed">Pay</button>
         <button id="pay-off">Pay off debt</button>
       </div>
 
-      <h3>Tip the dealer (shop)</h3>
-      <p class="hint">Tips don't count toward your debt.</p>
-      <div id="stock" class="card-row"></div>
-      <button id="shuffle"></button>
+      <div id="shop-section">
+        <h3>Tip the dealer (shop)</h3>
+        <p id="shop-intro" class="shop-intro"></p>
+        <p class="hint">Tips don't count toward your debt.</p>
+        <div id="stock" class="card-row"></div>
+        <button id="shuffle"></button>
 
-      <h3>Your cards <span id="slots"></span></h3>
-      <div id="owned" class="card-row"></div>
+        <h3>Your cards <span id="slots"></span></h3>
+        <div id="owned" class="card-row"></div>
+      </div>
 
       <p id="break-message" class="break-message"></p>
       <p id="break-warning" class="break-warning"></p>

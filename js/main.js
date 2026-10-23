@@ -102,7 +102,7 @@ function roll() {
   afterRoll(state, sevenOut);
 
   const notes = before.notes.concat(cardNotes, crewNotes);
-  showMessage(describeRoll(total, results, pointBefore, state.point) + " " + notes.join(" "));
+  showMessage(describeRoll(total, results, pointBefore, state.point) + " " + notes.join(" "), sevenOut);
   renderAll();
 }
 
@@ -120,11 +120,11 @@ function payDealer(amount) {
 function payTyped() {
   const typed = Math.floor(Number(document.getElementById("deposit-amount").value));
   if (!(typed > 0)) {
-    showBreakMessage("Type an amount to pay, like 50.");
+    showBreakMessage("Type an amount to pay, like 25.");
     return;
   }
   payDealer(typed);
-  document.getElementById("deposit-amount").value = "";
+  document.getElementById("deposit-amount").value = CONFIG.tableMinimum;
 }
 
 // Shop buttons

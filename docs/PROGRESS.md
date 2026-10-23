@@ -19,8 +19,10 @@ Dated session log. Newest at the top.
 - No Rare or Extra chain link cards exist yet, so those tiers fall back to Uncommon/Common until 5b.
 - Hot Hand resets on any roll with no win, including "no decision" rolls during a point. Watch in playtesting.
 
+- Owner feedback on 5a, all done: shop opens after the first shooter with an intro, Shuffle a flat 5%, big red SEVEN OUT, pay box defaults to $5 with $5 steps, "current chance of a 7", coloured rarity labels, instant fall on a broke seven-out. tests.html: 138 checks, all passing.
+
 **Waiting on the owner**
-- Testing Milestone 5a.
+- Testing the 5a feedback changes. Owner wants to stay on 5a for now.
 
 **Exact next step**
 - Milestone 5b: Loaded Die, Reroll, Double Up, Doubles Charm, Green Dice (interest), Cut a chain, Extra chain link.

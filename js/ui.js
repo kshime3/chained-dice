@@ -84,7 +84,7 @@ function renderCrew(state) {
       const tip = document.createElement("div");
       tip.className = "tooltip";
       tip.innerHTML = "<strong>" + name + "</strong><br>Dice: " + info.dice + "<br>Style: " + info.style +
-        "<br>Chance of a 7: <strong>" + percent(sevenChance(name)) + "</strong> (normal dice: 16.7%)";
+        "<br>Current chance of a 7: <strong>" + percent(sevenChance(name)) + "</strong> (normal dice: 16.7%)";
       seat.appendChild(tip);
     }
     box.appendChild(seat);
@@ -112,9 +112,23 @@ function renderBreak(state) {
   } else {
     const next = CONFIG.crew[state.shooterIndex];
     const before = next === "You" ? "Before you shoot" : "Before " + next + " shoots";
-    intro = "Seven out. " + before + ", you can pay the dealer. " + whose(next) + " chance of a 7: " + percent(diceOdds(state.dice)[7]) + ".";
+    intro = before + ", you can pay the dealer. " + whose(next) + " current chance of a 7: " + percent(diceOdds(state.dice)[7]) + ".";
   }
   document.getElementById("break-intro").textContent = intro;
+
+  // A seven-out is bad news: say it big and red.
+  const who = state.sevenOutBy;
+  document.getElementById("seven-out-banner").innerHTML = who
+    ? '<div class="big">SEVEN OUT!</div>' + (who === "You" ? "You" : who) + " sevened out."
+    : "";
+
+  // The shop opens after the first shooter, with a one-time explanation.
+  document.getElementById("shop-section").classList.toggle("hidden", !isShopOpen(state));
+  document.getElementById("shop-intro").innerHTML = state.shooterIndex === CONFIG.shopOpensAfterShooter
+    ? "<strong>New: the stickman's shop!</strong> Tip the dealer from your kitty to buy cards that bend the rules. " +
+      CONFIG.shopSlots + " cards are offered at every break, and rarer cards cost more. You can hold " + CONFIG.maxCards +
+      " cards and sell one for half its price. Don't like the offer? Shuffle for new cards."
+    : "";
   document.getElementById("break-owed").textContent = money(amountOwed(state));
   document.getElementById("break-kitty").textContent = money(state.kitty);
 
@@ -230,7 +244,7 @@ function renderOddsPanel(state) {
     bars += '<div class="' + cls + '"><span class="pct">' + Math.round(odds[t] * 100) + '%</span>' +
       '<div class="fill" style="height:' + height + 'px"></div><span class="num">' + t + "</span></div>";
   }
-  let summary = whose(name) + " dice: chance of a 7 is <strong>" + percent(odds[7]) + "</strong> (normal: 16.7%).";
+  let summary = whose(name) + " dice: current chance of a 7 is <strong>" + percent(odds[7]) + "</strong> (normal: 16.7%).";
   if (state.point !== null) {
     summary += " Hitting the " + state.point + " before a 7: <strong>" + percent(pointBeforeSeven(odds, state.point)) + "</strong>.";
   }
@@ -283,6 +297,15 @@ function describeRoll(total, results, pointBefore, pointAfter) {
   return lines.join(" ");
 }
 
-function showMessage(text) {
-  document.getElementById("message").textContent = text;
+// bad: a seven-out, shown big and red.
+function showMessage(text, bad) {
+  const box = document.getElementById("message");
+  box.innerHTML = "";
+  if (bad) {
+    const big = document.createElement("div");
+    big.className = "seven-out-text";
+    big.textContent = "SEVEN OUT!";
+    box.appendChild(big);
+  }
+  box.appendChild(document.createTextNode(text));
 }

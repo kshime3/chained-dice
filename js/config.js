@@ -31,12 +31,13 @@ const CONFIG = {
   coldTablePenalty: 0.5,     // Cold Table: shooter after Jinx starts this much lower, until their first win
 
   // The shop (the stickman). Prices are a share of the shift's debt, rounded to the nearest $5.
+  shopOpensAfterShooter: 1, // the shop first opens after this many shooters have sevened out
   shopSlots: 3,       // cards offered at each Dealer break
   maxCards: 5,        // cards you can hold
   rarityPricePct: { common: 0.05, uncommon: 0.10, rare: 0.25, legendary: 0.50 },
   rarityChance:   { common: 0.60, uncommon: 0.30, rare: 0.09, legendary: 0.01 }, // per slot
-  shuffleBasePct: 0.05,   // first Shuffle of a shift costs this share of the debt
-  shuffleStepPct: 0.025,  // each Shuffle after that costs this much more
+  shuffleBasePct: 0.05,   // a Shuffle costs this share of the debt
+  shuffleStepPct: 0,      // each Shuffle after that costs this much more (0 = same price every time)
   sellBackShare: 0.5,     // selling a card gives back this share of its price
 
   // Card rarity. "legendary" is the Extra chain link tier.

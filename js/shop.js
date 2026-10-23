@@ -46,6 +46,11 @@ function newStock(state) {
   return stock;
 }
 
+// The shop stays closed until the first shooter has had a turn.
+function isShopOpen(state) {
+  return state.shooterIndex >= CONFIG.shopOpensAfterShooter;
+}
+
 // Spending in the shop can't take your kitty below the minimum Pass Line bet.
 function canSpend(state, amount) {
   return state.kitty - amount >= CONFIG.tableMinimum;

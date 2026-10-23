@@ -101,3 +101,13 @@ Dated log of every decision and why. Newest at the bottom.
 - **Milestone 5a cards:** Hot Hand, Snake Eyes, Lucky Seven, Rattlesnake, Red Dice, Odds Addict, Pit Boss's Pity, Muggsy. 5b: Loaded Die, Reroll, Double Up, Doubles Charm, Green Dice, Cut a chain, Extra chain link.
 - **Shift 1 now uses the new scale ($100 cash, $200 debt)** so shop prices (a share of the debt) make sense.
 - **Buying a card can't take the kitty below $5,** same as paying the dealer.
+
+## 2026-10-23 (Milestone 5a feedback from owner)
+
+- **The shop opens after the first shooter,** not at the start, with a one-time "New: the stickman's shop!" explanation. Why: opening with the shop was confusing. (`shopOpensAfterShooter` in config.)
+- **Shuffle costs a flat 5% of the debt** every time.
+- **Seven-outs are big and red:** a "SEVEN OUT!" banner on the Dealer break and in the roll message.
+- **The pay box starts at $5 and its arrows move in $5 steps.**
+- **Odds wording says "current chance of a 7",** since cards and perks will change the odds.
+- **Rarity labels are coloured:** Common grey, Uncommon green, Rare blue, Legendary gold.
+- **A seven-out that leaves you broke (and unable to pay off the debt) is an instant fall,** with no Dealer break.
