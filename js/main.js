@@ -152,7 +152,7 @@ document.getElementById("field").onclick = () => placeBet("field");
 document.getElementById("roll-button").onclick = roll;
 document.getElementById("clear-button").onclick = clearBets;
 document.getElementById("pay-typed").onclick = payTyped;
-document.getElementById("pay-all").onclick = () => payDealer(maxDeposit(state));
+document.getElementById("pay-off").onclick = () => payDealer(amountOwed(state));
 document.getElementById("leave-break").onclick = leaveBreak;
 document.getElementById("play-again").onclick = playAgain;
 

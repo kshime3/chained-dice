@@ -117,6 +117,12 @@ function renderBreak(state) {
   document.getElementById("break-intro").textContent = intro;
   document.getElementById("break-owed").textContent = money(amountOwed(state));
   document.getElementById("break-kitty").textContent = money(state.kitty);
+
+  // Pay off debt only works when your kitty covers the whole amount owed.
+  const payOff = document.getElementById("pay-off");
+  payOff.disabled = state.kitty < amountOwed(state);
+  payOff.textContent = "Pay off debt (" + money(amountOwed(state)) + ")";
+  payOff.title = payOff.disabled ? "You need the full amount in your kitty to pay off the debt." : "";
   document.getElementById("leave-break").textContent = isFinalBreak(state)
     ? "Face the pit boss"
     : "Next shooter: " + CONFIG.crew[state.shooterIndex];

@@ -73,3 +73,4 @@ Dated log of every decision and why. Newest at the bottom.
 - **Mult applies to winnings only, rounded down,** and resets to 1x for each new shooter (plus Mentor/Cold Table effects).
 - **A "winning roll" means any of your bets won that roll.**
 - **Mentor = half of Hot Rod's bonus above 1x. Cold Table = -0.5x, lifted by the first winning roll.** All numbers are in config.js.
+- **"Pay all I can" removed; replaced by "Pay off debt"** (shows the amount owed), greyed out unless your kitty covers the whole debt. Typed "Pay" stays for partial payments. Owner's choice. Why: one accidental click could ruin a run, since payments can't be undone.

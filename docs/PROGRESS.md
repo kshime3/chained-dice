@@ -14,8 +14,10 @@ Dated session log. Newest at the top.
 **Broken**
 - Nothing known.
 
+- Owner tested 4b, then asked for a fix: "Pay all I can" replaced by "Pay off debt", greyed out until the kitty covers the full debt.
+
 **Waiting on the owner**
-- Testing Milestone 4b.
+- Quick test of the Pay off debt button.
 
 **Exact next step**
 - Milestone 5: the dealer's shop at the Dealer break ("Tip the dealer"), with rotating stock and rarity tiers. Includes "Cut a chain" and the Doubles Charm / Reroll ideas. Ask first: shop size per visit, price range, which starter items go in v1, and rarity odds.

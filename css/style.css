@@ -165,3 +165,5 @@ button {
 .mult { margin: -6px 0 10px; }
 .mult.hot strong { color: #ff9f43; }
 .mult.cold strong { color: #6ec1ff; }
+
+button:disabled { opacity: 0.4; cursor: not-allowed; }
