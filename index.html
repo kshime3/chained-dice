@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chained Dice</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <h1>Chained Dice</h1>
+
+  <div class="money">
+    <div>Bankroll: <strong id="bankroll"></strong></div>
+    <div>On table: <strong id="on-table"></strong></div>
+  </div>
+
+  <div class="table">
+    <div class="dice">
+      <span id="die1" class="die">⚀</span>
+      <span id="die2" class="die">⚀</span>
+    </div>
+    <div id="total" class="total">Place a bet, then roll.</div>
+
+    <div class="bet-area" id="field">
+      <div class="bet-title">FIELD</div>
+      <div class="bet-hint">2 pays double · 3 4 9 10 11 · 12 pays triple</div>
+      <div class="bet-amount" id="field-amount"></div>
+    </div>
+
+    <div class="bet-area" id="pass-line">
+      <div class="bet-title">PASS LINE</div>
+      <div class="bet-hint">Come-out: 7 or 11 wins · 2, 3, 12 loses</div>
+      <div class="bet-amount" id="pass-amount"></div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <div id="chips" class="chips"></div>
+    <button id="roll-button" class="big-button">Roll</button>
+    <button id="clear-button">Clear bets</button>
+  </div>
+
+  <p id="message" class="message">Pick a chip, click a bet area to place it, then press Roll.</p>
+
+  <!-- Load order matters: config first, then logic, then display, then main. -->
+  <script src="js/config.js"></script>
+  <script src="js/dice.js"></script>
+  <script src="js/bets.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

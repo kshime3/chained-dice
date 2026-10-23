@@ -28,5 +28,13 @@ docs/DESIGN.md     game design
 docs/DECISIONS.md  dated decision log
 docs/PROGRESS.md   dated session log and next step
 docs/IDEAS.md      parked ideas and later features
+index.html         the game page (open this to play)
+tests.html         rule checks: open to see green/red results
+css/style.css      colors and layout
+js/config.js       ALL tunable numbers
+js/dice.js         logic: rolling dice
+js/bets.js         logic: settling bets
+js/ui.js           display: drawing the screen
+js/main.js         wires buttons to logic and display
 ```
-(Game files will be added starting in Milestone 1.)
+Scripts load with plain `<script>` tags in a set order (config, logic, display, main), not ES modules, so double-clicking index.html works.

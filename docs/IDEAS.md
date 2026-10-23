@@ -15,3 +15,6 @@ Parked ideas and later features. Not in v1 unless moved into the design.
 
 ## Presentation
 - Real art and sound to replace placeholders.
+
+## Quality of life
+- A "repeat last bets" button, and a short roll history ("last 10 rolls").
