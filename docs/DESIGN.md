@@ -177,6 +177,8 @@ Like Clover Pit's phone. After **every won shift**, it rings and you **pick 1 of
 
 - Fits on one screen without scrolling on desktop and phones: two columns on wide screens, one compact column on phones.
 - Dice are drawn with pips and tumble for a moment before landing (`diceRollMs` in config). Tapping the dice rolls them.
+- **SEVEN OUT screen:** big and red, shows who sevened out and what you lost, for 2.5 seconds (tap to skip), then the Dealer Break (and the shop tutorial the first time).
+- **POINT HIT screen:** shows total winnings, each bet's winnings, and how much cards and mult boosted them ("normally $12"), for 2.5 seconds (tap to skip).
 
 ## Tech
 

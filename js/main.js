@@ -4,6 +4,11 @@ let state = newShiftState();
 let selectedChip = CONFIG.chipValues[0];
 let rolling = false; // true while the dice animation plays
 
+// No betting or rolling while the dice tumble or a splash screen is up.
+function busy() {
+  return rolling || splashOpen;
+}
+
 function pickChip(value) {
   selectedChip = value;
   renderChips(selectedChip, pickChip);
@@ -11,7 +16,7 @@ function pickChip(value) {
 
 // Move chips from your kitty onto a bet.
 function placeBet(betName) {
-  if (rolling || state.status !== "playing" || state.onBreak) return;
+  if (busy() || state.status !== "playing" || state.onBreak) return;
   let amount = selectedChip;
 
   if (betName === "pass") {
@@ -55,7 +60,7 @@ function placeBet(betName) {
 
 // Take bets back into your kitty. A locked Pass Line stays put.
 function clearBets() {
-  if (rolling || state.status !== "playing" || state.onBreak) return;
+  if (busy() || state.status !== "playing" || state.onBreak) return;
   state.kitty += state.bets.odds + state.bets.field;
   state.bets.odds = 0;
   state.bets.field = 0;
@@ -70,7 +75,7 @@ function clearBets() {
 }
 
 function roll() {
-  if (rolling || state.status !== "playing" || state.onBreak) return;
+  if (busy() || state.status !== "playing" || state.onBreak) return;
   if (!canRoll(state)) {
     showMessage("Place at least " + money(CONFIG.tableMinimum) + " on the Pass Line to roll.");
     return;
@@ -91,8 +96,13 @@ function finishRoll(rolled) {
   const total = state.lastRoll.total;
   const pointBefore = state.point;
   const results = resolveRoll(state.bets, total, pointBefore);
+  for (const r of results) r.plain = r.winnings; // before cards and mult, for the win screen
+  const boosts = [];
+  const multUsed = effectiveMult(state);
+  if (multUsed !== 1) boosts.push("Mult " + multUsed + "x" + (multReasons(state).length ? " (" + multReasons(state).join(", ") + ")" : ""));
   const before = applyCardsBeforePayout(state, results, total, pointBefore);
-  applyMult(results, effectiveMult(state));
+  if (hasCard(state, "oddsAddict") && results.some((r) => r.bet === "odds" && r.outcome === "win")) boosts.push("Odds Addict (+50% Odds)");
+  applyMult(results, multUsed);
 
   // Pay winners and remove losers.
   for (const r of results) {
@@ -115,7 +125,19 @@ function finishRoll(rolled) {
 
   const notes = before.notes.concat(cardNotes, crewNotes);
   showMessage(describeRoll(total, results, pointBefore, state.point) + " " + notes.join(" "), sevenOut);
+
+  if (sevenOut) {
+    // Let the seven-out sink in before the Dealer Break (or the fall).
+    renderState(state);
+    const lost = results.filter((r) => r.outcome === "lose").reduce((sum, r) => sum + r.amount, 0);
+    showSplash(sevenOutSplash(state.sevenOutBy, lost, cardNotes.concat(crewNotes)), "bad", CONFIG.sevenOutSplashMs, renderAll);
+    return;
+  }
   renderAll();
+  if (pointBefore !== null && total === pointBefore) {
+    const wins = results.filter((r) => r.outcome === "win");
+    showSplash(pointWinSplash(pointBefore, wins, boosts), "good", CONFIG.winSplashMs);
+  }
 }
 
 // Dealer Break buttons

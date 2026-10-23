@@ -200,10 +200,7 @@ function renderMult(state) {
     return;
   }
   const mult = effectiveMult(state);
-  const notes = state.multNotes.slice();
-  if (hasCard(state, "hotHand") && state.hotStreak > 0) {
-    notes.push("Hot Hand: +" + state.hotStreak * CONFIG.hotHandPerWin + "x");
-  }
+  const notes = multReasons(state);
   box.innerHTML = "Mult: <strong>" + mult + "x</strong>" + (notes.length ? " · " + notes.join(" · ") : "");
   box.className = "mult" + (mult > 1 ? " hot" : mult < 1 ? " cold" : "");
 }
@@ -336,6 +333,50 @@ function describeRoll(total, results, pointBefore, pointAfter) {
     lines.push("Still rolling for a " + pointAfter + ". A 7 ends it.");
   }
   return lines.join(" ");
+}
+
+// A full-screen splash (seven-out, point hit). Tap to skip; onDone runs after.
+let splashOpen = false;
+function showSplash(html, kind, ms, onDone) {
+  const box = document.getElementById("splash");
+  let closed = false;
+  const close = () => {
+    if (closed) return;
+    closed = true;
+    splashOpen = false;
+    box.classList.add("hidden");
+    if (onDone) onDone();
+  };
+  splashOpen = true;
+  document.getElementById("splash-content").innerHTML = html;
+  box.className = "overlay splash " + kind;
+  box.onclick = close;
+  setTimeout(close, ms);
+}
+
+// The SEVEN OUT screen.
+function sevenOutSplash(who, lost, notes) {
+  return '<div class="splash-title">SEVEN OUT!</div>' +
+    "<p>" + (who === "You" ? "You" : who) + " sevened out.</p>" +
+    (lost > 0 ? '<p class="splash-big">-' + money(lost) + "</p><p>lost on the table</p>" : "") +
+    notes.map((n) => "<p>" + n + "</p>").join("") +
+    '<p class="hint">Tap to continue</p>';
+}
+
+// The "Point hit" screen: what you won, and how much cards and mult added.
+// wins: [{ bet, plain, winnings }], boosts: reasons the winnings went up.
+function pointWinSplash(point, wins, boosts) {
+  const total = wins.reduce((sum, w) => sum + w.winnings, 0);
+  const plain = wins.reduce((sum, w) => sum + w.plain, 0);
+  let html = '<div class="splash-title">POINT HIT!</div><p>The ' + point + ' came back before a 7.</p>' +
+    '<p class="splash-big">+' + money(total) + "</p>";
+  html += wins.map((w) => "<p>" + BET_NAMES[w.bet] + ": +" + money(w.winnings) +
+    (w.winnings !== w.plain ? ' <span class="hint">(normally ' + money(w.plain) + ")</span>" : "") + "</p>").join("");
+  if (total !== plain) {
+    html += '<p class="boost">' + (total > plain ? "Boosted +" + money(total - plain) : "Cut by " + money(plain - total)) +
+      " by: " + boosts.join(", ") + "</p>";
+  }
+  return html + '<p class="hint">Tap to continue</p>';
 }
 
 // Show tutorial pages one at a time. onDone runs when it's closed.

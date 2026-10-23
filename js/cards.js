@@ -27,6 +27,15 @@ function effectiveMult(state) {
   return (state.mult + hotHand) * state.payoutX;
 }
 
+// Why the mult is what it is, e.g. ["Mentor: +1x from Hot Rod's streak", "Hot Hand: +1x"].
+function multReasons(state) {
+  const reasons = state.multNotes.slice();
+  if (hasCard(state, "hotHand") && state.hotStreak > 0) {
+    reasons.push("Hot Hand: +" + state.hotStreak * CONFIG.hotHandPerWin + "x");
+  }
+  return reasons;
+}
+
 // Charge losing Pass Line and Odds bets again (times - 1 more), never below the
 // $5 minimum. Used by Hot Rod and Muggsy. Returns the amount charged.
 function chargeExtra(state, results, times) {
@@ -97,6 +106,8 @@ function applyCardsAfterRoll(state, results, total, pointBefore, sevenOut) {
   }
   if (hasCard(state, "rattlesnake") && total === 2) {
     state.mult += CONFIG.rattlesnakeMult;
+    state.rattleGain += CONFIG.rattlesnakeMult;
+    setMultNote(state, "Rattlesnake", "Rattlesnake: +" + state.rattleGain + "x");
     notes.push("Rattlesnake: +" + CONFIG.rattlesnakeMult + "x mult for this shooter.");
   }
 

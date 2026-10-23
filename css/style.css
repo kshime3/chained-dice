@@ -310,3 +310,18 @@ button:disabled { opacity: 0.4; cursor: not-allowed; }
 .rarity-pill.common { background: #7f8c8d; }
 .rarity-pill.uncommon { background: #27ae60; }
 .rarity-pill.rare { background: #2980b9; }
+
+/* Splash screens: SEVEN OUT and POINT HIT */
+.splash { z-index: 18; cursor: pointer; }
+.splash-content { background: #222; border-radius: 16px; padding: 24px 32px; max-width: 460px; }
+.splash.bad .splash-content { border: 4px solid #ff3b30; box-shadow: 0 0 40px rgba(255, 59, 48, 0.5); }
+.splash.good .splash-content { border: 4px solid #ffd84d; box-shadow: 0 0 40px rgba(255, 216, 77, 0.5); }
+.splash-title { font-size: 3rem; font-weight: 900; letter-spacing: 2px; }
+.splash.bad .splash-title { color: #ff3b30; text-shadow: 0 0 14px rgba(255, 59, 48, 0.7); }
+.splash.good .splash-title { color: #ffd84d; text-shadow: 0 0 14px rgba(255, 216, 77, 0.7); }
+.splash-big { font-size: 2.2rem; font-weight: bold; margin: 6px 0; }
+.splash.bad .splash-big { color: #ff7b6b; }
+.splash.good .splash-big { color: #7dff9b; }
+.boost { color: #ff9f43; font-weight: bold; }
+.splash-content p { margin: 6px 0; }
+@media (max-width: 760px) { .splash-title { font-size: 2.2rem; } .splash-big { font-size: 1.7rem; } }

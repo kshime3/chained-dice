@@ -195,6 +195,7 @@
     applyCrewEffects(rod, [{ bet: "field", outcome: "win" }], false);
     applyCrewEffects(rod, [{ bet: "field", outcome: "lose" }], false);
     check("Hot Rod: two winning rolls and a loss -> 3x", rod.mult, 3);
+    check("...and the mult lists the reason once: \"Hot Rod streak: +2x\"", multReasons(rod), ["Hot Rod streak: +2x"]);
 
     const rod2 = atIndex(2); rod2.kitty = 100;
     applyCrewEffects(rod2, [{ bet: "pass", outcome: "lose", amount: 10 }, { bet: "odds", outcome: "lose", amount: 20 }, { bet: "field", outcome: "lose", amount: 5 }], true);
@@ -281,6 +282,7 @@
     applyCardsAfterRoll(se, [], 2, 6, false);
     check("Snake Eyes: a 2 pays 10% of the debt ($200)", se.kitty, 1200);
     check("Rattlesnake: a 2 adds +1x mult", se.mult, 2);
+    check("...and shows as a mult reason", multReasons(se), ["Rattlesnake: +1x"]);
 
     const ls = withCards("luckySeven");
     applyCardsAfterRoll(ls, [], 7, null, false);

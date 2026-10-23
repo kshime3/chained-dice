@@ -25,6 +25,8 @@ function setupTurn(state, prevName, prevMult) {
   state.multNotes = [];
   state.coldTable = false;
   state.payoutX = 1;
+  state.hotRodGain = 0;
+  state.rattleGain = 0;
 
   // Muggsy: after a point-7, this shooter's winnings are multiplied.
   if (state.muggsyPending) {
@@ -45,6 +47,11 @@ function setupTurn(state, prevName, prevMult) {
     state.coldTable = true;
     state.multNotes.push("Cold Table: -" + CONFIG.coldTablePenalty + "x until the first win");
   }
+}
+
+// Keep one note per source in the mult's list of reasons (replaces an older one).
+function setMultNote(state, prefix, text) {
+  state.multNotes = state.multNotes.filter((n) => !n.startsWith(prefix)).concat(text);
 }
 
 // Multiply each winning bet by the current mult (rounded down).
@@ -71,6 +78,8 @@ function applyCrewEffects(state, results, sevenOut) {
   }
   if (won && name === "Hot Rod") {
     state.mult += CONFIG.hotRodMultPerWin;
+    state.hotRodGain += CONFIG.hotRodMultPerWin;
+    setMultNote(state, "Hot Rod", "Hot Rod streak: +" + state.hotRodGain + "x");
     notes.push("Hot Rod heats up: mult is now " + state.mult + "x.");
   }
 

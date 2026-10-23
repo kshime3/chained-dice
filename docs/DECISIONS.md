@@ -126,3 +126,5 @@ Dated log of every decision and why. Newest at the bottom.
 - **Tapping the dice rolls them.** Owner's request.
 - **Everything should fit on one screen without scrolling, on desktop and mobile.** Owner's request.
 - **Dice are drawn with real pips and get a short rolling animation.** Owner suggested it for later; Claude added it with the layout rework. Length is `diceRollMs` in config.
+- **SEVEN OUT gets its own screen for a few seconds before the Dealer Break.** Owner's request. `sevenOutSplashMs` in config; tap skips.
+- **Hitting a point shows a winnings screen,** including how much cards and mult boosted the payout. Owner's request. `winSplashMs` in config; tap skips. `?fast` skips both for testing.

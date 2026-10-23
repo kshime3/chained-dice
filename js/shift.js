@@ -17,6 +17,8 @@ function newShiftState() {
     coldTable: false, // true until this shooter's first win, after Jinx
     hotRodPenaltyUsed: false, // Hot Rod's double-cost seven-out happens once a shift
     payoutX: 1, // Muggsy's x2 on the next shooter's winnings
+    hotRodGain: 0, // mult Hot Rod has built up this turn
+    rattleGain: 0, // mult Rattlesnake has added this turn
     cards: [], // card ids you own (see cards.js)
     stock: [], // card ids for sale at this Dealer Break (null = sold out)
     shuffles: 0, // Shuffles used this shift (each one costs more)

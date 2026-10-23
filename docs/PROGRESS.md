@@ -28,8 +28,11 @@ Dated session log. Newest at the top.
 - New layout fits one screen without scrolling (checked at 1366x768, 1920x1080, 390x844, 360x740). tests.html: 142 checks, all passing.
 - Owner decided: finish the base game first, add more bets after v1.
 
+- Splash screens: SEVEN OUT (2.5s, then the Dealer Break) and POINT HIT (winnings with the boost from cards and mult). Mult now lists Hot Rod's streak and Rattlesnake as reasons. tests.html: 144 checks, all passing.
+- Owner asked why the tutorial didn't show: it's remembered per browser (How to play button or a private window to see it again).
+
 **Waiting on the owner**
-- Testing the layout, dice, and interest. Owner wants to stay on 5a for now.
+- Testing the splash screens. Owner wants to stay on 5a for now.
 
 **Exact next step**
 - Milestone 5b: Loaded Die, Reroll, Double Up, Doubles Charm, Green Dice (interest), Cut a chain, Extra chain link.
