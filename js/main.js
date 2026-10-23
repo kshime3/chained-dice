@@ -103,9 +103,11 @@ function roll() {
 // Dealer break buttons
 function payDealer(amount) {
   const paid = deposit(state, amount);
-  showBreakMessage(paid > 0
-    ? "Paid " + money(paid) + ". That money is safe now, and out of play."
-    : "Nothing to pay.");
+  let text = paid > 0 ? "Paid " + money(paid) + ". That money is safe now, and out of play." : "Nothing more you can pay.";
+  if (state.status === "playing" && state.kitty <= CONFIG.tableMinimum) {
+    text += " You keep " + money(CONFIG.tableMinimum) + " for your Pass Line bet.";
+  }
+  showBreakMessage(text);
   renderAll();
 }
 
@@ -147,7 +149,7 @@ document.getElementById("field").onclick = () => placeBet("field");
 document.getElementById("roll-button").onclick = roll;
 document.getElementById("clear-button").onclick = clearBets;
 document.getElementById("pay-typed").onclick = payTyped;
-document.getElementById("pay-all").onclick = () => payDealer(state.kitty);
+document.getElementById("pay-all").onclick = () => payDealer(maxDeposit(state));
 document.getElementById("leave-break").onclick = leaveBreak;
 document.getElementById("play-again").onclick = playAgain;
 

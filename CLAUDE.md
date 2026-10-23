@@ -35,9 +35,10 @@ js/config.js       ALL tunable numbers
 js/dice.js         logic: rolling dice
 js/bets.js         logic: settling bets
 js/shift.js        logic: shift turns, dealer breaks and deposits, win/fall checks
+js/crew.js         crew info (hover text now; weighted dice and synergies in Milestone 4)
 js/ui.js           display: drawing the screen
 js/main.js         wires buttons to logic and display
 ```
 Testing shortcut: add `?target=300` to the page address for a smaller shift target.
 
-Scripts load with plain `<script>` tags in a set order (config, logic, display, main), not ES modules, so double-clicking index.html works.
+Scripts load with plain `<script>` tags in a set order (config, logic incl. crew, display, main), not ES modules, so double-clicking index.html works.

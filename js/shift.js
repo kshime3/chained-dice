@@ -39,10 +39,18 @@ function isBroke(state) {
   return state.point === null && totalMoney(state) < CONFIG.tableMinimum;
 }
 
-// Pay the dealer from your kitty. Never more than you have or still owe.
+// The most you can pay right now. You always keep enough in your kitty
+// for the minimum Pass Line bet, unless this payment clears the debt.
+function maxDeposit(state) {
+  const owed = amountOwed(state);
+  if (state.kitty >= owed) return owed;
+  return Math.max(0, state.kitty - CONFIG.tableMinimum);
+}
+
+// Pay the dealer from your kitty, up to maxDeposit.
 // Returns how much was actually paid. Paying in full wins the shift.
 function deposit(state, amount) {
-  const paid = Math.min(amount, state.kitty, amountOwed(state));
+  const paid = Math.min(amount, maxDeposit(state));
   if (paid <= 0) return 0;
   state.kitty -= paid;
   state.deposited += paid;

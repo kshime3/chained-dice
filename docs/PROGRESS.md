@@ -2,6 +2,26 @@
 
 Dated session log. Newest at the top.
 
+## 2026-10-23: Session 1 wrap-up
+
+**Done this session (overall)**
+- Project set up with git, notes, GitHub repo (kshime3/chained-dice, public) and GitHub Pages (https://kshime3.github.io/chained-dice/).
+- Milestones 1, 2, 3 and 3.5 built, tested by owner, committed and pushed.
+- Final tweaks: "Pay all I can" (and Pay) always keep $5 in the kitty for the Pass Line, unless paying off the whole debt. Hovering a seat shows that character's planned dice and style. New `js/crew.js`. tests.html: 84 checks, all passing.
+
+**Works**
+- Full shift: dealer breaks, paying the debt, six shooters with normal dice, Pass Line/Odds/Field, win and both kinds of fall, Play again.
+
+**Broken**
+- Nothing known.
+
+**Owner's homework (for next session)**
+- Brainstorm using Claude's 3 ideas in `docs/IDEAS.md` (pit boss bounties, house rules, cut a chain).
+- Think about how to adjust each crew member's quirks.
+
+**Exact next step**
+- Start of next session: hear the owner's brainstorm results, then plan Milestone 4 (crew weighted dice, dice odds on screen, synergies). Settle first: seat order, adjusted quirks, and what makes Dealer Dee's turn different (every turn already ends on a seven-out).
+
 ## 2026-10-23: Session 1, continued (Milestone 3.5: Pay the dealer)
 
 **Done**

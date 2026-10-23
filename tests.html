@@ -103,7 +103,11 @@
     const d = newShiftState();
     check("Pay $50: $50 paid", deposit(d, 50), 50);
     check("...kitty $150, paid $50, still owe $1,950", [d.kitty, d.deposited, amountOwed(d)], [150, 50, 1950]);
-    check("Can't pay more than your kitty", deposit(d, 999), 150);
+    check("Paying everything keeps $5 back for the Pass Line", deposit(d, 999), 145);
+    check("...kitty $5 left", d.kitty, 5);
+    check("Kitty at $5: nothing more can be paid", deposit(d, 5), 0);
+    const d3 = newShiftState(); d3.kitty = 100; d3.deposited = 1900;
+    check("Paying off the whole debt may use every last dollar", [deposit(d3, 100), d3.kitty, d3.status], [100, 0, "won"]);
     const d2 = newShiftState(); d2.kitty = 300; d2.deposited = 1900;
     check("Owe $100 with $300: only $100 is paid", deposit(d2, 300), 100);
     check("Paying in full wins at once, extra stays in kitty", [d2.status, d2.kitty], ["won", 200]);

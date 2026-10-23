@@ -60,6 +60,14 @@ function renderCrew(state) {
     const seat = document.createElement("div");
     seat.className = "seat" + (i === state.shooterIndex ? " shooting" : "") + (i < state.shooterIndex ? " done" : "");
     seat.innerHTML = "⛓<br>" + name;
+    const info = CREW_INFO[name];
+    if (info) {
+      const tip = document.createElement("div");
+      tip.className = "tooltip";
+      tip.innerHTML = "<strong>" + name + "</strong><br>Dice: " + info.dice + "<br>Style: " + info.style +
+        (info.active ? "" : "<br><em>Coming in Milestone 4. Everyone rolls normal dice for now.</em>");
+      seat.appendChild(tip);
+    }
     box.appendChild(seat);
   });
   const shooter = CONFIG.crew[state.shooterIndex];

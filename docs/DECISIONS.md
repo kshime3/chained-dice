@@ -48,3 +48,9 @@ Dated log of every decision and why. Newest at the bottom.
 - **Deposits are capped at what you still owe.** Why: overpaying would just waste money.
 - **"Bankroll" renamed "Kitty"** on screen and in code, to match the owner's wording.
 - **The first Dealer break appears before shooter 1.** Why: introduces the dealer and the rule right away.
+
+## 2026-10-23 (end of session tweaks)
+
+- **Payments always leave the minimum Pass Line bet ($5) in the kitty,** for both "Pay" and "Pay all I can", unless the payment clears the whole debt. Owner's rule: never let the player reach $0 on purpose.
+- **Hovering over a seat shows that character's dice and style.** Quirks are marked "Coming in Milestone 4" until they're real. Owner wants to revisit and adjust the quirks in Milestone 4. Crew text lives in `js/crew.js` (it's words, not tunable numbers).
+- **Keep the flat shapes layout until the game is complete,** then grow it into a 3D Clover Pit-style world. Owner's direction.

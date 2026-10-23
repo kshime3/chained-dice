@@ -110,6 +110,26 @@ button {
   font-size: 0.85rem;
   min-width: 64px;
 }
+.seat { position: relative; cursor: help; }
+.seat .tooltip {
+  display: none;
+  position: absolute;
+  top: 110%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 220px;
+  background: #fff;
+  color: #111;
+  text-align: left;
+  font-weight: normal;
+  text-decoration: none;
+  padding: 8px 10px;
+  border-radius: 8px;
+  z-index: 10;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+.seat:hover .tooltip { display: block; }
+.seat.done:hover { opacity: 1; }
 .seat.shooting { background: #ffd84d; color: #111; font-weight: bold; }
 .seat.done { opacity: 0.35; text-decoration: line-through; }
 .shooter { margin: 8px 0 12px; }
