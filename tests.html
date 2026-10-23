@@ -18,8 +18,14 @@
   <script src="js/dice.js"></script>
   <script src="js/bets.js"></script>
   <script src="js/crew.js"></script>
+  <script src="js/cards.js"></script>
+  <script src="js/shop.js"></script>
   <script src="js/shift.js"></script>
   <script>
+    // Tests use fixed numbers, so tuning config.js doesn't break them.
+    CONFIG.buyIn = 200;
+    CONFIG.shiftTarget = 2000;
+
     // Each check prints a green ✔ or a red ✘.
     let passed = 0, failed = 0;
     function check(label, actual, expected) {
@@ -196,6 +202,89 @@
     const flow = newShiftState(); flow.onBreak = false; flow.kitty = 100; flow.shooterIndex = 2; flow.mult = 4;
     afterRoll(flow, true);
     check("Full flow: Hot Rod sevens out at 4x -> Jinx starts at 2.5x", [CONFIG.crew[flow.shooterIndex], flow.mult], ["Jinx", 2.5]);
+
+    // Shop: prices are a share of the debt, rounded to $5
+    check("Common = 5% of $2,000 = $100", cardPrice("hotHand"), 100);
+    check("Uncommon = 10% of $2,000 = $200", cardPrice("redDice"), 200);
+    CONFIG.shiftTarget = 200;
+    check("At a $200 debt: Common $10, Uncommon $20", [cardPrice("snakeEyes"), cardPrice("muggsy")], [10, 20]);
+    CONFIG.shiftTarget = 2000;
+    check("Selling gives back half", sellPrice("hotHand"), 50);
+
+    const shop = newShiftState();
+    check("A new shift has 3 different cards for sale", [shop.stock.length, new Set(shop.stock).size], [3, 3]);
+    let ownedInStock = false;
+    for (let i = 0; i < 200; i++) {
+      const st = newShiftState(); st.cards = ["hotHand", "snakeEyes", "luckySeven", "rattlesnake", "redDice"];
+      if (newStock(st).some((id) => st.cards.includes(id))) ownedInStock = true;
+    }
+    check("Cards you own never show up in the stock", ownedInStock, false);
+
+    const b1 = newShiftState(); b1.kitty = 300; b1.stock = ["hotHand", "redDice", "pity"];
+    check("Buy Hot Hand ($100)", [buyCard(b1, 0), b1.kitty, b1.cards, b1.stock[0]], ["ok", 200, ["hotHand"], null]);
+    check("Buying the same slot again: sold out", buyCard(b1, 0), "empty");
+    check("Can't buy if it would leave less than $5", [buyCard(b1, 1), b1.kitty], ["money", 200]);
+    b1.kitty = 205;
+    check("...exactly $5 left is fine", [buyCard(b1, 1), b1.kitty], ["ok", 5]);
+    const b2 = newShiftState(); b2.kitty = 5000; b2.cards = ["hotHand", "snakeEyes", "luckySeven", "rattlesnake", "redDice"]; b2.stock = ["pity", null, null];
+    check("5 cards: slots are full", buyCard(b2, 0), "full");
+    check("Sell Snake Eyes for $50", [sellCard(b2, "snakeEyes"), b2.cards.length, b2.kitty], [50, 4, 5050]);
+    const sf = newShiftState(); sf.kitty = 1000;
+    check("Shuffle costs $100, then $150", [shuffleCost(sf), shuffleStock(sf), shuffleCost(sf), sf.kitty], [100, true, 150, 900]);
+
+    // Cards in play. Helper: a state that owns the given cards.
+    const withCards = (...ids) => { const st = newShiftState(); st.onBreak = false; st.kitty = 1000; st.cards = ids; return st; };
+    const passLose = (amt) => [{ bet: "pass", outcome: "lose", amount: amt, winnings: 0 }];
+
+    const rd = withCards("redDice");
+    const rdRes = resolveRoll({ pass: 10, odds: 0, field: 0 }, 3, null);
+    applyCardsBeforePayout(rd, rdRes, 3, null);
+    check("Red Dice: come-out 3 wins the $10 Pass Line", [rdRes[0].outcome, rdRes[0].winnings], ["win", 10]);
+    const noRd = resolveRoll({ pass: 10, odds: 0, field: 0 }, 3, null);
+    applyCardsBeforePayout(withCards(), noRd, 3, null);
+    check("Without Red Dice, come-out 3 still loses", noRd[0].outcome, "lose");
+
+    const oa = withCards("oddsAddict");
+    const oaRes = resolveRoll({ pass: 10, odds: 10, field: 0 }, 4, 4);
+    applyCardsBeforePayout(oa, oaRes, 4, 4);
+    check("Odds Addict: $10 Odds on 4 pays $30 instead of $20", oaRes.find((r) => r.bet === "odds").winnings, 30);
+
+    const pt = withCards("pity");
+    const ptRes = resolveRoll({ pass: 10, odds: 20, field: 5 }, 7, 6);
+    const ptOut = applyCardsBeforePayout(pt, ptRes, 7, 6);
+    check("Pity: first seven-out ignored; only the Field loses", [ptOut.pity, ptRes.map((r) => r.bet)], [true, ["field"]]);
+    const ptRes2 = resolveRoll({ pass: 10, odds: 0, field: 0 }, 7, 6);
+    check("...but only once a shift", applyCardsBeforePayout(pt, ptRes2, 7, 6).pity, false);
+
+    const se = withCards("snakeEyes", "rattlesnake");
+    applyCardsAfterRoll(se, [], 2, 6, false);
+    check("Snake Eyes: a 2 pays 10% of the debt ($200)", se.kitty, 1200);
+    check("Rattlesnake: a 2 adds +1x mult", se.mult, 2);
+
+    const ls = withCards("luckySeven");
+    applyCardsAfterRoll(ls, [], 7, null, false);
+    check("Lucky Seven: a come-out 7 pays 5% ($100)", ls.kitty, 1100);
+    applyCardsAfterRoll(ls, [], 7, 6, true);
+    check("...but not a seven-out", ls.kitty, 1100);
+
+    const hh = withCards("hotHand");
+    applyCardsAfterRoll(hh, [{ bet: "field", outcome: "win" }], 3, null, false);
+    applyCardsAfterRoll(hh, [{ bet: "field", outcome: "win" }], 4, null, false);
+    check("Hot Hand: 2 wins in a row -> 2x mult", effectiveMult(hh), 2);
+    applyCardsAfterRoll(hh, [], 5, 4, false);
+    check("...a roll with no win resets it", effectiveMult(hh), 1);
+
+    const mg = withCards("muggsy");
+    mg.point = 6; applyCardsAfterRoll(mg, [], 6, null, false); // point set
+    applyCardsAfterRoll(mg, passLose(10), 7, 6, true);           // seven on the very next roll
+    check("Muggsy: point-7 charges another $10", mg.kitty, 990);
+    mg.shooterIndex = 1; setupTurn(mg, "Lefty", 1);
+    check("...and the next shooter's winnings are x2", effectiveMult(mg), 2);
+    const mg2 = withCards("muggsy");
+    mg2.point = 6; applyCardsAfterRoll(mg2, [], 6, null, false);
+    applyCardsAfterRoll(mg2, [], 9, 6, false);
+    applyCardsAfterRoll(mg2, passLose(10), 7, 6, true);
+    check("Muggsy: a 7 two rolls after the point is a normal seven-out", [mg2.kitty, mg2.muggsyPending], [1000, false]);
 
     // Dice: 10,000 rolls stay in range, and 7 is the most common total
     const counts = {};

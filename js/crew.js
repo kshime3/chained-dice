@@ -24,6 +24,14 @@ function setupTurn(state, prevName, prevMult) {
   state.mult = CONFIG.startingMult;
   state.multNotes = [];
   state.coldTable = false;
+  state.payoutX = 1;
+
+  // Muggsy: after a point-7, this shooter's winnings are multiplied.
+  if (state.muggsyPending) {
+    state.payoutX = CONFIG.muggsyNextShooterX;
+    state.muggsyPending = false;
+    state.multNotes.push("Muggsy: winnings x" + CONFIG.muggsyNextShooterX + " this turn");
+  }
 
   // Mentor: part of Hot Rod's streak carries over.
   if (prevName === "Hot Rod" && prevMult > CONFIG.startingMult) {
@@ -70,12 +78,8 @@ function applyCrewEffects(state, results, sevenOut) {
   // It never takes you below the minimum Pass Line bet.
   if (sevenOut && name === "Hot Rod" && !state.hotRodPenaltyUsed) {
     state.hotRodPenaltyUsed = true;
-    const lost = results.filter((r) => r.outcome === "lose" && r.bet !== "field")
-      .reduce((sum, r) => sum + r.amount, 0);
-    const wanted = lost * (CONFIG.hotRodSevenOutCost - 1);
-    const extra = Math.min(wanted, Math.max(0, state.kitty - CONFIG.tableMinimum));
+    const extra = chargeExtra(state, results, CONFIG.hotRodSevenOutCost);
     if (extra > 0) {
-      state.kitty -= extra;
       notes.push("Hot Rod's seven-out costs double: another $" + extra + " from your kitty.");
     }
   }

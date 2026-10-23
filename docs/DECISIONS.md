@@ -88,3 +88,16 @@ Dated log of every decision and why. Newest at the bottom.
 - **Pit Boss's Pity covers any shooter's first seven-out of the shift.** Owner's choice; Claude agrees it's fine for an Uncommon.
 - **"+1 odds" = +1 way out of 36** (one extra combination for that total).
 - **DESIGN.md rewritten as one clean, current document,** with status tags (Built/Planned/Open), the end goal, the v1 goal, and a glossary. Milestones renumbered: 6 = multiple shifts + phone, 7 = fall animation, polish, release.
+
+## 2026-10-23 (Session 2: final shop answers)
+
+- **Shift 2+ starting cash adds to your leftover kitty.** Owner's choice.
+- **Cards carry over between shifts** (like Balatro jokers).
+- **Phone perks and dice cards affect everyone's dice.**
+- **Flat bonuses are a share of the debt:** Snake Eyes 10%, Lucky Seven 5%.
+- **Muggsy:** a seven on the roll right after the point is set charges your losing Pass Line and Odds again (never below $5). The next shooter's winnings are x2 for their whole turn. It stacks with Hot Rod (triple cost).
+- **Interest: 0% base;** Green Dice starts it at 0.5%, and each 12 adds 0.5%.
+- **Rarities:** Double Up, Muggsy, Reroll and Red Dice are Uncommon.
+- **Milestone 5a cards:** Hot Hand, Snake Eyes, Lucky Seven, Rattlesnake, Red Dice, Odds Addict, Pit Boss's Pity, Muggsy. 5b: Loaded Die, Reroll, Double Up, Doubles Charm, Green Dice, Cut a chain, Extra chain link.
+- **Shift 1 now uses the new scale ($100 cash, $200 debt)** so shop prices (a share of the debt) make sense.
+- **Buying a card can't take the kitty below $5,** same as paying the dealer.

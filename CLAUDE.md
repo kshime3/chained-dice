@@ -36,9 +36,13 @@ js/dice.js         logic: rolling dice
 js/bets.js         logic: settling bets
 js/shift.js        logic: shift turns, dealer breaks and deposits, win/fall checks
 js/crew.js         logic: each shooter's dice, mult, crew synergies, hover text
+js/cards.js        logic: what each shop card does
+js/shop.js         logic: shop stock, rarity, prices, buy/sell/shuffle
 js/ui.js           display: drawing the screen
 js/main.js         wires buttons to logic and display
 ```
-Testing shortcut: add `?target=300` to the page address for a smaller shift target.
+Testing shortcut: add `?target=300` to the page address for a different shift target (debt).
 
-Scripts load with plain `<script>` tags in a set order (config, logic incl. crew, display, main), not ES modules, so double-clicking index.html works.
+tests.html pins its own numbers (buy-in $200, debt $2,000) so tuning config.js doesn't break the checks.
+
+Scripts load with plain `<script>` tags in a set order (config, logic: dice, bets, crew, cards, shop, shift; then display, main), not ES modules, so double-clicking index.html works.

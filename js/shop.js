@@ -1,0 +1,82 @@
+// Shop logic (the stickman): stock, prices, buying and selling. No screen code here.
+
+const RARITY_ORDER = ["legendary", "rare", "uncommon", "common"];
+
+// Price of a card: a share of the shift's debt, rounded to the nearest $5.
+function cardPrice(id) {
+  return roundTo5(CONFIG.rarityPricePct[CONFIG.cardRarity[id]] * CONFIG.shiftTarget);
+}
+
+function sellPrice(id) {
+  return Math.floor(cardPrice(id) * CONFIG.sellBackShare);
+}
+
+function shuffleCost(state) {
+  return roundTo5((CONFIG.shuffleBasePct + CONFIG.shuffleStepPct * state.shuffles) * CONFIG.shiftTarget);
+}
+
+// Pick a rarity tier using the chances in config.js.
+function rollRarity() {
+  let roll = Math.random();
+  for (const tier of ["common", "uncommon", "rare", "legendary"]) {
+    roll -= CONFIG.rarityChance[tier];
+    if (roll < 0) return tier;
+  }
+  return "common";
+}
+
+// Fresh stock: random cards you don't own, no repeats.
+// If a tier has no cards left, the next tier down is used.
+function newStock(state) {
+  const stock = [];
+  for (let slot = 0; slot < CONFIG.shopSlots; slot++) {
+    const pool = Object.keys(CARDS).filter((id) => !state.cards.includes(id) && !stock.includes(id));
+    if (pool.length === 0) {
+      stock.push(null);
+      continue;
+    }
+    const start = RARITY_ORDER.indexOf(rollRarity());
+    let candidates = [];
+    for (let i = start; i < RARITY_ORDER.length && candidates.length === 0; i++) {
+      candidates = pool.filter((id) => CONFIG.cardRarity[id] === RARITY_ORDER[i]);
+    }
+    if (candidates.length === 0) candidates = pool;
+    stock.push(candidates[Math.floor(Math.random() * candidates.length)]);
+  }
+  return stock;
+}
+
+// Spending in the shop can't take your kitty below the minimum Pass Line bet.
+function canSpend(state, amount) {
+  return state.kitty - amount >= CONFIG.tableMinimum;
+}
+
+// Buy the card in a stock slot. Returns "ok", "empty", "full" or "money".
+function buyCard(state, slot) {
+  const id = state.stock[slot];
+  if (!id) return "empty";
+  if (state.cards.length >= CONFIG.maxCards) return "full";
+  if (!canSpend(state, cardPrice(id))) return "money";
+  state.kitty -= cardPrice(id);
+  state.cards.push(id);
+  state.stock[slot] = null; // sold out
+  return "ok";
+}
+
+// Sell a card you own for part of its price.
+function sellCard(state, id) {
+  if (!state.cards.includes(id)) return 0;
+  state.cards = state.cards.filter((c) => c !== id);
+  state.kitty += sellPrice(id);
+  return sellPrice(id);
+}
+
+// Replace the stock. Returns true if it worked.
+function shuffleStock(state) {
+  const cost = shuffleCost(state);
+  if (!canSpend(state, cost)) return false;
+  state.kitty -= cost;
+  state.shuffles += 1;
+  state.stock = newStock(state);
+  return true;
+}

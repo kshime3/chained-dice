@@ -2,6 +2,29 @@
 
 Dated session log. Newest at the top.
 
+## 2026-10-23: Session 2, continued (planning + Milestone 5a)
+
+**Done**
+- Owner sent a spreadsheet (cards, Pit Boss phone, scales), saved in docs/. Claude gave feedback; owner answered all open questions (see DECISIONS.md).
+- DESIGN.md rewritten as one clean document with a glossary and status tags.
+- **Built Milestone 5a:** shift 1 now $100 cash / $200 debt. The Dealer break has "Pay the dealer" and "Tip the dealer (shop)": 3 random cards per break by rarity, prices as a share of the debt, Shuffle (rising price), 5 card slots, sell for half. Your cards show as badges with hover text. 8 cards work: Hot Hand, Snake Eyes, Lucky Seven, Rattlesnake, Red Dice, Odds Addict, Pit Boss's Pity, Muggsy. New `js/cards.js` and `js/shop.js`. tests.html: 134 checks, all passing (now pins its own numbers).
+
+**Works**
+- Full shift played in a headless browser: buying, shuffling, selling, and card effects firing (Red Dice, Muggsy, Lucky Seven, x2 next shooter).
+
+**Broken**
+- Nothing known.
+
+**Notes for later**
+- No Rare or Extra chain link cards exist yet, so those tiers fall back to Uncommon/Common until 5b.
+- Hot Hand resets on any roll with no win, including "no decision" rolls during a point. Watch in playtesting.
+
+**Waiting on the owner**
+- Testing Milestone 5a.
+
+**Exact next step**
+- Milestone 5b: Loaded Die, Reroll, Double Up, Doubles Charm, Green Dice (interest), Cut a chain, Extra chain link.
+
 ## 2026-10-23: Session 2, continued (Milestone 4b)
 
 **Done**

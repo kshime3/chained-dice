@@ -144,9 +144,71 @@ function renderMult(state) {
     box.textContent = "";
     return;
   }
-  box.innerHTML = "Mult: <strong>" + state.mult + "x</strong>" +
-    (state.multNotes.length ? " · " + state.multNotes.join(" · ") : "");
-  box.className = "mult" + (state.mult > 1 ? " hot" : state.mult < 1 ? " cold" : "");
+  const mult = effectiveMult(state);
+  const notes = state.multNotes.slice();
+  if (hasCard(state, "hotHand") && state.hotStreak > 0) {
+    notes.push("Hot Hand: +" + state.hotStreak * CONFIG.hotHandPerWin + "x");
+  }
+  box.innerHTML = "Mult: <strong>" + mult + "x</strong>" + (notes.length ? " · " + notes.join(" · ") : "");
+  box.className = "mult" + (mult > 1 ? " hot" : mult < 1 ? " cold" : "");
+}
+
+// One card as a box: name, rarity, what it does, plus an optional button.
+function cardBox(id, buttonText, onClick, disabled) {
+  const card = CARDS[id];
+  const rarity = CONFIG.cardRarity[id];
+  const box = document.createElement("div");
+  box.className = "card " + rarity;
+  box.innerHTML = '<div class="card-name">' + card.name + '</div><div class="card-rarity">' + rarity +
+    '</div><div class="card-text">' + card.text + "</div>";
+  if (buttonText) {
+    const button = document.createElement("button");
+    button.textContent = buttonText;
+    button.disabled = !!disabled;
+    button.onclick = onClick;
+    box.appendChild(button);
+  }
+  return box;
+}
+
+// The shop on the Dealer break, plus your cards on the main screen.
+// handlers: { buy(slot), sell(id) } from main.js
+function renderShop(state, handlers) {
+  const stockBox = document.getElementById("stock");
+  stockBox.innerHTML = "";
+  const full = state.cards.length >= CONFIG.maxCards;
+  state.stock.forEach((id, slot) => {
+    if (!id) {
+      const empty = document.createElement("div");
+      empty.className = "card sold-out";
+      empty.textContent = "Sold out";
+      stockBox.appendChild(empty);
+      return;
+    }
+    const price = cardPrice(id);
+    stockBox.appendChild(cardBox(id, "Buy " + money(price), () => handlers.buy(slot),
+      full || !canSpend(state, price)));
+  });
+  document.getElementById("shuffle").textContent = "Shuffle (" + money(shuffleCost(state)) + ")";
+  document.getElementById("shuffle").disabled = !canSpend(state, shuffleCost(state));
+
+  // Your cards, with Sell buttons (break screen)
+  document.getElementById("slots").textContent = state.cards.length + " / " + CONFIG.maxCards;
+  const owned = document.getElementById("owned");
+  owned.innerHTML = state.cards.length ? "" : '<p class="hint">No cards yet.</p>';
+  for (const id of state.cards) {
+    owned.appendChild(cardBox(id, "Sell for " + money(sellPrice(id)), () => handlers.sell(id)));
+  }
+
+  // Your cards as small badges with hover text (main screen)
+  const badges = document.getElementById("my-cards");
+  badges.innerHTML = "";
+  for (const id of state.cards) {
+    const badge = document.createElement("div");
+    badge.className = "card-badge " + CONFIG.cardRarity[id];
+    badge.innerHTML = CARDS[id].name + '<div class="tooltip"><strong>' + CARDS[id].name + "</strong><br>" + CARDS[id].text + "</div>";
+    badges.appendChild(badge);
+  }
 }
 
 // Bar chart of the current shooter's chance of each total.

@@ -2,7 +2,7 @@
 
 // A fresh shift: wake up at the table with the buy-in.
 function newShiftState() {
-  return {
+  const state = {
     kitty: CONFIG.buyIn, // money in your hand, not on the table
     deposited: 0, // paid to the dealer: safe, but out of play
     bets: { pass: 0, odds: 0, field: 0 },
@@ -16,7 +16,17 @@ function newShiftState() {
     multNotes: [], // why the mult is what it is (synergies)
     coldTable: false, // true until this shooter's first win, after Jinx
     hotRodPenaltyUsed: false, // Hot Rod's double-cost seven-out happens once a shift
+    payoutX: 1, // Muggsy's x2 on the next shooter's winnings
+    cards: [], // card ids you own (see cards.js)
+    stock: [], // card ids for sale at this Dealer break (null = sold out)
+    shuffles: 0, // Shuffles used this shift (each one costs more)
+    hotStreak: 0, // winning rolls in a row (Hot Hand)
+    pityUsed: false, // Pit Boss's Pity works once a shift
+    muggsyPending: false, // the next shooter gets Muggsy's x2
+    rollsSincePoint: 0, // for Muggsy's point-7
   };
+  state.stock = newStock(state);
+  return state;
 }
 
 // Money still in play: kitty plus everything on the table (not deposits).
@@ -94,6 +104,7 @@ function afterRoll(state, sevenOut) {
     state.shooterIndex += 1;
     state.onBreak = true;
     if (!isFinalBreak(state)) setupTurn(state, prevName, state.mult);
+    state.stock = newStock(state); // fresh cards at every Dealer break
   } else if (isBroke(state)) {
     state.status = "fell-broke";
   }

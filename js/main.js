@@ -79,7 +79,8 @@ function roll() {
   const total = state.lastRoll.total;
   const pointBefore = state.point;
   const results = resolveRoll(state.bets, total, pointBefore);
-  applyMult(results, state.mult);
+  const before = applyCardsBeforePayout(state, results, total, pointBefore);
+  applyMult(results, effectiveMult(state));
 
   // Pay winners and remove losers.
   for (const r of results) {
@@ -93,12 +94,15 @@ function roll() {
     if (r.outcome === "lose") state.bets[r.bet] = 0;
   }
 
-  state.point = nextPoint(pointBefore, total);
-  const sevenOut = pointBefore !== null && total === CONFIG.sevenOut;
+  // Pit Boss's Pity keeps the point on after an ignored seven-out.
+  state.point = before.pity ? pointBefore : nextPoint(pointBefore, total);
+  const sevenOut = !before.pity && pointBefore !== null && total === CONFIG.sevenOut;
+  const cardNotes = applyCardsAfterRoll(state, results, total, pointBefore, sevenOut);
   const crewNotes = applyCrewEffects(state, results, sevenOut);
   afterRoll(state, sevenOut);
 
-  showMessage(describeRoll(total, results, pointBefore, state.point) + " " + crewNotes.join(" "));
+  const notes = before.notes.concat(cardNotes, crewNotes);
+  showMessage(describeRoll(total, results, pointBefore, state.point) + " " + notes.join(" "));
   renderAll();
 }
 
@@ -123,6 +127,34 @@ function payTyped() {
   document.getElementById("deposit-amount").value = "";
 }
 
+// Shop buttons
+function buy(slot) {
+  const id = state.stock[slot];
+  const outcome = buyCard(state, slot);
+  const texts = {
+    ok: "Bought " + (id && CARDS[id].name) + ".",
+    full: "Your card slots are full (" + CONFIG.maxCards + "). Sell a card first.",
+    money: "Not enough. Buying can't take your kitty below " + money(CONFIG.tableMinimum) + ".",
+    empty: "That one's sold out.",
+  };
+  showBreakMessage(texts[outcome]);
+  renderAll();
+}
+
+function sell(id) {
+  const got = sellCard(state, id);
+  showBreakMessage("Sold " + CARDS[id].name + " for " + money(got) + ".");
+  renderAll();
+}
+
+function shuffle() {
+  const cost = shuffleCost(state);
+  showBreakMessage(shuffleStock(state)
+    ? "Shuffled for " + money(cost) + ". New cards on the table."
+    : "Not enough. Shuffling can't take your kitty below " + money(CONFIG.tableMinimum) + ".");
+  renderAll();
+}
+
 function leaveBreak() {
   endBreak(state);
   showBreakMessage("");
@@ -142,6 +174,7 @@ function playAgain() {
 
 function renderAll() {
   renderState(state);
+  renderShop(state, { buy: buy, sell: sell });
   renderBreak(state);
   renderEndScreen(state);
 }
@@ -154,6 +187,7 @@ document.getElementById("clear-button").onclick = clearBets;
 document.getElementById("pay-typed").onclick = payTyped;
 document.getElementById("pay-off").onclick = () => payDealer(amountOwed(state));
 document.getElementById("leave-break").onclick = leaveBreak;
+document.getElementById("shuffle").onclick = shuffle;
 document.getElementById("play-again").onclick = playAgain;
 
 renderChips(selectedChip, pickChip);

@@ -19,6 +19,7 @@
   <div id="crew" class="crew"></div>
   <div id="shooter" class="shooter"></div>
   <div id="mult" class="mult"></div>
+  <div id="my-cards" class="my-cards"></div>
   <div id="odds-panel" class="odds-panel"></div>
 
   <div class="table">
@@ -64,11 +65,22 @@
       <h2>Dealer break</h2>
       <p id="break-intro"></p>
       <p>Still owed: <strong id="break-owed"></strong> · Your kitty: <strong id="break-kitty"></strong></p>
+
+      <h3>Pay the dealer</h3>
       <div>
         $<input id="deposit-amount" type="number" min="1" step="1" placeholder="amount">
         <button id="pay-typed">Pay</button>
         <button id="pay-off">Pay off debt</button>
       </div>
+
+      <h3>Tip the dealer (shop)</h3>
+      <p class="hint">Tips don't count toward your debt.</p>
+      <div id="stock" class="card-row"></div>
+      <button id="shuffle"></button>
+
+      <h3>Your cards <span id="slots"></span></h3>
+      <div id="owned" class="card-row"></div>
+
       <p id="break-message" class="break-message"></p>
       <p id="break-warning" class="break-warning"></p>
       <button id="leave-break" class="big-button"></button>
@@ -88,6 +100,8 @@
   <script src="js/dice.js"></script>
   <script src="js/bets.js"></script>
   <script src="js/crew.js"></script>
+  <script src="js/cards.js"></script>
+  <script src="js/shop.js"></script>
   <script src="js/shift.js"></script>
   <script src="js/ui.js"></script>
   <script src="js/main.js"></script>

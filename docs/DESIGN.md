@@ -40,7 +40,7 @@ Long term, it becomes a first-person 3D room like Clover Pit: chained at the tab
 | 2 | $200 | $500 |
 | 3+ | TBD | TBD |
 
-**[Built]** with the old scale ($200 cash, $2,000 debt, one shift only). **[Planned]** Switch to this table. **[Open]** Does "starting cash" replace your leftover kitty, or add to it?
+**[Built]** Shift 1 uses this scale. **[Planned]** Shifts 2+ (Milestone 6). Starting cash for shift 2+ is **added** to your leftover kitty. Cards carry over between shifts.
 
 ## Paying the Dealer  [Built]
 
@@ -92,7 +92,7 @@ Seat order: **Lefty, Dealer Dee, Hot Rod, Jinx, Ghost, You.** Dice are lists of 
 - Starts at 1x for every shooter, then adjusted by synergies and cards.
 - Shown on screen with the reasons, and in each win message ("$5 x 1.5").
 
-## The Shop (the Stickman)  [Planned: Milestone 5]
+## The Shop (the Stickman)  [Built: Milestone 5a]
 
 - At every Dealer break, a **Tip the dealer** section shows **3 random cards**.
 - **Shuffle** replaces the stock for a price that rises each time in a shift.
@@ -106,7 +106,8 @@ Seat order: **Lefty, Dealer Dee, Hot Rod, Jinx, Ghost, You.** Dice are lists of 
 | Extra chain link | 50% | 1% |
 
 - **5 card slots** to start. A "+1 slot" card may come later.
-- Paid from the kitty; tips **don't** count toward the debt.
+- Paid from the kitty; tips **don't** count toward the debt. Buying or shuffling can't take the kitty below $5.
+- Cards you own never appear in the stock. Selling gives back half the price.
 - Presentation (3D, later): run by the stickman; open it by clicking his bank of chips.
 - **[Open]** Card packs, like Balatro. A second currency (tickets)? Leaning toward kitty money only.
 
@@ -116,19 +117,19 @@ Full list: `docs/Store-Cards-Phone-Scales.xlsx`.
 
 | Card | Effect | Rarity |
 | --- | --- | --- |
-| Rattlesnake | Rolling snake eyes (1+1) adds +1x mult. Resets each shooter. | Common |
-| Double Up | Doubles become more likely (+1 way out of 36). | [Open] |
-| Muggsy | A seven right after the point is set costs double, but the next shooter pays double. | [Open] |
-| Red Dice | Craps on the come-out wins even money. | Common ([Open]: too strong?) |
-| Green Dice | Each 12 rolled raises kitty interest by 0.5%. Interest is paid after every shooter. | Rare |
-| Hot Hand | +0.5x mult per winning roll in a row; resets on a roll with no win. | Common |
-| Snake Eyes | Rolling a 2 pays a bonus. | Common |
-| Lucky Seven | A come-out 7 pays a bonus. | Common |
-| Odds Addict | Odds pay 50% extra. | Uncommon |
+| Rattlesnake [Built] | Rolling snake eyes (1+1) adds +1x mult. Resets each shooter. | Common |
+| Double Up | Doubles become more likely (+1 way out of 36). | Uncommon |
+| Muggsy [Built] | A 7 on the roll right after the point is set charges your losing Pass Line and Odds again (never below $5). The next shooter's winnings are x2 for their whole turn. Stacks with Hot Rod. | Uncommon |
+| Red Dice [Built] | Craps on the come-out wins the Pass Line at even money. | Uncommon |
+| Green Dice | Interest on your kitty, paid after every shooter: starts at 0.5%, each 12 rolled adds 0.5%. No interest without this card. | Rare |
+| Hot Hand [Built] | +0.5x mult per winning roll in a row; resets on a roll with no win. | Common |
+| Snake Eyes [Built] | Rolling a 2 pays a bonus of 10% of the debt. | Common |
+| Lucky Seven [Built] | A come-out 7 pays a bonus of 5% of the debt. | Common |
+| Odds Addict [Built] | Odds pay 50% extra. | Uncommon |
 | Loaded Die | Once per shift, reroll one die after seeing a roll. | Uncommon |
-| Pit Boss's Pity | The first seven-out of the shift (any shooter) is ignored. Bets stay and the shooter keeps rolling. | Uncommon |
+| Pit Boss's Pity [Built] | The first seven-out of the shift (any shooter) is ignored. Bets stay and the shooter keeps rolling. | Uncommon |
 | Doubles Charm | Every 3rd roll is a pair. | Rare |
-| Reroll | Cancel a roll and roll again. | [Open] |
+| Reroll | Cancel a roll and roll again. | Uncommon |
 | Extra chain link | Saves you from one fall. | Very rare |
 
 **Cut a chain:** pay to drop a crew member through the floor, removing their seat and synergy. Likely a fixed Dealer break option rather than a random card.
@@ -140,7 +141,7 @@ Full list: `docs/Store-Cards-Phone-Scales.xlsx`.
 Like Clover Pit's phone. After **every won shift**, it rings and you **pick 1 of 3 permanent perks**:
 
 - -1 way to roll a 7.
-- +1 way to roll any one total (2 through 12). +1 to 7 is a deliberate trap, so label it clearly.
+- +1 way to roll any one total (2 through 12). Perks affect **everyone's** dice. +1 to 7 is a deliberate trap, so label it clearly.
 - Remove a character from the table (a free Cut a chain).
 - 2 items from the shop are free.
 - **Let it burn:** unlocks the **Fire Bet** side bet, paid on how many different points the shooter makes: 4 points 25:1, 5 points 250:1, 6 points 1000:1.
@@ -180,6 +181,6 @@ Like Clover Pit's phone. After **every won shift**, it rings and you **pick 1 of
 2. [Built] Come-out and point phases, Odds, seven-out
 3. [Built] Shift: buy-in, turns, win and fall. 3.5: paying the dealer
 4. [Built] Crew dice, visible odds (4a); mult and synergies (4b)
-5. [Planned] Shop: 5a framework and simple cards, 5b trickier cards
+5. Shop: [Built] 5a framework and 8 cards; [Planned] 5b trickier cards
 6. [Planned] Multiple shifts at the new scale, plus the Pit Boss phone
 7. [Planned] Fall animation, restart, how-to-play, polish, itch.io release

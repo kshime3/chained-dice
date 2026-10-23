@@ -3,8 +3,8 @@
 
 const CONFIG = {
   // The shift
-  buyIn: 200,        // money you wake up with
-  shiftTarget: 2000, // reach this and the chains hold (see testing shortcut at the bottom)
+  buyIn: 100,        // money you wake up with (shift 1)
+  shiftTarget: 200,  // the debt: pay this and the chains hold (see testing shortcut at the bottom)
   // Seat order. Each seat shoots until they seven out, then the dice pass on.
   crew: ["Lefty", "Dealer Dee", "Hot Rod", "Jinx", "Ghost", "You"],
 
@@ -29,6 +29,36 @@ const CONFIG = {
   hotRodSevenOutCost: 2,     // Hot Rod's first seven-out: your losing bets cost this many times over
   mentorShare: 0.5,          // Mentor: this share of Hot Rod's bonus passes to the next shooter
   coldTablePenalty: 0.5,     // Cold Table: shooter after Jinx starts this much lower, until their first win
+
+  // The shop (the stickman). Prices are a share of the shift's debt, rounded to the nearest $5.
+  shopSlots: 3,       // cards offered at each Dealer break
+  maxCards: 5,        // cards you can hold
+  rarityPricePct: { common: 0.05, uncommon: 0.10, rare: 0.25, legendary: 0.50 },
+  rarityChance:   { common: 0.60, uncommon: 0.30, rare: 0.09, legendary: 0.01 }, // per slot
+  shuffleBasePct: 0.05,   // first Shuffle of a shift costs this share of the debt
+  shuffleStepPct: 0.025,  // each Shuffle after that costs this much more
+  sellBackShare: 0.5,     // selling a card gives back this share of its price
+
+  // Card rarity. "legendary" is the Extra chain link tier.
+  cardRarity: {
+    hotHand: "common",
+    snakeEyes: "common",
+    luckySeven: "common",
+    rattlesnake: "common",
+    redDice: "uncommon",
+    oddsAddict: "uncommon",
+    pity: "uncommon",
+    muggsy: "uncommon",
+  },
+
+  // Card numbers
+  hotHandPerWin: 0.5,         // Hot Hand: +mult per winning roll in a row
+  rattlesnakeMult: 1,         // Rattlesnake: +mult when snake eyes (1+1) is rolled
+  snakeEyesBonusPct: 0.10,    // Snake Eyes: rolling a 2 pays this share of the debt
+  luckySevenBonusPct: 0.05,   // Lucky Seven: a come-out 7 pays this share of the debt
+  oddsAddictExtra: 0.5,       // Odds Addict: Odds winnings +50%
+  muggsyCost: 2,              // Muggsy: a point-7 costs this many times your losing bets
+  muggsyNextShooterX: 2,      // Muggsy: the next shooter's winnings are multiplied by this
 
   // Money
   tableMinimum: 5, // also the smallest Pass Line bet, which is required to roll
