@@ -2,6 +2,7 @@
 
 let state = newShiftState();
 let selectedChip = CONFIG.chipValues[0];
+let rolling = false; // true while the dice animation plays
 
 function pickChip(value) {
   selectedChip = value;
@@ -10,7 +11,7 @@ function pickChip(value) {
 
 // Move chips from your kitty onto a bet.
 function placeBet(betName) {
-  if (state.status !== "playing" || state.onBreak) return;
+  if (rolling || state.status !== "playing" || state.onBreak) return;
   let amount = selectedChip;
 
   if (betName === "pass") {
@@ -54,7 +55,7 @@ function placeBet(betName) {
 
 // Take bets back into your kitty. A locked Pass Line stays put.
 function clearBets() {
-  if (state.status !== "playing" || state.onBreak) return;
+  if (rolling || state.status !== "playing" || state.onBreak) return;
   state.kitty += state.bets.odds + state.bets.field;
   state.bets.odds = 0;
   state.bets.field = 0;
@@ -69,13 +70,24 @@ function clearBets() {
 }
 
 function roll() {
-  if (state.status !== "playing" || state.onBreak) return;
+  if (rolling || state.status !== "playing" || state.onBreak) return;
   if (!canRoll(state)) {
     showMessage("Place at least " + money(CONFIG.tableMinimum) + " on the Pass Line to roll.");
     return;
   }
 
-  state.lastRoll = rollDice(state.dice);
+  // The result is decided now; the animation just shows it.
+  const rolled = rollDice(state.dice);
+  rolling = true;
+  animateDice(rolled.dice, CONFIG.diceRollMs, () => {
+    rolling = false;
+    finishRoll(rolled);
+  });
+}
+
+// Settle every bet once the dice land.
+function finishRoll(rolled) {
+  state.lastRoll = rolled;
   const total = state.lastRoll.total;
   const pointBefore = state.point;
   const results = resolveRoll(state.bets, total, pointBefore);
@@ -189,6 +201,7 @@ document.getElementById("pass-line").onclick = () => placeBet("pass");
 document.getElementById("odds").onclick = () => placeBet("odds");
 document.getElementById("field").onclick = () => placeBet("field");
 document.getElementById("roll-button").onclick = roll;
+document.getElementById("dice").onclick = roll; // tapping the dice rolls too
 document.getElementById("clear-button").onclick = clearBets;
 document.getElementById("pay-typed").onclick = payTyped;
 document.getElementById("pay-off").onclick = () => payDealer(amountOwed(state));
@@ -200,6 +213,8 @@ document.getElementById("how-to-play").onclick = () => showTutorial(introPages()
 document.getElementById("shop-help").onclick = () => showTutorial(shopPages());
 
 renderChips(selectedChip, pickChip);
+drawDie("die1", 1);
+drawDie("die2", 1);
 renderAll();
 
 // First visit: the full introduction.

@@ -61,6 +61,13 @@ const CONFIG = {
   muggsyCost: 2,              // Muggsy: a point-7 costs this many times your losing bets
   muggsyNextShooterX: 2,      // Muggsy: the next shooter's winnings are multiplied by this
 
+  // Interest: at every Dealer Break after a seven-out, this share of the money
+  // you've paid the dealer so far is paid into your kitty (rounded down).
+  interestRate: 0.05,
+
+  // Presentation
+  diceRollMs: 600, // how long the dice-rolling animation lasts (0 = no animation)
+
   // Money
   tableMinimum: 5, // also the smallest Pass Line bet, which is required to roll
   chipValues: [5, 25, 100],
@@ -101,3 +108,6 @@ const CONFIG = {
 // Testing shortcut: add ?target=300 to the page address to play with a smaller target.
 const testTarget = Number(new URLSearchParams(location.search).get("target"));
 if (testTarget > 0) CONFIG.shiftTarget = testTarget;
+
+// Testing shortcut: add ?fast to the page address to skip the dice animation.
+if (new URLSearchParams(location.search).has("fast")) CONFIG.diceRollMs = 0;

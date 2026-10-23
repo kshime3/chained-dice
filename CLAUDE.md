@@ -42,7 +42,7 @@ js/ui.js           display: drawing the screen
 js/tutorials.js    display: tutorial pages (intro, shop) and "seen" memory
 js/main.js         wires buttons to logic and display
 ```
-Testing shortcut: add `?target=300` to the page address for a different shift target (debt).
+Testing shortcuts: add `?target=300` to the page address for a different shift target (debt); add `?fast` to skip the dice animation (combine as `?target=300&fast`).
 
 tests.html pins its own numbers (buy-in $200, debt $2,000) so tuning config.js doesn't break the checks.
 

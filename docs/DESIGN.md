@@ -49,6 +49,7 @@ Long term, it becomes a first-person 3D room like Clover Pit: chained at the tab
 - **Payments** come from the kitty, are safe from bad rolls, are out of play, and **can't be taken back**.
 - You can't pay more than you owe, and a partial payment always leaves the **$5 minimum Pass Line bet** in your kitty.
 - **Pay off debt** is greyed out until your kitty covers the whole debt.
+- **Interest [Built]:** at every Dealer Break after a seven-out, 5% of everything you've paid so far (rounded down) goes into your kitty. Shown at the top of the screen. Rewards paying early.
 
 ## Losing (the Fall)  [Built, animation Planned]
 
@@ -66,7 +67,7 @@ Long term, it becomes a first-person 3D room like Clover Pit: chained at the tab
 - **Field:** one-roll bet. 3, 4, 9, 10, 11 pay even money; 2 pays double; 12 pays triple; 5, 6, 7, 8 lose.
 - Winning Pass Line and Field bets are paid and stay on the table. "Clear bets" takes back everything that isn't locked.
 - **Chips:** $5, $25, $100. No maximum bet.
-- **[Planned]** Hard Ways, Come/Don't Come, Place bets, Any Seven. Phone unlocks: Fire Bet, Different Doubles.
+- **[Planned, after v1]** A "More bets" milestone: Place bets, Hard Ways, Come with its own Odds (some as phone unlocks). Phone unlocks: Fire Bet, Different Doubles. The base game is finished first.
 
 ## The Crew  [Built]
 
@@ -122,7 +123,7 @@ Full list: `docs/Store-Cards-Phone-Scales.xlsx`.
 | Double Up | Doubles become more likely (+1 way out of 36). | Uncommon |
 | Muggsy [Built] | A 7 on the roll right after the point is set charges your losing Pass Line and Odds again (never below $5). The next shooter's winnings are x2 for their whole turn. Stacks with Hot Rod. | Uncommon |
 | Red Dice [Built] | Craps on the come-out wins the Pass Line at even money. | Uncommon |
-| Green Dice | Interest on your kitty, paid after every shooter: starts at 0.5%, each 12 rolled adds 0.5%. No interest without this card. | Rare |
+| Green Dice | Each 12 rolled adds +0.5% to your interest rate. | Rare |
 | Hot Hand [Built] | +0.5x mult per winning roll in a row; resets on a roll with no win. | Common |
 | Snake Eyes [Built] | Rolling a 2 pays a bonus of 10% of the debt. | Common |
 | Lucky Seven [Built] | A come-out 7 pays a bonus of 5% of the debt. | Common |
@@ -152,13 +153,14 @@ Like Clover Pit's phone. After **every won shift**, it rings and you **pick 1 of
 
 - **Pit boss challenges:** a small challenge each shooter's turn, with a reward. Own milestone after the shop.
 - **House rules:** one rule twist per shift, like Balatro's boss blinds. For later shifts.
-- **Tutorials [Built]:** a 6-page "How to play" intro on first visit (also via the How to play button), a 2-page shop tutorial the first time the shop opens (also via the shop's ? button). [Planned] A phone tutorial. Each shows once per browser.
+- **Tutorials [Built]:** a 7-page "How to play" intro on first visit (also via the How to play button), a 2-page shop tutorial the first time the shop opens (also via the shop's ? button). [Planned] A phone tutorial. Each shows once per browser.
 
 ## Glossary
 
 - **Shift** (also "session"): one round. Pay the debt by the end or fall.
 - **Debt:** what the dealer demands this shift (the goal).
 - **Kitty:** money in your hand. You bet, shop and pay from it.
+- **Interest:** a share of your paid money, added to your kitty at each Dealer Break.
 - **On table:** money currently in bets.
 - **Paid / deposited:** money given to the dealer toward the debt. Safe, but gone from play.
 - **Dealer Break:** the pause between shooters to pay (and shop).
@@ -170,6 +172,11 @@ Like Clover Pit's phone. After **every won shift**, it rings and you **pick 1 of
 - **Perk:** a permanent upgrade from the Pit Boss phone.
 - **Tip:** money spent in the shop. Doesn't count toward the debt.
 - **Fall:** losing the run.
+
+## Presentation  [Built]
+
+- Fits on one screen without scrolling on desktop and phones: two columns on wide screens, one compact column on phones.
+- Dice are drawn with pips and tumble for a moment before landing (`diceRollMs` in config). Tapping the dice rolls them.
 
 ## Tech
 

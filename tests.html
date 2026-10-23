@@ -25,6 +25,7 @@
     // Tests use fixed numbers, so tuning config.js doesn't break them.
     CONFIG.buyIn = 200;
     CONFIG.shiftTarget = 2000;
+    CONFIG.interestRate = 0.05;
 
     // Each check prints a green ✔ or a red ✘.
     let passed = 0, failed = 0;
@@ -139,6 +140,17 @@
     const brokeRoll = newShiftState(); brokeRoll.onBreak = false; brokeRoll.kitty = 0;
     afterRoll(brokeRoll, false);
     check("Going broke on a come-out: fall", brokeRoll.status, "fell-broke");
+    // Interest on paid money
+    const in1 = newShiftState(); in1.onBreak = false; in1.kitty = 50; in1.deposited = 100;
+    afterRoll(in1, true);
+    check("Interest: $100 paid -> +$5 into the kitty at the Break", [in1.lastInterest, in1.kitty], [5, 55]);
+    const in2 = newShiftState(); in2.deposited = 30;
+    check("Interest rounds down: $30 paid -> $1", payInterest(in2), 1);
+    check("Nothing paid -> no interest", payInterest(newShiftState()), 0);
+    const in3 = newShiftState(); in3.onBreak = false; in3.kitty = 0; in3.deposited = 100; in3.shooterIndex = 1;
+    afterRoll(in3, true);
+    check("Interest can save you: $0 kitty + $5 interest -> Break, not a fall", [in3.status, in3.kitty], ["playing", 5]);
+
     const zero = newShiftState(); zero.onBreak = false; zero.kitty = 0; zero.shooterIndex = 1;
     afterRoll(zero, true);
     check("Seven-out with $0: fall at once, no Dealer break", [zero.status, zero.onBreak], ["fell-broke", false]);

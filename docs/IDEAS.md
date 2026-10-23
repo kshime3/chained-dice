@@ -48,3 +48,10 @@ Parked ideas and later features. Not in v1 unless moved into the design.
 - **Interest on the kitty** (Green Dice card).
 - **Presentation:** the shop is run by the stickman; open it by clicking the bank of chips next to him.
 - **Possible second currency** (tickets) for the shop. Open question.
+
+## After v1: More bets milestone (owner agreed 2026-10-23)
+- Place bets first (most common), then Hard Ways (unlocks Hard Way Hero), then Come bets with their own Odds.
+- Some arrive as Pit Boss phone unlocks, so new players start simple.
+
+## Presentation polish (later)
+- Better dice art, sounds for rolls and the seven-out, chip stacks on bets.

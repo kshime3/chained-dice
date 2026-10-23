@@ -38,7 +38,15 @@ function introPages() {
       title: "Paying the dealer",
       body: "Between shooters there's a <strong>Dealer Break</strong>. That's your chance to pay toward the debt.<br><br>" +
         "Paid money is <strong>safe</strong> from bad rolls, but you can't bet it, and you can't take it back. You win the moment the debt is fully paid.<br><br>" +
-        "<strong>You fall if:</strong> you can't afford the " + min + " Pass Line bet, or the last shooter sevens out and you still owe money.<br><br>Good luck.",
+        "<strong>You fall if:</strong> you can't afford the " + min + " Pass Line bet, or the last shooter sevens out and you still owe money.",
+    },
+    {
+      title: "Interest: why paying early pays",
+      body: "Money you've paid the dealer earns <strong>interest</strong>.<br><br>" +
+        "At every Dealer Break (after each seven-out), you get <strong>" + Math.round(CONFIG.interestRate * 100) +
+        "% of everything you've paid so far</strong>, paid into your kitty.<br><br>" +
+        "Example: you've paid " + money(100) + ", so you get " + money(Math.floor(100 * CONFIG.interestRate)) + " at the next Break.<br><br>" +
+        "The current interest rate is always shown at the top of the screen.<br><br>Good luck.",
     },
   ];
 }

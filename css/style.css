@@ -1,117 +1,52 @@
+/* ---------- Page and layout ---------- */
+* { box-sizing: border-box; }
+
 body {
-  position: relative;
   background: #1b1b1b;
   color: #f2f2f2;
   font-family: system-ui, sans-serif;
-  max-width: 720px;
+  max-width: 1100px;
   margin: 0 auto;
-  padding: 16px;
+  padding: 8px 16px;
   text-align: center;
 }
 
-h1 { letter-spacing: 2px; }
+h1 { letter-spacing: 2px; font-size: 1.6rem; margin: 0; }
+.title-row { display: flex; align-items: center; justify-content: space-between; }
+.how-to-play { position: relative; z-index: 15; } /* stays clickable above the Dealer Break */
 
 .money {
   display: flex;
   justify-content: center;
-  gap: 32px;
-  font-size: 1.2rem;
-  margin-bottom: 12px;
+  gap: 24px;
+  font-size: 1.05rem;
+  margin: 4px 0;
 }
-
-.table {
-  background: #0d6b3a;
-  border: 8px solid #5a3a1a;
-  border-radius: 24px;
-  padding: 16px;
-}
-
-.dice { font-size: 80px; line-height: 1; }
-.die { margin: 0 8px; }
-.total { font-size: 1.3rem; margin: 8px 0 16px; }
-
-.bet-area {
-  border: 2px solid #f2f2f2;
-  border-radius: 12px;
-  padding: 12px;
-  margin: 12px 0;
-  cursor: pointer;
-}
-.bet-area:hover { background: rgba(255, 255, 255, 0.1); }
-.bet-title { font-weight: bold; font-size: 1.3rem; }
-.bet-hint { font-size: 0.85rem; opacity: 0.8; }
-.bet-amount { font-size: 1.2rem; margin-top: 6px; color: #ffd84d; }
-
-.controls { margin: 16px 0; }
-.chips { margin-bottom: 12px; }
-
-button {
-  font-size: 1rem;
-  padding: 8px 16px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  margin: 4px;
-}
-
-.chip {
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  border: 4px dashed #fff;
-  color: #fff;
-  font-weight: bold;
-}
-.chip-5 { background: #c0392b; }
-.chip-25 { background: #27ae60; }
-.chip-100 { background: #222; }
-.chip.selected { outline: 4px solid #ffd84d; }
-
-.big-button {
-  font-size: 1.4rem;
-  padding: 12px 40px;
-  background: #ffd84d;
-  color: #222;
-  font-weight: bold;
-}
-
-.message { min-height: 1.5em; font-size: 1.1rem; }
-
-.puck {
-  display: inline-block;
-  padding: 6px 16px;
-  border-radius: 999px;
-  font-weight: bold;
-  margin-bottom: 8px;
-}
-.puck.off { background: #222; color: #aaa; }
-.puck.on { background: #fff; color: #111; }
-
-.bet-row { display: flex; gap: 12px; }
-.bet-row .bet-area { flex: 1; }
-@media (max-width: 520px) { .bet-row { flex-direction: column; gap: 0; } }
-
-.bet-area.locked { border-style: dashed; }
-.bet-area.disabled { opacity: 0.4; }
+.money strong { margin-left: 4px; }
 
 .progress {
-  height: 10px;
+  height: 8px;
   background: #333;
   border-radius: 999px;
   overflow: hidden;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 .progress-fill { height: 100%; width: 0; background: #ffd84d; transition: width 0.3s; }
 
-.crew { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
+/* Two columns on wide screens: info on the left, table on the right */
+.layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 16px; align-items: start; }
+
+/* ---------- Left: crew, mult, cards, odds ---------- */
+.crew { display: flex; justify-content: center; gap: 6px; flex-wrap: wrap; }
 .seat {
+  position: relative;
   background: #333;
   border-radius: 8px;
-  padding: 6px 10px;
-  font-size: 0.85rem;
-  min-width: 64px;
+  padding: 4px 8px;
+  font-size: 0.8rem;
+  min-width: 58px;
+  cursor: help;
 }
-.seat { position: relative; cursor: help; }
 .seat .tooltip {
   display: none;
   position: absolute;
@@ -130,11 +65,158 @@ button {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 }
 .seat:hover .tooltip { display: block; }
-.seat.done:hover { opacity: 1; }
 .seat.shooting { background: #ffd84d; color: #111; font-weight: bold; }
 .seat.done { opacity: 0.35; text-decoration: line-through; }
-.shooter { margin: 8px 0 12px; }
+.seat.done:hover { opacity: 1; }
+.shooter { margin: 6px 0 2px; font-size: 0.95rem; }
 
+.mult { margin-bottom: 6px; font-size: 0.95rem; }
+.mult.hot strong { color: #ff9f43; }
+.mult.cold strong { color: #6ec1ff; }
+
+.my-cards { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-bottom: 6px; }
+
+.odds-panel { margin: 0 auto; max-width: 480px; }
+.bars { --bar-max: 56px; display: flex; justify-content: space-between; align-items: flex-end; gap: 3px; }
+.bar { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; font-size: 0.7rem; }
+.bar .fill { width: 100%; background: #4a90d9; border-radius: 3px 3px 0 0; min-height: 2px; }
+.bar.seven .fill { background: #c0392b; }
+.bar.point .fill { background: #ffd84d; }
+.bar.impossible { opacity: 0.3; }
+.bar .num { font-weight: bold; font-size: 0.85rem; }
+.odds-summary { font-size: 0.85rem; margin-top: 4px; }
+
+/* ---------- Right: the table ---------- */
+.table {
+  background: #0d6b3a;
+  border: 6px solid #5a3a1a;
+  border-radius: 20px;
+  padding: 10px 12px;
+}
+
+.roll-row { display: flex; align-items: center; justify-content: center; gap: 18px; }
+.roll-info { text-align: left; }
+.total { font-size: 1.2rem; margin-bottom: 4px; }
+
+/* Dice drawn with pips: a 3 x 3 grid of spots */
+.dice { display: flex; gap: 12px; cursor: pointer; }
+.die {
+  width: 58px;
+  height: 58px;
+  background: #fdfdfd;
+  border-radius: 12px;
+  padding: 7px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  box-shadow: 0 4px 0 #bbb, 0 6px 10px rgba(0, 0, 0, 0.4);
+}
+.die span { display: flex; align-items: center; justify-content: center; }
+.die .pip::after { content: ""; width: 10px; height: 10px; border-radius: 50%; background: #1b1b1b; }
+.dice:hover .die { box-shadow: 0 4px 0 #bbb, 0 0 0 3px #ffd84d; }
+.dice.rolling .die { animation: tumble 0.25s linear infinite; }
+.dice.rolling .die:nth-child(2) { animation-direction: reverse; }
+@keyframes tumble {
+  0% { transform: rotate(0deg) translateY(0); }
+  25% { transform: rotate(15deg) translateY(-6px); }
+  50% { transform: rotate(0deg) translateY(0); }
+  75% { transform: rotate(-15deg) translateY(-4px); }
+  100% { transform: rotate(0deg) translateY(0); }
+}
+
+.puck {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+.puck.off { background: #222; color: #aaa; }
+.puck.on { background: #fff; color: #111; }
+
+.bet-area {
+  border: 2px solid #f2f2f2;
+  border-radius: 10px;
+  padding: 6px 10px;
+  margin: 8px 0 0;
+  cursor: pointer;
+}
+.bet-area:hover { background: rgba(255, 255, 255, 0.1); }
+.bet-title { font-weight: bold; font-size: 1.1rem; }
+.bet-hint { font-size: 0.78rem; opacity: 0.8; }
+.bet-amount { color: #ffd84d; margin-left: 6px; }
+.bet-row { display: flex; gap: 8px; }
+.bet-row .bet-area { flex: 1; }
+.bet-area.locked { border-style: dashed; }
+.bet-area.disabled { opacity: 0.4; }
+
+.controls { margin: 8px 0 4px; display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 4px; }
+.chips { display: flex; }
+
+button {
+  font-size: 1rem;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  margin: 4px;
+}
+
+.chip {
+  width: 54px;
+  height: 54px;
+  padding: 0;
+  border-radius: 50%;
+  border: 4px dashed #fff;
+  color: #fff;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+.chip-5 { background: #c0392b; }
+.chip-25 { background: #27ae60; }
+.chip-100 { background: #222; }
+.chip.selected { outline: 4px solid #ffd84d; }
+
+.big-button {
+  font-size: 1.3rem;
+  padding: 10px 32px;
+  background: #ffd84d;
+  color: #222;
+  font-weight: bold;
+}
+
+.message { min-height: 1.5em; font-size: 1rem; }
+.message .seven-out-text { font-size: 1.8rem; }
+
+/* ---------- Phones: one compact column ---------- */
+@media (max-width: 760px) {
+  body { padding: 6px 8px; }
+  h1 { font-size: 1.2rem; }
+  .how-to-play { font-size: 0.85rem; padding: 6px 10px; }
+  .money { gap: 10px; font-size: 0.85rem; }
+  .layout { grid-template-columns: 1fr; gap: 6px; }
+  .seat { font-size: 0.68rem; min-width: 0; padding: 3px 5px; flex: 1; }
+  .crew { gap: 3px; flex-wrap: nowrap; }
+  .shooter, .mult { font-size: 0.8rem; margin: 3px 0 0; }
+  .bars { --bar-max: 28px; }
+  .bar { font-size: 0.55rem; }
+  .bar .num { font-size: 0.75rem; }
+  .odds-summary { font-size: 0.72rem; }
+  .table { padding: 6px 8px; border-width: 4px; }
+  .die { width: 46px; height: 46px; padding: 5px; }
+  .die .pip::after { width: 8px; height: 8px; }
+  .total { font-size: 1rem; }
+  .bet-area { padding: 4px 6px; margin-top: 6px; }
+  .bet-title { font-size: 0.95rem; }
+  .bet-hint { font-size: 0.68rem; }
+  .chip { width: 44px; height: 44px; font-size: 0.75rem; border-width: 3px; }
+  .big-button { font-size: 1.1rem; padding: 8px 20px; }
+  .controls button { margin: 2px; }
+  .message { font-size: 0.85rem; }
+  .message .seven-out-text { font-size: 1.4rem; }
+}
+
+/* ---------- Overlays: Dealer Break, tutorials, end screen ---------- */
 .overlay {
   position: fixed;
   inset: 0;
@@ -154,19 +236,6 @@ button {
 .break-message { min-height: 1.2em; color: #ffd84d; }
 .break-warning { color: #ff7b6b; font-weight: bold; }
 
-.odds-panel { margin: 0 auto 12px; max-width: 520px; }
-.bars { display: flex; justify-content: space-between; align-items: flex-end; height: 100px; gap: 4px; }
-.bar { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; font-size: 0.75rem; }
-.bar .fill { width: 100%; background: #4a90d9; border-radius: 3px 3px 0 0; min-height: 2px; }
-.bar.seven .fill { background: #c0392b; }
-.bar.point .fill { background: #ffd84d; }
-.bar.impossible { opacity: 0.3; }
-.bar .num { font-weight: bold; font-size: 0.9rem; }
-.odds-summary { font-size: 0.9rem; margin-top: 6px; }
-
-.mult { margin: -6px 0 10px; }
-.mult.hot strong { color: #ff9f43; }
-.mult.cold strong { color: #6ec1ff; }
 
 button:disabled { opacity: 0.4; cursor: not-allowed; }
 
@@ -207,7 +276,6 @@ button:disabled { opacity: 0.4; cursor: not-allowed; }
 .card-text { font-size: 0.85rem; flex: 1; margin: 4px 0; }
 .card button { background: #ffd84d; font-weight: bold; }
 
-.my-cards { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-bottom: 10px; }
 .card-badge {
   position: relative;
   background: #fdf6e3;
@@ -226,14 +294,13 @@ button:disabled { opacity: 0.4; cursor: not-allowed; }
 .hidden { display: none; }
 .seven-out-banner { color: #ff5c5c; font-weight: bold; }
 .seven-out-banner .big, .seven-out-text {
-  font-size: 2.6rem;
+  font-size: 2.4rem;
   font-weight: 900;
   color: #ff3b30;
   letter-spacing: 2px;
   text-shadow: 0 0 12px rgba(255, 59, 48, 0.6);
 }
 
-.how-to-play { position: absolute; top: 16px; right: 16px; z-index: 15; }
 .help-button { width: 26px; height: 26px; border-radius: 50%; padding: 0; font-weight: bold; vertical-align: middle; }
 .tutorial { z-index: 20; }
 .tutorial .end-box { border: 3px solid #ffd84d; max-width: 520px; }

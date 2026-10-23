@@ -118,3 +118,11 @@ Dated log of every decision and why. Newest at the bottom.
 - **The game opens with a full paged "How to play" tutorial** (premise, shooters, come-out, point and Odds, Field, paying the dealer). No shop or phone notes in it. Owner's choice.
 - **The shop has its own tutorial the first time it opens;** the phone will get one too (Milestone 6). Owner's choice.
 - **Tutorials show once per browser** (remembered in the browser's storage), with a "How to play" button and a shop "?" button to see them again, plus a Skip link. Why: players restart often in a roguelike, so repeating tutorials would get annoying.
+
+## 2026-10-23 (interest, bets, layout)
+
+- **Interest is earned on paid money, not the kitty:** at every Dealer Break after a seven-out, 5% of everything paid so far (rounded down) goes into your kitty. Owner approved Claude's suggestion. Why: rewards paying early, and makes "bank it or ride it" sharper. Green Dice becomes "each 12 adds +0.5% to your interest rate".
+- **Finish the base game first; add more bets later** (Place, Hard Ways, Come with Odds), some as phone unlocks. Owner's choice.
+- **Tapping the dice rolls them.** Owner's request.
+- **Everything should fit on one screen without scrolling, on desktop and mobile.** Owner's request.
+- **Dice are drawn with real pips and get a short rolling animation.** Owner suggested it for later; Claude added it with the layout rework. Length is `diceRollMs` in config.

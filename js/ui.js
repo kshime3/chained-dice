@@ -1,6 +1,47 @@
 // Display code: draws the game on screen. No game rules here.
 
-const DIE_FACES = ["", "⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
+// Which of a die's 9 spots (3 x 3 grid, read left to right) have a pip.
+const PIP_SPOTS = {
+  1: [4],
+  2: [0, 8],
+  3: [0, 4, 8],
+  4: [0, 2, 6, 8],
+  5: [0, 2, 4, 6, 8],
+  6: [0, 2, 3, 5, 6, 8],
+};
+
+function drawDie(id, value) {
+  const die = document.getElementById(id);
+  die.innerHTML = "";
+  for (let spot = 0; spot < 9; spot++) {
+    const cell = document.createElement("span");
+    if (PIP_SPOTS[value].includes(spot)) cell.className = "pip";
+    die.appendChild(cell);
+  }
+}
+
+// Tumble the dice through random faces, then land on the real result.
+function animateDice(finalDice, ms, onDone) {
+  const box = document.getElementById("dice");
+  if (ms <= 0) {
+    drawDie("die1", finalDice[0]);
+    drawDie("die2", finalDice[1]);
+    setTimeout(onDone, 0);
+    return;
+  }
+  box.classList.add("rolling");
+  const spin = setInterval(() => {
+    drawDie("die1", 1 + Math.floor(Math.random() * 6));
+    drawDie("die2", 1 + Math.floor(Math.random() * 6));
+  }, 70);
+  setTimeout(() => {
+    clearInterval(spin);
+    box.classList.remove("rolling");
+    drawDie("die1", finalDice[0]);
+    drawDie("die2", finalDice[1]);
+    onDone();
+  }, ms);
+}
 const BET_NAMES = { pass: "Pass Line", odds: "Odds", field: "Field" };
 
 function money(n) {
@@ -39,6 +80,7 @@ function renderChips(selectedChip, onPick) {
 function renderState(state) {
   const b = state.bets;
   document.getElementById("kitty").textContent = money(state.kitty);
+  document.getElementById("interest").textContent = Math.round(state.interestRate * 1000) / 10 + "%";
   document.getElementById("paid").textContent = money(state.deposited) + " / " + money(CONFIG.shiftTarget);
   const progress = Math.min(100, (state.deposited / CONFIG.shiftTarget) * 100);
   document.getElementById("progress-fill").style.width = progress + "%";
@@ -65,8 +107,8 @@ function renderState(state) {
     state.point === null ? "Opens once a point is set" : money(b.odds) + " / max " + money(maxOdds(b.pass, state.point));
 
   if (state.lastRoll) {
-    document.getElementById("die1").textContent = DIE_FACES[state.lastRoll.dice[0]];
-    document.getElementById("die2").textContent = DIE_FACES[state.lastRoll.dice[1]];
+    drawDie("die1", state.lastRoll.dice[0]);
+    drawDie("die2", state.lastRoll.dice[1]);
     document.getElementById("total").textContent = "Total: " + state.lastRoll.total;
   }
 }
@@ -126,6 +168,10 @@ function renderBreak(state) {
   document.getElementById("shop-section").classList.toggle("hidden", !isShopOpen(state));
   document.getElementById("break-owed").textContent = money(amountOwed(state));
   document.getElementById("break-kitty").textContent = money(state.kitty);
+  const rate = Math.round(state.interestRate * 1000) / 10 + "%";
+  document.getElementById("break-interest").innerHTML = state.lastInterest > 0
+    ? "Interest paid into your kitty: <strong>+" + money(state.lastInterest) + "</strong> (" + rate + " of the " + money(state.deposited) + " you've paid)."
+    : "Paid money earns " + rate + " interest at every Break, paid into your kitty.";
 
   // Pay off debt only works when your kitty covers the whole amount owed.
   const payOff = document.getElementById("pay-off");
@@ -231,13 +277,13 @@ function renderOddsPanel(state) {
   const odds = diceOdds(state.dice);
   let bars = "";
   for (let t = 2; t <= 12; t++) {
-    const height = Math.round((odds[t] / 0.25) * 60); // 25% fills the bar
+    const share = Math.min(1, odds[t] / 0.25); // 25% fills the bar (height set in CSS)
     let cls = "bar";
     if (t === 7) cls += " seven";
     if (t === state.point) cls += " point";
     if (odds[t] === 0) cls += " impossible";
     bars += '<div class="' + cls + '"><span class="pct">' + Math.round(odds[t] * 100) + '%</span>' +
-      '<div class="fill" style="height:' + height + 'px"></div><span class="num">' + t + "</span></div>";
+      '<div class="fill" style="height: calc(var(--bar-max) * ' + share + ')"></div><span class="num">' + t + "</span></div>";
   }
   let summary = whose(name) + " dice: current chance of a 7 is <strong>" + percent(odds[7]) + "</strong> (normal: 16.7%).";
   if (state.point !== null) {

@@ -25,6 +25,8 @@ function newShiftState() {
     muggsyPending: false, // the next shooter gets Muggsy's x2
     rollsSincePoint: 0, // for Muggsy's point-7
     sevenOutBy: null, // who just sevened out (shown on the Dealer Break)
+    interestRate: CONFIG.interestRate, // cards can raise this later
+    lastInterest: 0, // interest paid at the latest Dealer Break
   };
   state.stock = newStock(state);
   return state;
@@ -97,6 +99,13 @@ function fundPassLine(state, amount) {
   return moves;
 }
 
+// Interest: a share of everything you've paid, into your kitty (rounded down).
+function payInterest(state) {
+  state.lastInterest = Math.floor(state.deposited * state.interestRate);
+  state.kitty += state.lastInterest;
+  return state.lastInterest;
+}
+
 // After a roll: a seven-out passes the dice and starts a Dealer Break.
 // Otherwise, check whether you just went broke.
 function afterRoll(state, sevenOut) {
@@ -104,6 +113,7 @@ function afterRoll(state, sevenOut) {
     const prevName = CONFIG.crew[state.shooterIndex];
     state.sevenOutBy = prevName;
     state.shooterIndex += 1;
+    payInterest(state);
     // Broke with no way to pay off the debt: fall right away, no break.
     if (isBroke(state) && state.kitty < amountOwed(state)) {
       state.status = "fell-broke";

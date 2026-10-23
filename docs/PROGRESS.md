@@ -23,8 +23,13 @@ Dated session log. Newest at the top.
 
 - Tutorials: a 6-page How to play intro (first visit, plus a button), a 2-page shop tutorial (first time the shop opens, plus a ? button), capital-B "Dealer Break". New `js/tutorials.js`.
 
+- Interest built: 5% of paid money into the kitty at every Break after a seven-out, shown at the top, explained on a new 7th intro page.
+- Tapping the dice rolls them. Dice now drawn with pips and tumble for 0.6s. New `?fast` testing shortcut.
+- New layout fits one screen without scrolling (checked at 1366x768, 1920x1080, 390x844, 360x740). tests.html: 142 checks, all passing.
+- Owner decided: finish the base game first, add more bets after v1.
+
 **Waiting on the owner**
-- Decisions on interest (paid money vs kitty, rate, where it goes) and when to add more craps bets (see Claude's recommendation in chat: finish v1 basic, add bets after). Owner wants to stay on 5a for now.
+- Testing the layout, dice, and interest. Owner wants to stay on 5a for now.
 
 **Exact next step**
 - Milestone 5b: Loaded Die, Reroll, Double Up, Doubles Charm, Green Dice (interest), Cut a chain, Extra chain link.
