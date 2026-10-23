@@ -1,180 +1,185 @@
-# Chained Dice: Game Design Doc (v0.1)
+# Chained Dice: Game Design (v0.2)
 
-*Working title. A Craps-themed roguelike for the browser, built with Claude Code. Items marked **(proposed)** are placeholders to tune or change.*
+*A Craps-themed roguelike for the browser. This is the single current version of the design. The history of how we got here is in `DECISIONS.md`. Status tags: **[Built]**, **[Planned]**, **[Open]** (still to decide).*
 
 ## Premise
 
-You wake up chained to a craps table, along with your buddies. A pit boss sets a chip target for each shift. Hit it and the chains hold. Miss it, or go broke, and the chains release and everyone falls through the floor. Then you wake up at the table again.
+You wake up chained to a craps table with your crew. The dealer, the bad guy, says you owe them money by the end of the shift. Pay it and the chains hold. Fail, or go broke, and the chains release and everyone falls through the floor. Then you wake up at the table again.
+
+## The End Goal
+
+An endless roguelike about beating the house at its own game. Each shift, the dealer demands a bigger debt. You have a fixed crew of shooters whose dice have visible, different odds. You build an engine from **cards** (the stickman's shop, between shooters), **permanent perks** (the Pit Boss's phone, between shifts) and **new bets** you unlock, turning craps' house edge into your edge. Every decision is **bank it or ride it**. Your score is how many shifts you survive.
+
+Long term, it becomes a first-person 3D room like Clover Pit: chained at the table, the crew around you, the stickman's chip bank to shop, the ringing phone, the floor opening.
+
+**v1 goal (to finish and publish on itch.io):** 2-3 shifts at the new scale, the shop with 8-10 cards, the phone with about 5 perks, the fall and restart, a short how-to-play intro. Flat 2D shapes for now.
 
 ## Pillars
 
-- **Balatro-style run:** escalating targets, a shop between shifts, modifiers that combine into strategies.
-- **Hit the target or die:** one miss ends the run. No health bar.
-- **Shared table:** the crew takes turns as shooter, each with weighted dice and their own style, and crew members affect each other.
-- **Simple presentation:** placeholder art and sound are fine. Fun comes from the rules.
+- **Balatro-style run:** escalating debts, a shop, and items that combine into strategies ("builds").
+- **Hit the debt or fall:** one miss ends the run. No health bar.
+- **Shared table:** the crew takes turns as shooter, each with different dice, and seat order matters.
+- **Visible math:** the odds of every roll are shown on screen.
+- **Beginner-friendly:** craps is confusing, so the game explains itself as you play.
+- **Simple presentation first:** placeholder shapes; fun comes from the rules.
 
-## Core Loop
+## Core Loop  [Built for one shift]
 
-1. **Wake up** at the table with a $200 buy-in and a crew.
-2. **Shift begins:** the pit boss sets the target. Shift 1 target: **$2,000**.
-3. **Rolls:** bet, then the current shooter rolls. The player is one of the shooters.
-4. **Seven-out:** each shooter keeps rolling until they seven out, then the next crew member steps in.
-5. **Shift ends** once every shooter has had a turn. If your bankroll meets the target, go to the shop. If not, you fall.
-6. **Shop:** tip the dealer to buy enhancements.
-7. **Next shift** with a higher target. Repeat until you fall. The run has no final shift.
+1. **Wake up** at the table with the shift's starting cash in your **kitty**.
+2. **Dealer break:** pay toward the debt (and later, shop).
+3. **The current shooter rolls.** You bet on every roll, whoever is shooting. The shooter keeps rolling until they **seven out**.
+4. **Dealer break** after every seven-out, then the next shooter steps up.
+5. After the last shooter sevens out: one **final Dealer break**, then the pit boss judges.
+6. **Win** the moment your payments reach the debt. Leftover kitty is kept. **[Planned]** The Pit Boss phone rings: pick 1 of 3 perks. Next shift.
 
-## Loss Conditions
+## Shifts and Scale
 
-- **Missed target** at the end of a shift: instant fall.
-- **Bankroll hits zero:** instant fall.
-
-## Craps Rules (v1 scope)
-
-Keep the bet list small at first.
-
-- **Come-out roll:** 7 or 11 wins pass line bets. 2, 3, or 12 (craps) loses them. Any other number becomes the **point**.
-- **Point phase:** the shooter keeps rolling. Hitting the point wins pass line bets. Rolling a 7 is a **seven-out**: pass line bets lose and the shooter changes.
-- **v1 bets:** Pass Line, Field, and Odds (behind the pass line).
-- **Later bets:** Hard Ways, Come/Don't Come, Place bets, Any Seven.
-
-## Scoring (proposed)
-
-- Winning bets pay **chips** at standard craps odds.
-- A **multiplier** applies to payouts, built from modifiers and streaks.
-- **Bankroll is your score.** The shift target is the bankroll you must hold when the shift ends. Tips to the dealer come out of the same bankroll.
-- Going from $200 to $2,000 is a 10x climb, so bet sizing and multipliers need playtesting.
-
-## The Crew
-
-The seats rotate shooters. A new shooter steps in after each seven-out. Each character has a **dice quirk** and a **style trait**.
-
-| Character | Dice quirk | Style trait |
+| Shift | Starting cash | Debt owed |
 | --- | --- | --- |
-| Lefty | Dice have no 6s | Sevens are rarer, big numbers are impossible |
-| Dealer Dee | Dice favor 6s and 8s | Her turn always ends on a seven-out |
-| Hot Rod | Normal dice | +1 mult per winning roll; first seven-out costs double |
-| Ghost | Even/odd-only die | Streaky, predictable results |
-| Jinx | Dice lean toward 3s and 4s, so 7s come up often | Terrible thrower who commonly sevens out |
-| You | Normal dice at the start | Dice are upgradable at the shop |
+| 1 | $100 | $200 |
+| 2 | $200 | $500 |
+| 3+ | TBD | TBD |
 
-*(All names and quirks are proposed. Start with 4-5 characters, one clear quirk each.)*
+**[Built]** with the old scale ($200 cash, $2,000 debt, one shift only). **[Planned]** Switch to this table. **[Open]** Does "starting cash" replace your leftover kitty, or add to it?
 
-**Crew synergies (proposed).** Seat order matters, and characters affect each other:
+## Paying the Dealer  [Built]
 
-- **Cold Table:** the shooter after Jinx starts with minus 0.5x mult until their first win.
-- **Coach:** the shooter after Dealer Dee gets one free reroll.
-- **Mentor:** half of Hot Rod's streak bonus carries to the next shooter.
+- **Kitty:** the money in your hand. You bet from it.
+- **Dealer break:** before the first shooter, after every seven-out, and once more after the last shooter.
+- **Payments** come from the kitty, are safe from bad rolls, are out of play, and **can't be taken back**.
+- You can't pay more than you owe, and a partial payment always leaves the **$5 minimum Pass Line bet** in your kitty.
+- **Pay off debt** is greyed out until your kitty covers the whole debt.
 
-## The Shop
+## Losing (the Fall)  [Built, animation Planned]
 
-The shop is **the dealer**. Between shifts, you **tip the dealer** to buy enhancements, paid from your bankroll. The stock rotates, so only some items appear each visit, and rarer items show up less often. The dealer sells:
+- **Broke:** on a come-out, your kitty plus money on the table can't cover the $5 minimum Pass Line bet.
+- **Short:** you leave the final Dealer break still owing.
+- [Planned] The floor opens and everyone drops, then the run restarts.
 
-- **Modifiers:** passive effects that change payouts, rules, or the multiplier.
-- **Dice edits:** change a face on any character's dice, including yours (for example, swap a 1 for a 6).
-- **Crew changes:** recruit, replace, or upgrade a character.
-- **Rerolls:** refresh the shop stock.
-- **Rare items:** the **extra chain link** is very rare. It saves you from one fall.
+## Craps Rules  [Built]
 
-The player can view each character's dice odds so the math stays visible.
+- **Come-out roll:** 7 or 11 wins the Pass Line. 2, 3 or 12 (craps) loses it. Any other number (4, 5, 6, 8, 9, 10) becomes the **point**.
+- **Point phase:** hitting the point wins the Pass Line. A 7 is a **seven-out**: Pass Line and Odds lose, and the shooter changes.
+- **Pass Line is required** (minimum $5) to roll a come-out. If your kitty is short, money moves automatically from your other bets (Field first, then Odds). Once a point is set, the Pass Line is locked.
+- **Odds:** only while a point is on, up to 3x the Pass Line on 4/10, 4x on 5/9, 5x on 6/8. Pays true odds (2:1, 3:2, 6:5), rounded down. Can be taken back at any time. A winning Odds bet returns to your kitty.
+- **Field:** one-roll bet. 3, 4, 9, 10, 11 pay even money; 2 pays double; 12 pays triple; 5, 6, 7, 8 lose.
+- Winning Pass Line and Field bets are paid and stay on the table. "Clear bets" takes back everything that isn't locked.
+- **Chips:** $5, $25, $100. No maximum bet.
+- **[Planned]** Hard Ways, Come/Don't Come, Place bets, Any Seven. Phone unlocks: Fire Bet, Different Doubles.
 
-## Starter Modifiers (proposed)
+## The Crew  [Built]
 
-- **Hot Hand:** +0.5x mult per consecutive winning roll. Resets on a loss.
-- **Loaded Die:** once per shift, reroll one die.
-- **Pit Boss's Pity:** ignore your first seven-out each shift.
-- **Snake Eyes:** rolling a 2 pays a big flat bonus.
-- **Hard Way Hero:** hard way bets pay double.
-- **Odds Addict:** odds bets pay a bonus on top of true odds.
-- **Lucky Seven:** a come-out 7 also adds bonus chips.
+Seat order: **Lefty, Dealer Dee, Hot Rod, Jinx, Ghost, You.** Dice are lists of faces in `config.js`; each listed face is equally likely.
 
-## Presentation
+| Character | Dice | Chance of a 7 | Style |
+| --- | --- | --- | --- |
+| Lefty | Each die rolls 1-5 (no 6s) | 16.0% | 11 and 12 impossible |
+| Dealer Dee | Sticky dice: left 1 + right 6 can't land together | 14.3% | Turns tend to last longer |
+| Hot Rod | Normal | 16.7% | +1x mult per winning roll; first seven-out of the shift costs double |
+| Jinx | Faces 1, 2, 3, 3, 4, 4 | 22.2% | Nothing above 8 |
+| Ghost | Right die evens-only or odds-only, picked each turn | 16.7% | Streaky |
+| You | Normal | 16.7% | Upgradable later |
 
-- Top-down or front-on table view with dice, chips, and the crew seated around it.
-- Chains visible on the player and crew.
-- **The fall:** on a loss, the floor opens and everyone drops. Then the run restarts.
-- Placeholder shapes and basic sounds are acceptable for v1.
+**Synergies (seat order matters):**
+- **Mentor (Hot Rod to Jinx):** half of Hot Rod's mult bonus carries over.
+- **Cold Table (Jinx to Ghost):** -0.5x mult until the first winning roll.
 
-## Tech and Scope
+**Hot Rod's double cost:** your losing Pass Line and Odds are charged again from the kitty, never below the $5 minimum.
 
-- **v1 scope: the first shift only.** Build the $200 to $2,000 shift end to end, then scale up with later shifts.
-- **Platform:** browser game in plain HTML, CSS, and JavaScript, hosted free (for example itch.io or GitHub Pages).
-- **Tools:** Claude Code for building, git for version control.
-- **Keep a notes file** in the project with decisions and the next task.
+## Mult  [Built]
+
+- Multiplies **winnings**, not bets. Rounded down.
+- Starts at 1x for every shooter, then adjusted by synergies and cards.
+- Shown on screen with the reasons, and in each win message ("$5 x 1.5").
+
+## The Shop (the Stickman)  [Planned: Milestone 5]
+
+- At every Dealer break, a **Tip the dealer** section shows **3 random cards**.
+- **Shuffle** replaces the stock for a price that rises each time in a shift.
+- **Prices are a share of the current shift's debt,** rounded to the nearest $5:
+
+| Rarity | Price | Chance per slot |
+| --- | --- | --- |
+| Common | 5% | 60% |
+| Uncommon | 10% | 30% |
+| Rare | 25% | 9% |
+| Extra chain link | 50% | 1% |
+
+- **5 card slots** to start. A "+1 slot" card may come later.
+- Paid from the kitty; tips **don't** count toward the debt.
+- Presentation (3D, later): run by the stickman; open it by clicking his bank of chips.
+- **[Open]** Card packs, like Balatro. A second currency (tickets)? Leaning toward kitty money only.
+
+## Cards  [Planned]
+
+Full list: `docs/Store-Cards-Phone-Scales.xlsx`.
+
+| Card | Effect | Rarity |
+| --- | --- | --- |
+| Rattlesnake | Rolling snake eyes (1+1) adds +1x mult. Resets each shooter. | Common |
+| Double Up | Doubles become more likely (+1 way out of 36). | [Open] |
+| Muggsy | A seven right after the point is set costs double, but the next shooter pays double. | [Open] |
+| Red Dice | Craps on the come-out wins even money. | Common ([Open]: too strong?) |
+| Green Dice | Each 12 rolled raises kitty interest by 0.5%. Interest is paid after every shooter. | Rare |
+| Hot Hand | +0.5x mult per winning roll in a row; resets on a roll with no win. | Common |
+| Snake Eyes | Rolling a 2 pays a bonus. | Common |
+| Lucky Seven | A come-out 7 pays a bonus. | Common |
+| Odds Addict | Odds pay 50% extra. | Uncommon |
+| Loaded Die | Once per shift, reroll one die after seeing a roll. | Uncommon |
+| Pit Boss's Pity | The first seven-out of the shift (any shooter) is ignored. Bets stay and the shooter keeps rolling. | Uncommon |
+| Doubles Charm | Every 3rd roll is a pair. | Rare |
+| Reroll | Cancel a roll and roll again. | [Open] |
+| Extra chain link | Saves you from one fall. | Very rare |
+
+**Cut a chain:** pay to drop a crew member through the floor, removing their seat and synergy. Likely a fixed Dealer break option rather than a random card.
+
+**"+1 odds" means +1 way out of 36:** one extra combination for that total, so a 2 goes from 1 in 36 to 2 in 37.
+
+## The Pit Boss Phone  [Planned]
+
+Like Clover Pit's phone. After **every won shift**, it rings and you **pick 1 of 3 permanent perks**:
+
+- -1 way to roll a 7.
+- +1 way to roll any one total (2 through 12). +1 to 7 is a deliberate trap, so label it clearly.
+- Remove a character from the table (a free Cut a chain).
+- 2 items from the shop are free.
+- **Let it burn:** unlocks the **Fire Bet** side bet, paid on how many different points the shooter makes: 4 points 25:1, 5 points 250:1, 6 points 1000:1.
+- **Different Doubles:** unlocks a side bet paid on how many different doubles the shooter rolls before a 7: 3 doubles 4:1, 4 doubles 8:1, 5 doubles 15:1, 6 doubles 100:1.
+
+## More Planned Ideas
+
+- **Pit boss challenges:** a small challenge each shooter's turn, with a reward. Own milestone after the shop.
+- **House rules:** one rule twist per shift, like Balatro's boss blinds. For later shifts.
+- **How-to-play intro** for players new to craps.
+
+## Glossary
+
+- **Shift** (also "session"): one round. Pay the debt by the end or fall.
+- **Debt:** what the dealer demands this shift (the goal).
+- **Kitty:** money in your hand. You bet, shop and pay from it.
+- **On table:** money currently in bets.
+- **Paid / deposited:** money given to the dealer toward the debt. Safe, but gone from play.
+- **Dealer break:** the pause between shooters to pay (and shop).
+- **Shooter:** the crew member currently rolling.
+- **Seven-out:** rolling a 7 while a point is on. The shooter's turn ends.
+- **Point:** the number set on the come-out that the shooter must hit again before a 7.
+- **Mult:** multiplier on winnings ("multi" means the same thing).
+- **Card:** an item bought in the shop (5 slots).
+- **Perk:** a permanent upgrade from the Pit Boss phone.
+- **Tip:** money spent in the shop. Doesn't count toward the debt.
+- **Fall:** losing the run.
+
+## Tech
+
+- Plain HTML, CSS and JavaScript, hosted on GitHub Pages (https://kshime3.github.io/chained-dice/). itch.io later.
+- Game logic is kept separate from display code; every tunable number lives in `js/config.js`.
 
 ## Milestones
 
-1. Dice roll and basic bets paying out correctly
-2. Come-out and point phases, seven-out handling
-3. $200 buy-in, shift target, roll-until-seven-out turns, and instant-fall loss
-4. Crew rotation with weighted dice
-5. Dealer shop with rotating stock and rarity tiers
-6. Fall animation, run restart, and polish
-
-## Open Questions
-
-- After shift 1 works, should each target double (proposed), or ramp differently?
-- What are the rarity odds for shop items, and how rare is the extra chain link?
-- Which crew synergies ship in v1?
-- How much should tips cost relative to the bankroll target?
-
-## Kickoff Clarifications (2026-10-23)
-
-These details come from the kickoff brief and take priority over anything above.
-
-- **v1 is the first shift only:** $200 buy-in, $2,000 target. No shop *between shifts* yet, so when the shop opens in v1 is an open question (see DECISIONS.md).
-- **You bet on every roll**, whoever is shooting. You are one of the shooters.
-- **The shift ends** once every shooter has had one turn (one lap of the table).
-- **Payouts** use standard craps odds; a multiplier from modifiers and streaks applies on top.
-- **Crew details:**
-  - Hot Rod: +1 mult per winning roll; his first seven-out costs double.
-  - Ghost: one die rolls only even or only odd numbers; streaky.
-  - Jinx: dice lean toward 3s and 4s, so 7s come up often.
-- **Starter synergies are part of Milestone 4:** Cold Table (after Jinx), Coach (after Dealer Dee), Mentor (after Hot Rod).
-- **Dice odds are shown on screen** for every character, so the math is visible.
-- **Chains are visible** on the player and crew. On a loss the floor opens, everyone drops, and the game restarts.
-
-## Open Questions Added at Kickoff
-
-- Dealer Dee "always ends on a seven-out": every turn ends that way, so what makes her different? (Settle before Milestone 4.)
-- When does the shop open in a single-shift v1?
-
-## Paying the Dealer (2026-10-23, replaces "reach the target")
-
-The dealer is the bad guy, and you owe them the shift target. Inspired by Clover Pit's ATM.
-
-- **Kitty:** the money in your hand. You bet from it.
-- **Dealer break:** before the first shooter, after every seven-out, and once more after the last shooter. You can **deposit** any amount from your kitty.
-- **Deposits are paid for good:** safe from bad rolls, out of play, can't be taken back. You can't pay more than you still owe.
-- **Win:** the moment your deposits reach the target. Leftover kitty carries over (to later shifts).
-- **Fall:** you leave the final Dealer break still owing, or you can't cover the minimum Pass Line bet.
-- **Pass Line is required** to roll a come-out. If your kitty is short, the game moves money from your other bets to cover it.
-- **The Dealer break is also where the shop lives** (Milestone 5): "Pay the dealer" (debt) and "Tip the dealer" (items). Tips don't count toward the debt.
-
-## Crew Update (2026-10-23, Milestone 4a)
-
-Seat order: **Lefty, Dealer Dee, Hot Rod, Jinx, Ghost, You.**
-
-| Character | Dice | Chance of a 7 |
-| --- | --- | --- |
-| Lefty | Each die rolls 1-5 (no 6s) | 16.0% |
-| Dealer Dee | **Sticky dice:** left 1 + right 6 can't land together | 14.3% |
-| Hot Rod | Normal | 16.7% |
-| Jinx | Faces 1, 2, 3, 3, 4, 4 (nothing above 8) | 22.2% |
-| Ghost | Right die evens-only or odds-only, picked each turn | 16.7% |
-| You | Normal (upgradable in the shop) | 16.7% |
-
-Synergies with this order (Milestone 4b): Coach (Dee to Hot Rod), Mentor (Hot Rod to Jinx), Cold Table (Jinx to Ghost).
-
-## Accepted Ideas (2026-10-23)
-
-- **Pit boss challenges:** each shooter's turn, a small challenge with a reward (cash, item, or debt cut). Own milestone after the shop.
-- **House rules:** one rule twist per shift, like Balatro boss blinds. Mainly for later shifts. Owner to decide whether shift 1 gets a preview.
-- **Cut a chain:** pay to drop a crew member through the floor, removing their seat (and their synergy). A Dealer break action, built with the shop.
-
-## Mult and Synergies (2026-10-23, Milestone 4b)
-
-- **Mult multiplies winnings, not bets.** Every shooter starts at 1.0x. Half dollars round down.
-- **Hot Rod:** +1x after every roll where any of your bets wins, for the rest of his turn. His first seven-out of the shift costs double: your losing Pass Line and Odds are charged again from your kitty, never below the $5 minimum.
-- **Mentor (Hot Rod to Jinx):** half of Hot Rod's bonus carries over. Hot Rod ending at 5x gives Jinx 3x.
-- **Cold Table (Jinx to Ghost):** the next shooter starts 0.5x lower until their first winning roll.
-- **Coach (Dee's free reroll) was removed.** It may come back as a shop perk.
+1. [Built] Dice roll and basic bets
+2. [Built] Come-out and point phases, Odds, seven-out
+3. [Built] Shift: buy-in, turns, win and fall. 3.5: paying the dealer
+4. [Built] Crew dice, visible odds (4a); mult and synergies (4b)
+5. [Planned] Shop: 5a framework and simple cards, 5b trickier cards
+6. [Planned] Multiple shifts at the new scale, plus the Pit Boss phone
+7. [Planned] Fall animation, restart, how-to-play, polish, itch.io release

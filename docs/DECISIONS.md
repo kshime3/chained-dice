@@ -83,3 +83,8 @@ Dated log of every decision and why. Newest at the bottom.
 - **5 item slots to start;** a "+1 slot" item may come later.
 - **New scale (owner):** shift 1 = $100 starting cash, $200 debt; shift 2 = $200 cash, $500 debt; later shifts TBD. Replaces $200 / $2,000. Not built yet.
 - **Not decided yet:** see the open questions in PROGRESS.md.
+- **"Session" = "shift".** Glossary added to DESIGN.md.
+- **The Pit Boss phone rings after every won shift: pick 1 of 3 perks.**
+- **Pit Boss's Pity covers any shooter's first seven-out of the shift.** Owner's choice; Claude agrees it's fine for an Uncommon.
+- **"+1 odds" = +1 way out of 36** (one extra combination for that total).
+- **DESIGN.md rewritten as one clean, current document,** with status tags (Built/Planned/Open), the end goal, the v1 goal, and a glossary. Milestones renumbered: 6 = multiple shifts + phone, 7 = fall animation, polish, release.
