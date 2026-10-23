@@ -39,10 +39,11 @@ js/crew.js         logic: each shooter's dice, mult, crew synergies, hover text
 js/cards.js        logic: what each shop card does
 js/shop.js         logic: shop stock, rarity, prices, buy/sell/shuffle
 js/ui.js           display: drawing the screen
+js/tutorials.js    display: tutorial pages (intro, shop) and "seen" memory
 js/main.js         wires buttons to logic and display
 ```
 Testing shortcut: add `?target=300` to the page address for a different shift target (debt).
 
 tests.html pins its own numbers (buy-in $200, debt $2,000) so tuning config.js doesn't break the checks.
 
-Scripts load with plain `<script>` tags in a set order (config, logic: dice, bets, crew, cards, shop, shift; then display, main), not ES modules, so double-clicking index.html works.
+Scripts load with plain `<script>` tags in a set order (config, logic: dice, bets, crew, cards, shop, shift; then display: ui, tutorials; then main), not ES modules, so double-clicking index.html works.

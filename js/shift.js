@@ -8,7 +8,7 @@ function newShiftState() {
     bets: { pass: 0, odds: 0, field: 0 },
     point: null, // null means the next roll is a come-out roll
     shooterIndex: 0, // seat number of the current shooter (0 = first seat)
-    onBreak: true, // a Dealer break happens before each shooter and once at the end
+    onBreak: true, // a Dealer Break happens before each shooter and once at the end
     status: "playing", // "playing", "won", "fell-broke", or "fell-short"
     lastRoll: null,
     dice: diceForShooter(CONFIG.crew[0]), // current shooter's dice
@@ -18,13 +18,13 @@ function newShiftState() {
     hotRodPenaltyUsed: false, // Hot Rod's double-cost seven-out happens once a shift
     payoutX: 1, // Muggsy's x2 on the next shooter's winnings
     cards: [], // card ids you own (see cards.js)
-    stock: [], // card ids for sale at this Dealer break (null = sold out)
+    stock: [], // card ids for sale at this Dealer Break (null = sold out)
     shuffles: 0, // Shuffles used this shift (each one costs more)
     hotStreak: 0, // winning rolls in a row (Hot Hand)
     pityUsed: false, // Pit Boss's Pity works once a shift
     muggsyPending: false, // the next shooter gets Muggsy's x2
     rollsSincePoint: 0, // for Muggsy's point-7
-    sevenOutBy: null, // who just sevened out (shown on the Dealer break)
+    sevenOutBy: null, // who just sevened out (shown on the Dealer Break)
   };
   state.stock = newStock(state);
   return state;
@@ -97,7 +97,7 @@ function fundPassLine(state, amount) {
   return moves;
 }
 
-// After a roll: a seven-out passes the dice and starts a Dealer break.
+// After a roll: a seven-out passes the dice and starts a Dealer Break.
 // Otherwise, check whether you just went broke.
 function afterRoll(state, sevenOut) {
   if (sevenOut) {
@@ -111,13 +111,13 @@ function afterRoll(state, sevenOut) {
     }
     state.onBreak = true;
     if (!isFinalBreak(state)) setupTurn(state, prevName, state.mult);
-    state.stock = newStock(state); // fresh cards at every Dealer break
+    state.stock = newStock(state); // fresh cards at every Dealer Break
   } else if (isBroke(state)) {
     state.status = "fell-broke";
   }
 }
 
-// Leaving a Dealer break: the final break is judged; otherwise the
+// Leaving a Dealer Break: the final break is judged; otherwise the
 // next shooter steps up, as long as you can still cover the Pass Line.
 function endBreak(state) {
   state.onBreak = false;

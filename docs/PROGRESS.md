@@ -21,8 +21,10 @@ Dated session log. Newest at the top.
 
 - Owner feedback on 5a, all done: shop opens after the first shooter with an intro, Shuffle a flat 5%, big red SEVEN OUT, pay box defaults to $5 with $5 steps, "current chance of a 7", coloured rarity labels, instant fall on a broke seven-out. tests.html: 138 checks, all passing.
 
+- Tutorials: a 6-page How to play intro (first visit, plus a button), a 2-page shop tutorial (first time the shop opens, plus a ? button), capital-B "Dealer Break". New `js/tutorials.js`.
+
 **Waiting on the owner**
-- Testing the 5a feedback changes. Owner wants to stay on 5a for now.
+- Decisions on interest (paid money vs kitty, rate, where it goes) and when to add more craps bets (see Claude's recommendation in chat: finish v1 basic, add bets after). Owner wants to stay on 5a for now.
 
 **Exact next step**
 - Milestone 5b: Loaded Die, Reroll, Double Up, Doubles Charm, Green Dice (interest), Cut a chain, Extra chain link.

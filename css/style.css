@@ -1,4 +1,5 @@
 body {
+  position: relative;
   background: #1b1b1b;
   color: #f2f2f2;
   font-family: system-ui, sans-serif;
@@ -231,5 +232,14 @@ button:disabled { opacity: 0.4; cursor: not-allowed; }
   letter-spacing: 2px;
   text-shadow: 0 0 12px rgba(255, 59, 48, 0.6);
 }
-.shop-intro { background: #33302a; border: 2px solid #ffd84d; border-radius: 8px; padding: 8px; text-align: left; }
-.shop-intro:empty { display: none; }
+
+.how-to-play { position: absolute; top: 16px; right: 16px; z-index: 15; }
+.help-button { width: 26px; height: 26px; border-radius: 50%; padding: 0; font-weight: bold; vertical-align: middle; }
+.tutorial { z-index: 20; }
+.tutorial .end-box { border: 3px solid #ffd84d; max-width: 520px; }
+.tutorial-body { text-align: left; line-height: 1.5; }
+.link-button { background: none; color: #aaa; text-decoration: underline; font-size: 0.9rem; }
+.rarity-pill { display: inline-block; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; color: #fff; border-radius: 4px; padding: 1px 6px; }
+.rarity-pill.common { background: #7f8c8d; }
+.rarity-pill.uncommon { background: #27ae60; }
+.rarity-pill.rare { background: #2980b9; }

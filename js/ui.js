@@ -95,7 +95,7 @@ function renderCrew(state) {
     : "Every shooter has had a turn.";
 }
 
-// The Dealer break: pay toward the debt between shooters.
+// The Dealer Break: pay toward the debt between shooters.
 function renderBreak(state) {
   const screen = document.getElementById("break-screen");
   if (!state.onBreak || state.status !== "playing") {
@@ -122,13 +122,8 @@ function renderBreak(state) {
     ? '<div class="big">SEVEN OUT!</div>' + (who === "You" ? "You" : who) + " sevened out."
     : "";
 
-  // The shop opens after the first shooter, with a one-time explanation.
+  // The shop opens after the first shooter (its tutorial is shown by main.js).
   document.getElementById("shop-section").classList.toggle("hidden", !isShopOpen(state));
-  document.getElementById("shop-intro").innerHTML = state.shooterIndex === CONFIG.shopOpensAfterShooter
-    ? "<strong>New: the stickman's shop!</strong> Tip the dealer from your kitty to buy cards that bend the rules. " +
-      CONFIG.shopSlots + " cards are offered at every break, and rarer cards cost more. You can hold " + CONFIG.maxCards +
-      " cards and sell one for half its price. Don't like the offer? Shuffle for new cards."
-    : "";
   document.getElementById("break-owed").textContent = money(amountOwed(state));
   document.getElementById("break-kitty").textContent = money(state.kitty);
 
@@ -185,7 +180,7 @@ function cardBox(id, buttonText, onClick, disabled) {
   return box;
 }
 
-// The shop on the Dealer break, plus your cards on the main screen.
+// The shop on the Dealer Break, plus your cards on the main screen.
 // handlers: { buy(slot), sell(id) } from main.js
 function renderShop(state, handlers) {
   const stockBox = document.getElementById("stock");
@@ -295,6 +290,31 @@ function describeRoll(total, results, pointBefore, pointAfter) {
     lines.push("Still rolling for a " + pointAfter + ". A 7 ends it.");
   }
   return lines.join(" ");
+}
+
+// Show tutorial pages one at a time. onDone runs when it's closed.
+function showTutorial(pages, onDone) {
+  let page = 0;
+  const box = document.getElementById("tutorial");
+  const draw = () => {
+    document.getElementById("tutorial-step").textContent = (page + 1) + " / " + pages.length;
+    document.getElementById("tutorial-title").textContent = pages[page].title;
+    document.getElementById("tutorial-body").innerHTML = pages[page].body;
+    document.getElementById("tutorial-back").disabled = page === 0;
+    document.getElementById("tutorial-next").textContent = page === pages.length - 1 ? "Let's play" : "Next";
+  };
+  const close = () => {
+    box.classList.add("hidden");
+    if (onDone) onDone();
+  };
+  document.getElementById("tutorial-back").onclick = () => { page -= 1; draw(); };
+  document.getElementById("tutorial-next").onclick = () => {
+    if (page === pages.length - 1) close();
+    else { page += 1; draw(); }
+  };
+  document.getElementById("tutorial-skip").onclick = close;
+  draw();
+  box.classList.remove("hidden");
 }
 
 // bad: a seven-out, shown big and red.

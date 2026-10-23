@@ -8,6 +8,7 @@
 </head>
 <body>
   <h1>Chained Dice</h1>
+  <button id="how-to-play" class="how-to-play">How to play</button>
 
   <div class="money">
     <div>Kitty: <strong id="kitty"></strong></div>
@@ -63,7 +64,7 @@
   <div id="break-screen" class="overlay hidden">
     <div class="end-box">
       <div id="seven-out-banner" class="seven-out-banner"></div>
-      <h2>Dealer break</h2>
+      <h2>Dealer Break</h2>
       <p id="break-intro"></p>
       <p>Still owed: <strong id="break-owed"></strong> · Your kitty: <strong id="break-kitty"></strong></p>
 
@@ -75,8 +76,7 @@
       </div>
 
       <div id="shop-section">
-        <h3>Tip the dealer (shop)</h3>
-        <p id="shop-intro" class="shop-intro"></p>
+        <h3>Tip the dealer (shop) <button id="shop-help" class="help-button" title="How the shop works">?</button></h3>
         <p class="hint">Tips don't count toward your debt.</p>
         <div id="stock" class="card-row"></div>
         <button id="shuffle"></button>
@@ -88,6 +88,17 @@
       <p id="break-message" class="break-message"></p>
       <p id="break-warning" class="break-warning"></p>
       <button id="leave-break" class="big-button"></button>
+    </div>
+  </div>
+
+  <div id="tutorial" class="overlay tutorial hidden">
+    <div class="end-box">
+      <div id="tutorial-step" class="hint"></div>
+      <h2 id="tutorial-title"></h2>
+      <p id="tutorial-body" class="tutorial-body"></p>
+      <button id="tutorial-back">Back</button>
+      <button id="tutorial-next" class="big-button">Next</button>
+      <div><button id="tutorial-skip" class="link-button">Skip</button></div>
     </div>
   </div>
 
@@ -108,6 +119,7 @@
   <script src="js/shop.js"></script>
   <script src="js/shift.js"></script>
   <script src="js/ui.js"></script>
+  <script src="js/tutorials.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>

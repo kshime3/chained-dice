@@ -106,7 +106,7 @@ function roll() {
   renderAll();
 }
 
-// Dealer break buttons
+// Dealer Break buttons
 function payDealer(amount) {
   const paid = deposit(state, amount);
   let text = paid > 0 ? "Paid " + money(paid) + ". That money is safe now, and out of play." : "Nothing more you can pay.";
@@ -177,6 +177,12 @@ function renderAll() {
   renderShop(state, { buy: buy, sell: sell });
   renderBreak(state);
   renderEndScreen(state);
+
+  // The first time the shop opens, explain it.
+  if (state.onBreak && state.status === "playing" && isShopOpen(state) && !tutorialSeen("shop")) {
+    markTutorialSeen("shop");
+    showTutorial(shopPages());
+  }
 }
 
 document.getElementById("pass-line").onclick = () => placeBet("pass");
@@ -190,5 +196,14 @@ document.getElementById("leave-break").onclick = leaveBreak;
 document.getElementById("shuffle").onclick = shuffle;
 document.getElementById("play-again").onclick = playAgain;
 
+document.getElementById("how-to-play").onclick = () => showTutorial(introPages());
+document.getElementById("shop-help").onclick = () => showTutorial(shopPages());
+
 renderChips(selectedChip, pickChip);
 renderAll();
+
+// First visit: the full introduction.
+if (!tutorialSeen("intro")) {
+  markTutorialSeen("intro");
+  showTutorial(introPages());
+}

@@ -26,10 +26,10 @@ Long term, it becomes a first-person 3D room like Clover Pit: chained at the tab
 ## Core Loop  [Built for one shift]
 
 1. **Wake up** at the table with the shift's starting cash in your **kitty**.
-2. **Dealer break:** pay toward the debt (and later, shop).
+2. **Dealer Break:** pay toward the debt (and later, shop).
 3. **The current shooter rolls.** You bet on every roll, whoever is shooting. The shooter keeps rolling until they **seven out**.
-4. **Dealer break** after every seven-out, then the next shooter steps up.
-5. After the last shooter sevens out: one **final Dealer break**, then the pit boss judges.
+4. **Dealer Break** after every seven-out, then the next shooter steps up.
+5. After the last shooter sevens out: one **final Dealer Break**, then the pit boss judges.
 6. **Win** the moment your payments reach the debt. Leftover kitty is kept. **[Planned]** The Pit Boss phone rings: pick 1 of 3 perks. Next shift.
 
 ## Shifts and Scale
@@ -45,7 +45,7 @@ Long term, it becomes a first-person 3D room like Clover Pit: chained at the tab
 ## Paying the Dealer  [Built]
 
 - **Kitty:** the money in your hand. You bet from it.
-- **Dealer break:** before the first shooter, after every seven-out, and once more after the last shooter.
+- **Dealer Break:** before the first shooter, after every seven-out, and once more after the last shooter.
 - **Payments** come from the kitty, are safe from bad rolls, are out of play, and **can't be taken back**.
 - You can't pay more than you owe, and a partial payment always leaves the **$5 minimum Pass Line bet** in your kitty.
 - **Pay off debt** is greyed out until your kitty covers the whole debt.
@@ -53,8 +53,8 @@ Long term, it becomes a first-person 3D room like Clover Pit: chained at the tab
 ## Losing (the Fall)  [Built, animation Planned]
 
 - **Broke:** on a come-out, your kitty plus money on the table can't cover the $5 minimum Pass Line bet.
-- **Short:** you leave the final Dealer break still owing.
-- A seven-out that leaves you broke (and unable to pay off the debt) is an instant fall, with no Dealer break.
+- **Short:** you leave the final Dealer Break still owing.
+- A seven-out that leaves you broke (and unable to pay off the debt) is an instant fall, with no Dealer Break.
 - [Planned] The floor opens and everyone drops, then the run restarts.
 
 ## Craps Rules  [Built]
@@ -95,7 +95,7 @@ Seat order: **Lefty, Dealer Dee, Hot Rod, Jinx, Ghost, You.** Dice are lists of 
 
 ## The Shop (the Stickman)  [Built: Milestone 5a]
 
-- From the **second** Dealer break on (after the first shooter), a **Tip the dealer** section shows **3 random cards**. The first time, it explains how the shop works.
+- From the **second** Dealer Break on (after the first shooter), a **Tip the dealer** section shows **3 random cards**. The first time, it explains how the shop works.
 - **Shuffle** replaces the stock for a flat 5% of the debt.
 - **Prices are a share of the current shift's debt,** rounded to the nearest $5:
 
@@ -133,7 +133,7 @@ Full list: `docs/Store-Cards-Phone-Scales.xlsx`.
 | Reroll | Cancel a roll and roll again. | Uncommon |
 | Extra chain link | Saves you from one fall. | Very rare |
 
-**Cut a chain:** pay to drop a crew member through the floor, removing their seat and synergy. Likely a fixed Dealer break option rather than a random card.
+**Cut a chain:** pay to drop a crew member through the floor, removing their seat and synergy. Likely a fixed Dealer Break option rather than a random card.
 
 **"+1 odds" means +1 way out of 36:** one extra combination for that total, so a 2 goes from 1 in 36 to 2 in 37.
 
@@ -152,7 +152,7 @@ Like Clover Pit's phone. After **every won shift**, it rings and you **pick 1 of
 
 - **Pit boss challenges:** a small challenge each shooter's turn, with a reward. Own milestone after the shop.
 - **House rules:** one rule twist per shift, like Balatro's boss blinds. For later shifts.
-- **How-to-play intro** for players new to craps.
+- **Tutorials [Built]:** a 6-page "How to play" intro on first visit (also via the How to play button), a 2-page shop tutorial the first time the shop opens (also via the shop's ? button). [Planned] A phone tutorial. Each shows once per browser.
 
 ## Glossary
 
@@ -161,7 +161,7 @@ Like Clover Pit's phone. After **every won shift**, it rings and you **pick 1 of
 - **Kitty:** money in your hand. You bet, shop and pay from it.
 - **On table:** money currently in bets.
 - **Paid / deposited:** money given to the dealer toward the debt. Safe, but gone from play.
-- **Dealer break:** the pause between shooters to pay (and shop).
+- **Dealer Break:** the pause between shooters to pay (and shop).
 - **Shooter:** the crew member currently rolling.
 - **Seven-out:** rolling a 7 while a point is on. The shooter's turn ends.
 - **Point:** the number set on the come-out that the shooter must hit again before a 7.

@@ -111,3 +111,10 @@ Dated log of every decision and why. Newest at the bottom.
 - **Odds wording says "current chance of a 7",** since cards and perks will change the odds.
 - **Rarity labels are coloured:** Common grey, Uncommon green, Rare blue, Legendary gold.
 - **A seven-out that leaves you broke (and unable to pay off the debt) is an instant fall,** with no Dealer break.
+
+## 2026-10-23 (tutorials)
+
+- **"Dealer Break" with a capital B,** everywhere. Owner's choice.
+- **The game opens with a full paged "How to play" tutorial** (premise, shooters, come-out, point and Odds, Field, paying the dealer). No shop or phone notes in it. Owner's choice.
+- **The shop has its own tutorial the first time it opens;** the phone will get one too (Milestone 6). Owner's choice.
+- **Tutorials show once per browser** (remembered in the browser's storage), with a "How to play" button and a shop "?" button to see them again, plus a Skip link. Why: players restart often in a roguelike, so repeating tutorials would get annoying.

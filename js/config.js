@@ -32,7 +32,7 @@ const CONFIG = {
 
   // The shop (the stickman). Prices are a share of the shift's debt, rounded to the nearest $5.
   shopOpensAfterShooter: 1, // the shop first opens after this many shooters have sevened out
-  shopSlots: 3,       // cards offered at each Dealer break
+  shopSlots: 3,       // cards offered at each Dealer Break
   maxCards: 5,        // cards you can hold
   rarityPricePct: { common: 0.05, uncommon: 0.10, rare: 0.25, legendary: 0.50 },
   rarityChance:   { common: 0.60, uncommon: 0.30, rare: 0.09, legendary: 0.01 }, // per slot
