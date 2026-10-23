@@ -41,3 +41,10 @@ Parked ideas and later features. Not in v1 unless moved into the design.
 ## Shop item ideas
 - **Doubles Charm:** every 3rd roll is a pair (owner's idea, first proposed for Hot Rod). Pairs never make 7. Pairs nicely with Hard Ways later.
 - **Reroll perk:** once per turn (or shift), cancel a roll and roll again. Was Dealer Dee's "Coach" synergy, moved here by the owner.
+
+## From the owner's spreadsheet (2026-10-23), not built yet
+- **Pit Boss phone** (like Clover Pit's phone): offers permanent perks between shifts. Includes +1 odds for any total, -1 odds for 7, remove a character, 2 free shop items, and new side bets (Fire Bet, Different Doubles).
+- **Card packs** like Balatro.
+- **Interest on the kitty** (Green Dice card).
+- **Presentation:** the shop is run by the stickman; open it by clicking the bank of chips next to him.
+- **Possible second currency** (tickets) for the shop. Open question.

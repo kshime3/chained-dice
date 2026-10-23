@@ -74,3 +74,12 @@ Dated log of every decision and why. Newest at the bottom.
 - **A "winning roll" means any of your bets won that roll.**
 - **Mentor = half of Hot Rod's bonus above 1x. Cold Table = -0.5x, lifted by the first winning roll.** All numbers are in config.js.
 - **"Pay all I can" removed; replaced by "Pay off debt"** (shows the amount owed), greyed out unless your kitty covers the whole debt. Typed "Pay" stays for partial payments. Owner's choice. Why: one accidental click could ruin a run, since payments can't be undone.
+
+## 2026-10-23 (Session 2: shop planning, owner's spreadsheet)
+
+- **Owner's spreadsheet saved as `docs/Store-Cards-Phone-Scales.xlsx`** (shop cards, Pit Boss phone perks, shift scales).
+- **Shop layout approved:** 3 random items per Dealer break, Shuffle button, tips don't count toward the debt.
+- **Prices scale with the shift's debt:** Common 5%, Uncommon 10%, Rare 25%, Extra chain link 50%, each rounded to the nearest $5. Why: prices stay meaningful as debts grow.
+- **5 item slots to start;** a "+1 slot" item may come later.
+- **New scale (owner):** shift 1 = $100 starting cash, $200 debt; shift 2 = $200 cash, $500 debt; later shifts TBD. Replaces $200 / $2,000. Not built yet.
+- **Not decided yet:** see the open questions in PROGRESS.md.
