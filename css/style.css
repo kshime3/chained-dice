@@ -151,3 +151,13 @@ button {
 #deposit-amount { width: 90px; font-size: 1rem; padding: 6px; border-radius: 6px; border: none; }
 .break-message { min-height: 1.2em; color: #ffd84d; }
 .break-warning { color: #ff7b6b; font-weight: bold; }
+
+.odds-panel { margin: 0 auto 12px; max-width: 520px; }
+.bars { display: flex; justify-content: space-between; align-items: flex-end; height: 100px; gap: 4px; }
+.bar { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; font-size: 0.75rem; }
+.bar .fill { width: 100%; background: #4a90d9; border-radius: 3px 3px 0 0; min-height: 2px; }
+.bar.seven .fill { background: #c0392b; }
+.bar.point .fill { background: #ffd84d; }
+.bar.impossible { opacity: 0.3; }
+.bar .num { font-weight: bold; font-size: 0.9rem; }
+.odds-summary { font-size: 0.9rem; margin-top: 6px; }

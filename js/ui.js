@@ -7,6 +7,23 @@ function money(n) {
   return "$" + n.toLocaleString();
 }
 
+// "Jinx's" or "Your", so sentences read right when it's your turn.
+function whose(name) {
+  return name === "You" ? "Your" : name + "'s";
+}
+
+function percent(p) {
+  return (p * 100).toFixed(1) + "%";
+}
+
+// Chance of a 7 for a crew member, for hover cards and the break screen.
+// Ghost's 7 chance is the same whichever side he picks, so evens is used.
+function sevenChance(name) {
+  const set = CONFIG.crewDice[name];
+  const dice = set.right === "ghost" ? { left: set.left, right: CONFIG.ghostFaces.evens } : set;
+  return diceOdds(dice)[7];
+}
+
 function renderChips(selectedChip, onPick) {
   const box = document.getElementById("chips");
   box.innerHTML = "";
@@ -26,6 +43,7 @@ function renderState(state) {
   const progress = Math.min(100, (state.deposited / CONFIG.shiftTarget) * 100);
   document.getElementById("progress-fill").style.width = progress + "%";
   renderCrew(state);
+  renderOddsPanel(state);
   document.getElementById("on-table").textContent = money(b.pass + b.odds + b.field);
   document.getElementById("pass-amount").textContent = money(b.pass);
   document.getElementById("field-amount").textContent = money(b.field);
@@ -65,7 +83,7 @@ function renderCrew(state) {
       const tip = document.createElement("div");
       tip.className = "tooltip";
       tip.innerHTML = "<strong>" + name + "</strong><br>Dice: " + info.dice + "<br>Style: " + info.style +
-        (info.active ? "" : "<br><em>Coming in Milestone 4. Everyone rolls normal dice for now.</em>");
+        "<br>Chance of a 7: <strong>" + percent(sevenChance(name)) + "</strong> (normal dice: 16.7%)";
       seat.appendChild(tip);
     }
     box.appendChild(seat);
@@ -91,7 +109,9 @@ function renderBreak(state) {
   } else if (isFinalBreak(state)) {
     intro = "Every shooter has sevened out. Last chance to pay before the pit boss judges you.";
   } else {
-    intro = "Seven out. Before " + CONFIG.crew[state.shooterIndex] + " shoots, you can pay the dealer.";
+    const next = CONFIG.crew[state.shooterIndex];
+    const before = next === "You" ? "Before you shoot" : "Before " + next + " shoots";
+    intro = "Seven out. " + before + ", you can pay the dealer. " + whose(next) + " chance of a 7: " + percent(diceOdds(state.dice)[7]) + ".";
   }
   document.getElementById("break-intro").textContent = intro;
   document.getElementById("break-owed").textContent = money(amountOwed(state));
@@ -108,6 +128,33 @@ function renderBreak(state) {
 
 function showBreakMessage(text) {
   document.getElementById("break-message").textContent = text;
+}
+
+// Bar chart of the current shooter's chance of each total.
+function renderOddsPanel(state) {
+  const panel = document.getElementById("odds-panel");
+  const name = CONFIG.crew[state.shooterIndex];
+  if (!name) {
+    panel.innerHTML = "";
+    return;
+  }
+  const odds = diceOdds(state.dice);
+  let bars = "";
+  for (let t = 2; t <= 12; t++) {
+    const height = Math.round((odds[t] / 0.25) * 60); // 25% fills the bar
+    let cls = "bar";
+    if (t === 7) cls += " seven";
+    if (t === state.point) cls += " point";
+    if (odds[t] === 0) cls += " impossible";
+    bars += '<div class="' + cls + '"><span class="pct">' + Math.round(odds[t] * 100) + '%</span>' +
+      '<div class="fill" style="height:' + height + 'px"></div><span class="num">' + t + "</span></div>";
+  }
+  let summary = whose(name) + " dice: chance of a 7 is <strong>" + percent(odds[7]) + "</strong> (normal: 16.7%).";
+  if (state.point !== null) {
+    summary += " Hitting the " + state.point + " before a 7: <strong>" + percent(pointBeforeSeven(odds, state.point)) + "</strong>.";
+  }
+  if (state.dice.note) summary += " " + state.dice.note;
+  panel.innerHTML = '<div class="bars">' + bars + '</div><div class="odds-summary">' + summary + "</div>";
 }
 
 // Show the win or fall screen when the shift is over.

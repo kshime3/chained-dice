@@ -75,7 +75,7 @@ function roll() {
     return;
   }
 
-  state.lastRoll = rollDice();
+  state.lastRoll = rollDice(state.dice);
   const total = state.lastRoll.total;
   const pointBefore = state.point;
   const results = resolveRoll(state.bets, total, pointBefore);
@@ -125,7 +125,8 @@ function leaveBreak() {
   endBreak(state);
   showBreakMessage("");
   if (state.status === "playing") {
-    showMessage(CONFIG.crew[state.shooterIndex] + " steps up to shoot. Place your Pass Line bet.");
+    const next = CONFIG.crew[state.shooterIndex];
+    showMessage((next === "You" ? "Your turn to shoot." : next + " steps up to shoot.") + " Place your Pass Line bet.");
   }
   renderAll();
 }

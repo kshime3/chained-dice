@@ -37,3 +37,6 @@ Parked ideas and later features. Not in v1 unless moved into the design.
 1. **Pit boss bounties.** Each shooter's turn, the pit boss posts one small challenge, like "Hit a point of 4 or 10", "Win the Field 3 times in a row" or "Don't seven out in your first 5 rolls". Complete it for a reward: cash, a free item, or a cut to the dealer's debt. It gives every turn a goal beyond "win money", like Balatro's blinds.
 2. **House rules (boss twists).** Later shifts add one rule change shown at the start, like "Field pays only 1:1 on 12", "Odds capped at 2x" or "Come-out 11s don't pay". Like Balatro's boss blinds, it forces you to adapt instead of repeating one strategy.
 3. **Cut a chain.** Pay the dealer (or give up something) to cut a crew member's chain. They're gone and drop through the floor, and the shift gets one shooter shorter. Skip Jinx and lose the bad thrower, but also his seat in the rotation and any synergy. It ties the chains theme to seat-order strategy and is a dark, memorable moment.
+
+## Shop item ideas
+- **Doubles Charm:** every 3rd roll is a pair (owner's idea, first proposed for Hot Rod). Pairs never make 7. Pairs nicely with Hard Ways later.

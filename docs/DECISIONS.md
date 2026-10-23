@@ -54,3 +54,14 @@ Dated log of every decision and why. Newest at the bottom.
 - **Payments always leave the minimum Pass Line bet ($5) in the kitty,** for both "Pay" and "Pay all I can", unless the payment clears the whole debt. Owner's rule: never let the player reach $0 on purpose.
 - **Hovering over a seat shows that character's dice and style.** Quirks are marked "Coming in Milestone 4" until they're real. Owner wants to revisit and adjust the quirks in Milestone 4. Crew text lives in `js/crew.js` (it's words, not tunable numbers).
 - **Keep the flat shapes layout until the game is complete,** then grow it into a 3D Clover Pit-style world. Owner's direction.
+
+## 2026-10-23 (Session 2: Milestone 4a)
+
+- **Owner accepted all three ideas:** pit boss challenges, house rules, cut a chain.
+- **Dealer Dee = sticky dice:** only the left-1 + right-6 combo is impossible (chance of a 7 is 14.3%). Owner's choice over the stricter versions, which would actually raise 7s to 20-25%.
+- **Seat order: Lefty, Dealer Dee, Hot Rod, Jinx, Ghost, You** (Ghost and Jinx swapped). Owner's choice.
+- **Hot Rod's "every 3rd roll is a pair" becomes a shop item, not his quirk.** Why: pairs can't make 7, so he'd be nearly unable to seven out on top of his mult bonus. Too strong for a free seat.
+- **Milestone 4 split into 4a (weighted dice, visible odds) and 4b (mult and synergies).** Why: smaller steps.
+- **Dice are lists of faces in config.js;** every listed face is equally likely, and repeating a face makes it more common. Odds are worked out exactly by counting combos.
+- **Ghost picks evens or odds for his right die at the start of each turn.**
+- **Odds panel shows the current shooter's chance of every total, the 7, and the point before 7.** The break screen shows the next shooter's 7 chance.

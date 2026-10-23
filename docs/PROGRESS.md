@@ -2,6 +2,24 @@
 
 Dated session log. Newest at the top.
 
+## 2026-10-23: Session 2 (Milestone 4a)
+
+**Done**
+- Owner accepted all 3 ideas (logged in DESIGN.md). Dee's quirk set to sticky dice, seat order changed, Hot Rod's pair idea moved to the shop.
+- **Built Milestone 4a:** each crew member rolls their own dice (set in config.js), an odds bar chart for the current shooter (7 in red, point in yellow, point-before-7 chance), hover cards with real 7 chances, and the next shooter's 7 chance on the break screen. tests.html: 96 checks, all passing.
+
+**Works**
+- Checked in a headless browser through a full shift: each shooter's dice and odds are correct, and Ghost's evens/odds note shows.
+
+**Broken**
+- Nothing known.
+
+**Waiting on the owner**
+- Testing Milestone 4a.
+
+**Exact next step**
+- Milestone 4b: mult (applies to winnings), Hot Rod (+1 mult per winning roll, first seven-out costs double), Cold Table, Coach (free reroll), Mentor. Ask first: exactly what "costs double" takes, and how the free reroll is used (button? which roll?).
+
 ## 2026-10-23: Session 1 wrap-up
 
 **Done this session (overall)**

@@ -11,6 +11,7 @@ function newShiftState() {
     onBreak: true, // a Dealer break happens before each shooter and once at the end
     status: "playing", // "playing", "won", "fell-broke", or "fell-short"
     lastRoll: null,
+    dice: diceForShooter(CONFIG.crew[0]), // current shooter's dice
   };
 }
 
@@ -87,6 +88,7 @@ function afterRoll(state, sevenOut) {
   if (sevenOut) {
     state.shooterIndex += 1;
     state.onBreak = true;
+    if (!isFinalBreak(state)) state.dice = diceForShooter(CONFIG.crew[state.shooterIndex]);
   } else if (isBroke(state)) {
     state.status = "fell-broke";
   }

@@ -149,3 +149,24 @@ The dealer is the bad guy, and you owe them the shift target. Inspired by Clover
 - **Fall:** you leave the final Dealer break still owing, or you can't cover the minimum Pass Line bet.
 - **Pass Line is required** to roll a come-out. If your kitty is short, the game moves money from your other bets to cover it.
 - **The Dealer break is also where the shop lives** (Milestone 5): "Pay the dealer" (debt) and "Tip the dealer" (items). Tips don't count toward the debt.
+
+## Crew Update (2026-10-23, Milestone 4a)
+
+Seat order: **Lefty, Dealer Dee, Hot Rod, Jinx, Ghost, You.**
+
+| Character | Dice | Chance of a 7 |
+| --- | --- | --- |
+| Lefty | Each die rolls 1-5 (no 6s) | 16.0% |
+| Dealer Dee | **Sticky dice:** left 1 + right 6 can't land together | 14.3% |
+| Hot Rod | Normal | 16.7% |
+| Jinx | Faces 1, 2, 3, 3, 4, 4 (nothing above 8) | 22.2% |
+| Ghost | Right die evens-only or odds-only, picked each turn | 16.7% |
+| You | Normal (upgradable in the shop) | 16.7% |
+
+Synergies with this order (Milestone 4b): Coach (Dee to Hot Rod), Mentor (Hot Rod to Jinx), Cold Table (Jinx to Ghost).
+
+## Accepted Ideas (2026-10-23)
+
+- **Pit boss challenges:** each shooter's turn, a small challenge with a reward (cash, item, or debt cut). Own milestone after the shop.
+- **House rules:** one rule twist per shift, like Balatro boss blinds. Mainly for later shifts. Owner to decide whether shift 1 gets a preview.
+- **Cut a chain:** pay to drop a crew member through the floor, removing their seat (and their synergy). A Dealer break action, built with the shop.
