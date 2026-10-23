@@ -79,6 +79,7 @@ function roll() {
   const total = state.lastRoll.total;
   const pointBefore = state.point;
   const results = resolveRoll(state.bets, total, pointBefore);
+  applyMult(results, state.mult);
 
   // Pay winners and remove losers.
   for (const r of results) {
@@ -94,9 +95,10 @@ function roll() {
 
   state.point = nextPoint(pointBefore, total);
   const sevenOut = pointBefore !== null && total === CONFIG.sevenOut;
+  const crewNotes = applyCrewEffects(state, results, sevenOut);
   afterRoll(state, sevenOut);
 
-  showMessage(describeRoll(total, results, pointBefore, state.point));
+  showMessage(describeRoll(total, results, pointBefore, state.point) + " " + crewNotes.join(" "));
   renderAll();
 }
 

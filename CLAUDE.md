@@ -35,7 +35,7 @@ js/config.js       ALL tunable numbers
 js/dice.js         logic: rolling dice
 js/bets.js         logic: settling bets
 js/shift.js        logic: shift turns, dealer breaks and deposits, win/fall checks
-js/crew.js         logic: each shooter's dice, hover text (synergies in Milestone 4b)
+js/crew.js         logic: each shooter's dice, mult, crew synergies, hover text
 js/ui.js           display: drawing the screen
 js/main.js         wires buttons to logic and display
 ```

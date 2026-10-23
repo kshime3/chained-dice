@@ -40,3 +40,4 @@ Parked ideas and later features. Not in v1 unless moved into the design.
 
 ## Shop item ideas
 - **Doubles Charm:** every 3rd roll is a pair (owner's idea, first proposed for Hot Rod). Pairs never make 7. Pairs nicely with Hard Ways later.
+- **Reroll perk:** once per turn (or shift), cancel a roll and roll again. Was Dealer Dee's "Coach" synergy, moved here by the owner.

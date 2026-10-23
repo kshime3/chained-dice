@@ -23,6 +23,13 @@ const CONFIG = {
   // Ghost's right die is evens-only or odds-only, picked at the start of each turn.
   ghostFaces: { evens: [2, 4, 6], odds: [1, 3, 5] },
 
+  // Mult: multiplies your winnings (not your bet). Every shooter starts at this.
+  startingMult: 1,
+  hotRodMultPerWin: 1,       // Hot Rod: + this after every roll where a bet of yours wins
+  hotRodSevenOutCost: 2,     // Hot Rod's first seven-out: your losing bets cost this many times over
+  mentorShare: 0.5,          // Mentor: this share of Hot Rod's bonus passes to the next shooter
+  coldTablePenalty: 0.5,     // Cold Table: shooter after Jinx starts this much lower, until their first win
+
   // Money
   tableMinimum: 5, // also the smallest Pass Line bet, which is required to roll
   chipValues: [5, 25, 100],

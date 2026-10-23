@@ -65,3 +65,11 @@ Dated log of every decision and why. Newest at the bottom.
 - **Dice are lists of faces in config.js;** every listed face is equally likely, and repeating a face makes it more common. Odds are worked out exactly by counting combos.
 - **Ghost picks evens or odds for his right die at the start of each turn.**
 - **Odds panel shows the current shooter's chance of every total, the 7, and the point before 7.** The break screen shows the next shooter's 7 chance.
+
+## 2026-10-23 (Session 2: Milestone 4b)
+
+- **Hot Rod's first seven-out costs double:** your losing Pass Line and Odds are charged again from the kitty, never taking it below the $5 minimum. Field losses don't count. Owner approved.
+- **Coach (free reroll after Dee) removed.** A reroll may come back as a shop perk. Owner's choice.
+- **Mult applies to winnings only, rounded down,** and resets to 1x for each new shooter (plus Mentor/Cold Table effects).
+- **A "winning roll" means any of your bets won that roll.**
+- **Mentor = half of Hot Rod's bonus above 1x. Cold Table = -0.5x, lifted by the first winning roll.** All numbers are in config.js.

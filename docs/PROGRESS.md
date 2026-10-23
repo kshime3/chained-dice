@@ -2,6 +2,24 @@
 
 Dated session log. Newest at the top.
 
+## 2026-10-23: Session 2, continued (Milestone 4b)
+
+**Done**
+- Owner tested Milestone 4a.
+- **Built Milestone 4b:** mult on screen (orange when hot, blue when cold, with reasons), winnings multiplied and shown as "$5 x 1.5". Hot Rod +1x per winning roll, his first seven-out costs double. Mentor (Hot Rod to Jinx) and Cold Table (Jinx to Ghost). Coach removed. tests.html: 107 checks, all passing.
+
+**Works**
+- Checked in a headless browser through a full shift: Hot Rod heating up, the double-cost seven-out, Mentor carry-over to Jinx, Cold Table on Ghost lifting after a win.
+
+**Broken**
+- Nothing known.
+
+**Waiting on the owner**
+- Testing Milestone 4b.
+
+**Exact next step**
+- Milestone 5: the dealer's shop at the Dealer break ("Tip the dealer"), with rotating stock and rarity tiers. Includes "Cut a chain" and the Doubles Charm / Reroll ideas. Ask first: shop size per visit, price range, which starter items go in v1, and rarity odds.
+
 ## 2026-10-23: Session 2 (Milestone 4a)
 
 **Done**

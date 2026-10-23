@@ -170,3 +170,11 @@ Synergies with this order (Milestone 4b): Coach (Dee to Hot Rod), Mentor (Hot Ro
 - **Pit boss challenges:** each shooter's turn, a small challenge with a reward (cash, item, or debt cut). Own milestone after the shop.
 - **House rules:** one rule twist per shift, like Balatro boss blinds. Mainly for later shifts. Owner to decide whether shift 1 gets a preview.
 - **Cut a chain:** pay to drop a crew member through the floor, removing their seat (and their synergy). A Dealer break action, built with the shop.
+
+## Mult and Synergies (2026-10-23, Milestone 4b)
+
+- **Mult multiplies winnings, not bets.** Every shooter starts at 1.0x. Half dollars round down.
+- **Hot Rod:** +1x after every roll where any of your bets wins, for the rest of his turn. His first seven-out of the shift costs double: your losing Pass Line and Odds are charged again from your kitty, never below the $5 minimum.
+- **Mentor (Hot Rod to Jinx):** half of Hot Rod's bonus carries over. Hot Rod ending at 5x gives Jinx 3x.
+- **Cold Table (Jinx to Ghost):** the next shooter starts 0.5x lower until their first winning roll.
+- **Coach (Dee's free reroll) was removed.** It may come back as a shop perk.

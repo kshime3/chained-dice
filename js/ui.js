@@ -44,6 +44,7 @@ function renderState(state) {
   document.getElementById("progress-fill").style.width = progress + "%";
   renderCrew(state);
   renderOddsPanel(state);
+  renderMult(state);
   document.getElementById("on-table").textContent = money(b.pass + b.odds + b.field);
   document.getElementById("pass-amount").textContent = money(b.pass);
   document.getElementById("field-amount").textContent = money(b.field);
@@ -130,6 +131,18 @@ function showBreakMessage(text) {
   document.getElementById("break-message").textContent = text;
 }
 
+// The current mult, and why (synergies).
+function renderMult(state) {
+  const box = document.getElementById("mult");
+  if (!CONFIG.crew[state.shooterIndex]) {
+    box.textContent = "";
+    return;
+  }
+  box.innerHTML = "Mult: <strong>" + state.mult + "x</strong>" +
+    (state.multNotes.length ? " · " + state.multNotes.join(" · ") : "");
+  box.className = "mult" + (state.mult > 1 ? " hot" : state.mult < 1 ? " cold" : "");
+}
+
 // Bar chart of the current shooter's chance of each total.
 function renderOddsPanel(state) {
   const panel = document.getElementById("odds-panel");
@@ -181,7 +194,12 @@ function describeRoll(total, results, pointBefore, pointAfter) {
 
   for (const r of results) {
     const name = BET_NAMES[r.bet];
-    if (r.outcome === "win") lines.push(name + " wins " + money(r.winnings) + ".");
+    if (r.outcome === "win") {
+      const shown = r.mult !== undefined && r.mult !== 1
+        ? " (" + money(r.baseWinnings) + " x " + r.mult + ")"
+        : "";
+      lines.push(name + " wins " + money(r.winnings) + shown + ".");
+    }
     if (r.outcome === "lose") lines.push(name + " loses " + money(r.amount) + ".");
   }
 

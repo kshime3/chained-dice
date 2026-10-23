@@ -12,6 +12,10 @@ function newShiftState() {
     status: "playing", // "playing", "won", "fell-broke", or "fell-short"
     lastRoll: null,
     dice: diceForShooter(CONFIG.crew[0]), // current shooter's dice
+    mult: CONFIG.startingMult, // multiplies winnings this turn
+    multNotes: [], // why the mult is what it is (synergies)
+    coldTable: false, // true until this shooter's first win, after Jinx
+    hotRodPenaltyUsed: false, // Hot Rod's double-cost seven-out happens once a shift
   };
 }
 
@@ -86,9 +90,10 @@ function fundPassLine(state, amount) {
 // Otherwise, check whether you just went broke.
 function afterRoll(state, sevenOut) {
   if (sevenOut) {
+    const prevName = CONFIG.crew[state.shooterIndex];
     state.shooterIndex += 1;
     state.onBreak = true;
-    if (!isFinalBreak(state)) state.dice = diceForShooter(CONFIG.crew[state.shooterIndex]);
+    if (!isFinalBreak(state)) setupTurn(state, prevName, state.mult);
   } else if (isBroke(state)) {
     state.status = "fell-broke";
   }

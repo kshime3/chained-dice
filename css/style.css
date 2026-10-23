@@ -161,3 +161,7 @@ button {
 .bar.impossible { opacity: 0.3; }
 .bar .num { font-weight: bold; font-size: 0.9rem; }
 .odds-summary { font-size: 0.9rem; margin-top: 6px; }
+
+.mult { margin: -6px 0 10px; }
+.mult.hot strong { color: #ff9f43; }
+.mult.cold strong { color: #6ec1ff; }
