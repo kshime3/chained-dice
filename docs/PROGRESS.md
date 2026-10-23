@@ -2,6 +2,24 @@
 
 Dated session log. Newest at the top.
 
+## 2026-10-23: Session 1, continued (Milestone 3.5: Pay the dealer)
+
+**Done**
+- Owner adjusted the Milestone 3 rules (see DECISIONS.md and the new DESIGN.md section).
+- **Built Milestone 3.5:** "Bankroll" is now "Kitty". Dealer break screen before the first shooter, after each seven-out, and a final one after the last shooter. Pay a typed amount or "Pay all I can". Progress bar shows money paid. Win the moment the debt is paid. Pass Line auto-tops-up from the Field/Odds when the kitty is short. Warning on the break screen if leaving would mean falling. tests.html: 81 checks, all passing.
+
+**Works**
+- Checked in a headless browser: opening break, paying, auto-move, seven-out break, falling broke, falling short.
+
+**Broken**
+- Nothing known.
+
+**Waiting on the owner**
+- Testing Milestone 3.5 and feedback.
+
+**Exact next step**
+- After feedback: plan Milestone 4 (crew weighted dice, dice odds on screen, synergies). Ask about seat order and Dealer Dee's trait first.
+
 ## 2026-10-23: Session 1, continued (Milestone 3)
 
 **Done**

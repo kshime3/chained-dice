@@ -27,3 +27,7 @@ Parked ideas and later features. Not in v1 unless moved into the design.
 ## Teaching the game (owner priority, later)
 - Craps is confusing for newcomers. Balatro and Clover Pit explain themselves well. Add simple instructions at the start, maybe a guided first few rolls.
 - Ideas: hover/tap a bet to see what it does; highlight which numbers win or lose right now.
+
+## Paying the dealer
+- Clover Pit-style interest: unpaid debt grows, or deposits earn a small bonus.
+- The dealer reacts (taunts, nods) depending on how much you pay.

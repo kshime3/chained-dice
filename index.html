@@ -10,9 +10,9 @@
   <h1>Chained Dice</h1>
 
   <div class="money">
-    <div>Bankroll: <strong id="bankroll"></strong></div>
+    <div>Kitty: <strong id="kitty"></strong></div>
     <div>On table: <strong id="on-table"></strong></div>
-    <div>Target: <strong id="target"></strong></div>
+    <div>Paid to dealer: <strong id="paid"></strong></div>
   </div>
   <div class="progress"><div id="progress-fill" class="progress-fill"></div></div>
 
@@ -57,7 +57,23 @@
 
   <p id="message" class="message">You wake up chained to the table. Pick a chip, put it on the Pass Line, then press Roll.</p>
 
-  <div id="end-screen" class="hidden">
+  <div id="break-screen" class="overlay hidden">
+    <div class="end-box">
+      <h2>Dealer break</h2>
+      <p id="break-intro"></p>
+      <p>Still owed: <strong id="break-owed"></strong> · Your kitty: <strong id="break-kitty"></strong></p>
+      <div>
+        $<input id="deposit-amount" type="number" min="1" step="1" placeholder="amount">
+        <button id="pay-typed">Pay</button>
+        <button id="pay-all">Pay all I can</button>
+      </div>
+      <p id="break-message" class="break-message"></p>
+      <p id="break-warning" class="break-warning"></p>
+      <button id="leave-break" class="big-button"></button>
+    </div>
+  </div>
+
+  <div id="end-screen" class="overlay hidden">
     <div class="end-box">
       <h2 id="end-title"></h2>
       <p id="end-body"></p>

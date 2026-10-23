@@ -75,33 +75,62 @@
 
     // Shift rules
     const s1 = newShiftState();
-    check("Shift starts with $200 and shooter 1", [s1.bankroll, s1.shooterIndex, s1.status], [200, 0, "playing"]);
+    check("Shift starts: $200 kitty, $0 paid, shooter 1, on a Dealer break", [s1.kitty, s1.deposited, s1.shooterIndex, s1.onBreak], [200, 0, 0, true]);
     check("Can't roll a come-out with no Pass Line", canRoll(s1), false);
-    s1.bankroll = 195; s1.bets.pass = 5;
+    s1.kitty = 195; s1.bets.pass = 5;
     check("Can roll with $5 on the Pass Line", canRoll(s1), true);
 
-    const broke = newShiftState(); broke.bankroll = 4;
+    // Broke
+    const broke = newShiftState(); broke.kitty = 4;
     check("$4 total on a come-out is broke", isBroke(broke), true);
-    const notBroke = newShiftState(); notBroke.bankroll = 0; notBroke.bets.field = 5;
-    check("$0 in hand but $5 on the Field is not broke", isBroke(notBroke), false);
-    const pointOn = newShiftState(); pointOn.bankroll = 0; pointOn.bets.pass = 5; pointOn.point = 6;
-    check("$0 in hand with a point on is not broke", isBroke(pointOn), false);
+    const notBroke = newShiftState(); notBroke.kitty = 0; notBroke.bets.field = 5;
+    check("$0 kitty but $5 on the Field is not broke", isBroke(notBroke), false);
+    const pointOn = newShiftState(); pointOn.kitty = 0; pointOn.bets.pass = 5; pointOn.point = 6;
+    check("$0 kitty with a point on is not broke", isBroke(pointOn), false);
+    const paidUp = newShiftState(); paidUp.kitty = 3; paidUp.deposited = 500;
+    check("Deposits don't count toward covering a bet", isBroke(paidUp), true);
 
-    const rich = newShiftState(); rich.bankroll = 1990; rich.bets.pass = 10;
-    updateShift(rich, false);
-    check("Hitting $2,000 (hand + table) wins right away", rich.status, "won");
+    // Auto-moving money to the Pass Line
+    const mv = newShiftState(); mv.kitty = 2; mv.bets.field = 10;
+    check("Kitty $2 + Field $10: $5 Pass moves $3 from Field", fundPassLine(mv, 5), [{ from: "field", amount: 3 }]);
+    check("...leaving kitty $0, Field $7, Pass $5", [mv.kitty, mv.bets.field, mv.bets.pass], [0, 7, 5]);
+    const mv2 = newShiftState(); mv2.kitty = 50;
+    check("Enough in kitty: nothing moved", fundPassLine(mv2, 25), []);
+    const mv3 = newShiftState(); mv3.kitty = 2; mv3.bets.field = 2;
+    check("Can't cover $5 at all: refused, nothing changes", [fundPassLine(mv3, 5), mv3.kitty, mv3.bets.field], [null, 2, 2]);
 
-    const so1 = newShiftState(); so1.bankroll = 100;
-    updateShift(so1, true);
-    check("A seven-out passes the dice to the next shooter", [so1.shooterIndex, so1.status], [1, "playing"]);
+    // Paying the dealer
+    const d = newShiftState();
+    check("Pay $50: $50 paid", deposit(d, 50), 50);
+    check("...kitty $150, paid $50, still owe $1,950", [d.kitty, d.deposited, amountOwed(d)], [150, 50, 1950]);
+    check("Can't pay more than your kitty", deposit(d, 999), 150);
+    const d2 = newShiftState(); d2.kitty = 300; d2.deposited = 1900;
+    check("Owe $100 with $300: only $100 is paid", deposit(d2, 300), 100);
+    check("Paying in full wins at once, extra stays in kitty", [d2.status, d2.kitty], ["won", 200]);
 
-    const last = newShiftState(); last.bankroll = 500; last.shooterIndex = 5;
-    updateShift(last, true);
-    check("Last shooter sevens out short of target: fall", last.status, "fell-short");
+    // Turns and breaks
+    const so1 = newShiftState(); so1.onBreak = false; so1.kitty = 100;
+    afterRoll(so1, true);
+    check("A seven-out passes the dice and starts a Dealer break", [so1.shooterIndex, so1.onBreak, so1.status], [1, true, "playing"]);
+    endBreak(so1);
+    check("Leaving the break: next shooter plays", [so1.onBreak, so1.status], [false, "playing"]);
 
-    const brokeRoll = newShiftState(); brokeRoll.bankroll = 0;
-    updateShift(brokeRoll, false);
-    check("Going broke mid-shift: fall", brokeRoll.status, "fell-broke");
+    const last = newShiftState(); last.onBreak = false; last.kitty = 5000; last.shooterIndex = 5;
+    afterRoll(last, true);
+    check("Last shooter sevens out: a final Dealer break, not a fall yet", [isFinalBreak(last), last.onBreak, last.status], [true, true, "playing"]);
+    deposit(last, 5000);
+    check("Paying in full on the final break wins", last.status, "won");
+
+    const short = newShiftState(); short.kitty = 500; short.shooterIndex = 6;
+    endBreak(short);
+    check("Leaving the final break still owing: fall", short.status, "fell-short");
+
+    const brokeRoll = newShiftState(); brokeRoll.onBreak = false; brokeRoll.kitty = 0;
+    afterRoll(brokeRoll, false);
+    check("Going broke on a come-out: fall", brokeRoll.status, "fell-broke");
+    const brokeBreak = newShiftState(); brokeBreak.kitty = 3; brokeBreak.shooterIndex = 2;
+    endBreak(brokeBreak);
+    check("Leaving a break unable to cover $5: fall", brokeBreak.status, "fell-broke");
 
     // Dice: 10,000 rolls stay in range, and 7 is the most common total
     const counts = {};

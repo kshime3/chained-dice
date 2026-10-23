@@ -137,3 +137,15 @@ These details come from the kickoff brief and take priority over anything above.
 
 - Dealer Dee "always ends on a seven-out": every turn ends that way, so what makes her different? (Settle before Milestone 4.)
 - When does the shop open in a single-shift v1?
+
+## Paying the Dealer (2026-10-23, replaces "reach the target")
+
+The dealer is the bad guy, and you owe them the shift target. Inspired by Clover Pit's ATM.
+
+- **Kitty:** the money in your hand. You bet from it.
+- **Dealer break:** before the first shooter, after every seven-out, and once more after the last shooter. You can **deposit** any amount from your kitty.
+- **Deposits are paid for good:** safe from bad rolls, out of play, can't be taken back. You can't pay more than you still owe.
+- **Win:** the moment your deposits reach the target. Leftover kitty carries over (to later shifts).
+- **Fall:** you leave the final Dealer break still owing, or you can't cover the minimum Pass Line bet.
+- **Pass Line is required** to roll a come-out. If your kitty is short, the game moves money from your other bets to cover it.
+- **The Dealer break is also where the shop lives** (Milestone 5): "Pay the dealer" (debt) and "Tip the dealer" (items). Tips don't count toward the debt.

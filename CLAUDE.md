@@ -34,7 +34,7 @@ css/style.css      colors and layout
 js/config.js       ALL tunable numbers
 js/dice.js         logic: rolling dice
 js/bets.js         logic: settling bets
-js/shift.js        logic: shift turns, target, win/fall checks
+js/shift.js        logic: shift turns, dealer breaks and deposits, win/fall checks
 js/ui.js           display: drawing the screen
 js/main.js         wires buttons to logic and display
 ```

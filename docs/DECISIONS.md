@@ -36,3 +36,15 @@ Dated log of every decision and why. Newest at the bottom.
 - **Broke = on a come-out, your total money (hand + table) is below the $5 minimum Pass Line bet.** Instant fall.
 - **If the last shooter sevens out before the target, you fall.**
 - **Testing shortcut:** `?target=300` in the page address sets a smaller target, so the win screen is easy to test.
+
+## 2026-10-23 (Milestone 3 adjustments by owner)
+
+- **Broke = can't place the minimum Pass Line bet,** counting kitty plus money on the table. If the kitty is short, money is **moved automatically** from other bets (Field first, then Odds) to the Pass Line. Owner's choice.
+- **Pay the dealer instead of "reach $2,000":** deposit from your kitty at Dealer breaks between shooters (like Clover Pit). Owner's design.
+- **Deposits can't be taken back.** Owner's choice. Why: makes "bank it or let it ride" a real decision.
+- **Paying the full debt wins the shift immediately;** leftover kitty carries over. Owner's choice.
+- **One final Dealer break after the last seven-out,** before judgment. Owner's choice.
+- **One Dealer break screen for both paying the debt and (later) the shop; tips don't count toward the debt.** Owner's choice.
+- **Deposits are capped at what you still owe.** Why: overpaying would just waste money.
+- **"Bankroll" renamed "Kitty"** on screen and in code, to match the owner's wording.
+- **The first Dealer break appears before shooter 1.** Why: introduces the dealer and the rule right away.

@@ -21,9 +21,9 @@ function renderChips(selectedChip, onPick) {
 
 function renderState(state) {
   const b = state.bets;
-  document.getElementById("bankroll").textContent = money(state.bankroll);
-  document.getElementById("target").textContent = money(CONFIG.shiftTarget);
-  const progress = Math.min(100, (totalMoney(state) / CONFIG.shiftTarget) * 100);
+  document.getElementById("kitty").textContent = money(state.kitty);
+  document.getElementById("paid").textContent = money(state.deposited) + " / " + money(CONFIG.shiftTarget);
+  const progress = Math.min(100, (state.deposited / CONFIG.shiftTarget) * 100);
   document.getElementById("progress-fill").style.width = progress + "%";
   renderCrew(state);
   document.getElementById("on-table").textContent = money(b.pass + b.odds + b.field);
@@ -68,6 +68,40 @@ function renderCrew(state) {
     : "Every shooter has had a turn.";
 }
 
+// The Dealer break: pay toward the debt between shooters.
+function renderBreak(state) {
+  const screen = document.getElementById("break-screen");
+  if (!state.onBreak || state.status !== "playing") {
+    screen.classList.add("hidden");
+    return;
+  }
+  screen.classList.remove("hidden");
+
+  let intro;
+  if (state.shooterIndex === 0 && state.lastRoll === null) {
+    intro = "The dealer leans in. \"You owe me " + money(CONFIG.shiftTarget) + " by the end of the shift.\" Pay any time between shooters. Paid money is safe, but you can't bet it.";
+  } else if (isFinalBreak(state)) {
+    intro = "Every shooter has sevened out. Last chance to pay before the pit boss judges you.";
+  } else {
+    intro = "Seven out. Before " + CONFIG.crew[state.shooterIndex] + " shoots, you can pay the dealer.";
+  }
+  document.getElementById("break-intro").textContent = intro;
+  document.getElementById("break-owed").textContent = money(amountOwed(state));
+  document.getElementById("break-kitty").textContent = money(state.kitty);
+  document.getElementById("leave-break").textContent = isFinalBreak(state)
+    ? "Face the pit boss"
+    : "Next shooter: " + CONFIG.crew[state.shooterIndex];
+
+  const warn = !isFinalBreak(state) && totalMoney(state) < CONFIG.tableMinimum;
+  document.getElementById("break-warning").textContent = warn
+    ? "Warning: you need " + money(CONFIG.tableMinimum) + " to bet the Pass Line. Leave now and you fall."
+    : "";
+}
+
+function showBreakMessage(text) {
+  document.getElementById("break-message").textContent = text;
+}
+
 // Show the win or fall screen when the shift is over.
 function renderEndScreen(state) {
   const screen = document.getElementById("end-screen");
@@ -76,14 +110,14 @@ function renderEndScreen(state) {
     return;
   }
   const texts = {
-    "won": ["The chains hold.", "You reached " + money(CONFIG.shiftTarget) + ". The pit boss nods. You live to roll another shift."],
+    "won": ["The chains hold.", "You paid the dealer " + money(CONFIG.shiftTarget) + ". The pit boss nods. You keep " + money(totalMoney(state)) + " for the next shift."],
     "fell-broke": ["You fall.", "You couldn't cover the " + money(CONFIG.tableMinimum) + " Pass Line. The chains release and the floor opens."],
-    "fell-short": ["You fall.", "Every shooter has sevened out and you finished with " + money(totalMoney(state)) + ", short of " + money(CONFIG.shiftTarget) + ". The chains release."],
+    "fell-short": ["You fall.", "You only paid " + money(state.deposited) + " of the " + money(CONFIG.shiftTarget) + " you owed. The chains release."],
   };
   const [title, body] = texts[state.status];
   document.getElementById("end-title").textContent = title;
   document.getElementById("end-body").textContent = body;
-  screen.className = state.status === "won" ? "won" : "fell";
+  screen.className = "overlay " + (state.status === "won" ? "won" : "fell");
 }
 
 // Turn one roll into plain-language sentences.
