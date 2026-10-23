@@ -18,3 +18,8 @@ Parked ideas and later features. Not in v1 unless moved into the design.
 
 ## Quality of life
 - A "repeat last bets" button, and a short roll history ("last 10 rolls").
+
+## Long-term: full 3D (owner's goal, far off)
+- Owner wants the game fully 3D eventually, first-person at the table like Clover Pit.
+- Keeping rules (dice, bets, crew, shop) separate from display code means a 3D version can reuse the logic files and only replace the display.
+- Will need a library decision when we get there (for example Three.js in the browser, or a game engine). Ask the owner first.

@@ -19,3 +19,9 @@ Dated log of every decision and why. Newest at the bottom.
 - **Added tests.html,** a page of automatic rule checks. Why: catches payout mistakes fast.
 - **Milestone 1 only:** a point number leaves the Pass Line bet up and the next roll is treated as a come-out again. Temporary until Milestone 2.
 - **Owner may move to Claude Code on their own Windows PC later.** Keep everything in git so it's easy to move over.
+
+## 2026-10-23 (after Milestone 1 testing)
+
+- **Milestone 1 tested by owner: everything works.**
+- **Code pushed to the public GitHub repository kshime3/chained-dice, published with GitHub Pages** at https://kshime3.github.io/chained-dice/.
+- **Once a point is set, the Pass Line bet is locked:** no adding and no removing. You can add Odds up to the 3-4-5x limit. Owner's rule, matches real craps. Built in Milestone 2.
