@@ -28,6 +28,7 @@ docs/DESIGN.md     game design
 docs/DECISIONS.md  dated decision log
 docs/PROGRESS.md   dated session log and next step
 docs/IDEAS.md      parked ideas and later features
+docs/BALANCE.md    simulator results and balance recommendations
 index.html         the game page (open this to play)
 tests.html         rule checks: open to see green/red results
 css/style.css      colors and layout
@@ -41,6 +42,7 @@ js/shop.js         logic: shop stock, rarity, prices, buy/sell/shuffle
 js/ui.js           display: drawing the screen
 js/tutorials.js    display: tutorial pages (intro, shop) and "seen" memory
 js/main.js         wires buttons to logic and display
+tools/simulate.js  balance simulator (Node.js, not part of the game): node tools/simulate.js 20000
 ```
 Testing shortcuts: add `?target=300` to the page address for a different shift target (debt); add `?fast` to skip the dice animation and splash screens; add `?cards=doubleUp,greenDice` to start with those cards (ids are in js/cards.js). Combine with `&`, e.g. `?target=300&fast&cards=doublesCharm`.
 

@@ -14,8 +14,11 @@ Dated session log. Newest at the top.
 **Broken**
 - Nothing known.
 
+- Added `?cards=` testing shortcut.
+- Owner asked whether $200 is too easy. Built `tools/simulate.js` (plays thousands of shifts with the real rule files). Result: it's hard (smart bot 46%, mostly going broke). Results and recommendations in `docs/BALANCE.md`.
+
 **Waiting on the owner**
-- Testing 5b-1.
+- Decisions on Claude's balance proposals: shift 1 cash $150, new scale table, card tweaks (Pity to Rare, Hot Hand and Muggsy fixes), house rules, and card unlocks.
 
 **Exact next step**
 - 5b-2: Loaded Die and Reroll (offered only on a costly roll), Cut a chain (Break option, 25% of the debt), Extra chain link (Mr. Bones-style save).
