@@ -67,8 +67,8 @@ const CONFIG = {
 
   // Presentation
   diceRollMs: 600, // how long the dice-rolling animation lasts (0 = no animation)
-  sevenOutSplashMs: 2500, // how long the SEVEN OUT screen shows before the Dealer Break (tap skips)
-  winSplashMs: 2500,      // how long the "Point hit" winnings screen shows (tap skips)
+  sevenOutSplashMs: 5000, // how long the SEVEN OUT screen shows before the Dealer Break (tap skips)
+  winSplashMs: 5000,      // how long the "Point hit" winnings screen shows (tap skips)
 
   // Money
   tableMinimum: 5, // also the smallest Pass Line bet, which is required to roll

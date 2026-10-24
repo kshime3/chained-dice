@@ -31,6 +31,8 @@ Dated session log. Newest at the top.
 - Splash screens: SEVEN OUT (2.5s, then the Dealer Break) and POINT HIT (winnings with the boost from cards and mult). Mult now lists Hot Rod's streak and Rattlesnake as reasons. tests.html: 144 checks, all passing.
 - Owner asked why the tutorial didn't show: it's remembered per browser (How to play button or a private window to see it again).
 
+- 2026-10-24: splash screens lengthened to 5 seconds (tap to close early), per owner.
+
 **Waiting on the owner**
 - Testing the splash screens. Owner wants to stay on 5a for now.
 

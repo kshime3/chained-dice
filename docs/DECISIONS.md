@@ -128,3 +128,7 @@ Dated log of every decision and why. Newest at the bottom.
 - **Dice are drawn with real pips and get a short rolling animation.** Owner suggested it for later; Claude added it with the layout rework. Length is `diceRollMs` in config.
 - **SEVEN OUT gets its own screen for a few seconds before the Dealer Break.** Owner's request. `sevenOutSplashMs` in config; tap skips.
 - **Hitting a point shows a winnings screen,** including how much cards and mult boosted the payout. Owner's request. `winSplashMs` in config; tap skips. `?fast` skips both for testing.
+
+## 2026-10-24
+
+- **Splash screens (SEVEN OUT and POINT HIT) last 5 seconds,** up from 2.5; tapping or clicking closes them early. Owner's choice: 2.5s was too short.
