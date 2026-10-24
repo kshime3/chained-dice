@@ -27,6 +27,7 @@ function setupTurn(state, prevName, prevMult) {
   state.payoutX = 1;
   state.hotRodGain = 0;
   state.rattleGain = 0;
+  state.turnRolls = 0;
 
   // Muggsy: after a point-7, this shooter's winnings are multiplied.
   if (state.muggsyPending) {

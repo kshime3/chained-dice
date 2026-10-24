@@ -10,6 +10,9 @@ const CARDS = {
   oddsAddict:  { name: "Odds Addict",     text: "Odds bets pay 50% extra." },
   pity:        { name: "Pit Boss's Pity", text: "The first seven-out of the shift (any shooter) is ignored. Pass Line and Odds stay, and the shooter keeps rolling." },
   muggsy:      { name: "Muggsy",          text: "A 7 right after the point is set costs double. But the next shooter's winnings are x2 for their whole turn." },
+  doubleUp:    { name: "Double Up",       text: "Doubles come up more: +1 way (out of 36) for each double, on everyone's dice. Fewer 7s, too." },
+  doublesCharm:{ name: "Doubles Charm",   text: "Every 3rd roll of each shooter's turn is guaranteed to be a pair. Pairs can never make 7." },
+  greenDice:   { name: "Green Dice",      text: "Every 12 rolled raises your interest rate by 0.5% for the rest of the run." },
 };
 
 function hasCard(state, id) {
@@ -25,6 +28,21 @@ function roundTo5(n) {
 function effectiveMult(state) {
   const hotHand = hasCard(state, "hotHand") ? state.hotStreak * CONFIG.hotHandPerWin : 0;
   return (state.mult + hotHand) * state.payoutX;
+}
+
+// The dice the current shooter really rolls: their own dice plus card effects.
+function currentDice(state) {
+  const set = Object.assign({}, state.dice);
+  set.extraWays = [];
+  if (hasCard(state, "doubleUp")) {
+    for (let face = 1; face <= 6; face++) set.extraWays.push([face, face, CONFIG.doubleUpWays]);
+  }
+  return set;
+}
+
+// Doubles Charm: is the next roll a guaranteed pair?
+function pairDue(state) {
+  return hasCard(state, "doublesCharm") && (state.turnRolls + 1) % CONFIG.doublesCharmEvery === 0;
 }
 
 // Why the mult is what it is, e.g. ["Mentor: +1x from Hot Rod's streak", "Hot Hand: +1x"].
@@ -109,6 +127,12 @@ function applyCardsAfterRoll(state, results, total, pointBefore, sevenOut) {
     state.rattleGain += CONFIG.rattlesnakeMult;
     setMultNote(state, "Rattlesnake", "Rattlesnake: +" + state.rattleGain + "x");
     notes.push("Rattlesnake: +" + CONFIG.rattlesnakeMult + "x mult for this shooter.");
+  }
+
+  // Green Dice: every 12 raises interest for the rest of the run.
+  if (hasCard(state, "greenDice") && total === 12) {
+    state.interestRate += CONFIG.greenDiceInterestStep;
+    notes.push("Green Dice: interest is now " + Math.round(state.interestRate * 1000) / 10 + "%.");
   }
 
   // Hot Hand streak (tracked always, only counts if you own the card).

@@ -309,6 +309,42 @@
     applyCardsAfterRoll(mg2, passLose(10), 7, 6, true);
     check("Muggsy: a 7 two rolls after the point is a normal seven-out", [mg2.kitty, mg2.muggsyPending], [1000, false]);
 
+    // 5b-1 dice cards
+    const du = withCards("doubleUp"); du.dice = diceForShooter("Hot Rod"); // normal dice
+    const duOdds = diceOdds(currentDice(du));
+    check("Double Up, normal dice: 7 drops to 14.3% (6 of 42)", pct(duOdds[7]), 14.3);
+    check("Double Up: a 2 goes from 2.8% to 4.8% (2 of 42)", pct(duOdds[2]), 4.8);
+    const plainState = withCards(); plainState.dice = diceForShooter("Hot Rod");
+    const plainDice = diceOdds(currentDice(plainState));
+    check("Without Double Up, dice are unchanged (7 is 16.7%)", pct(plainDice[7]), 16.7);
+    const duDee = withCards("doubleUp"); duDee.dice = diceForShooter("Dealer Dee");
+    check("Double Up stacks with Dee's sticky dice: 7 is 5 of 41 = 12.2%", pct(diceOdds(currentDice(duDee))[7]), 12.2);
+    const lefty = withCards("doubleUp"); lefty.dice = diceForShooter("Lefty");
+    check("Double Up never makes Lefty roll a 12", diceOdds(currentDice(lefty))[12], 0);
+
+    const dc = withCards("doublesCharm");
+    check("Doubles Charm: rolls 1 and 2 are normal, roll 3 is a pair", [pairDue(dc), (dc.turnRolls = 1, pairDue(dc)), (dc.turnRolls = 2, pairDue(dc))], [false, false, true]);
+    check("...then roll 6", [(dc.turnRolls = 4, pairDue(dc)), (dc.turnRolls = 5, pairDue(dc))], [false, true]);
+    let allPairs = true, leftySix = false;
+    const leftyDice = diceForShooter("Lefty");
+    for (let i = 0; i < 2000; i++) {
+      const r = rollDice(leftyDice, true);
+      if (r.dice[0] !== r.dice[1]) allPairs = false;
+      if (r.dice[0] === 6) leftySix = true;
+    }
+    check("Doubles Charm rolls: 2,000 for Lefty, always pairs, never 6-6", [allPairs, leftySix], [true, false]);
+    check("Doubles Charm odds: 7 is impossible on a pair roll", diceOdds(NORMAL_DICE, true)[7], 0);
+    const newTurn = withCards(); newTurn.turnRolls = 7; newTurn.shooterIndex = 1; setupTurn(newTurn, "Lefty", 1);
+    check("The roll count restarts with each shooter", newTurn.turnRolls, 0);
+
+    const gd = withCards("greenDice");
+    applyCardsAfterRoll(gd, [], 12, null, false);
+    check("Green Dice: a 12 raises interest from 5% to 5.5%", Math.round(gd.interestRate * 1000) / 10, 5.5);
+    applyCardsAfterRoll(gd, [], 11, null, false);
+    check("...other totals don't", Math.round(gd.interestRate * 1000) / 10, 5.5);
+
+    check("Rare cards cost 25% of the debt ($500 at $2,000)", cardPrice("greenDice"), 500);
+
     // Dice: 10,000 rolls stay in range, and 7 is the most common total
     const counts = {};
     let inRange = true;

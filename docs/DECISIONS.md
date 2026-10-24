@@ -132,3 +132,10 @@ Dated log of every decision and why. Newest at the bottom.
 ## 2026-10-24
 
 - **Splash screens (SEVEN OUT and POINT HIT) last 5 seconds,** up from 2.5; tapping or clicking closes them early. Owner's choice: 2.5s was too short.
+- **Milestone 5b split into 5b-1 (Double Up, Doubles Charm, Green Dice) and 5b-2 (Loaded Die, Reroll, Cut a chain, Extra chain link).**
+- **Double Up: +1 way (out of 36) for each double** the shooter can roll. On normal dice, doubles go from 16.7% to 28.6% and 7s drop to 14.3%. Applies to everyone's dice.
+- **Doubles Charm: every 3rd roll of each shooter's turn is a pair,** picked from the doubles that shooter can roll. A note shows when it's due.
+- **Green Dice: each 12 adds +0.5% interest for the rest of the run.**
+- **Loaded Die and Reroll are only offered when a roll is about to cost you** (seven-out, come-out craps, Field loss). Loaded Die: once per shift, one die. Reroll: once per shooter, both dice.
+- **Cut a chain:** a fixed Dealer Break option once the shop is open, 25% of the debt, only for crew who haven't shot yet this shift (never You), gone for the rest of the run.
+- **Extra chain link works like Balatro's Mr. Bones:** when you would fall, it snaps instead, the shift counts as survived, and the rest of the debt is forgiven. Takes a card slot until used.

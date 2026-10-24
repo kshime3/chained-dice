@@ -50,6 +50,9 @@ const CONFIG = {
     oddsAddict: "uncommon",
     pity: "uncommon",
     muggsy: "uncommon",
+    doubleUp: "uncommon",
+    doublesCharm: "rare",
+    greenDice: "rare",
   },
 
   // Card numbers
@@ -60,6 +63,9 @@ const CONFIG = {
   oddsAddictExtra: 0.5,       // Odds Addict: Odds winnings +50%
   muggsyCost: 2,              // Muggsy: a point-7 costs this many times your losing bets
   muggsyNextShooterX: 2,      // Muggsy: the next shooter's winnings are multiplied by this
+  doubleUpWays: 1,            // Double Up: + this many ways (out of 36) for each double
+  doublesCharmEvery: 3,       // Doubles Charm: every Nth roll of a shooter's turn is a pair
+  greenDiceInterestStep: 0.005, // Green Dice: each 12 adds this to the interest rate (0.005 = 0.5%)
 
   // Interest: at every Dealer Break after a seven-out, this share of the money
   // you've paid the dealer so far is paid into your kitty (rounded down).

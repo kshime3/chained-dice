@@ -120,23 +120,23 @@ Full list: `docs/Store-Cards-Phone-Scales.xlsx`.
 | Card | Effect | Rarity |
 | --- | --- | --- |
 | Rattlesnake [Built] | Rolling snake eyes (1+1) adds +1x mult. Resets each shooter. | Common |
-| Double Up | Doubles become more likely (+1 way out of 36). | Uncommon |
+| Double Up [Built] | +1 way (out of 36) for each double, on everyone's dice. Normal dice: doubles 28.6%, 7s 14.3%. | Uncommon |
 | Muggsy [Built] | A 7 on the roll right after the point is set charges your losing Pass Line and Odds again (never below $5). The next shooter's winnings are x2 for their whole turn. Stacks with Hot Rod. | Uncommon |
 | Red Dice [Built] | Craps on the come-out wins the Pass Line at even money. | Uncommon |
-| Green Dice | Each 12 rolled adds +0.5% to your interest rate. | Rare |
+| Green Dice [Built] | Each 12 rolled adds +0.5% to your interest rate for the rest of the run. | Rare |
 | Hot Hand [Built] | +0.5x mult per winning roll in a row; resets on a roll with no win. | Common |
 | Snake Eyes [Built] | Rolling a 2 pays a bonus of 10% of the debt. | Common |
 | Lucky Seven [Built] | A come-out 7 pays a bonus of 5% of the debt. | Common |
 | Odds Addict [Built] | Odds pay 50% extra. | Uncommon |
-| Loaded Die | Once per shift, reroll one die after seeing a roll. | Uncommon |
+| Loaded Die | Once per shift, reroll one die, offered only when a roll is about to cost you. | Uncommon |
 | Pit Boss's Pity [Built] | The first seven-out of the shift (any shooter) is ignored. Bets stay and the shooter keeps rolling. | Uncommon |
-| Doubles Charm | Every 3rd roll is a pair. | Rare |
-| Reroll | Cancel a roll and roll again. | Uncommon |
-| Extra chain link | Saves you from one fall. | Very rare |
+| Doubles Charm [Built] | Every 3rd roll of each shooter's turn is a pair (from the doubles that shooter can roll). | Rare |
+| Reroll | Once per shooter, reroll both dice, offered only when a roll is about to cost you. | Uncommon |
+| Extra chain link | When you would fall, it snaps instead: the shift counts as survived and the rest of the debt is forgiven. Takes a slot until used. | Very rare |
 
-**Cut a chain:** pay to drop a crew member through the floor, removing their seat and synergy. Likely a fixed Dealer Break option rather than a random card.
+**Cut a chain:** a fixed Dealer Break option (once the shop is open) for 25% of the debt. Drops a crew member who hasn't shot yet this shift (never You) through the floor for the rest of the run; seats close up and synergies change.
 
-**"+1 odds" means +1 way out of 36:** one extra combination for that total, so a 2 goes from 1 in 36 to 2 in 37.
+**"+1 odds" means +1 way out of 36 [Built]:** one extra combination for that total, so a 2 goes from 1 in 36 to 2 in 37. Dice with fewer faces (like Lefty's) are scaled so their plain combos still count as 36.
 
 ## The Pit Boss Phone  [Planned]
 
@@ -191,6 +191,6 @@ Like Clover Pit's phone. After **every won shift**, it rings and you **pick 1 of
 2. [Built] Come-out and point phases, Odds, seven-out
 3. [Built] Shift: buy-in, turns, win and fall. 3.5: paying the dealer
 4. [Built] Crew dice, visible odds (4a); mult and synergies (4b)
-5. Shop: [Built] 5a framework and 8 cards; [Planned] 5b trickier cards
+5. Shop: [Built] 5a framework and 8 cards; [Built] 5b-1 dice cards; [Planned] 5b-2 action cards
 6. [Planned] Multiple shifts at the new scale, plus the Pit Boss phone
 7. [Planned] Fall animation, restart, how-to-play, polish, itch.io release

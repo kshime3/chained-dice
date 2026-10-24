@@ -82,7 +82,7 @@ function roll() {
   }
 
   // The result is decided now; the animation just shows it.
-  const rolled = rollDice(state.dice);
+  const rolled = rollDice(currentDice(state), pairDue(state));
   rolling = true;
   animateDice(rolled.dice, CONFIG.diceRollMs, () => {
     rolling = false;
@@ -93,6 +93,7 @@ function roll() {
 // Settle every bet once the dice land.
 function finishRoll(rolled) {
   state.lastRoll = rolled;
+  state.turnRolls += 1;
   const total = state.lastRoll.total;
   const pointBefore = state.point;
   const results = resolveRoll(state.bets, total, pointBefore);

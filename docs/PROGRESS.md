@@ -2,6 +2,24 @@
 
 Dated session log. Newest at the top.
 
+## 2026-10-24: Session 3 (Milestone 5b-1)
+
+**Done**
+- Owner approved all 5b recommendations (see DECISIONS.md). 5b split into 5b-1 and 5b-2.
+- **Built 5b-1:** dice now roll from weighted combos, which supports "+N ways out of 36" (`extraWays`) and pair-only rolls. Three new cards: **Double Up** (Uncommon), **Doubles Charm** (Rare), **Green Dice** (Rare). Rare cards now appear in the shop ($50 at a $200 debt). The odds chart, Break text and hover cards all show the current odds, including card effects. On a Doubles Charm roll, the chart shows pair-only odds and a note. tests.html: 157 checks, all passing.
+
+**Works**
+- Checked in a headless browser: the charm roll is a pair, the chart shows pairs only, and Dee's hover shows 12.2% with Double Up.
+
+**Broken**
+- Nothing known.
+
+**Waiting on the owner**
+- Testing 5b-1.
+
+**Exact next step**
+- 5b-2: Loaded Die and Reroll (offered only on a costly roll), Cut a chain (Break option, 25% of the debt), Extra chain link (Mr. Bones-style save).
+
 ## 2026-10-23: Session 2, continued (planning + Milestone 5a)
 
 **Done**

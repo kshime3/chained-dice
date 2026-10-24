@@ -59,10 +59,11 @@ function percent(p) {
 
 // Chance of a 7 for a crew member, for hover cards and the break screen.
 // Ghost's 7 chance is the same whichever side he picks, so evens is used.
-function sevenChance(name) {
+function sevenChance(name, state) {
   const set = CONFIG.crewDice[name];
   const dice = set.right === "ghost" ? { left: set.left, right: CONFIG.ghostFaces.evens } : set;
-  return diceOdds(dice)[7];
+  const extras = state ? currentDice(state).extraWays : [];
+  return diceOdds(Object.assign({}, dice, { extraWays: extras }))[7];
 }
 
 function renderChips(selectedChip, onPick) {
@@ -126,7 +127,7 @@ function renderCrew(state) {
       const tip = document.createElement("div");
       tip.className = "tooltip";
       tip.innerHTML = "<strong>" + name + "</strong><br>Dice: " + info.dice + "<br>Style: " + info.style +
-        "<br>Current chance of a 7: <strong>" + percent(sevenChance(name)) + "</strong> (normal dice: 16.7%)";
+        "<br>Current chance of a 7: <strong>" + percent(sevenChance(name, state)) + "</strong> (normal dice: 16.7%)";
       seat.appendChild(tip);
     }
     box.appendChild(seat);
@@ -154,7 +155,7 @@ function renderBreak(state) {
   } else {
     const next = CONFIG.crew[state.shooterIndex];
     const before = next === "You" ? "Before you shoot" : "Before " + next + " shoots";
-    intro = before + ", you can pay the dealer. " + whose(next) + " current chance of a 7: " + percent(diceOdds(state.dice)[7]) + ".";
+    intro = before + ", you can pay the dealer. " + whose(next) + " current chance of a 7: " + percent(diceOdds(currentDice(state))[7]) + ".";
   }
   document.getElementById("break-intro").textContent = intro;
 
@@ -271,7 +272,8 @@ function renderOddsPanel(state) {
     panel.innerHTML = "";
     return;
   }
-  const odds = diceOdds(state.dice);
+  const charm = pairDue(state);
+  const odds = diceOdds(currentDice(state), charm);
   let bars = "";
   for (let t = 2; t <= 12; t++) {
     const share = Math.min(1, odds[t] / 0.25); // 25% fills the bar (height set in CSS)
@@ -287,6 +289,7 @@ function renderOddsPanel(state) {
     summary += " Hitting the " + state.point + " before a 7: <strong>" + percent(pointBeforeSeven(odds, state.point)) + "</strong>.";
   }
   if (state.dice.note) summary += " " + state.dice.note;
+  if (charm) summary += " <strong>Doubles Charm: next roll is a pair!</strong>";
   panel.innerHTML = '<div class="bars">' + bars + '</div><div class="odds-summary">' + summary + "</div>";
 }
 
