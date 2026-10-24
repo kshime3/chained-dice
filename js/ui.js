@@ -118,7 +118,7 @@ function renderState(state) {
 function renderCrew(state) {
   const box = document.getElementById("crew");
   box.innerHTML = "";
-  CONFIG.crew.forEach((name, i) => {
+  state.crew.forEach((name, i) => {
     const seat = document.createElement("div");
     seat.className = "seat" + (i === state.shooterIndex ? " shooting" : "") + (i < state.shooterIndex ? " done" : "");
     seat.innerHTML = "⛓<br>" + name;
@@ -132,9 +132,9 @@ function renderCrew(state) {
     }
     box.appendChild(seat);
   });
-  const shooter = CONFIG.crew[state.shooterIndex];
+  const shooter = state.crew[state.shooterIndex];
   document.getElementById("shooter").textContent = shooter
-    ? "Now shooting: " + shooter + " (shooter " + (state.shooterIndex + 1) + " of " + CONFIG.crew.length + ")"
+    ? "Now shooting: " + shooter + " (shooter " + (state.shooterIndex + 1) + " of " + state.crew.length + ")"
     : "Every shooter has had a turn.";
 }
 
@@ -153,7 +153,7 @@ function renderBreak(state) {
   } else if (isFinalBreak(state)) {
     intro = "Every shooter has sevened out. Last chance to pay before the pit boss judges you.";
   } else {
-    const next = CONFIG.crew[state.shooterIndex];
+    const next = state.crew[state.shooterIndex];
     const before = next === "You" ? "Before you shoot" : "Before " + next + " shoots";
     intro = before + ", you can pay the dealer. " + whose(next) + " current chance of a 7: " + percent(diceOdds(currentDice(state))[7]) + ".";
   }
@@ -181,7 +181,7 @@ function renderBreak(state) {
   payOff.title = payOff.disabled ? "You need the full amount in your kitty to pay off the debt." : "";
   document.getElementById("leave-break").textContent = isFinalBreak(state)
     ? "Face the pit boss"
-    : "Next shooter: " + CONFIG.crew[state.shooterIndex];
+    : "Next shooter: " + state.crew[state.shooterIndex];
 
   const warn = !isFinalBreak(state) && totalMoney(state) < CONFIG.tableMinimum;
   document.getElementById("break-warning").textContent = warn
@@ -196,7 +196,7 @@ function showBreakMessage(text) {
 // The current mult, and why (synergies).
 function renderMult(state) {
   const box = document.getElementById("mult");
-  if (!CONFIG.crew[state.shooterIndex]) {
+  if (!state.crew[state.shooterIndex]) {
     box.textContent = "";
     return;
   }
@@ -253,6 +253,18 @@ function renderShop(state, handlers) {
     owned.appendChild(cardBox(id, "Sell for " + money(sellPrice(id)), () => handlers.sell(id)));
   }
 
+  // Cut a chain: one button per crew member who hasn't shot yet (Break screen)
+  const cutRow = document.getElementById("cut-row");
+  cutRow.innerHTML = "";
+  for (const name of cuttableCrew(state)) {
+    const button = document.createElement("button");
+    button.textContent = "Cut " + name + " (" + money(cutChainPrice()) + ")";
+    button.disabled = !canSpend(state, cutChainPrice());
+    button.onclick = () => handlers.cut(name);
+    cutRow.appendChild(button);
+  }
+  if (!cutRow.children.length) cutRow.innerHTML = '<p class="hint">Nobody left to cut this shift.</p>';
+
   // Your cards as small badges with hover text (main screen)
   const badges = document.getElementById("my-cards");
   badges.innerHTML = "";
@@ -267,7 +279,7 @@ function renderShop(state, handlers) {
 // Bar chart of the current shooter's chance of each total.
 function renderOddsPanel(state) {
   const panel = document.getElementById("odds-panel");
-  const name = CONFIG.crew[state.shooterIndex];
+  const name = state.crew[state.shooterIndex];
   if (!name) {
     panel.innerHTML = "";
     return;
@@ -301,7 +313,9 @@ function renderEndScreen(state) {
     return;
   }
   const texts = {
-    "won": ["The chains hold.", "You paid the dealer " + money(CONFIG.shiftTarget) + ". The pit boss nods. You keep " + money(totalMoney(state)) + " for the next shift."],
+    "won": state.savedByLink
+      ? ["The extra link holds!", "You were about to fall, but your Extra chain link snapped instead. The dealer forgives the rest of the debt. The chains hold, and you keep " + money(totalMoney(state)) + "."]
+      : ["The chains hold.", "You paid the dealer " + money(CONFIG.shiftTarget) + ". The pit boss nods. You keep " + money(totalMoney(state)) + " for the next shift."],
     "fell-broke": ["You fall.", "You couldn't cover the " + money(CONFIG.tableMinimum) + " Pass Line. The chains release and the floor opens."],
     "fell-short": ["You fall.", "You only paid " + money(state.deposited) + " of the " + money(CONFIG.shiftTarget) + " you owed. The chains release."],
   };
@@ -355,6 +369,43 @@ function showSplash(html, kind, ms, onDone) {
   box.className = "overlay splash " + kind;
   box.onclick = close;
   setTimeout(close, ms);
+}
+
+// Loaded Die / Reroll: offer to reroll a roll that would cost you.
+// lose: the bets that would lose. options: from rerollOptions(). onChoose("left" | "right" | "both" | "keep").
+let promptOpen = false;
+function showRerollPrompt(rolled, lose, options, onChoose) {
+  const box = document.getElementById("reroll-prompt");
+  document.getElementById("reroll-text").innerHTML = "Rolled <strong>" + rolled.dice[0] + " and " + rolled.dice[1] +
+    " (" + rolled.total + ")</strong>. You'd lose: " + lose.map((r) => BET_NAMES[r.bet] + " " + money(r.amount)).join(", ") + ".";
+  const buttons = document.getElementById("reroll-buttons");
+  buttons.innerHTML = "";
+  const add = (label, choice, cls) => {
+    const button = document.createElement("button");
+    button.textContent = label;
+    if (cls) button.className = cls;
+    button.onclick = (e) => {
+      e.stopPropagation();
+      promptOpen = false;
+      box.classList.add("hidden");
+      onChoose(choice);
+    };
+    buttons.appendChild(button);
+  };
+  if (options.oneDie) {
+    add("Loaded Die: reroll the left " + rolled.dice[0], "left", "big-button");
+    add("Loaded Die: reroll the right " + rolled.dice[1], "right", "big-button");
+  }
+  if (options.bothDice) add("Reroll: both dice", "both", "big-button");
+  add("Keep the roll", "keep");
+  promptOpen = true;
+  box.classList.remove("hidden");
+}
+
+// The "falls through the floor" screen for Cut a chain.
+function cutSplash(name) {
+  return '<div class="splash-title">CHAIN CUT</div><p class="splash-big">' + name + " falls through the floor.</p>" +
+    "<p>The seats close up. " + name + " is gone for the rest of the run.</p>" + '<p class="hint">Tap to continue</p>';
 }
 
 // The SEVEN OUT screen.

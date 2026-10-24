@@ -95,11 +95,23 @@
 
         <h3>Your cards <span id="slots"></span></h3>
         <div id="owned" class="card-row"></div>
+
+        <h3>Cut a chain</h3>
+        <p class="hint">Pay to drop a crew member through the floor for the rest of the run. Only crew who haven't shot yet this shift.</p>
+        <div id="cut-row" class="cut-row"></div>
       </div>
 
       <p id="break-message" class="break-message"></p>
       <p id="break-warning" class="break-warning"></p>
       <button id="leave-break" class="big-button"></button>
+    </div>
+  </div>
+
+  <div id="reroll-prompt" class="overlay splash hidden">
+    <div class="splash-content">
+      <div class="splash-title small">That roll would cost you</div>
+      <p id="reroll-text"></p>
+      <div id="reroll-buttons"></div>
     </div>
   </div>
 

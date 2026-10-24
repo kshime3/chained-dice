@@ -11,6 +11,7 @@ function newShiftState() {
     onBreak: true, // a Dealer Break happens before each shooter and once at the end
     status: "playing", // "playing", "won", "fell-broke", or "fell-short"
     lastRoll: null,
+    crew: CONFIG.crew.slice(), // seats still at the table (Cut a chain removes one)
     dice: diceForShooter(CONFIG.crew[0]), // current shooter's dice
     mult: CONFIG.startingMult, // multiplies winnings this turn
     multNotes: [], // why the mult is what it is (synergies)
@@ -20,6 +21,10 @@ function newShiftState() {
     hotRodGain: 0, // mult Hot Rod has built up this turn
     rattleGain: 0, // mult Rattlesnake has added this turn
     turnRolls: 0, // rolls in the current shooter's turn (Doubles Charm)
+    loadedDieUsed: false, // Loaded Die works once a shift
+    rerollUsed: false, // Reroll works once per shooter
+    prevShooterMult: 1, // the last shooter's final mult (for Mentor if a seat is cut)
+    savedByLink: false, // true if the Extra chain link saved this shift
     cards: [], // card ids you own (see cards.js)
     stock: [], // card ids for sale at this Dealer Break (null = sold out)
     shuffles: 0, // Shuffles used this shift (each one costs more)
@@ -47,7 +52,7 @@ function amountOwed(state) {
 
 // True once every shooter has had a turn.
 function isFinalBreak(state) {
-  return state.shooterIndex >= CONFIG.crew.length;
+  return state.shooterIndex >= state.crew.length;
 }
 
 // The Pass Line must be played. On a come-out you need the minimum on it.
@@ -109,24 +114,60 @@ function payInterest(state) {
   return state.lastInterest;
 }
 
+// You would fall. The Extra chain link snaps instead, if you have one:
+// the shift counts as survived and the rest of the debt is forgiven.
+function fall(state, reason) {
+  if (hasCard(state, "chainLink")) {
+    state.cards = state.cards.filter((id) => id !== "chainLink");
+    state.savedByLink = true;
+    state.status = "won";
+    return;
+  }
+  state.status = reason;
+}
+
+// Cut a chain: price, who can be cut, and doing it.
+function cutChainPrice() {
+  return roundTo5(CONFIG.cutChainPct * CONFIG.shiftTarget);
+}
+
+// Only crew who haven't shot yet this shift, never You.
+function cuttableCrew(state) {
+  return state.crew.filter((name, i) => i >= state.shooterIndex && name !== "You");
+}
+
+function cutChain(state, name) {
+  if (!cuttableCrew(state).includes(name)) return "not-allowed";
+  if (!canSpend(state, cutChainPrice())) return "money";
+  state.kitty -= cutChainPrice();
+  const wasNext = state.crew[state.shooterIndex] === name;
+  state.crew = state.crew.filter((n) => n !== name);
+  // If the next shooter was cut, the seat after them steps up (synergies included).
+  if (wasNext && !isFinalBreak(state)) {
+    setupTurn(state, state.crew[state.shooterIndex - 1] || null, state.prevShooterMult);
+  }
+  return "ok";
+}
+
 // After a roll: a seven-out passes the dice and starts a Dealer Break.
 // Otherwise, check whether you just went broke.
 function afterRoll(state, sevenOut) {
   if (sevenOut) {
-    const prevName = CONFIG.crew[state.shooterIndex];
+    const prevName = state.crew[state.shooterIndex];
+    state.prevShooterMult = state.mult;
     state.sevenOutBy = prevName;
     state.shooterIndex += 1;
     payInterest(state);
     // Broke with no way to pay off the debt: fall right away, no break.
     if (isBroke(state) && state.kitty < amountOwed(state)) {
-      state.status = "fell-broke";
+      fall(state, "fell-broke");
       return;
     }
     state.onBreak = true;
     if (!isFinalBreak(state)) setupTurn(state, prevName, state.mult);
     state.stock = newStock(state); // fresh cards at every Dealer Break
   } else if (isBroke(state)) {
-    state.status = "fell-broke";
+    fall(state, "fell-broke");
   }
 }
 
@@ -135,8 +176,8 @@ function afterRoll(state, sevenOut) {
 function endBreak(state) {
   state.onBreak = false;
   if (isFinalBreak(state)) {
-    state.status = "fell-short"; // reaching here means the debt isn't paid
+    fall(state, "fell-short"); // reaching here means the debt isn't paid
   } else if (isBroke(state)) {
-    state.status = "fell-broke";
+    fall(state, "fell-broke");
   }
 }

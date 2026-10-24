@@ -220,7 +220,7 @@
 
     const flow = newShiftState(); flow.onBreak = false; flow.kitty = 100; flow.shooterIndex = 2; flow.mult = 4;
     afterRoll(flow, true);
-    check("Full flow: Hot Rod sevens out at 4x -> Jinx starts at 2.5x", [CONFIG.crew[flow.shooterIndex], flow.mult], ["Jinx", 2.5]);
+    check("Full flow: Hot Rod sevens out at 4x -> Jinx starts at 2.5x", [flow.crew[flow.shooterIndex], flow.mult], ["Jinx", 2.5]);
 
     // Shop: prices are a share of the debt, rounded to $5
     check("Common = 5% of $2,000 = $100", cardPrice("hotHand"), 100);
@@ -295,12 +295,18 @@
     applyCardsAfterRoll(hh, [{ bet: "field", outcome: "win" }], 4, null, false);
     check("Hot Hand: 2 wins in a row -> 2x mult", effectiveMult(hh), 2);
     applyCardsAfterRoll(hh, [], 5, 4, false);
-    check("...a roll with no win resets it", effectiveMult(hh), 1);
+    check("...a roll that decides nothing keeps the streak", effectiveMult(hh), 2);
+    applyCardsAfterRoll(hh, [{ bet: "field", outcome: "lose", amount: 5 }], 5, 4, false);
+    check("...a losing roll resets it", effectiveMult(hh), 1);
 
     const mg = withCards("muggsy");
     mg.point = 6; applyCardsAfterRoll(mg, [], 6, null, false); // point set
     applyCardsAfterRoll(mg, passLose(10), 7, 6, true);           // seven on the very next roll
     check("Muggsy: point-7 charges another $10", mg.kitty, 990);
+    const mgOdds = withCards("muggsy");
+    mgOdds.point = 6; applyCardsAfterRoll(mgOdds, [], 6, null, false);
+    applyCardsAfterRoll(mgOdds, [{ bet: "pass", outcome: "lose", amount: 10 }, { bet: "odds", outcome: "lose", amount: 50 }], 7, 6, true);
+    check("Muggsy charges the Pass Line only, not Odds ($10, not $60)", mgOdds.kitty, 990);
     mg.shooterIndex = 1; setupTurn(mg, "Lefty", 1);
     check("...and the next shooter's winnings are x2", effectiveMult(mg), 2);
     const mg2 = withCards("muggsy");
@@ -344,6 +350,52 @@
     check("...other totals don't", Math.round(gd.interestRate * 1000) / 10, 5.5);
 
     check("Rare cards cost 25% of the debt ($500 at $2,000)", cardPrice("greenDice"), 500);
+
+    // 5b-2: Loaded Die, Reroll, Cut a chain, Extra chain link
+    check("Pit Boss's Pity is now Rare", CONFIG.cardRarity.pity, "rare");
+    const cb = withCards(); cb.point = 6; cb.bets = { pass: 10, odds: 20, field: 5 };
+    check("Costly roll: a seven-out loses Pass, Odds and Field", costlyBets(cb, 7).map((r) => r.bet), ["pass", "odds", "field"]);
+    check("Not costly: a 9 with the point on 6 (Field wins)", costlyBets(cb, 9).length, 0);
+    const cbPity = withCards("pity"); cbPity.point = 6; cbPity.bets = { pass: 10, odds: 0, field: 0 };
+    check("Not costly: a seven-out Pity would ignore", costlyBets(cbPity, 7).length, 0);
+    const cbRed = withCards("redDice"); cbRed.bets = { pass: 10, odds: 0, field: 0 };
+    check("Not costly: come-out craps with Red Dice", costlyBets(cbRed, 3).length, 0);
+
+    const rr = withCards("loadedDie", "reroll");
+    check("Both rerolls available at first", rerollOptions(rr), { oneDie: true, bothDice: true });
+    rr.loadedDieUsed = true; rr.rerollUsed = true;
+    rr.shooterIndex = 1; setupTurn(rr, "Lefty", 1);
+    check("Next shooter: Reroll is back, Loaded Die stays used (once a shift)", rerollOptions(rr), { oneDie: false, bothDice: true });
+    let keptLeft = true;
+    for (let i = 0; i < 500; i++) { if (rerollOneDie(NORMAL_DICE, { dice: [4, 3], total: 7 }, 1).dice[0] !== 4) keptLeft = false; }
+    check("Loaded Die rerolling the right die keeps the left one", keptLeft, true);
+
+    CONFIG.shiftTarget = 200;
+    check("Cut a chain costs 25% of the debt ($50 at $200)", cutChainPrice(), 50);
+    CONFIG.shiftTarget = 2000;
+    const ct = newShiftState(); ct.kitty = 2000; ct.shooterIndex = 2; ct.onBreak = true; // Lefty and Dee have shot
+    check("Can cut only crew who haven't shot, never You", cuttableCrew(ct), ["Hot Rod", "Jinx", "Ghost"]);
+    check("Can't cut someone who already shot", cutChain(ct, "Lefty"), "not-allowed");
+    ct.prevShooterMult = 1;
+    check("Cut Hot Rod: $500 paid, Jinx is up next", [cutChain(ct, "Hot Rod"), ct.kitty, ct.crew[ct.shooterIndex]], ["ok", 1500, "Jinx"]);
+    check("...and Jinx now rolls Jinx's dice", pct(diceOdds(ct.dice)[7]), 22.2);
+    check("...5 seats left", ct.crew.length, 5);
+    const ct2 = newShiftState(); ct2.kitty = 2000; ct2.shooterIndex = 4; ct2.onBreak = true; // Ghost is next
+    cutChain(ct2, "Ghost");
+    check("Cutting the last crew seat before You: You shoot next", ct2.crew[ct2.shooterIndex], "You");
+    const ct3 = newShiftState(); ct3.kitty = 500; ct3.shooterIndex = 1;
+    check("Cutting can't take the kitty below $5", cutChain(ct3, "Jinx"), "money");
+
+    const cl = newShiftState(); cl.cards = ["chainLink", "hotHand"]; cl.kitty = 50; cl.shooterIndex = 6;
+    endBreak(cl);
+    check("Extra chain link: falling short becomes a survived shift", [cl.status, cl.savedByLink], ["won", true]);
+    check("...and the link is used up", cl.cards, ["hotHand"]);
+    const cl2 = newShiftState(); cl2.onBreak = false; cl2.kitty = 0; cl2.cards = ["chainLink"];
+    afterRoll(cl2, false);
+    check("Extra chain link also saves you from going broke", cl2.status, "won");
+    const noLink = newShiftState(); noLink.kitty = 50; noLink.shooterIndex = 6;
+    endBreak(noLink);
+    check("Without it, you still fall", noLink.status, "fell-short");
 
     // Dice: 10,000 rolls stay in range, and 7 is the most common total
     const counts = {};

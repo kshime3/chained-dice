@@ -60,3 +60,9 @@ Baseline with no cards: 39%.
 Compared with the current scale ($100 to $200, then $200 to $500): 46% then 21%.
 
 The proposed scale gives a gentle first shift, then cards become **necessary** from shift 3 on. That's the Balatro feel: you can't survive on luck alone, you need a build. House rules and phone perks will shift these numbers, so rerun the simulator after each change.
+
+## 2026-10-24: Changes made from this report
+
+- Shift 1 changed to $150 cash / $200 debt.
+- Pit Boss's Pity moved to Rare. Hot Hand now resets only on a losing roll. Muggsy's double charge now covers the Pass Line only.
+- Rerun the simulator after Milestone 6 to check shifts 2-5.

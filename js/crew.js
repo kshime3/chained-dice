@@ -19,7 +19,7 @@ function diceForShooter(name) {
 // Set up a new shooter's turn: their dice and starting mult.
 // prevName / prevMult: the shooter who just sevened out, and their final mult.
 function setupTurn(state, prevName, prevMult) {
-  const name = CONFIG.crew[state.shooterIndex];
+  const name = state.crew[state.shooterIndex];
   state.dice = diceForShooter(name);
   state.mult = CONFIG.startingMult;
   state.multNotes = [];
@@ -28,6 +28,7 @@ function setupTurn(state, prevName, prevMult) {
   state.hotRodGain = 0;
   state.rattleGain = 0;
   state.turnRolls = 0;
+  state.rerollUsed = false; // Reroll works once per shooter
 
   // Muggsy: after a point-7, this shooter's winnings are multiplied.
   if (state.muggsyPending) {
@@ -68,7 +69,7 @@ function applyMult(results, mult) {
 // Crew effects after a roll has been paid out. Returns sentences for the message.
 function applyCrewEffects(state, results, sevenOut) {
   const notes = [];
-  const name = CONFIG.crew[state.shooterIndex];
+  const name = state.crew[state.shooterIndex];
   const won = results.some((r) => r.outcome === "win");
 
   if (won && state.coldTable) {

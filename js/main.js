@@ -7,7 +7,7 @@ let rolling = false; // true while the dice animation plays
 
 // No betting or rolling while the dice tumble or a splash screen is up.
 function busy() {
-  return rolling || splashOpen;
+  return rolling || splashOpen || promptOpen;
 }
 
 function pickChip(value) {
@@ -87,7 +87,36 @@ function roll() {
   rolling = true;
   animateDice(rolled.dice, CONFIG.diceRollMs, () => {
     rolling = false;
+    offerRerollOrFinish(rolled);
+  });
+}
+
+// Loaded Die / Reroll: if this roll would cost you, offer to reroll it first.
+function offerRerollOrFinish(rolled) {
+  const options = rerollOptions(state);
+  const lose = costlyBets(state, rolled.total);
+  if (!(options.oneDie || options.bothDice) || lose.length === 0) {
     finishRoll(rolled);
+    return;
+  }
+  showRerollPrompt(rolled, lose, options, (choice) => {
+    if (choice === "keep") {
+      finishRoll(rolled);
+      return;
+    }
+    let next;
+    if (choice === "both") {
+      state.rerollUsed = true;
+      next = rollDice(currentDice(state));
+    } else {
+      state.loadedDieUsed = true;
+      next = rerollOneDie(currentDice(state), rolled, choice === "left" ? 0 : 1);
+    }
+    rolling = true;
+    animateDice(next.dice, CONFIG.diceRollMs, () => {
+      rolling = false;
+      offerRerollOrFinish(next); // the other card may still be available
+    });
   });
 }
 
@@ -183,6 +212,19 @@ function sell(id) {
   renderAll();
 }
 
+function cut(name) {
+  if (!confirm("Cut " + name + "'s chain for " + money(cutChainPrice()) + "? They fall through the floor for the rest of the run.")) return;
+  const outcome = cutChain(state, name);
+  if (outcome !== "ok") {
+    showBreakMessage(outcome === "money" ? "Not enough. Cutting can't take your kitty below " + money(CONFIG.tableMinimum) + "." : "You can't cut " + name + ".");
+    renderAll();
+    return;
+  }
+  showBreakMessage(name + " is gone.");
+  renderAll();
+  showSplash(cutSplash(name), "bad", CONFIG.cutSplashMs);
+}
+
 function shuffle() {
   const cost = shuffleCost(state);
   showBreakMessage(shuffleStock(state)
@@ -195,7 +237,7 @@ function leaveBreak() {
   endBreak(state);
   showBreakMessage("");
   if (state.status === "playing") {
-    const next = CONFIG.crew[state.shooterIndex];
+    const next = state.crew[state.shooterIndex];
     showMessage((next === "You" ? "Your turn to shoot." : next + " steps up to shoot.") + " Place your Pass Line bet.");
   }
   renderAll();
@@ -219,7 +261,7 @@ function playAgain() {
 
 function renderAll() {
   renderState(state);
-  renderShop(state, { buy: buy, sell: sell });
+  renderShop(state, { buy: buy, sell: sell, cut: cut });
   renderBreak(state);
   renderEndScreen(state);
 

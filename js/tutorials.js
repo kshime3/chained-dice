@@ -69,6 +69,11 @@ function shopPages() {
         "You can hold <strong>" + CONFIG.maxCards + " cards</strong>, and sell one for half its price. Don't like the offer? <strong>Shuffle</strong> for new cards (" +
         pct("common") + " of the debt).<br><br>Your cards work on every roll. Hover over one, under the Mult line, to read it.",
     },
+    {
+      title: "Cut a chain",
+      body: "Don't like a shooter? For <strong>" + Math.round(CONFIG.cutChainPct * 100) + "% of the debt</strong> you can cut their chain at a Dealer Break. They fall through the floor and are gone <strong>for the rest of the run</strong>.<br><br>" +
+        "You can only cut crew who haven't shot yet this shift, and never yourself. Fewer shooters means fewer rolls to make your money, and the seats close up, so synergies change.",
+    },
   ];
 }
 

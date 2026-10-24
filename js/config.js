@@ -3,7 +3,7 @@
 
 const CONFIG = {
   // The shift
-  buyIn: 100,        // money you wake up with (shift 1)
+  buyIn: 150,        // money you wake up with (shift 1)
   shiftTarget: 200,  // the debt: pay this and the chains hold (see testing shortcut at the bottom)
   // Seat order. Each seat shoots until they seven out, then the dice pass on.
   crew: ["Lefty", "Dealer Dee", "Hot Rod", "Jinx", "Ghost", "You"],
@@ -48,11 +48,14 @@ const CONFIG = {
     rattlesnake: "common",
     redDice: "uncommon",
     oddsAddict: "uncommon",
-    pity: "uncommon",
+    pity: "rare",
     muggsy: "uncommon",
     doubleUp: "uncommon",
     doublesCharm: "rare",
     greenDice: "rare",
+    loadedDie: "uncommon",
+    reroll: "uncommon",
+    chainLink: "legendary",
   },
 
   // Card numbers
@@ -67,6 +70,9 @@ const CONFIG = {
   doublesCharmEvery: 3,       // Doubles Charm: every Nth roll of a shooter's turn is a pair
   greenDiceInterestStep: 0.005, // Green Dice: each 12 adds this to the interest rate (0.005 = 0.5%)
 
+  // Cut a chain: a Dealer Break option once the shop is open.
+  cutChainPct: 0.25, // costs this share of the debt
+
   // Interest: at every Dealer Break after a seven-out, this share of the money
   // you've paid the dealer so far is paid into your kitty (rounded down).
   interestRate: 0.05,
@@ -75,6 +81,7 @@ const CONFIG = {
   diceRollMs: 600, // how long the dice-rolling animation lasts (0 = no animation)
   sevenOutSplashMs: 5000, // how long the SEVEN OUT screen shows before the Dealer Break (tap skips)
   winSplashMs: 5000,      // how long the "Point hit" winnings screen shows (tap skips)
+  cutSplashMs: 4000,      // how long the "falls through the floor" screen shows (tap skips)
 
   // Money
   tableMinimum: 5, // also the smallest Pass Line bet, which is required to roll
@@ -122,4 +129,5 @@ if (new URLSearchParams(location.search).has("fast")) {
   CONFIG.diceRollMs = 0;
   CONFIG.sevenOutSplashMs = 0;
   CONFIG.winSplashMs = 0;
+  CONFIG.cutSplashMs = 0;
 }

@@ -2,6 +2,26 @@
 
 Dated session log. Newest at the top.
 
+## 2026-10-24: Session 3, continued (balance fixes + Milestone 5b-2)
+
+**Done**
+- Owner approved the balance plan, house rules, unlocks (with announcements), and the order of work.
+- Quick fixes: shift 1 now $150 cash / $200 debt; Pit Boss's Pity is Rare; Hot Hand resets only on a losing roll; Muggsy charges the Pass Line only.
+- **Built 5b-2:** Loaded Die and Reroll (a prompt appears only when a roll would cost you; Loaded Die rerolls one chosen die once per shift, Reroll both dice once per shooter). Cut a chain (Dealer Break section, 25% of the debt, confirm box, "falls through the floor" screen, seats close up and synergies follow). Extra chain link (Legendary; when you'd fall, the shift counts as survived). The crew list now lives in the game state so cuts last. Shop tutorial has a 3rd page on Cut a chain. tests.html: 179 checks, all passing.
+- **Milestone 5 (the shop) is complete.**
+
+**Works**
+- Checked in a headless browser: reroll prompt and both reroll types, cutting Jinx, chain link save screen.
+
+**Broken**
+- Nothing known.
+
+**Waiting on the owner**
+- Testing 5b-2.
+
+**Exact next step**
+- Milestone 6: multiple shifts at the new scale (cash added to leftover kitty, cards and cut crew carry over), and the Pit Boss phone (pick 1 of 3 perks after each won shift, with its own tutorial).
+
 ## 2026-10-24: Session 3 (Milestone 5b-1)
 
 **Done**

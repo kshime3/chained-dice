@@ -139,3 +139,12 @@ Dated log of every decision and why. Newest at the bottom.
 - **Loaded Die and Reroll are only offered when a roll is about to cost you** (seven-out, come-out craps, Field loss). Loaded Die: once per shift, one die. Reroll: once per shooter, both dice.
 - **Cut a chain:** a fixed Dealer Break option once the shop is open, 25% of the debt, only for crew who haven't shot yet this shift (never You), gone for the rest of the run.
 - **Extra chain link works like Balatro's Mr. Bones:** when you would fall, it snaps instead, the shift counts as survived, and the rest of the debt is forgiven. Takes a card slot until used.
+
+## 2026-10-24 (balance, from simulator results in docs/BALANCE.md)
+
+- **Shift 1 is now $150 cash and a $200 debt.** Why: $100 to $200 was only won 46% of the time by a careful bot, mostly lost by going broke.
+- **Scale for later shifts (Milestone 6):** shift 2 +$150 / $300, shift 3 +$200 / $500, shift 4 +$250 / $800, shift 5 +$300 / $1,200, then about 1.5x per shift, retested with the simulator.
+- **Card fixes:** Pit Boss's Pity becomes Rare (+16 points was too strong for Uncommon). Hot Hand resets only on a losing roll. Muggsy's double charge covers only the Pass Line, not Odds.
+- **House rules (Milestone 7):** one random rule per shift from shift 3, announced on the opening Break, with a tutorial the first time. Starter list: Tight Odds, Short Table, High Roller, Stingy Field, Dealer's Cut, Markup, Jinxed, Pit Watch.
+- **Card unlocks (Milestone 8):** starter set Hot Hand, Snake Eyes, Lucky Seven, Rattlesnake, Red Dice, Double Up; others unlock by goals (see DESIGN.md). Each unlock gets an on-screen announcement. Progress saved in the browser; a Collection screen shows locked cards.
+- **Order of work:** 5b-2 + quick fixes now, then 6 (shifts + phone), 7 (house rules), 8 (unlocks + Collection), then polish and release.

@@ -34,11 +34,16 @@ Long term, it becomes a first-person 3D room like Clover Pit: chained at the tab
 
 ## Shifts and Scale
 
-| Shift | Starting cash | Debt owed |
-| --- | --- | --- |
-| 1 | $100 | $200 |
-| 2 | $200 | $500 |
-| 3+ | TBD | TBD |
+Tested with the simulator (`docs/BALANCE.md`).
+
+| Shift | Cash added | Debt owed | House rule |
+| --- | --- | --- | --- |
+| 1 | $150 | $200 | none |
+| 2 | $150 | $300 | none |
+| 3 | $200 | $500 | 1 random |
+| 4 | $250 | $800 | 1 random |
+| 5 | $300 | $1,200 | 1 random |
+| 6+ | about 1.5x per shift | | 1 random |
 
 **[Built]** Shift 1 uses this scale. **[Planned]** Shifts 2+ (Milestone 6). Starting cash for shift 2+ is **added** to your leftover kitty. Cards carry over between shifts.
 
@@ -121,20 +126,20 @@ Full list: `docs/Store-Cards-Phone-Scales.xlsx`.
 | --- | --- | --- |
 | Rattlesnake [Built] | Rolling snake eyes (1+1) adds +1x mult. Resets each shooter. | Common |
 | Double Up [Built] | +1 way (out of 36) for each double, on everyone's dice. Normal dice: doubles 28.6%, 7s 14.3%. | Uncommon |
-| Muggsy [Built] | A 7 on the roll right after the point is set charges your losing Pass Line and Odds again (never below $5). The next shooter's winnings are x2 for their whole turn. Stacks with Hot Rod. | Uncommon |
+| Muggsy [Built] | A 7 on the roll right after the point is set charges your losing Pass Line again (not Odds; never below $5). The next shooter's winnings are x2 for their whole turn. Stacks with Hot Rod. | Uncommon |
 | Red Dice [Built] | Craps on the come-out wins the Pass Line at even money. | Uncommon |
 | Green Dice [Built] | Each 12 rolled adds +0.5% to your interest rate for the rest of the run. | Rare |
-| Hot Hand [Built] | +0.5x mult per winning roll in a row; resets on a roll with no win. | Common |
+| Hot Hand [Built] | +0.5x mult per winning roll in a row; resets on a roll that loses a bet without winning one. | Common |
 | Snake Eyes [Built] | Rolling a 2 pays a bonus of 10% of the debt. | Common |
 | Lucky Seven [Built] | A come-out 7 pays a bonus of 5% of the debt. | Common |
 | Odds Addict [Built] | Odds pay 50% extra. | Uncommon |
-| Loaded Die | Once per shift, reroll one die, offered only when a roll is about to cost you. | Uncommon |
-| Pit Boss's Pity [Built] | The first seven-out of the shift (any shooter) is ignored. Bets stay and the shooter keeps rolling. | Uncommon |
+| Loaded Die [Built] | Once per shift, reroll one die, offered only when a roll is about to cost you. | Uncommon |
+| Pit Boss's Pity [Built] | The first seven-out of the shift (any shooter) is ignored. Bets stay and the shooter keeps rolling. | Rare |
 | Doubles Charm [Built] | Every 3rd roll of each shooter's turn is a pair (from the doubles that shooter can roll). | Rare |
-| Reroll | Once per shooter, reroll both dice, offered only when a roll is about to cost you. | Uncommon |
-| Extra chain link | When you would fall, it snaps instead: the shift counts as survived and the rest of the debt is forgiven. Takes a slot until used. | Very rare |
+| Reroll [Built] | Once per shooter, reroll both dice, offered only when a roll is about to cost you. | Uncommon |
+| Extra chain link [Built] | When you would fall, it snaps instead: the shift counts as survived and the rest of the debt is forgiven. Takes a slot until used. | Very rare |
 
-**Cut a chain:** a fixed Dealer Break option (once the shop is open) for 25% of the debt. Drops a crew member who hasn't shot yet this shift (never You) through the floor for the rest of the run; seats close up and synergies change.
+**Cut a chain [Built]:** a fixed Dealer Break option (once the shop is open) for 25% of the debt. Drops a crew member who hasn't shot yet this shift (never You) through the floor for the rest of the run; seats close up and synergies change.
 
 **"+1 odds" means +1 way out of 36 [Built]:** one extra combination for that total, so a 2 goes from 1 in 36 to 2 in 37. Dice with fewer faces (like Lefty's) are scaled so their plain combos still count as 36.
 
@@ -152,8 +157,9 @@ Like Clover Pit's phone. After **every won shift**, it rings and you **pick 1 of
 ## More Planned Ideas
 
 - **Pit boss challenges:** a small challenge each shooter's turn, with a reward. Own milestone after the shop.
-- **House rules:** one rule twist per shift, like Balatro's boss blinds. For later shifts.
-- **Tutorials [Built]:** a 7-page "How to play" intro on first visit (also via the How to play button), a 2-page shop tutorial the first time the shop opens (also via the shop's ? button). [Planned] A phone tutorial. Each shows once per browser.
+- **House rules [Planned, Milestone 7]:** from shift 3, one random rule per shift, announced on the opening Dealer Break, with a tutorial the first time. Starter list: **Tight Odds** (Odds capped at 2x), **Short Table** (a random crew member sits out), **High Roller** ($25 minimum), **Stingy Field** (12 pays only double), **Dealer's Cut** (interest halved), **Markup** (shop prices +50%), **Jinxed** (Jinx shoots twice), **Pit Watch** (one of your cards is switched off).
+- **Card unlocks [Planned, Milestone 8]:** new players start with Hot Hand, Snake Eyes, Lucky Seven, Rattlesnake, Red Dice and Double Up. Others unlock by goals: Odds Addict (win $500 total on Odds), Muggsy (5 point-7s), Pit Boss's Pity (fall 5 times), Doubles Charm (3 doubles in one turn), Green Dice ($50 interest in one run), Loaded Die (survive shift 2), Reroll (survive shift 3), Extra chain link (survive shift 4). Each unlock gets an announcement. Progress is saved in the browser; a Collection screen shows locked cards and their goals.
+- **Tutorials [Built]:** a 7-page "How to play" intro on first visit (also via the How to play button), a 3-page shop tutorial (including Cut a chain) the first time the shop opens (also via the shop's ? button). [Planned] A phone tutorial. Each shows once per browser.
 
 ## Glossary
 
@@ -191,6 +197,9 @@ Like Clover Pit's phone. After **every won shift**, it rings and you **pick 1 of
 2. [Built] Come-out and point phases, Odds, seven-out
 3. [Built] Shift: buy-in, turns, win and fall. 3.5: paying the dealer
 4. [Built] Crew dice, visible odds (4a); mult and synergies (4b)
-5. Shop: [Built] 5a framework and 8 cards; [Built] 5b-1 dice cards; [Planned] 5b-2 action cards
+5. [Built] Shop: 5a framework and 8 cards; 5b-1 dice cards; 5b-2 Loaded Die, Reroll, Cut a chain, Extra chain link
 6. [Planned] Multiple shifts at the new scale, plus the Pit Boss phone
-7. [Planned] Fall animation, restart, how-to-play, polish, itch.io release
+7. [Planned] House rules
+8. [Planned] Card unlocks and the Collection screen
+9. [Planned] Fall animation, polish, itch.io release
+10. [After v1] More bets (Place, Hard Ways, Come)

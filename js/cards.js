@@ -2,17 +2,20 @@
 // Card numbers and rarity live in config.js.
 
 const CARDS = {
-  hotHand:     { name: "Hot Hand",        text: "+0.5x mult for every winning roll in a row. Resets on a roll with no win." },
+  hotHand:     { name: "Hot Hand",        text: "+0.5x mult for every winning roll in a row. Resets when a roll loses you a bet without winning one." },
   snakeEyes:   { name: "Snake Eyes",      text: "Rolling a 2 pays a bonus of 10% of the debt." },
   luckySeven:  { name: "Lucky Seven",     text: "A 7 on the come-out pays a bonus of 5% of the debt." },
   rattlesnake: { name: "Rattlesnake",     text: "Rolling snake eyes (1+1) adds +1x mult for the rest of this shooter's turn." },
   redDice:     { name: "Red Dice",        text: "Craps (2, 3, 12) on the come-out wins the Pass Line at even money instead of losing." },
   oddsAddict:  { name: "Odds Addict",     text: "Odds bets pay 50% extra." },
   pity:        { name: "Pit Boss's Pity", text: "The first seven-out of the shift (any shooter) is ignored. Pass Line and Odds stay, and the shooter keeps rolling." },
-  muggsy:      { name: "Muggsy",          text: "A 7 right after the point is set costs double. But the next shooter's winnings are x2 for their whole turn." },
+  muggsy:      { name: "Muggsy",          text: "A 7 right after the point is set costs your Pass Line twice. But the next shooter's winnings are x2 for their whole turn." },
   doubleUp:    { name: "Double Up",       text: "Doubles come up more: +1 way (out of 36) for each double, on everyone's dice. Fewer 7s, too." },
   doublesCharm:{ name: "Doubles Charm",   text: "Every 3rd roll of each shooter's turn is guaranteed to be a pair. Pairs can never make 7." },
   greenDice:   { name: "Green Dice",      text: "Every 12 rolled raises your interest rate by 0.5% for the rest of the run." },
+  loadedDie:   { name: "Loaded Die",      text: "Once per shift, when a roll would cost you, reroll one die of your choice." },
+  reroll:      { name: "Reroll",          text: "Once per shooter, when a roll would cost you, reroll both dice." },
+  chainLink:   { name: "Extra chain link", text: "When you would fall, this snaps instead: the shift counts as survived and the rest of the debt is forgiven. Used up." },
 };
 
 function hasCard(state, id) {
@@ -45,6 +48,26 @@ function pairDue(state) {
   return hasCard(state, "doublesCharm") && (state.turnRolls + 1) % CONFIG.doublesCharmEvery === 0;
 }
 
+// Would this roll cost you money? Counts Red Dice and an unused Pit Boss's Pity,
+// since those would save the bet anyway. Returns the bets that would lose.
+function costlyBets(state, total) {
+  const pointOn = state.point !== null;
+  return resolveRoll(state.bets, total, state.point).filter((r) => {
+    if (r.outcome !== "lose") return false;
+    if (r.bet === "pass" && !pointOn && hasCard(state, "redDice")) return false;
+    if (pointOn && total === CONFIG.sevenOut && hasCard(state, "pity") && !state.pityUsed && r.bet !== "field") return false;
+    return true;
+  });
+}
+
+// Which rerolls you can use right now: { oneDie: Loaded Die, bothDice: Reroll }.
+function rerollOptions(state) {
+  return {
+    oneDie: hasCard(state, "loadedDie") && !state.loadedDieUsed,
+    bothDice: hasCard(state, "reroll") && !state.rerollUsed,
+  };
+}
+
 // Why the mult is what it is, e.g. ["Mentor: +1x from Hot Rod's streak", "Hot Hand: +1x"].
 function multReasons(state) {
   const reasons = state.multNotes.slice();
@@ -54,10 +77,11 @@ function multReasons(state) {
   return reasons;
 }
 
-// Charge losing Pass Line and Odds bets again (times - 1 more), never below the
-// $5 minimum. Used by Hot Rod and Muggsy. Returns the amount charged.
-function chargeExtra(state, results, times) {
-  const lost = results.filter((r) => r.outcome === "lose" && r.bet !== "field")
+// Charge losing bets again (times - 1 more), never below the $5 minimum.
+// bets: which losing bets count. Used by Hot Rod (Pass Line and Odds) and
+// Muggsy (Pass Line only). Returns the amount charged.
+function chargeExtra(state, results, times, bets = ["pass", "odds"]) {
+  const lost = results.filter((r) => r.outcome === "lose" && bets.includes(r.bet))
     .reduce((sum, r) => sum + r.amount, 0);
   const extra = Math.min(lost * (times - 1), Math.max(0, state.kitty - CONFIG.tableMinimum));
   state.kitty -= extra;
@@ -136,7 +160,9 @@ function applyCardsAfterRoll(state, results, total, pointBefore, sevenOut) {
   }
 
   // Hot Hand streak (tracked always, only counts if you own the card).
-  state.hotStreak = won ? state.hotStreak + 1 : 0;
+  const lost = results.some((r) => r.outcome === "lose");
+  if (won) state.hotStreak += 1;
+  else if (lost) state.hotStreak = 0;
   if (hasCard(state, "hotHand") && won) {
     notes.push("Hot Hand: " + state.hotStreak + " in a row (+" + state.hotStreak * CONFIG.hotHandPerWin + "x).");
   }
@@ -144,7 +170,7 @@ function applyCardsAfterRoll(state, results, total, pointBefore, sevenOut) {
   // Muggsy: a 7 on the very next roll after the point was set.
   if (pointBefore !== null) state.rollsSincePoint += 1;
   if (hasCard(state, "muggsy") && sevenOut && state.rollsSincePoint === 1) {
-    const extra = chargeExtra(state, results, CONFIG.muggsyCost);
+    const extra = chargeExtra(state, results, CONFIG.muggsyCost, ["pass"]);
     state.muggsyPending = true;
     notes.push("Muggsy: point-7! " + (extra > 0 ? "Another $" + extra + " from your kitty. " : "") +
       "The next shooter's winnings are x" + CONFIG.muggsyNextShooterX + ".");

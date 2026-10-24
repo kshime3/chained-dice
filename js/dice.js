@@ -49,6 +49,21 @@ function rollDice(diceSet = NORMAL_DICE, pairsOnly = false) {
   return { dice: [last.a, last.b], total: last.a + last.b };
 }
 
+// Reroll one die (0 = left, 1 = right) and keep the other.
+// Uses the same weights as a normal roll, so card effects still count.
+function rerollOneDie(diceSet, rolled, which) {
+  const kept = rolled.dice[1 - which];
+  const combos = comboList(diceSet).filter((c) => (which === 0 ? c.b : c.a) === kept);
+  const totalWeight = combos.reduce((sum, c) => sum + c.weight, 0);
+  let pick = Math.random() * totalWeight;
+  for (const c of combos) {
+    pick -= c.weight;
+    if (pick < 0) return { dice: [c.a, c.b], total: c.a + c.b };
+  }
+  const last = combos[combos.length - 1];
+  return { dice: [last.a, last.b], total: last.a + last.b };
+}
+
 // The exact chance of each total from 2 to 12.
 // Returns { 2: 0.0278, 3: 0.0556, ... } (0.0278 means 2.78%).
 function diceOdds(diceSet = NORMAL_DICE, pairsOnly = false) {
