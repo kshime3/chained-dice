@@ -1,6 +1,7 @@
 // Connects the buttons to the game logic and the display.
 
 let state = newShiftState();
+giveTestCards(state);
 let selectedChip = CONFIG.chipValues[0];
 let rolling = false; // true while the dice animation plays
 
@@ -200,8 +201,17 @@ function leaveBreak() {
   renderAll();
 }
 
+// Testing shortcut: ?cards=doubleUp,greenDice starts you with those cards.
+function giveTestCards(st) {
+  const wanted = new URLSearchParams(location.search).get("cards");
+  if (!wanted) return;
+  st.cards = wanted.split(",").filter((id) => CARDS[id]).slice(0, CONFIG.maxCards);
+  st.stock = newStock(st);
+}
+
 function playAgain() {
   state = newShiftState();
+  giveTestCards(state);
   showBreakMessage("");
   showMessage("You wake up chained to the table.");
   renderAll();
