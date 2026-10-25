@@ -9,7 +9,7 @@ const vm = require("vm");
 
 // Load the logic files exactly as the browser does (no display code).
 globalThis.location = { search: "" };
-const files = ["config", "dice", "bets", "crew", "cards", "shop", "stats", "shift"];
+const files = ["config", "dice", "bets", "crew", "cards", "shop", "stats", "perks", "shift"];
 const source = files.map((f) => fs.readFileSync(path.join(__dirname, "..", "js", f + ".js"), "utf8")).join("\n");
 
 const simulator = `
@@ -76,6 +76,12 @@ function placeBets(state, s) {
 
 function playShift(s, carry) {
   const state = carry ? nextShift(carry) : newShiftState();
+  if (carry && !s.noPhone) {
+    // The phone: take -1 way to roll 7 if offered, else free items, else the first offer.
+    const offer = phoneOffer(state);
+    const pick = ["minusSeven", "freeItems"].find((id) => offer.includes(id)) || offer.find((id) => id !== "removeCharacter" && id !== "plus7") || offer[0];
+    takePerk(state, pick, state.crew.find((n) => n === "Jinx") || state.crew[0]);
+  }
   if (s.startCards && !carry) { state.cards = s.startCards.slice(); state.stock = newStock(state); }
   let rolls = 0;
   while (state.status === "playing" && rolls < 3000) {

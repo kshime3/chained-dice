@@ -7,7 +7,7 @@ let rolling = false; // true while the dice animation plays
 
 // No betting or rolling while the dice tumble or a splash screen is up.
 function busy() {
-  return rolling || splashOpen || promptOpen;
+  return rolling || splashOpen || promptOpen || phoneOpen;
 }
 
 function pickChip(value) {
@@ -256,11 +256,21 @@ function giveTestCards(st) {
   st.stock = newStock(st);
 }
 
+// After a won shift: the next shift starts, and the Pit Boss phone rings first.
 function startNextShift() {
   state = nextShift(state);
   showBreakMessage("");
   showMessage("Shift " + state.shift + " begins.");
   renderAll();
+  showPhone(state, phoneOffer(state), (id, target) => {
+    takePerk(state, id, target);
+    showBreakMessage("New perk: " + perkInfo(id).name + (target ? " (" + target + " is gone)" : "") + ".");
+    renderAll();
+  });
+  if (!tutorialSeen("phone")) {
+    markTutorialSeen("phone");
+    showTutorial(phonePages());
+  }
 }
 
 function playAgain() {

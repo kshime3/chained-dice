@@ -59,3 +59,6 @@ Parked ideas and later features. Not in v1 unless moved into the design.
 ## Stats ideas (later)
 - Best-ever records across runs (longest run, most shifts), saved in the browser.
 - Share a run summary as an image or text.
+
+## Known small issues
+- A card taken free (phone perk) can be sold for half its normal price. Could make free cards sell for $0.

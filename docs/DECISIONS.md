@@ -164,3 +164,8 @@ Dated log of every decision and why. Newest at the bottom.
 ## 2026-10-25 (stats screen)
 
 - **A full stats screen when a run ends.** Owner's request; Claude added best shooter, highest mult, interest, shop spending, points/seven-outs, and the "rolled vs expected" chart (it shows how lucky the dice were). Stats carry across shifts.
+
+## 2026-10-25 (direction)
+
+- **Order:** 6b (the phone), then polish (fall animation, sounds, balance check). House rules and unlocks after that.
+- **Never publish the game anywhere without the owner's explicit permission.** The owner shares the GitHub Pages link with friends for testing. Added to CLAUDE.md working rules.

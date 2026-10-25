@@ -78,6 +78,14 @@ const CONFIG = {
   doublesCharmEvery: 3,       // Doubles Charm: every Nth roll of a shooter's turn is a pair
   greenDiceInterestStep: 0.005, // Green Dice: each 12 adds this to the interest rate (0.005 = 0.5%)
 
+  // The Pit Boss phone: after each won shift, pick 1 of these many different perks.
+  phoneChoices: 3,
+  // How likely each kind of perk is to be offered. "plusTotal" is shared by the 11 "+1 way to roll N" perks.
+  perkWeights: { plusTotal: 0.6, removeCharacter: 0.15, freeItems: 0.15, minusSeven: 0.1 },
+  minusSevenRarer: 0.5, // each time you take "-1 way to roll 7", its chance is multiplied by this
+  minSevenWays: 2,      // a 7 never drops below this many ways out of 36
+  freeItemsCount: 2,    // "2 free items": your next this-many shop cards are free
+
   // Cut a chain: a Dealer Break option once the shop is open.
   cutChainPct: 0.25, // costs this share of the debt
 

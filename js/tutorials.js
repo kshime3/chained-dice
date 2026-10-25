@@ -77,6 +77,25 @@ function shopPages() {
   ];
 }
 
+function phonePages() {
+  return [
+    {
+      title: "The Pit Boss is calling",
+      body: "You survived a shift, so the Pit Boss's phone rings. He offers you <strong>" + CONFIG.phoneChoices + " perks</strong>. Pick one.<br><br>" +
+        "Perks are <strong>permanent</strong>: they last for the rest of the run, and they change <strong>everyone's</strong> dice, not just yours. You'll see the new odds in the bar chart.<br><br>" +
+        "The phone rings after every shift you survive.",
+    },
+    {
+      title: "Which perk?",
+      body: "<strong>+1 way to roll a number:</strong> that total comes up a little more often (common).<br>" +
+        "<strong>-1 way to roll 7:</strong> fewer seven-outs. The strongest perk, so it's rare, and it gets rarer each time you take it. A 7 never goes away completely.<br>" +
+        "<strong>Remove a character</strong> or <strong>" + CONFIG.freeItemsCount + " free items</strong> (uncommon).<br><br>" +
+        "Careful with <strong>+1 way to roll 7</strong>: it's marked <strong>Risky</strong>. More 7s win come-out rolls, but they also end turns.<br><br>" +
+        "Your perks show as purple ☎ badges next to your cards.",
+    },
+  ];
+}
+
 // Remember which tutorials were seen. Storage can fail (private windows), so it's optional.
 function tutorialSeen(name) {
   try {

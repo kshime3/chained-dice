@@ -2,6 +2,26 @@
 
 Dated session log. Newest at the top.
 
+## 2026-10-25: Session 4, continued (Milestone 6b: the Pit Boss phone)
+
+**Done**
+- Owner chose: 6b, then polish. **Never publish anywhere without the owner's permission** (now in CLAUDE.md).
+- **Built 6b:** new `js/perks.js`. After each won shift the phone rings (with a 2-page tutorial the first time): pick 1 of 3 perks. +1 way to roll any total (7 marked Risky), -1 way to roll 7 (rarer each time, floor of 2 ways), Remove a character (pick who), 2 free items. The dice engine now supports "+/- ways to roll a total". Purple ☎ badges, FREE shop prices, perks on the stats screen. Simulator bot now answers the phone. tests.html: 207 checks, all passing.
+- **Milestone 6 is complete.**
+
+**Works**
+- Checked in a headless browser: phone tutorial, offers, Remove a character flow, free items, -1 seven in the odds chart.
+- Simulator (smart bot, shop + phone): survives shift 1 66%, 2 43%, 3 34%, 4 24%, 5 15%.
+
+**Broken / known**
+- A free card can be sold for half its normal price (small exploit). Noted in IDEAS.md.
+
+**Waiting on the owner**
+- Testing 6b.
+
+**Exact next step**
+- Polish: the fall animation (floor opens), sounds, and a balance check.
+
 ## 2026-10-25: Session 4 (Milestone 6a)
 
 **Done**

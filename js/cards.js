@@ -40,6 +40,7 @@ function currentDice(state) {
   if (hasCard(state, "doubleUp")) {
     for (let face = 1; face <= 6; face++) set.extraWays.push([face, face, CONFIG.doubleUpWays]);
   }
+  set.totalWays = perkTotalWays(state);
   return set;
 }
 

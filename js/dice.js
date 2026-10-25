@@ -1,8 +1,9 @@
 // Dice logic. No screen code here.
 // A dice set looks like:
-//   { left: [faces], right: [faces], bannedPairs: [[1, 6]], extraWays: [[2, 2, 1]] }
+//   { left: [faces], right: [faces], bannedPairs: [[1, 6]], extraWays: [[2, 2, 1]], totalWays: [[8, 1]] }
 // Every listed face is equally likely. bannedPairs can't happen.
-// extraWays adds "+N ways out of 36" to a left/right pair (cards and perks use this).
+// extraWays adds "+N ways out of 36" to a left/right pair (cards use this).
+// totalWays adds (or removes) ways to roll a total, spread over the pairs that make it (perks use this).
 
 const NORMAL_DICE = { left: [1, 2, 3, 4, 5, 6], right: [1, 2, 3, 4, 5, 6], bannedPairs: [] };
 
@@ -26,6 +27,17 @@ function comboList(diceSet) {
   for (const [a, b, ways] of diceSet.extraWays || []) {
     const possible = combos.some((c) => c.a === a && c.b === b);
     if (possible) combos.push({ a: a, b: b, weight: ways });
+  }
+
+  // Extra (or fewer) ways to roll a total, shared out over the pairs that make it.
+  // A 7 can get rarer, but never below CONFIG.minSevenWays ways out of 36.
+  for (const [total, ways] of diceSet.totalWays || []) {
+    const makers = combos.filter((c) => c.a + c.b === total);
+    const now = makers.reduce((sum, c) => sum + c.weight, 0);
+    if (now === 0) continue; // these dice can't roll it at all
+    let target = Math.max(0, now + ways);
+    if (total === CONFIG.sevenOut && ways < 0) target = Math.max(target, Math.min(now, CONFIG.minSevenWays));
+    for (const c of makers) c.weight *= target / now;
   }
   return combos;
 }

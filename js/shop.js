@@ -7,6 +7,11 @@ function cardPrice(state, id) {
   return roundTo5(CONFIG.rarityPricePct[CONFIG.cardRarity[id]] * state.debt);
 }
 
+// What you actually pay: free while you have free items from the phone.
+function buyPrice(state, id) {
+  return state.freeBuys > 0 ? 0 : cardPrice(state, id);
+}
+
 function sellPrice(state, id) {
   return Math.floor(cardPrice(state, id) * CONFIG.sellBackShare);
 }
@@ -62,9 +67,11 @@ function buyCard(state, slot) {
   const id = state.stock[slot];
   if (!id) return "empty";
   if (state.cards.length >= CONFIG.maxCards) return "full";
-  if (!canSpend(state, cardPrice(state, id))) return "money";
-  state.kitty -= cardPrice(state, id);
-  state.stats.spent += cardPrice(state, id);
+  const price = buyPrice(state, id);
+  if (!canSpend(state, price)) return "money";
+  if (state.freeBuys > 0) state.freeBuys -= 1;
+  state.kitty -= price;
+  state.stats.spent += price;
   state.cards.push(id);
   state.stock[slot] = null; // sold out
   return "ok";

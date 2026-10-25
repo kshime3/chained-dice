@@ -144,23 +144,27 @@ Full list: `docs/Store-Cards-Phone-Scales.xlsx`.
 
 **"+1 odds" means +1 way out of 36 [Built]:** one extra combination for that total, so a 2 goes from 1 in 36 to 2 in 37. Dice with fewer faces (like Lefty's) are scaled so their plain combos still count as 36.
 
-## The Pit Boss Phone  [Planned]
+## The Pit Boss Phone  [Built, Milestone 6b]
 
-Like Clover Pit's phone. After **every won shift**, it rings and you **pick 1 of 3 permanent perks**:
+Like Clover Pit's phone. After **every won shift**, it rings before the next shift starts: **pick 1 of 3 different permanent perks**. A 2-page tutorial the first time.
 
-- -1 way to roll a 7.
-- +1 way to roll any one total (2 through 12). Perks affect **everyone's** dice. +1 to 7 is a deliberate trap, so label it clearly.
-- Remove a character from the table (a free Cut a chain).
-- 2 items from the shop are free.
-- **Let it burn:** unlocks the **Fire Bet** side bet, paid on how many different points the shooter makes: 4 points 25:1, 5 points 250:1, 6 points 1000:1.
-- **Different Doubles:** unlocks a side bet paid on how many different doubles the shooter rolls before a 7: 3 doubles 4:1, 4 doubles 8:1, 5 doubles 15:1, 6 doubles 100:1.
+| Perk | Effect | Rarity |
+| --- | --- | --- |
+| +1 way to roll N (2 to 12) | That total comes up more often on everyone's dice (+1 way out of 36, shared over the pairs that make it). +1 to 7 is labelled **Risky**. | Common |
+| -1 way to roll 7 | Fewer 7s on everyone's dice. Gets half as likely to be offered each time it's taken; a 7 never drops below 2 ways out of 36. | Rare |
+| Remove a character | Pick a crew member (not You); gone for the rest of the run, free. | Uncommon |
+| 2 free items | Your next 2 shop cards cost $0. | Uncommon |
+
+- Perks can be picked again (except where noted); each call offers 3 different ones.
+- Dice perks show as purple ☎ badges next to your cards; remaining free items show too.
+- **[After v1]** Let it burn (unlocks the Fire Bet) and Different Doubles (side bet) arrive with the "More bets" milestone.
 
 ## More Planned Ideas
 
 - **Pit boss challenges:** a small challenge each shooter's turn, with a reward. Own milestone after the shop.
 - **House rules [Planned, Milestone 7]:** from shift 3, one random rule per shift, announced on the opening Dealer Break, with a tutorial the first time. Starter list: **Tight Odds** (Odds capped at 2x), **Short Table** (a random crew member sits out), **High Roller** ($25 minimum), **Stingy Field** (12 pays only double), **Dealer's Cut** (interest halved), **Markup** (shop prices +50%), **Jinxed** (Jinx shoots twice), **Pit Watch** (one of your cards is switched off).
 - **Card unlocks [Planned, Milestone 8]:** new players start with Hot Hand, Snake Eyes, Lucky Seven, Rattlesnake, Red Dice and Double Up. Others unlock by goals: Odds Addict (win $500 total on Odds), Muggsy (5 point-7s), Pit Boss's Pity (fall 5 times), Doubles Charm (3 doubles in one turn), Green Dice ($50 interest in one run), Loaded Die (survive shift 2), Reroll (survive shift 3), Extra chain link (survive shift 4). Each unlock gets an announcement. Progress is saved in the browser; a Collection screen shows locked cards and their goals.
-- **Tutorials [Built]:** a 7-page "How to play" intro on first visit (also via the How to play button), a 3-page shop tutorial (including Cut a chain) the first time the shop opens (also via the shop's ? button). [Planned] A phone tutorial. Each shows once per browser.
+- **Tutorials [Built]:** a 2-page phone tutorial the first time it rings; a 7-page "How to play" intro on first visit (also via the How to play button), a 3-page shop tutorial (including Cut a chain) the first time the shop opens (also via the shop's ? button). [Planned] A phone tutorial. Each shows once per browser.
 
 ## Glossary
 
@@ -199,7 +203,7 @@ Like Clover Pit's phone. After **every won shift**, it rings and you **pick 1 of
 3. [Built] Shift: buy-in, turns, win and fall. 3.5: paying the dealer
 4. [Built] Crew dice, visible odds (4a); mult and synergies (4b)
 5. [Built] Shop: 5a framework and 8 cards; 5b-1 dice cards; 5b-2 Loaded Die, Reroll, Cut a chain, Extra chain link
-6. Multiple shifts [Built, 6a] and the Pit Boss phone [Planned, 6b]
+6. [Built] Multiple shifts (6a) and the Pit Boss phone (6b)
 7. [Planned] House rules
 8. [Planned] Card unlocks and the Collection screen
 9. [Planned] Fall animation, polish, itch.io release

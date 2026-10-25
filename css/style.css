@@ -361,3 +361,12 @@ button:disabled { opacity: 0.4; cursor: not-allowed; }
 .legend-bar { display: inline-block; width: 10px; height: 10px; background: #4a90d9; border-radius: 2px; vertical-align: middle; }
 .legend-tick { display: inline-block; width: 14px; height: 2px; background: #e6e6e6; vertical-align: middle; }
 .run-stats .my-cards { justify-content: flex-start; }
+
+/* Pit Boss phone and perks */
+#phone { z-index: 17; }
+.phone-box { border: 4px solid #9b59b6; box-shadow: 0 0 40px rgba(155, 89, 182, 0.5); max-width: 640px; }
+.phone-ring { color: #c39bd3; font-weight: 900; letter-spacing: 3px; animation: ring 0.4s ease-in-out 4; }
+@keyframes ring { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-4deg); } 75% { transform: rotate(4deg); } }
+.perk-card { background: #f4ecf7; }
+.risky { display: inline-block; align-self: flex-start; background: #c0392b; color: #fff; font-size: 0.7rem; font-weight: bold; border-radius: 4px; padding: 1px 6px; }
+.card-badge.perk { background: #e8daef; border-left-color: #9b59b6; }

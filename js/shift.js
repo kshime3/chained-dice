@@ -42,6 +42,8 @@ function newShiftState() {
     prevShooterMult: 1, // the last shooter's final mult (for Mentor if a seat is cut)
     savedByLink: false, // true if the Extra chain link saved this shift
     stats: newStats(), // run stats for the end screen (carry over between shifts)
+    perks: [], // Pit Boss phone perks (carry over between shifts)
+    freeBuys: 0, // shop cards you can take for free (from the "free items" perk)
     cards: [], // card ids you own (see cards.js)
     stock: [], // card ids for sale at this Dealer Break (null = sold out)
     shuffles: 0, // Shuffles used this shift (each one costs more)
@@ -160,13 +162,18 @@ function cutChain(state, name) {
   if (!canSpend(state, cutChainPrice(state))) return "money";
   state.kitty -= cutChainPrice(state);
   state.stats.spent += cutChainPrice(state);
+  removeCrew(state, name);
+  return "ok";
+}
+
+// Take a crew member off the table for the rest of the run (Cut a chain, phone perk).
+function removeCrew(state, name) {
   const wasNext = state.crew[state.shooterIndex] === name;
   state.crew = state.crew.filter((n) => n !== name);
-  // If the next shooter was cut, the seat after them steps up (synergies included).
+  // If the next shooter was removed, the seat after them steps up (synergies included).
   if (wasNext && !isFinalBreak(state)) {
     setupTurn(state, state.crew[state.shooterIndex - 1] || null, state.prevShooterMult);
   }
-  return "ok";
 }
 
 // After a won shift: the next shift. Money, cards, cut crew and interest
@@ -182,6 +189,8 @@ function nextShift(old) {
   state.crew = old.crew.slice();
   state.interestRate = old.interestRate;
   state.stats = old.stats;
+  state.perks = old.perks.slice();
+  state.freeBuys = old.freeBuys;
   state.stats.shiftStarts.push(state.stats.history.length);
   setupTurn(state, null, CONFIG.startingMult);
   state.stock = newStock(state);

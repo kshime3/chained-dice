@@ -70,3 +70,7 @@ The proposed scale gives a gentle first shift, then cards become **necessary** f
 ## 2026-10-25: Milestone 6a check (real multi-shift runs, shop open from shift 2)
 
 Smart bot with shop, 10,000 runs: survived shift 1 **68%**, shift 2 **40%**, shift 3 **29%**, shift 4 **18%**, shift 5 **9%**. Without the shop: 69%, 37%, 13%, 2%, 0.1%. Cards matter more and more as shifts go on, as intended.
+
+## 2026-10-25: Milestone 6b check (shop + Pit Boss phone)
+
+Smart bot that takes -1 way to roll 7 when offered (else free items, else a +1 total): survived shift 1 **66%**, 2 **43%**, 3 **34%**, 4 **24%**, 5 **15%** (was 68/40/29/18/9 without the phone).

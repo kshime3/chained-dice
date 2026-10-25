@@ -62,8 +62,8 @@ function percent(p) {
 function sevenChance(name, state) {
   const set = CONFIG.crewDice[name];
   const dice = set.right === "ghost" ? { left: set.left, right: CONFIG.ghostFaces.evens } : set;
-  const extras = state ? currentDice(state).extraWays : [];
-  return diceOdds(Object.assign({}, dice, { extraWays: extras }))[7];
+  const now = state ? currentDice(state) : { extraWays: [], totalWays: [] };
+  return diceOdds(Object.assign({}, dice, { extraWays: now.extraWays, totalWays: now.totalWays }))[7];
 }
 
 function renderChips(selectedChip, onPick) {
@@ -241,9 +241,9 @@ function renderShop(state, handlers) {
       stockBox.appendChild(empty);
       return;
     }
-    const price = cardPrice(state, id);
-    stockBox.appendChild(cardBox(id, "Buy " + money(price), () => handlers.buy(slot),
-      full || !canSpend(state, price)));
+    const price = buyPrice(state, id);
+    const label = price === 0 ? "Take it FREE (" + state.freeBuys + " left)" : "Buy " + money(price);
+    stockBox.appendChild(cardBox(id, label, () => handlers.buy(slot), full || !canSpend(state, price)));
   });
   document.getElementById("shuffle").textContent = "Shuffle (" + money(shuffleCost(state)) + ")";
   document.getElementById("shuffle").disabled = !canSpend(state, shuffleCost(state));
@@ -271,6 +271,22 @@ function renderShop(state, handlers) {
   // Your cards as small badges with hover text (main screen)
   const badges = document.getElementById("my-cards");
   badges.innerHTML = "";
+  // Phone perks first (purple), with repeats grouped: "-1 way to roll 7 x2".
+  // One-time perks (Remove a character, free items) don't stay as badges.
+  if (state.freeBuys > 0) {
+    const free = document.createElement("div");
+    free.className = "card-badge perk";
+    free.textContent = "☎ " + state.freeBuys + " free shop card" + (state.freeBuys > 1 ? "s" : "") + " left";
+    badges.appendChild(free);
+  }
+  for (const id of [...new Set(state.perks)].filter((p) => p.startsWith("plus") || p === "minusSeven")) {
+    const info = perkInfo(id);
+    const n = countPerk(state, id);
+    const badge = document.createElement("div");
+    badge.className = "card-badge perk";
+    badge.innerHTML = "☎ " + info.name + (n > 1 ? " x" + n : "") + '<div class="tooltip"><strong>' + info.name + "</strong><br>" + info.text + "</div>";
+    badges.appendChild(badge);
+  }
   for (const id of state.cards) {
     const badge = document.createElement("div");
     badge.className = "card-badge " + CONFIG.cardRarity[id];
@@ -426,6 +442,10 @@ function runStatsHtml(state) {
     "</div>";
   html += '<h3>Your money over the run</h3><p class="hint">Kitty plus bets after every roll. Drops at a Break are payments to the dealer; dashed lines mark new shifts.</p>' + moneyChartSvg(st);
   html += '<h3>Every total you rolled</h3><p class="hint"><span class="legend-bar"></span> times rolled &nbsp; <span class="legend-tick"></span> expected from the dice odds</p>' + totalsChartSvg(st);
+  html += "<h3>Phone perks</h3>" + (state.perks.length
+    ? '<div class="my-cards">' + [...new Set(state.perks)].map((id) => '<div class="card-badge perk">☎ ' + perkInfo(id).name +
+      (countPerk(state, id) > 1 ? " x" + countPerk(state, id) : "") + "</div>").join("") + "</div>"
+    : '<p class="hint">No perks.</p>');
   html += "<h3>Cards at the end</h3>" + (state.cards.length
     ? '<div class="my-cards">' + state.cards.map((id) => '<div class="card-badge ' + CONFIG.cardRarity[id] + '">' + CARDS[id].name + "</div>").join("") + "</div>"
     : '<p class="hint">No cards.</p>');
@@ -506,6 +526,47 @@ function showRerollPrompt(rolled, lose, options, onChoose) {
   if (options.bothDice) add("Reroll: both dice", "both", "big-button");
   add("Keep the roll", "keep");
   promptOpen = true;
+  box.classList.remove("hidden");
+}
+
+// The Pit Boss phone: pick one of the offered perks.
+// onPick(id, target) runs once a perk (and, for Remove a character, a crew member) is chosen.
+let phoneOpen = false;
+function showPhone(state, offer, onPick) {
+  const box = document.getElementById("phone");
+  const choices = document.getElementById("phone-choices");
+  document.getElementById("phone-text").textContent = "\"Nice shift. I've got something for you. Pick one, it's yours for the rest of the run.\"";
+  choices.innerHTML = "";
+  const close = (id, target) => {
+    phoneOpen = false;
+    box.classList.add("hidden");
+    onPick(id, target);
+  };
+  for (const id of offer) {
+    const info = perkInfo(id);
+    const card = document.createElement("div");
+    card.className = "card perk-card " + info.rarity;
+    card.innerHTML = '<div class="card-name">☎ ' + info.name + '</div><div class="card-rarity">' + info.rarity + "</div>" +
+      (info.risky ? '<div class="risky">RISKY</div>' : "") + '<div class="card-text">' + info.text + "</div>";
+    const button = document.createElement("button");
+    button.textContent = "Take it";
+    button.onclick = () => {
+      if (id !== "removeCharacter") return close(id);
+      // Pick who goes.
+      document.getElementById("phone-text").textContent = "\"Who goes?\" Pick a crew member to remove for the rest of the run.";
+      choices.innerHTML = "";
+      for (const name of state.crew.filter((n) => n !== "You")) {
+        const who = document.createElement("button");
+        who.className = "big-button";
+        who.textContent = name;
+        who.onclick = () => close(id, name);
+        choices.appendChild(who);
+      }
+    };
+    card.appendChild(button);
+    choices.appendChild(card);
+  }
+  phoneOpen = true;
   box.classList.remove("hidden");
 }
 
