@@ -330,7 +330,106 @@ function renderEndScreen(state) {
   document.getElementById("end-title").textContent = title;
   document.getElementById("end-body").textContent = body;
   document.getElementById("play-again").textContent = state.status === "won" ? "Next shift" : "Play again";
+  document.getElementById("run-stats").innerHTML = state.status === "won" ? "" : runStatsHtml(state);
   screen.className = "overlay " + (state.status === "won" ? "won" : "fell");
+}
+
+// ---------- End-of-run stats screen ----------
+
+function statTile(label, value, detail) {
+  return '<div class="stat-tile"><div class="stat-label">' + label + '</div><div class="stat-value">' + value + "</div>" +
+    (detail ? '<div class="stat-detail">' + detail + "</div>" : "") + "</div>";
+}
+
+// Line chart: money in play after every roll, with shift starts marked.
+function moneyChartSvg(stats) {
+  const data = stats.history;
+  if (data.length < 2) return '<p class="hint">Not enough rolls for a chart.</p>';
+  const w = 420, h = 150, padL = 44, padR = 8, padT = 12, padB = 22;
+  const max = Math.max(...data, 1);
+  const x = (i) => padL + (i / (data.length - 1)) * (w - padL - padR);
+  const y = (v) => padT + (1 - v / max) * (h - padT - padB);
+  let svg = '<svg class="chart" viewBox="0 0 ' + w + " " + h + '" role="img" aria-label="Money in play after each roll">';
+  // Recessive grid: 0, half, max
+  for (const v of [0, max / 2, max]) {
+    svg += '<line class="grid" x1="' + padL + '" x2="' + (w - padR) + '" y1="' + y(v) + '" y2="' + y(v) + '"/>' +
+      '<text class="axis" x="' + (padL - 6) + '" y="' + (y(v) + 4) + '" text-anchor="end">' + money(Math.round(v)) + "</text>";
+  }
+  // Shift starts (labels only where there's room, so they don't overlap)
+  let lastLabel = -Infinity;
+  stats.shiftStarts.forEach((start, k) => {
+    if (k === 0) return;
+    const sx = x(Math.min(start, data.length - 1));
+    svg += '<line class="shift-line" x1="' + sx + '" x2="' + sx + '" y1="' + padT + '" y2="' + (h - padB) + '"/>';
+    if (sx - lastLabel > 34) {
+      svg += '<text class="axis" x="' + (sx + 3) + '" y="' + (padT + 8) + '">S' + (k + 1) + "</text>";
+      lastLabel = sx;
+    }
+  });
+  svg += '<polyline class="money-line" points="' + data.map((v, i) => x(i) + "," + y(v)).join(" ") + '"/>';
+  // Hover targets, bigger than the line
+  data.forEach((v, i) => {
+    svg += '<circle class="hit" cx="' + x(i) + '" cy="' + y(v) + '" r="6"><title>Roll ' + (i + 1) + ": " + money(v) + "</title></circle>";
+  });
+  svg += '<text class="axis" x="' + padL + '" y="' + (h - 6) + '">Roll 1</text>' +
+    '<text class="axis" x="' + (w - padR) + '" y="' + (h - 6) + '" text-anchor="end">Roll ' + data.length + "</text>";
+  return svg + "</svg>";
+}
+
+// Bar chart: how often each total came up, with a tick for what the dice odds expected.
+function totalsChartSvg(stats) {
+  const w = 420, h = 150, padL = 8, padR = 8, padT = 14, padB = 22;
+  let max = 1;
+  for (let t = 2; t <= 12; t++) max = Math.max(max, stats.totals[t], stats.expected[t]);
+  const slot = (w - padL - padR) / 11;
+  const y = (v) => padT + (1 - v / max) * (h - padT - padB);
+  let svg = '<svg class="chart" viewBox="0 0 ' + w + " " + h + '" role="img" aria-label="Times each total was rolled, against what the dice odds expected">';
+  svg += '<line class="grid" x1="' + padL + '" x2="' + (w - padR) + '" y1="' + y(0) + '" y2="' + y(0) + '"/>';
+  for (let t = 2; t <= 12; t++) {
+    const left = padL + (t - 2) * slot;
+    const barX = left + slot * 0.2, barW = slot * 0.6;
+    const count = stats.totals[t], exp = stats.expected[t];
+    const top = y(count);
+    const tip = "<title>" + t + ": rolled " + count + " times, expected about " + exp.toFixed(1) + "</title>";
+    if (count > 0) {
+      svg += '<path class="' + (t === 7 ? "bar seven" : "bar") + '" d="M' + barX + "," + y(0) + " V" + (top + 4) +
+        " Q" + barX + "," + top + " " + (barX + 4) + "," + top + " H" + (barX + barW - 4) +
+        " Q" + (barX + barW) + "," + top + " " + (barX + barW) + "," + (top + 4) + " V" + y(0) + ' Z">' + tip + "</path>";
+      svg += '<text class="bar-label" x="' + (barX + barW / 2) + '" y="' + (top - 4) + '" text-anchor="middle">' + count + "</text>";
+    }
+    svg += '<line class="expected" x1="' + (left + slot * 0.1) + '" x2="' + (left + slot * 0.9) + '" y1="' + y(exp) + '" y2="' + y(exp) + '">' + tip + "</line>";
+    svg += '<rect class="hit" x="' + left + '" y="' + padT + '" width="' + slot + '" height="' + (h - padT - padB) + '">' + tip + "</rect>";
+    svg += '<text class="axis" x="' + (left + slot / 2) + '" y="' + (h - 6) + '" text-anchor="middle">' + t + "</text>";
+  }
+  return svg + "</svg>";
+}
+
+function runStatsHtml(state) {
+  const st = state.stats;
+  const survived = state.shift - 1;
+  const best = bestShooter(st);
+  const net = st.totalWon - st.totalLost;
+  let html = '<div class="hero"><div class="hero-number">' + survived + '</div><div class="stat-label">' +
+    (survived === 1 ? "shift survived" : "shifts survived") + "</div></div>";
+  html += '<div class="stat-grid">' +
+    statTile("Rolls", st.rolls, st.doubles + " doubles") +
+    statTile("Longest run without a 7", st.bestNoSeven + " rolls") +
+    statTile("Longest turn", st.longestTurn.rolls + " rolls", st.longestTurn.name || "-") +
+    statTile("Biggest hit", "+" + money(st.biggestHit.amount), st.biggestHit.amount ? "roll " + st.biggestHit.roll + ", " + st.biggestHit.name + " shooting" : "-") +
+    statTile("Biggest loss", "-" + money(st.biggestLoss.amount), st.biggestLoss.amount ? "roll " + st.biggestLoss.roll + ", " + st.biggestLoss.name + " shooting" : "-") +
+    statTile("Won / lost at the table", money(st.totalWon) + " / " + money(st.totalLost), "net " + (net >= 0 ? "+" : "-") + money(Math.abs(net))) +
+    statTile("Paid to the dealer", money(st.paid), money(st.interest) + " interest earned") +
+    statTile("Spent in the shop", money(st.spent)) +
+    statTile("Points hit / seven-outs", st.pointsHit + " / " + st.sevenOuts) +
+    statTile("Highest mult", st.maxMult + "x") +
+    statTile("Best shooter", best ? best.name : "-", best ? (best.amount >= 0 ? "+" : "-") + money(Math.abs(best.amount)) + " for you" : "") +
+    "</div>";
+  html += '<h3>Your money over the run</h3><p class="hint">Kitty plus bets after every roll. Drops at a Break are payments to the dealer; dashed lines mark new shifts.</p>' + moneyChartSvg(st);
+  html += '<h3>Every total you rolled</h3><p class="hint"><span class="legend-bar"></span> times rolled &nbsp; <span class="legend-tick"></span> expected from the dice odds</p>' + totalsChartSvg(st);
+  html += "<h3>Cards at the end</h3>" + (state.cards.length
+    ? '<div class="my-cards">' + state.cards.map((id) => '<div class="card-badge ' + CONFIG.cardRarity[id] + '">' + CARDS[id].name + "</div>").join("") + "</div>"
+    : '<p class="hint">No cards.</p>');
+  return html;
 }
 
 // Turn one roll into plain-language sentences.

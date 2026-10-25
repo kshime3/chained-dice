@@ -41,6 +41,7 @@ function newShiftState() {
     rerollUsed: false, // Reroll works once per shooter
     prevShooterMult: 1, // the last shooter's final mult (for Mentor if a seat is cut)
     savedByLink: false, // true if the Extra chain link saved this shift
+    stats: newStats(), // run stats for the end screen (carry over between shifts)
     cards: [], // card ids you own (see cards.js)
     stock: [], // card ids for sale at this Dealer Break (null = sold out)
     shuffles: 0, // Shuffles used this shift (each one costs more)
@@ -96,6 +97,7 @@ function deposit(state, amount) {
   if (paid <= 0) return 0;
   state.kitty -= paid;
   state.deposited += paid;
+  state.stats.paid += paid;
   if (state.deposited >= state.debt) state.status = "won";
   return paid;
 }
@@ -127,6 +129,7 @@ function fundPassLine(state, amount) {
 function payInterest(state) {
   state.lastInterest = Math.floor(state.deposited * state.interestRate);
   state.kitty += state.lastInterest;
+  state.stats.interest += state.lastInterest;
   return state.lastInterest;
 }
 
@@ -156,6 +159,7 @@ function cutChain(state, name) {
   if (!cuttableCrew(state).includes(name)) return "not-allowed";
   if (!canSpend(state, cutChainPrice(state))) return "money";
   state.kitty -= cutChainPrice(state);
+  state.stats.spent += cutChainPrice(state);
   const wasNext = state.crew[state.shooterIndex] === name;
   state.crew = state.crew.filter((n) => n !== name);
   // If the next shooter was cut, the seat after them steps up (synergies included).
@@ -177,6 +181,8 @@ function nextShift(old) {
   state.cards = old.cards.slice();
   state.crew = old.crew.slice();
   state.interestRate = old.interestRate;
+  state.stats = old.stats;
+  state.stats.shiftStarts.push(state.stats.history.length);
   setupTurn(state, null, CONFIG.startingMult);
   state.stock = newStock(state);
   return state;

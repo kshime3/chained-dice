@@ -122,6 +122,9 @@ function offerRerollOrFinish(rolled) {
 
 // Settle every bet once the dice land.
 function finishRoll(rolled) {
+  const moneyBefore = totalMoney(state);
+  const shooter = state.crew[state.shooterIndex];
+  const odds = diceOdds(currentDice(state), pairDue(state));
   state.lastRoll = rolled;
   state.turnRolls += 1;
   const total = state.lastRoll.total;
@@ -152,6 +155,8 @@ function finishRoll(rolled) {
   const sevenOut = !before.pity && pointBefore !== null && total === CONFIG.sevenOut;
   const cardNotes = applyCardsAfterRoll(state, results, total, pointBefore, sevenOut);
   const crewNotes = applyCrewEffects(state, results, sevenOut);
+  const pointHit = pointBefore !== null && total === pointBefore;
+  recordRoll(state.stats, state, rolled, totalMoney(state) - moneyBefore, sevenOut, pointHit, odds, multUsed, shooter, state.turnRolls);
   afterRoll(state, sevenOut);
 
   const notes = before.notes.concat(cardNotes, crewNotes);

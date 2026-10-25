@@ -31,7 +31,7 @@ Long term, it becomes a first-person 3D room like Clover Pit: chained at the tab
 4. **Dealer Break** after every seven-out, then the next shooter steps up.
 5. After the last shooter sevens out: one **final Dealer Break**, then the pit boss judges.
 6. **Win** the moment your payments reach the debt. Leftover kitty is kept. **[Planned, 6b]** The Pit Boss phone rings: pick 1 of 3 perks. **[Built]** Next shift: the new cash is added to your kitty and a bigger debt starts. From shift 2, the shop is open on the opening Break.
-7. **Fall:** the run ends, showing how many shifts you survived (your score). Play again starts a new run at shift 1.
+7. **Fall:** the run ends with a **stats screen [Built]**: shifts survived (your score), rolls and doubles, longest run without a 7, longest turn, biggest hit and loss, won/lost at the table, paid to the dealer and interest, spent in the shop, points hit and seven-outs, highest mult, best shooter, a chart of your money over the run (shift starts marked), a chart of every total rolled against what the dice odds expected, and your cards. Play again starts a new run at shift 1.
 
 ## Shifts and Scale
 

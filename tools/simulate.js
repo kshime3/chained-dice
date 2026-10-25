@@ -9,7 +9,7 @@ const vm = require("vm");
 
 // Load the logic files exactly as the browser does (no display code).
 globalThis.location = { search: "" };
-const files = ["config", "dice", "bets", "crew", "cards", "shop", "shift"];
+const files = ["config", "dice", "bets", "crew", "cards", "shop", "stats", "shift"];
 const source = files.map((f) => fs.readFileSync(path.join(__dirname, "..", "js", f + ".js"), "utf8")).join("\n");
 
 const simulator = `

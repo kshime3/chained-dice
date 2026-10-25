@@ -64,6 +64,7 @@ function buyCard(state, slot) {
   if (state.cards.length >= CONFIG.maxCards) return "full";
   if (!canSpend(state, cardPrice(state, id))) return "money";
   state.kitty -= cardPrice(state, id);
+  state.stats.spent += cardPrice(state, id);
   state.cards.push(id);
   state.stock[slot] = null; // sold out
   return "ok";
@@ -82,6 +83,7 @@ function shuffleStock(state) {
   const cost = shuffleCost(state);
   if (!canSpend(state, cost)) return false;
   state.kitty -= cost;
+  state.stats.spent += cost;
   state.shuffles += 1;
   state.stock = newStock(state);
   return true;

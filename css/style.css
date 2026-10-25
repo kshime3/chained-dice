@@ -332,3 +332,32 @@ button:disabled { opacity: 0.4; cursor: not-allowed; }
 #reroll-buttons button { display: block; width: 100%; margin: 6px 0; }
 .cut-row { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; }
 .cut-row button { background: #5a1f1f; color: #fff; }
+
+/* End-of-run stats */
+#end-screen.fell .end-box { max-width: 760px; }
+@media (max-width: 760px) {
+  .end-box { padding: 16px 12px; }
+  .stat-value { font-size: 1.05rem; }
+  .hero-number { font-size: 2.6rem; }
+}
+.run-stats h3 { margin: 16px 0 4px; font-size: 1rem; text-align: left; }
+.hero { margin: 8px 0 12px; }
+.hero-number { font-size: 3.4rem; font-weight: 900; color: #ffd84d; line-height: 1; }
+.stat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; }
+.stat-tile { background: #2c2c2c; border-radius: 10px; padding: 8px 10px; text-align: left; }
+.stat-label { font-size: 0.75rem; color: #b5b5b5; }
+.stat-value { font-size: 1.25rem; font-weight: bold; color: #f2f2f2; }
+.stat-detail { font-size: 0.75rem; color: #b5b5b5; }
+.chart { width: 100%; height: auto; display: block; }
+.chart .grid { stroke: #3a3a3a; stroke-width: 1; }
+.chart .axis, .chart .bar-label { fill: #b5b5b5; font-size: 11px; }
+.chart .money-line { fill: none; stroke: #ffd84d; stroke-width: 2; stroke-linejoin: round; }
+.chart .shift-line { stroke: #777; stroke-width: 1; stroke-dasharray: 4 4; }
+.chart .bar { fill: #4a90d9; }
+.chart .bar.seven { fill: #c0392b; }
+.chart .expected { stroke: #e6e6e6; stroke-width: 2; }
+.chart .hit { fill: transparent; }
+.chart .hit:hover { fill: rgba(255, 255, 255, 0.06); }
+.legend-bar { display: inline-block; width: 10px; height: 10px; background: #4a90d9; border-radius: 2px; vertical-align: middle; }
+.legend-tick { display: inline-block; width: 14px; height: 2px; background: #e6e6e6; vertical-align: middle; }
+.run-stats .my-cards { justify-content: flex-start; }

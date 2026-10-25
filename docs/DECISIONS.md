@@ -160,3 +160,7 @@ Dated log of every decision and why. Newest at the bottom.
 - **Perks can be picked again,** but each call offers 3 different ones. **"-1 way to roll 7" gets rarer each time it's taken, and a 7 can never drop below 2 ways out of 36.** Owner's rule: 7s should get rarer, never disappear.
 - **"+1 way to roll 7" stays, labelled Risky.**
 - **Perk rarity:** +1 way to a total is common; Remove a character and 2 free items are uncommon; -1 way to roll 7 is rare.
+
+## 2026-10-25 (stats screen)
+
+- **A full stats screen when a run ends.** Owner's request; Claude added best shooter, highest mult, interest, shop spending, points/seven-outs, and the "rolled vs expected" chart (it shows how lucky the dice were). Stats carry across shifts.

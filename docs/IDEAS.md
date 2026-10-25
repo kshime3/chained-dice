@@ -55,3 +55,7 @@ Parked ideas and later features. Not in v1 unless moved into the design.
 
 ## Presentation polish (later)
 - Better dice art, sounds for rolls and the seven-out, chip stacks on bets.
+
+## Stats ideas (later)
+- Best-ever records across runs (longest run, most shifts), saved in the browser.
+- Share a run summary as an image or text.

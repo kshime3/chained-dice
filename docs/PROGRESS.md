@@ -15,8 +15,10 @@ Dated session log. Newest at the top.
 **Broken**
 - Nothing known.
 
+- Owner asked for a full stats screen when you fall. **Built:** new `js/stats.js` records every roll (carried across shifts); the fall screen shows 11 stat tiles, a money-over-the-run line chart, a totals-rolled vs expected bar chart, and your cards. Checked on laptop and phone. tests.html: 195 checks, all passing.
+
 **Waiting on the owner**
-- Testing 6a.
+- Testing 6a and the stats screen; decision on what to do after 6b (see chat: Claude recommends finishing the core loop, then a playtest/tuning pass and an early itch.io release before adding more cards).
 
 **Exact next step**
 - 6b: the Pit Boss phone (pick 1 of 3 perks after each won shift, with a tutorial).
