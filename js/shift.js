@@ -1,9 +1,25 @@
 // Shift logic: turns, paying the dealer, and win/fall checks. No screen code here.
 
-// A fresh shift: wake up at the table with the buy-in.
+// Cash and debt for shift n (1 = the first shift).
+function shiftScale(n) {
+  const table = CONFIG.shifts;
+  if (n <= table.length) return table[n - 1];
+  let scale = table[table.length - 1];
+  for (let k = table.length + 1; k <= n; k++) {
+    scale = {
+      cash: scale.cash + CONFIG.laterCashStep,
+      debt: Math.round((scale.debt * CONFIG.laterDebtGrowth) / 50) * 50,
+    };
+  }
+  return scale;
+}
+
+// A fresh run: wake up at the table for shift 1.
 function newShiftState() {
   const state = {
-    kitty: CONFIG.buyIn, // money in your hand, not on the table
+    shift: 1, // which shift of the run this is
+    debt: shiftScale(1).debt, // what the dealer wants this shift
+    kitty: shiftScale(1).cash, // money in your hand, not on the table
     deposited: 0, // paid to the dealer: safe, but out of play
     bets: { pass: 0, odds: 0, field: 0 },
     point: null, // null means the next roll is a come-out roll
@@ -47,7 +63,7 @@ function totalMoney(state) {
 }
 
 function amountOwed(state) {
-  return CONFIG.shiftTarget - state.deposited;
+  return state.debt - state.deposited;
 }
 
 // True once every shooter has had a turn.
@@ -80,7 +96,7 @@ function deposit(state, amount) {
   if (paid <= 0) return 0;
   state.kitty -= paid;
   state.deposited += paid;
-  if (state.deposited >= CONFIG.shiftTarget) state.status = "won";
+  if (state.deposited >= state.debt) state.status = "won";
   return paid;
 }
 
@@ -127,8 +143,8 @@ function fall(state, reason) {
 }
 
 // Cut a chain: price, who can be cut, and doing it.
-function cutChainPrice() {
-  return roundTo5(CONFIG.cutChainPct * CONFIG.shiftTarget);
+function cutChainPrice(state) {
+  return roundTo5(CONFIG.cutChainPct * state.debt);
 }
 
 // Only crew who haven't shot yet this shift, never You.
@@ -138,8 +154,8 @@ function cuttableCrew(state) {
 
 function cutChain(state, name) {
   if (!cuttableCrew(state).includes(name)) return "not-allowed";
-  if (!canSpend(state, cutChainPrice())) return "money";
-  state.kitty -= cutChainPrice();
+  if (!canSpend(state, cutChainPrice(state))) return "money";
+  state.kitty -= cutChainPrice(state);
   const wasNext = state.crew[state.shooterIndex] === name;
   state.crew = state.crew.filter((n) => n !== name);
   // If the next shooter was cut, the seat after them steps up (synergies included).
@@ -147,6 +163,23 @@ function cutChain(state, name) {
     setupTurn(state, state.crew[state.shooterIndex - 1] || null, state.prevShooterMult);
   }
   return "ok";
+}
+
+// After a won shift: the next shift. Money, cards, cut crew and interest
+// carry over; payments and once-a-shift effects start fresh.
+function nextShift(old) {
+  const state = newShiftState();
+  state.shift = old.shift + 1;
+  const scale = shiftScale(state.shift);
+  state.debt = scale.debt;
+  state.cashAdded = scale.cash;
+  state.kitty = totalMoney(old) + scale.cash; // bets left on the table come back to you
+  state.cards = old.cards.slice();
+  state.crew = old.crew.slice();
+  state.interestRate = old.interestRate;
+  setupTurn(state, null, CONFIG.startingMult);
+  state.stock = newStock(state);
+  return state;
 }
 
 // After a roll: a seven-out passes the dice and starts a Dealer Break.

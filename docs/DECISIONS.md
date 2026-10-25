@@ -148,3 +148,15 @@ Dated log of every decision and why. Newest at the bottom.
 - **House rules (Milestone 7):** one random rule per shift from shift 3, announced on the opening Break, with a tutorial the first time. Starter list: Tight Odds, Short Table, High Roller, Stingy Field, Dealer's Cut, Markup, Jinxed, Pit Watch.
 - **Card unlocks (Milestone 8):** starter set Hot Hand, Snake Eyes, Lucky Seven, Rattlesnake, Red Dice, Double Up; others unlock by goals (see DESIGN.md). Each unlock gets an on-screen announcement. Progress saved in the browser; a Collection screen shows locked cards.
 - **Order of work:** 5b-2 + quick fixes now, then 6 (shifts + phone), 7 (house rules), 8 (unlocks + Collection), then polish and release.
+
+## 2026-10-25 (Milestone 6 plan)
+
+- **Milestone 6 split:** 6a multiple shifts, 6b the Pit Boss phone.
+- **From shift 2, the shop is open on the opening Dealer Break.** Shift 1 keeps it closed until after the first shooter.
+- **Carry over between shifts:** kitty (plus the new shift's cash), cards, cut crew, interest boosts, perks. **Reset each shift:** payments, Pit Boss's Pity, Loaded Die, Hot Rod's double cost.
+- **Scale:** the table in DESIGN.md for shifts 1-5; after that the debt grows 1.5x per shift (rounded to $50) and the cash added grows $50 per shift.
+- **Score = shifts survived,** shown when you fall.
+- **Fire Bet and Different Doubles wait for the "More bets" milestone.** The phone launches with the other perks.
+- **Perks can be picked again,** but each call offers 3 different ones. **"-1 way to roll 7" gets rarer each time it's taken, and a 7 can never drop below 2 ways out of 36.** Owner's rule: 7s should get rarer, never disappear.
+- **"+1 way to roll 7" stays, labelled Risky.**
+- **Perk rarity:** +1 way to a total is common; Remove a character and 2 free items are uncommon; -1 way to roll 7 is rare.

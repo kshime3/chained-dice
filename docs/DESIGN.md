@@ -23,14 +23,15 @@ Long term, it becomes a first-person 3D room like Clover Pit: chained at the tab
 - **Beginner-friendly:** craps is confusing, so the game explains itself as you play.
 - **Simple presentation first:** placeholder shapes; fun comes from the rules.
 
-## Core Loop  [Built for one shift]
+## Core Loop  [Built]
 
 1. **Wake up** at the table with the shift's starting cash in your **kitty**.
 2. **Dealer Break:** pay toward the debt (and later, shop).
 3. **The current shooter rolls.** You bet on every roll, whoever is shooting. The shooter keeps rolling until they **seven out**.
 4. **Dealer Break** after every seven-out, then the next shooter steps up.
 5. After the last shooter sevens out: one **final Dealer Break**, then the pit boss judges.
-6. **Win** the moment your payments reach the debt. Leftover kitty is kept. **[Planned]** The Pit Boss phone rings: pick 1 of 3 perks. Next shift.
+6. **Win** the moment your payments reach the debt. Leftover kitty is kept. **[Planned, 6b]** The Pit Boss phone rings: pick 1 of 3 perks. **[Built]** Next shift: the new cash is added to your kitty and a bigger debt starts. From shift 2, the shop is open on the opening Break.
+7. **Fall:** the run ends, showing how many shifts you survived (your score). Play again starts a new run at shift 1.
 
 ## Shifts and Scale
 
@@ -45,7 +46,7 @@ Tested with the simulator (`docs/BALANCE.md`).
 | 5 | $300 | $1,200 | 1 random |
 | 6+ | about 1.5x per shift | | 1 random |
 
-**[Built]** Shift 1 uses this scale. **[Planned]** Shifts 2+ (Milestone 6). Starting cash for shift 2+ is **added** to your leftover kitty. Cards carry over between shifts.
+**[Built]** All shifts use this scale (`shifts` in config). Cash is **added** to your leftover kitty (bets left on the table come back too). Cards, cut crew and interest boosts carry over; payments and once-a-shift effects (Pity, Loaded Die, Hot Rod's double cost) reset.
 
 ## Paying the Dealer  [Built]
 
@@ -198,7 +199,7 @@ Like Clover Pit's phone. After **every won shift**, it rings and you **pick 1 of
 3. [Built] Shift: buy-in, turns, win and fall. 3.5: paying the dealer
 4. [Built] Crew dice, visible odds (4a); mult and synergies (4b)
 5. [Built] Shop: 5a framework and 8 cards; 5b-1 dice cards; 5b-2 Loaded Die, Reroll, Cut a chain, Extra chain link
-6. [Planned] Multiple shifts at the new scale, plus the Pit Boss phone
+6. Multiple shifts [Built, 6a] and the Pit Boss phone [Planned, 6b]
 7. [Planned] House rules
 8. [Planned] Card unlocks and the Collection screen
 9. [Planned] Fall animation, polish, itch.io release

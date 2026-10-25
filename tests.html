@@ -23,8 +23,8 @@
   <script src="js/shift.js"></script>
   <script>
     // Tests use fixed numbers, so tuning config.js doesn't break them.
-    CONFIG.buyIn = 200;
-    CONFIG.shiftTarget = 2000;
+    CONFIG.shifts[0] = { cash: 200, debt: 2000 };
+    const debtState = (debt) => { const st = newShiftState(); st.debt = debt; return st; };
     CONFIG.interestRate = 0.05;
 
     // Each check prints a green ✔ or a red ✘.
@@ -223,12 +223,10 @@
     check("Full flow: Hot Rod sevens out at 4x -> Jinx starts at 2.5x", [flow.crew[flow.shooterIndex], flow.mult], ["Jinx", 2.5]);
 
     // Shop: prices are a share of the debt, rounded to $5
-    check("Common = 5% of $2,000 = $100", cardPrice("hotHand"), 100);
-    check("Uncommon = 10% of $2,000 = $200", cardPrice("redDice"), 200);
-    CONFIG.shiftTarget = 200;
-    check("At a $200 debt: Common $10, Uncommon $20", [cardPrice("snakeEyes"), cardPrice("muggsy")], [10, 20]);
-    CONFIG.shiftTarget = 2000;
-    check("Selling gives back half", sellPrice("hotHand"), 50);
+    check("Common = 5% of $2,000 = $100", cardPrice(debtState(2000), "hotHand"), 100);
+    check("Uncommon = 10% of $2,000 = $200", cardPrice(debtState(2000), "redDice"), 200);
+    check("At a $200 debt: Common $10, Uncommon $20", [cardPrice(debtState(200), "snakeEyes"), cardPrice(debtState(200), "muggsy")], [10, 20]);
+    check("Selling gives back half", sellPrice(debtState(2000), "hotHand"), 50);
 
     const shop = newShiftState();
     check("A new shift has 3 different cards for sale", [shop.stock.length, new Set(shop.stock).size], [3, 3]);
@@ -349,7 +347,7 @@
     applyCardsAfterRoll(gd, [], 11, null, false);
     check("...other totals don't", Math.round(gd.interestRate * 1000) / 10, 5.5);
 
-    check("Rare cards cost 25% of the debt ($500 at $2,000)", cardPrice("greenDice"), 500);
+    check("Rare cards cost 25% of the debt ($500 at $2,000)", cardPrice(debtState(2000), "greenDice"), 500);
 
     // 5b-2: Loaded Die, Reroll, Cut a chain, Extra chain link
     check("Pit Boss's Pity is now Rare", CONFIG.cardRarity.pity, "rare");
@@ -370,9 +368,7 @@
     for (let i = 0; i < 500; i++) { if (rerollOneDie(NORMAL_DICE, { dice: [4, 3], total: 7 }, 1).dice[0] !== 4) keptLeft = false; }
     check("Loaded Die rerolling the right die keeps the left one", keptLeft, true);
 
-    CONFIG.shiftTarget = 200;
-    check("Cut a chain costs 25% of the debt ($50 at $200)", cutChainPrice(), 50);
-    CONFIG.shiftTarget = 2000;
+    check("Cut a chain costs 25% of the debt ($50 at $200)", cutChainPrice(debtState(200)), 50);
     const ct = newShiftState(); ct.kitty = 2000; ct.shooterIndex = 2; ct.onBreak = true; // Lefty and Dee have shot
     check("Can cut only crew who haven't shot, never You", cuttableCrew(ct), ["Hot Rod", "Jinx", "Ghost"]);
     check("Can't cut someone who already shot", cutChain(ct, "Lefty"), "not-allowed");
@@ -396,6 +392,21 @@
     const noLink = newShiftState(); noLink.kitty = 50; noLink.shooterIndex = 6;
     endBreak(noLink);
     check("Without it, you still fall", noLink.status, "fell-short");
+
+    // Milestone 6a: multiple shifts
+    check("Shift scale table: shift 3 adds $200 and owes $500", shiftScale(3), { cash: 200, debt: 500 });
+    check("After the table: debt x1.5 (rounded to $50), cash +$50", [shiftScale(6), shiftScale(7)], [{ cash: 350, debt: 1800 }, { cash: 400, debt: 2700 }]);
+    const s1end = newShiftState(); s1end.kitty = 70; s1end.bets.field = 5; s1end.deposited = 2000; s1end.status = "won";
+    s1end.cards = ["hotHand"]; s1end.crew = ["Lefty", "Dealer Dee", "Hot Rod", "Ghost", "You"]; s1end.interestRate = 0.055;
+    s1end.pityUsed = true; s1end.loadedDieUsed = true; s1end.hotRodPenaltyUsed = true;
+    const s2 = nextShift(s1end);
+    check("Next shift: shift 2, owes $300, nothing paid yet", [s2.shift, s2.debt, s2.deposited, s2.status], [2, 300, 0, "playing"]);
+    check("...kitty = leftover $75 (incl. the Field bet) + $150", [s2.kitty, s2.bets.field], [225, 0]);
+    check("...cards, cut crew and interest carry over", [s2.cards, s2.crew.length, s2.interestRate], [["hotHand"], 5, 0.055]);
+    check("...once-a-shift effects reset", [s2.pityUsed, s2.loadedDieUsed, s2.hotRodPenaltyUsed], [false, false, false]);
+    check("...starts on a Dealer Break with Lefty up", [s2.onBreak, s2.shooterIndex, s2.crew[0]], [true, 0, "Lefty"]);
+    check("Shop is open on shift 2's opening Break", isShopOpen(s2), true);
+    check("Prices follow the new debt (Common = 5% of $300 = $15)", cardPrice(s2, "hotHand"), 15);
 
     // Dice: 10,000 rolls stay in range, and 7 is the most common total
     const counts = {};

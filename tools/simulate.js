@@ -49,7 +49,7 @@ function atBreak(state, s) {
     const offers = state.stock.map((id, slot) => ({ id, slot })).filter((o) => o.id)
       .sort((x, y) => CARD_PREFERENCE.indexOf(x.id) - CARD_PREFERENCE.indexOf(y.id));
     for (const o of offers) {
-      if (state.kitty - cardPrice(o.id) >= s.shopReserve) buyCard(state, o.slot);
+      if (state.kitty - cardPrice(state, o.id) >= s.shopReserve) buyCard(state, o.slot);
     }
   }
   if (s.payReserve !== null) {
@@ -75,14 +75,8 @@ function placeBets(state, s) {
 }
 
 function playShift(s, carry) {
-  const state = newShiftState();
-  if (s.startCards) { state.cards = s.startCards.slice(); state.stock = newStock(state); }
-  if (carry) {
-    state.kitty = carry.kitty + CONFIG.buyIn;
-    state.cards = carry.cards.slice();
-    state.interestRate = carry.interestRate;
-    state.stock = newStock(state);
-  }
+  const state = carry ? nextShift(carry) : newShiftState();
+  if (s.startCards && !carry) { state.cards = s.startCards.slice(); state.stock = newStock(state); }
   let rolls = 0;
   while (state.status === "playing" && rolls < 3000) {
     if (state.onBreak) {
@@ -95,20 +89,21 @@ function playShift(s, carry) {
     simRoll(state);
     rolls++;
   }
-  return { status: state.status, rolls, kitty: totalMoney(state), cards: state.cards, interestRate: state.interestRate, cardCount: state.cards.length };
+  state.rolls = rolls;
+  return state;
 }
 
 function run(label, s, n, scale) {
   let wins = 0, broke = 0, short = 0, rolls = 0, left = 0, cards = 0;
   const reached = scale.map(() => 0); // how many runs survived each shift
+  CONFIG.shifts = scale.map(([cash, debt]) => ({ cash: cash, debt: debt }));
   for (let i = 0; i < n; i++) {
     let carry = null;
     for (let k = 0; k < scale.length; k++) {
-      CONFIG.buyIn = scale[k][0]; CONFIG.shiftTarget = scale[k][1];
       const r = playShift(s, carry);
       if (k === 0) {
-        rolls += r.rolls; cards += r.cardCount;
-        if (r.status === "won") { wins++; left += r.kitty; }
+        rolls += r.rolls; cards += r.cards.length;
+        if (r.status === "won") { wins++; left += totalMoney(r); }
         else if (r.status === "fell-broke") broke++; else short++;
       }
       if (r.status !== "won") break;
@@ -127,7 +122,7 @@ vm.runInThisContext(source + "\n" + simulator);
 
 const N = Number(process.argv[2]) || 20000;
 const scaleArg = process.argv[3]; // e.g. "100:200,200:500"
-const scale = (scaleArg || "100:200,200:500").split(",").map((p) => p.split(":").map(Number));
+const scale = (scaleArg || "150:200,150:300,200:500,250:800,300:1200").split(",").map((p) => p.split(":").map(Number));
 
 const strategies = [
   ["$5 Pass, no Odds, pay only at the end",      { pass: 5, odds: 0, payReserve: null, shop: false, shopReserve: 0 }],

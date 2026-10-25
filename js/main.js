@@ -213,7 +213,7 @@ function sell(id) {
 }
 
 function cut(name) {
-  if (!confirm("Cut " + name + "'s chain for " + money(cutChainPrice()) + "? They fall through the floor for the rest of the run.")) return;
+  if (!confirm("Cut " + name + "'s chain for " + money(cutChainPrice(state)) + "? They fall through the floor for the rest of the run.")) return;
   const outcome = cutChain(state, name);
   if (outcome !== "ok") {
     showBreakMessage(outcome === "money" ? "Not enough. Cutting can't take your kitty below " + money(CONFIG.tableMinimum) + "." : "You can't cut " + name + ".");
@@ -251,6 +251,13 @@ function giveTestCards(st) {
   st.stock = newStock(st);
 }
 
+function startNextShift() {
+  state = nextShift(state);
+  showBreakMessage("");
+  showMessage("Shift " + state.shift + " begins.");
+  renderAll();
+}
+
 function playAgain() {
   state = newShiftState();
   giveTestCards(state);
@@ -282,7 +289,7 @@ document.getElementById("pay-typed").onclick = payTyped;
 document.getElementById("pay-off").onclick = () => payDealer(amountOwed(state));
 document.getElementById("leave-break").onclick = leaveBreak;
 document.getElementById("shuffle").onclick = shuffle;
-document.getElementById("play-again").onclick = playAgain;
+document.getElementById("play-again").onclick = () => (state.status === "won" ? startNextShift() : playAgain());
 
 document.getElementById("how-to-play").onclick = () => showTutorial(introPages());
 document.getElementById("shop-help").onclick = () => showTutorial(shopPages());

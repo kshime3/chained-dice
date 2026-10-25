@@ -3,16 +3,16 @@
 const RARITY_ORDER = ["legendary", "rare", "uncommon", "common"];
 
 // Price of a card: a share of the shift's debt, rounded to the nearest $5.
-function cardPrice(id) {
-  return roundTo5(CONFIG.rarityPricePct[CONFIG.cardRarity[id]] * CONFIG.shiftTarget);
+function cardPrice(state, id) {
+  return roundTo5(CONFIG.rarityPricePct[CONFIG.cardRarity[id]] * state.debt);
 }
 
-function sellPrice(id) {
-  return Math.floor(cardPrice(id) * CONFIG.sellBackShare);
+function sellPrice(state, id) {
+  return Math.floor(cardPrice(state, id) * CONFIG.sellBackShare);
 }
 
 function shuffleCost(state) {
-  return roundTo5((CONFIG.shuffleBasePct + CONFIG.shuffleStepPct * state.shuffles) * CONFIG.shiftTarget);
+  return roundTo5((CONFIG.shuffleBasePct + CONFIG.shuffleStepPct * state.shuffles) * state.debt);
 }
 
 // Pick a rarity tier using the chances in config.js.
@@ -46,9 +46,10 @@ function newStock(state) {
   return stock;
 }
 
-// The shop stays closed until the first shooter has had a turn.
+// In shift 1 the shop stays closed until the first shooter has had a turn.
+// From shift 2 on, it's open from the start.
 function isShopOpen(state) {
-  return state.shooterIndex >= CONFIG.shopOpensAfterShooter;
+  return state.shift > 1 || state.shooterIndex >= CONFIG.shopOpensAfterShooter;
 }
 
 // Spending in the shop can't take your kitty below the minimum Pass Line bet.
@@ -61,8 +62,8 @@ function buyCard(state, slot) {
   const id = state.stock[slot];
   if (!id) return "empty";
   if (state.cards.length >= CONFIG.maxCards) return "full";
-  if (!canSpend(state, cardPrice(id))) return "money";
-  state.kitty -= cardPrice(id);
+  if (!canSpend(state, cardPrice(state, id))) return "money";
+  state.kitty -= cardPrice(state, id);
   state.cards.push(id);
   state.stock[slot] = null; // sold out
   return "ok";
@@ -72,8 +73,8 @@ function buyCard(state, slot) {
 function sellCard(state, id) {
   if (!state.cards.includes(id)) return 0;
   state.cards = state.cards.filter((c) => c !== id);
-  state.kitty += sellPrice(id);
-  return sellPrice(id);
+  state.kitty += sellPrice(state, id);
+  return sellPrice(state, id);
 }
 
 // Replace the stock. Returns true if it worked.

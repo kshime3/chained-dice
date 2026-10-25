@@ -80,10 +80,11 @@ function renderChips(selectedChip, onPick) {
 
 function renderState(state) {
   const b = state.bets;
+  document.getElementById("shift-number").textContent = state.shift;
   document.getElementById("kitty").textContent = money(state.kitty);
   document.getElementById("interest").textContent = Math.round(state.interestRate * 1000) / 10 + "%";
-  document.getElementById("paid").textContent = money(state.deposited) + " / " + money(CONFIG.shiftTarget);
-  const progress = Math.min(100, (state.deposited / CONFIG.shiftTarget) * 100);
+  document.getElementById("paid").textContent = money(state.deposited) + " / " + money(state.debt);
+  const progress = Math.min(100, (state.deposited / state.debt) * 100);
   document.getElementById("progress-fill").style.width = progress + "%";
   renderCrew(state);
   renderOddsPanel(state);
@@ -149,7 +150,9 @@ function renderBreak(state) {
 
   let intro;
   if (state.shooterIndex === 0 && state.lastRoll === null) {
-    intro = "The dealer leans in. \"You owe me " + money(CONFIG.shiftTarget) + " by the end of the shift.\" Pay any time between shooters. Paid money is safe, but you can't bet it.";
+    intro = state.shift === 1
+      ? "The dealer leans in. \"You owe me " + money(state.debt) + " by the end of the shift.\" Pay any time between shooters. Paid money is safe, but you can't bet it."
+      : "Shift " + state.shift + ". The pit boss slides " + money(state.cashAdded) + " into your kitty. The dealer leans in: \"This time you owe me " + money(state.debt) + ".\"";
   } else if (isFinalBreak(state)) {
     intro = "Every shooter has sevened out. Last chance to pay before the pit boss judges you.";
   } else {
@@ -238,7 +241,7 @@ function renderShop(state, handlers) {
       stockBox.appendChild(empty);
       return;
     }
-    const price = cardPrice(id);
+    const price = cardPrice(state, id);
     stockBox.appendChild(cardBox(id, "Buy " + money(price), () => handlers.buy(slot),
       full || !canSpend(state, price)));
   });
@@ -250,7 +253,7 @@ function renderShop(state, handlers) {
   const owned = document.getElementById("owned");
   owned.innerHTML = state.cards.length ? "" : '<p class="hint">No cards yet.</p>';
   for (const id of state.cards) {
-    owned.appendChild(cardBox(id, "Sell for " + money(sellPrice(id)), () => handlers.sell(id)));
+    owned.appendChild(cardBox(id, "Sell for " + money(sellPrice(state, id)), () => handlers.sell(id)));
   }
 
   // Cut a chain: one button per crew member who hasn't shot yet (Break screen)
@@ -258,8 +261,8 @@ function renderShop(state, handlers) {
   cutRow.innerHTML = "";
   for (const name of cuttableCrew(state)) {
     const button = document.createElement("button");
-    button.textContent = "Cut " + name + " (" + money(cutChainPrice()) + ")";
-    button.disabled = !canSpend(state, cutChainPrice());
+    button.textContent = "Cut " + name + " (" + money(cutChainPrice(state)) + ")";
+    button.disabled = !canSpend(state, cutChainPrice(state));
     button.onclick = () => handlers.cut(name);
     cutRow.appendChild(button);
   }
@@ -312,16 +315,21 @@ function renderEndScreen(state) {
     screen.classList.add("hidden");
     return;
   }
+  const next = shiftScale(state.shift + 1);
+  const nextLine = " Next: shift " + (state.shift + 1) + ". You'll get " + money(next.cash) + " more and owe " + money(next.debt) + ".";
+  const survived = state.shift - 1;
+  const score = " You survived " + survived + (survived === 1 ? " shift." : " shifts.");
   const texts = {
     "won": state.savedByLink
-      ? ["The extra link holds!", "You were about to fall, but your Extra chain link snapped instead. The dealer forgives the rest of the debt. The chains hold, and you keep " + money(totalMoney(state)) + "."]
-      : ["The chains hold.", "You paid the dealer " + money(CONFIG.shiftTarget) + ". The pit boss nods. You keep " + money(totalMoney(state)) + " for the next shift."],
-    "fell-broke": ["You fall.", "You couldn't cover the " + money(CONFIG.tableMinimum) + " Pass Line. The chains release and the floor opens."],
-    "fell-short": ["You fall.", "You only paid " + money(state.deposited) + " of the " + money(CONFIG.shiftTarget) + " you owed. The chains release."],
+      ? ["The extra link holds!", "You were about to fall, but your Extra chain link snapped instead. The dealer forgives the rest of the debt. You keep " + money(totalMoney(state)) + "." + nextLine]
+      : ["Shift " + state.shift + " survived. The chains hold.", "You paid the dealer " + money(state.debt) + ". You keep " + money(totalMoney(state)) + "." + nextLine],
+    "fell-broke": ["You fall.", "You couldn't cover the " + money(CONFIG.tableMinimum) + " Pass Line. The chains release and the floor opens." + score],
+    "fell-short": ["You fall.", "You only paid " + money(state.deposited) + " of the " + money(state.debt) + " you owed. The chains release." + score],
   };
   const [title, body] = texts[state.status];
   document.getElementById("end-title").textContent = title;
   document.getElementById("end-body").textContent = body;
+  document.getElementById("play-again").textContent = state.status === "won" ? "Next shift" : "Play again";
   screen.className = "overlay " + (state.status === "won" ? "won" : "fell");
 }
 

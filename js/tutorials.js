@@ -7,9 +7,9 @@ function introPages() {
   return [
     {
       title: "You wake up chained to a craps table",
-      body: "Your crew is chained up beside you. The dealer leans in: <strong>\"You owe me " + money(CONFIG.shiftTarget) +
+      body: "Your crew is chained up beside you. The dealer leans in: <strong>\"You owe me " + money(CONFIG.shifts[0].debt) +
         " by the end of the shift.\"</strong><br><br>Pay it and the chains hold. Fail, and the chains release and everyone falls through the floor.<br><br>You start with <strong>" +
-        money(CONFIG.buyIn) + "</strong> in your <strong>kitty</strong> (the money in your hand).",
+        money(CONFIG.shifts[0].cash) + "</strong> in your <strong>kitty</strong> (the money in your hand).",
     },
     {
       title: "The shooters",

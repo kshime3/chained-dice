@@ -137,12 +137,12 @@ function applyCardsAfterRoll(state, results, total, pointBefore, sevenOut) {
   const won = results.some((r) => r.outcome === "win");
 
   if (hasCard(state, "snakeEyes") && total === 2) {
-    const bonus = roundTo5(CONFIG.snakeEyesBonusPct * CONFIG.shiftTarget);
+    const bonus = roundTo5(CONFIG.snakeEyesBonusPct * state.debt);
     state.kitty += bonus;
     notes.push("Snake Eyes: +$" + bonus + " bonus.");
   }
   if (hasCard(state, "luckySeven") && pointBefore === null && total === 7) {
-    const bonus = roundTo5(CONFIG.luckySevenBonusPct * CONFIG.shiftTarget);
+    const bonus = roundTo5(CONFIG.luckySevenBonusPct * state.debt);
     state.kitty += bonus;
     notes.push("Lucky Seven: +$" + bonus + " bonus.");
   }

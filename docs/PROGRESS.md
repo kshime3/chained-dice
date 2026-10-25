@@ -2,6 +2,25 @@
 
 Dated session log. Newest at the top.
 
+## 2026-10-25: Session 4 (Milestone 6a)
+
+**Done**
+- Owner approved the Milestone 6 plan (see DECISIONS.md); 6 split into 6a (shifts) and 6b (phone).
+- **Built 6a:** the debt now lives in the game state (`state.debt`, `state.shift`); `shifts` table in config plus x1.5 growth after shift 5. After a won shift, "Next shift" carries kitty, cards, cut crew and interest into the next shift with new cash added. The shop opens on the opening Break from shift 2. "Shift N" shows at the top; falling shows "You survived N shifts". Simulator updated to play real multi-shift runs. tests.html: 188 checks, all passing.
+
+**Works**
+- Checked in a headless browser: win shift 1, next shift intro and prices at $300 debt, cards carried, fall shows the score, Play again resets. Still fits one screen on phones.
+- Simulator (smart bot with shop): survives shift 1 68%, 2 40%, 3 29%, 4 18%, 5 9%.
+
+**Broken**
+- Nothing known.
+
+**Waiting on the owner**
+- Testing 6a.
+
+**Exact next step**
+- 6b: the Pit Boss phone (pick 1 of 3 perks after each won shift, with a tutorial).
+
 ## 2026-10-24: Session 3, continued (balance fixes + Milestone 5b-2)
 
 **Done**

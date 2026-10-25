@@ -2,9 +2,17 @@
 // Change a value, save, and refresh the browser to try it.
 
 const CONFIG = {
-  // The shift
-  buyIn: 150,        // money you wake up with (shift 1)
-  shiftTarget: 200,  // the debt: pay this and the chains hold (see testing shortcut at the bottom)
+  // Shifts: cash added at the start of each shift (to your leftover kitty), and the debt.
+  // Tested with tools/simulate.js (see docs/BALANCE.md).
+  shifts: [
+    { cash: 150, debt: 200 },
+    { cash: 150, debt: 300 },
+    { cash: 200, debt: 500 },
+    { cash: 250, debt: 800 },
+    { cash: 300, debt: 1200 },
+  ],
+  laterDebtGrowth: 1.5, // after the table: each debt is this times the last (rounded to $50)
+  laterCashStep: 50,    // after the table: each shift adds this much more cash than the last
   // Seat order. Each seat shoots until they seven out, then the dice pass on.
   crew: ["Lefty", "Dealer Dee", "Hot Rod", "Jinx", "Ghost", "You"],
 
@@ -120,9 +128,9 @@ const CONFIG = {
   sevenOut: 7,
 };
 
-// Testing shortcut: add ?target=300 to the page address to play with a smaller target.
+// Testing shortcut: add ?target=300 to the page address to set shift 1's debt.
 const testTarget = Number(new URLSearchParams(location.search).get("target"));
-if (testTarget > 0) CONFIG.shiftTarget = testTarget;
+if (testTarget > 0) CONFIG.shifts[0].debt = testTarget;
 
 // Testing shortcut: add ?fast to the page address to skip the dice animation.
 if (new URLSearchParams(location.search).has("fast")) {

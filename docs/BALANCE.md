@@ -66,3 +66,7 @@ The proposed scale gives a gentle first shift, then cards become **necessary** f
 - Shift 1 changed to $150 cash / $200 debt.
 - Pit Boss's Pity moved to Rare. Hot Hand now resets only on a losing roll. Muggsy's double charge now covers the Pass Line only.
 - Rerun the simulator after Milestone 6 to check shifts 2-5.
+
+## 2026-10-25: Milestone 6a check (real multi-shift runs, shop open from shift 2)
+
+Smart bot with shop, 10,000 runs: survived shift 1 **68%**, shift 2 **40%**, shift 3 **29%**, shift 4 **18%**, shift 5 **9%**. Without the shop: 69%, 37%, 13%, 2%, 0.1%. Cards matter more and more as shifts go on, as intended.
