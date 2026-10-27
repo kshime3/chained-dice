@@ -530,6 +530,22 @@
     check("Spare Link is the new name of the Extra chain link", CARDS.chainLink.name, "Spare Link");
     check("Free Trapdoor is the new name of Remove a character", perkInfo("removeCharacter").name, "Free Trapdoor");
 
+    // Dealer's Bargain
+    const bg = newShiftState(); bg.kitty = 2000; bg.dice = diceForShooter("Hot Rod"); bg.stock = ["bargain", null, null];
+    bg.cards = ["hotHand", "snakeEyes", "luckySeven", "rattlesnake", "redDice"]; // slots full
+    check("Dealer's Bargain: can buy with full slots, and it takes no slot", [buyCard(bg, 0), bg.cards.length], ["ok", 5]);
+    check("...the chain now has 9 links", totalLinks(bg), 9);
+    check("...and 7s drop to 5/35 (14.3%) on everyone's dice", pct(diceOdds(currentDice(bg))[7]), 14.3);
+    const bg8 = newShiftState(); bg8.extraLinks = 1; bg8.shift = 8; bg8.status = "won";
+    check("With a bargain, winning shift 8 isn't the escape", hasEscaped(bg8), false);
+    bg8.shift = 9;
+    check("...shift 9 is", hasEscaped(bg8), true);
+    const bgCarry = newShiftState(); bgCarry.extraLinks = 2; bgCarry.status = "won";
+    check("Extra links carry into the next shift", nextShift(bgCarry).extraLinks, 2);
+    let bargainInEndless = false;
+    for (let i = 0; i < 300; i++) { const st = newShiftState(); st.endless = true; if (newStock(st).includes("bargain")) bargainInEndless = true; }
+    check("Dealer's Bargain is never offered in endless mode", bargainInEndless, false);
+
     // Dice: 10,000 rolls stay in range, and 7 is the most common total
     const counts = {};
     let inRange = true;

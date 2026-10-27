@@ -82,4 +82,8 @@ Parked ideas and later features. Not in v1 unless moved into the design.
 - Part of the fun of Balatro and Clover Pit is that scores scale to 100 million and beyond. Endless mode should get there: multiplying mults (x2, x3 cards stacking), mult that multiplies other mult, interest that compounds, chip values that grow (a $5 chip becomes $5,000 late in a run). Needs number formatting for big values ($1.2M, $45B) and a debt curve that keeps up.
 
 ## Card idea from the owner (2026-10-27): voluntary link break
-- A card that voluntarily breaks a chain link but increases odds somewhere. Exact rules waiting on owner (see PROGRESS.md).
+- Built as **Dealer's Bargain** (owner chose: add a link, get -1 way to roll 7). The other version ("Hacksaw": break a link now, +1 way to roll 7) could still be a future card.
+
+## Hot streak indicator (owner, 2026-10-27)
+- A visible **hot streak** counter: every roll in a row where you win money adds 1; a roll that loses money resets it. Show it on screen (flames that grow?).
+- Later, cards and perks can use it to raise mult ("+0.1x mult per streak", "at 5 in a row, double the next payout"). Hot Hand already tracks something similar (winning rolls in a row, reset on a losing roll); the indicator would make it visible to everyone, with or without the card.

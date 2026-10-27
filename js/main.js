@@ -230,7 +230,7 @@ function buy(slot) {
   const id = state.stock[slot];
   const outcome = buyCard(state, slot);
   const texts = {
-    ok: "Bought " + (id && CARDS[id].name) + ".",
+    ok: id && CARDS[id].instant ? CARDS[id].name + ": done. " + (id === "bargain" ? "Your chain now has " + totalLinks(state) + " links, and 7s are a little rarer." : "") : "Bought " + (id && CARDS[id].name) + ".",
     full: "Your card slots are full (" + CONFIG.maxCards + "). Sell a card first.",
     money: "Not enough. Buying can't take your kitty below " + money(CONFIG.tableMinimum) + ".",
     empty: "That one's sold out.",

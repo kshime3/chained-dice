@@ -35,7 +35,8 @@ function rollRarity() {
 function newStock(state) {
   const stock = [];
   for (let slot = 0; slot < CONFIG.shopSlots; slot++) {
-    const pool = Object.keys(CARDS).filter((id) => !state.cards.includes(id) && !stock.includes(id));
+    const pool = Object.keys(CARDS).filter((id) => !state.cards.includes(id) && !stock.includes(id) &&
+      !(id === "bargain" && state.endless)); // no chain to add a link to in endless mode
     if (pool.length === 0) {
       stock.push(null);
       continue;
@@ -66,13 +67,14 @@ function canSpend(state, amount) {
 function buyCard(state, slot) {
   const id = state.stock[slot];
   if (!id) return "empty";
-  if (state.cards.length >= CONFIG.maxCards) return "full";
+  if (state.cards.length >= CONFIG.maxCards && !CARDS[id].instant) return "full";
   const price = buyPrice(state, id);
   if (!canSpend(state, price)) return "money";
   if (state.freeBuys > 0) state.freeBuys -= 1;
   state.kitty -= price;
   state.stats.spent += price;
-  state.cards.push(id);
+  if (CARDS[id].instant) useInstantCard(state, id); // used right away, takes no slot
+  else state.cards.push(id);
   state.stock[slot] = null; // sold out
   return "ok";
 }

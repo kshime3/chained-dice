@@ -193,3 +193,5 @@ Dated log of every decision and why. Newest at the bottom.
 - Wording draft in `docs/WORDING.md` for owner review before it goes in the game.
 - **Break the Chain built** as written in `docs/WORDING.md` (approved): 8 links, link-break animation, walk out free, Double or nothing into endless mode. Renamed Spare Link, Trapdoor, Free Trapdoor.
 - **Big-number scaling (100 million+) is a later goal,** logged in IDEAS.md. Owner's note.
+- **Dealer's Bargain (Rare, one use, instant, no slot):** adds a link to your chain (one more shift to walk free) in exchange for -1 way to roll 7 on everyone's dice for the run. Owner chose this over "break a link now, +1 way to 7". Not offered in endless mode.
+- **Hot streak indicator** idea logged for later (owner).

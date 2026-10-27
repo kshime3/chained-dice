@@ -150,6 +150,7 @@ Full list: `docs/Store-Cards-Phone-Scales.xlsx`.
 | Wrong Way [Built] | Don't Pass winnings +50%. | Uncommon |
 | Cold Read [Built] | When your Don't Pass wins on a seven-out, the next shooter starts at +1x mult. | Common |
 | Pit Boss's Pity (note) | Only triggers when you're on the Pass Line. | |
+| Dealer's Bargain [Built] | One use, instant, takes no slot. Adds a link to your chain (one more shift to walk free); in return everyone's dice get -1 way to roll 7 for the rest of the run (7 floor still applies). Not offered in endless mode. | Rare |
 | Spare Link [Built] | When you would fall, it snaps instead: the shift counts as survived and the rest of the debt is forgiven. Takes a slot until used. | Very rare |
 
 **Trapdoor [Built]:** a fixed Dealer Break option (once the shop is open) for 25% of the debt. Drops a crew member who hasn't shot yet this shift (never You) through the floor for the rest of the run; seats close up and synergies change.

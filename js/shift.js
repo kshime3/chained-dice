@@ -43,6 +43,7 @@ function newShiftState() {
     prevShooterMult: 1, // the last shooter's final mult (for Mentor if a seat is cut)
     savedByLink: false, // true if the Spare Link saved this shift
     endless: false, // true after "Double or nothing": the chain is gone, play for score
+    extraLinks: 0, // links added by Dealer's Bargain (more shifts to walk free)
     walkedAway: false, // true if you escaped and chose "Walk away"
     stats: newStats(), // run stats for the end screen (carry over between shifts)
     perks: [], // Pit Boss phone perks (carry over between shifts)
@@ -139,16 +140,21 @@ function payInterest(state) {
   return state.lastInterest;
 }
 
+// How many links your chain has (Dealer's Bargain adds more).
+function totalLinks(state) {
+  return CONFIG.chainLinks + state.extraLinks;
+}
+
 // Links broken so far: one per won shift (all of them in endless mode).
 function linksBroken(state) {
-  if (state.endless) return CONFIG.chainLinks;
+  if (state.endless) return totalLinks(state);
   const won = state.shift - 1 + (state.status === "won" ? 1 : 0);
-  return Math.min(won, CONFIG.chainLinks);
+  return Math.min(won, totalLinks(state));
 }
 
 // True when the last link just broke: you can walk out free.
 function hasEscaped(state) {
-  return !state.endless && state.status === "won" && state.shift >= CONFIG.chainLinks;
+  return !state.endless && state.status === "won" && state.shift >= totalLinks(state);
 }
 
 // You would fall. The Spare Link catches you instead, if you have one:
@@ -207,6 +213,7 @@ function nextShift(old) {
   state.stats = old.stats;
   state.perks = old.perks.slice();
   state.endless = old.endless;
+  state.extraLinks = old.extraLinks;
   state.freeBuys = old.freeBuys;
   state.stats.shiftStarts.push(state.stats.history.length);
   setupTurn(state, null, CONFIG.startingMult);

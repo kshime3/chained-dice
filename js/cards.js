@@ -17,6 +17,7 @@ const CARDS = {
   reroll:      { name: "Reroll",          text: "Once per shooter, when a roll would cost you, reroll both dice." },
   wrongWay:    { name: "Wrong Way",       text: "Bet against the shooter and get paid for it: Don't Pass winnings +50%." },
   coldRead:    { name: "Cold Read",       text: "When your Don't Pass wins on a seven-out, the next shooter starts at +1x mult." },
+  bargain:     { name: "Dealer's Bargain", instant: true, text: "One use, works right away, takes no slot. The dealer adds a link to your chain (one more shift to walk free). In return, everyone's dice get -1 way to roll 7 for the rest of the run." },
   chainLink:   { name: "Spare Link",      text: "When the floor opens, this link catches you: the shift counts as survived, a link breaks as normal, and the rest of the debt is forgiven. Used up." },
 };
 
@@ -33,6 +34,11 @@ function roundTo5(n) {
 function effectiveMult(state) {
   const hotHand = hasCard(state, "hotHand") ? state.hotStreak * CONFIG.hotHandPerWin : 0;
   return (state.mult + hotHand) * state.payoutX;
+}
+
+// One-use cards that work the moment you buy them.
+function useInstantCard(state, id) {
+  if (id === "bargain") state.extraLinks += 1; // its -1 way to roll 7 comes from perkTotalWays
 }
 
 // The dice the current shooter really rolls: their own dice plus card effects.

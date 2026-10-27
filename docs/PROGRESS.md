@@ -14,11 +14,14 @@ Dated session log. Newest at the top.
 **Broken**
 - Nothing known.
 
+- Owner chose option (b) for the link card: **built "Dealer's Bargain"** (Rare, instant, no slot): +1 link on your chain, -1 way to roll 7 for everyone, for the run. Not offered in endless mode. tests.html: 248 checks, all passing.
+- Logged the owner's **hot streak indicator** idea in IDEAS.md.
+
 **Waiting on the owner**
-- Testing Break the Chain. Exact rules for the "voluntary link break" card (Claude asked in chat).
+- Testing Break the Chain and Dealer's Bargain.
 
 **Exact next step**
-- Build the voluntary link-break card once its rules are settled; then Milestone 8 (consumables).
+- Milestone 8: consumables (one-use chips).
 
 ## 2026-10-27: Session 5, continued (Milestone 7: bet against the shooter)
 

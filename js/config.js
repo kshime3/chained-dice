@@ -70,6 +70,7 @@ const CONFIG = {
     chainLink: "legendary",
     wrongWay: "uncommon",
     coldRead: "common",
+    bargain: "rare",
   },
 
   // Card numbers

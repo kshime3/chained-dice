@@ -75,5 +75,6 @@ function perkTotalWays(state) {
     if (id.startsWith("plus")) ways[Number(id.slice(4))] = (ways[Number(id.slice(4))] || 0) + 1;
     if (id === "minusSeven") ways[7] = (ways[7] || 0) - 1;
   }
+  if (state.extraLinks > 0) ways[7] = (ways[7] || 0) - state.extraLinks; // Dealer's Bargain
   return Object.entries(ways).map(([total, n]) => [Number(total), n]);
 }
