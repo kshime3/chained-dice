@@ -195,7 +195,7 @@ button {
   h1 { font-size: 1.2rem; }
   .how-to-play { font-size: 0.85rem; padding: 6px 10px; }
   .money { gap: 10px; font-size: 0.85rem; }
-  .layout { grid-template-columns: 1fr; gap: 6px; }
+  .layout { grid-template-columns: minmax(0, 1fr); gap: 6px; } /* minmax(0) lets wide rows scroll inside instead of widening the page */
   .seat { font-size: 0.68rem; min-width: 0; padding: 3px 5px; flex: 1; }
   .crew { gap: 3px; flex-wrap: nowrap; }
   .shooter, .mult { font-size: 0.8rem; margin: 3px 0 0; }
