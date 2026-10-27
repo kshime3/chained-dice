@@ -220,6 +220,9 @@ button {
   .chain-bar .link { width: 9px; height: 13px; }
   .chain-bar .link .half { border-width: 2px; }
   .chain-label { font-size: 0.65rem; }
+  /* Cards and perks stay on one line; swipe sideways to see them all */
+  .layout .my-cards { flex-wrap: nowrap; overflow-x: auto; justify-content: flex-start; margin-bottom: 4px; }
+  .layout .card-badge { flex: 0 0 auto; font-size: 0.75rem; padding: 3px 6px; }
 }
 
 /* ---------- Overlays: Dealer Break, tutorials, end screen ---------- */
