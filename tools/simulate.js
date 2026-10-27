@@ -22,6 +22,7 @@ function simRoll(state) {
   const pointBefore = state.point;
   const results = resolveRoll(state.bets, total, pointBefore);
   const multUsed = effectiveMult(state);
+  const crewBefore = applyCrewBeforePayout(state, results, total, pointBefore);
   const before = applyCardsBeforePayout(state, results, total, pointBefore);
   applyMult(results, multUsed);
   for (const r of results) {

@@ -37,6 +37,7 @@ const CONFIG = {
   hotRodSevenOutCost: 2,     // Hot Rod's first seven-out: your losing bets cost this many times over
   mentorShare: 0.5,          // Mentor: this share of Hot Rod's bonus passes to the next shooter
   coldTablePenalty: 0.5,     // Cold Table: shooter after Jinx starts this much lower, until their first win
+  jinxCurse: true,           // Jinx's come-out curse: when Jinx shoots, a come-out 7 is a tie for Don't Pass
 
   // The shop (the stickman). Prices are a share of the shift's debt, rounded to the nearest $5.
   shopOpensAfterShooter: 1, // the shop first opens after this many shooters have sevened out

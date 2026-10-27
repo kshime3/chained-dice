@@ -152,6 +152,7 @@ function finishRoll(rolled) {
   const boosts = [];
   const multUsed = effectiveMult(state);
   if (multUsed !== 1) boosts.push("Mult " + multUsed + "x" + (multReasons(state).length ? " (" + multReasons(state).join(", ") + ")" : ""));
+  const crewBefore = applyCrewBeforePayout(state, results, total, pointBefore);
   const before = applyCardsBeforePayout(state, results, total, pointBefore);
   if (hasCard(state, "oddsAddict") && results.some((r) => r.bet === "odds" && r.outcome === "win")) boosts.push("Odds Addict (+50% Odds)");
   applyMult(results, multUsed);
@@ -177,7 +178,7 @@ function finishRoll(rolled) {
   recordRoll(state.stats, state, rolled, totalMoney(state) - moneyBefore, sevenOut, pointHit, odds, multUsed, shooter, state.turnRolls);
   afterRoll(state, sevenOut);
 
-  const notes = before.notes.concat(cardNotes, crewNotes);
+  const notes = crewBefore.concat(before.notes, cardNotes, crewNotes);
   showMessage(describeRoll(total, results, pointBefore, state.point) + " " + notes.join(" "), sevenOut);
 
   if (sevenOut && results.some((r) => r.bet === "dont" && r.outcome === "win")) playSound("pointHit");

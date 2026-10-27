@@ -58,6 +58,7 @@ function costlyBets(state, total) {
   return resolveRoll(state.bets, total, state.point).filter((r) => {
     if (r.outcome !== "lose") return false;
     if (r.bet === "pass" && !pointOn && hasCard(state, "redDice")) return false;
+    if (r.bet === "dont" && !pointOn && total === CONFIG.sevenOut && CONFIG.jinxCurse && state.crew[state.shooterIndex] === "Jinx") return false;
     if (pointOn && total === CONFIG.sevenOut && hasCard(state, "pity") && !state.pityUsed && (r.bet === "pass" || r.bet === "odds")) return false;
     return true;
   });

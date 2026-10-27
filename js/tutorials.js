@@ -38,7 +38,7 @@ function introPages() {
       title: "Betting against the shooter",
       body: "Think a shooter is about to blow it? Bet <strong>Don't Pass</strong> instead of the Pass Line. You need one of the two (at least " + min + ") before every come-out, but only one side at a time.<br><br>" +
         "<strong>Come-out:</strong> 2 or 3 wins, 7 or 11 loses, 12 is a tie.<br><strong>Point on:</strong> a 7 wins, the point coming back loses.<br><br>" +
-        "Once a point is set you can add <strong>Lay Odds</strong> behind it. Sevens are more likely than the point, so you risk more to win less. Shaky shooters like Jinx are great to bet against.",
+        "Once a point is set you can add <strong>Lay Odds</strong> behind it. Sevens are more likely than the point, so you risk more to win less. Jinx is cursed: when he shoots, a come-out 7 is only a tie for Don't Pass, so he's the best shooter to bet against.",
     },
     {
       title: "Paying the dealer",

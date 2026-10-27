@@ -86,7 +86,7 @@ Seat order: **Lefty, Dealer Dee, Hot Rod, Jinx, Ghost, You.** Dice are lists of 
 | Lefty | Each die rolls 1-5 (no 6s) | 16.0% | 11 and 12 impossible |
 | Dealer Dee | Sticky dice: left 1 + right 6 can't land together | 14.3% | Turns tend to last longer |
 | Hot Rod | Normal | 16.7% | +1x mult per winning roll; first seven-out of the shift costs double |
-| Jinx | Faces 1, 2, 3, 3, 4, 4 | 22.2% | Nothing above 8 |
+| Jinx | Faces 1, 2, 3, 3, 4, 4 | 22.2% | Nothing above 8. **Cursed [Built]:** when he shoots, a come-out 7 is only a tie for Don't Pass |
 | Ghost | Right die evens-only or odds-only, picked each turn | 16.7% | Streaky |
 | You | Normal | 16.7% | Upgradable later |
 

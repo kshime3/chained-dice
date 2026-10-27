@@ -183,3 +183,4 @@ Dated log of every decision and why. Newest at the bottom.
 - **Pass Line or Don't Pass is required** on every come-out ($5 minimum), **one side at a time**. Don't Pass locks during a point like the Pass Line; Lay Odds can be added or taken back.
 - **Pit Boss's Pity only triggers when you're on the Pass Line** (it would hurt a Don't bettor).
 - **Two new "dark side" cards:** Wrong Way (Uncommon: Don't Pass winnings +50%) and Cold Read (Common: if your Don't Pass wins on a seven-out, the next shooter starts at +1x mult).
+- **Jinx's come-out curse:** when Jinx shoots, a come-out 7 is only a tie for Don't Pass (an 11 still loses). Owner's choice. Toggle: `jinxCurse` in config.

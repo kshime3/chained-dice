@@ -15,8 +15,11 @@ Dated session log. Newest at the top.
 - Don't Pass with max Lay is weaker than Pass with max Odds for the bot (shift 1: 55% vs 69%), mainly from going broke (Lay risks up to 6x the bet).
 - Betting against Jinx doesn't help (14% vs 19% by shift 5): Jinx's frequent 7s also hit the come-out, where a 7 loses a Don't Pass bet. Ideas to fix are in IDEAS.md; owner to choose.
 
+- Owner chose **Jinx's come-out curse**: built (crew logic before payout, reroll prompt aware, hover text and tutorial updated). tests.html: 234 checks. Simulator: still doesn't beat plain Pass Line (see BALANCE.md), which makes Jinx a real choice rather than a free win.
+- Owner raised a theme problem: "The chains hold" on a won shift is confusing. Claude's recommendation in chat: keep the theme and rework the language (plus an 8-link escape goal). Waiting for the owner's choice.
+
 **Waiting on the owner**
-- Testing Milestone 7, and a decision on the Jinx / Don't Pass finding.
+- Theme decision (Balatro-style plain levels, or keep the theme and rework the words). Don't start Milestone 8 yet.
 
 **Exact next step**
 - Milestone 8: consumables (one-use chips).

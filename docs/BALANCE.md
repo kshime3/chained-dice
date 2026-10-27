@@ -87,3 +87,7 @@ Smart bot that takes -1 way to roll 7 when offered (else free items, else a +1 t
 
 - Don't Pass loses more runs to going broke: max Lay risks up to 6x the bet.
 - Betting against Jinx doesn't pay: his 7s also come on the come-out, where they **lose** a Don't Pass bet. In real craps the same is true; to make "bet against Jinx" a real strategy the game needs a twist (see IDEAS.md).
+
+## 2026-10-27: Jinx's come-out curse
+
+With the curse (a come-out 7 is a tie for Don't Pass when Jinx shoots), "Pass Line, but Don't Pass against Jinx" still trails plain Pass Line (shift 5: 14% vs 19%). Reason: Jinx's 7s also make the Pass Line *win* 22% of his come-outs. He's good to bet **with** on the come-out and **against** once a point is set (vs a point of 8, a 7 comes first 67% of the time). You can't switch sides mid-hand, so it's a real choice rather than a free win.

@@ -73,6 +73,25 @@ function applyMult(results, mult) {
   }
 }
 
+// Crew effects before anyone is paid. Returns sentences for the message.
+// Jinx's come-out curse: when he shoots, a come-out 7 doesn't beat Don't Pass (it's a tie).
+function applyCrewBeforePayout(state, results, total, pointBefore) {
+  const notes = [];
+  const name = state.crew[state.shooterIndex];
+  if (CONFIG.jinxCurse && name === "Jinx" && pointBefore === null && total === CONFIG.sevenOut) {
+    for (const r of results) {
+      if (r.bet === "dont" && r.outcome === "lose") {
+        r.outcome = "none";
+        notes.push("Jinx's curse: his come-out 7 is only a tie for Don't Pass.");
+      }
+    }
+    const kept = results.filter((r) => r.outcome !== "none");
+    results.length = 0;
+    results.push(...kept);
+  }
+  return notes;
+}
+
 // Crew effects after a roll has been paid out. Returns sentences for the message.
 function applyCrewEffects(state, results, sevenOut) {
   const notes = [];
@@ -120,7 +139,7 @@ const CREW_INFO = {
   },
   "Jinx": {
     dice: "Faces are 1, 2, 3, 3, 4, 4. Lots of 3s and 4s.",
-    style: "Sevens come up often, and nothing above 8 is possible. Cold Table: the next shooter starts at -0.5x mult until their first win.",
+    style: "Sevens come up often, and nothing above 8 is possible. Cursed: when he shoots, a come-out 7 is only a tie for Don't Pass, so he's the perfect shooter to bet against. Cold Table: the next shooter starts at -0.5x mult until their first win.",
   },
   "Ghost": {
     dice: "Right die is evens-only or odds-only, picked each turn.",
