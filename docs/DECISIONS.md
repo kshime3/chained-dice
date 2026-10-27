@@ -184,3 +184,10 @@ Dated log of every decision and why. Newest at the bottom.
 - **Pit Boss's Pity only triggers when you're on the Pass Line** (it would hurt a Don't bettor).
 - **Two new "dark side" cards:** Wrong Way (Uncommon: Don't Pass winnings +50%) and Cold Read (Common: if your Don't Pass wins on a seven-out, the next shooter starts at +1x mult).
 - **Jinx's come-out curse:** when Jinx shoots, a come-out 7 is only a tie for Don't Pass (an 11 still loses). Owner's choice. Toggle: `jinxCurse` in config.
+
+## 2026-10-27 (theme)
+
+- **Keep the theme; rework the language.** "The chains hold" read backwards. New frame: the chains are your sentence, the floor is the threat.
+- **8 links.** Each won shift unlocks one. Break all 8 and you **walk out free** (a real win), then the dealer offers **"Double or nothing"** for **endless mode** (play for score).
+- **A chain link breaking animation at the end of every won shift.** Owner's request.
+- Wording draft in `docs/WORDING.md` for owner review before it goes in the game.

@@ -18,8 +18,10 @@ Dated session log. Newest at the top.
 - Owner chose **Jinx's come-out curse**: built (crew logic before payout, reroll prompt aware, hover text and tutorial updated). tests.html: 234 checks. Simulator: still doesn't beat plain Pass Line (see BALANCE.md), which makes Jinx a real choice rather than a free win.
 - Owner raised a theme problem: "The chains hold" on a won shift is confusing. Claude's recommendation in chat: keep the theme and rework the language (plus an 8-link escape goal). Waiting for the owner's choice.
 
+- Owner decided: keep the theme, 8 links, walk out free + endless, link-breaking animation. Claude drafted all new wording in `docs/WORDING.md`. Simulator: a simple bot walks out free (8 shifts) ~3-4% of runs.
+
 **Waiting on the owner**
-- Theme decision (Balatro-style plain levels, or keep the theme and rework the words). Don't start Milestone 8 yet.
+- Review of `docs/WORDING.md`. Then build the "Break the Chain" update. Milestone 8 after that.
 
 **Exact next step**
 - Milestone 8: consumables (one-use chips).
