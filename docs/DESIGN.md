@@ -69,6 +69,8 @@ Tested with the simulator (`docs/BALANCE.md`).
 - **Come-out roll:** 7 or 11 wins the Pass Line. 2, 3 or 12 (craps) loses it. Any other number (4, 5, 6, 8, 9, 10) becomes the **point**.
 - **Point phase:** hitting the point wins the Pass Line. A 7 is a **seven-out**: Pass Line and Odds lose, and the shooter changes.
 - **Pass Line is required** (minimum $5) to roll a come-out. If your kitty is short, money moves automatically from your other bets (Field first, then Odds). Once a point is set, the Pass Line is locked.
+- **Don't Pass [Built, Milestone 7]:** bet against the shooter. Come-out: 2/3 win, 7/11 lose, 12 is a tie. Point on: a 7 wins, the point loses. Even money. A Pass Line **or** Don't Pass bet ($5+) is required on every come-out, one side at a time; it locks during a point.
+- **Lay Odds [Built]:** behind Don't Pass while a point is on. Pays 1:2 on 4/10, 2:3 on 5/9, 5:6 on 6/8 (rounded down). You can lay enough to win up to 3-4-5x your Don't Pass bet (6x the bet on every point). Can be taken back.
 - **Odds:** only while a point is on, up to 3x the Pass Line on 4/10, 4x on 5/9, 5x on 6/8. Pays true odds (2:1, 3:2, 6:5), rounded down. Can be taken back at any time. A winning Odds bet returns to your kitty.
 - **Field:** one-roll bet. 3, 4, 9, 10, 11 pay even money; 2 pays double; 12 pays triple; 5, 6, 7, 8 lose.
 - Winning Pass Line and Field bets are paid and stay on the table. "Clear bets" takes back everything that isn't locked.
@@ -138,6 +140,9 @@ Full list: `docs/Store-Cards-Phone-Scales.xlsx`.
 | Pit Boss's Pity [Built] | The first seven-out of the shift (any shooter) is ignored. Bets stay and the shooter keeps rolling. | Rare |
 | Doubles Charm [Built] | Every 3rd roll of each shooter's turn is a pair (from the doubles that shooter can roll). | Rare |
 | Reroll [Built] | Once per shooter, reroll both dice, offered only when a roll is about to cost you. | Uncommon |
+| Wrong Way [Built] | Don't Pass winnings +50%. | Uncommon |
+| Cold Read [Built] | When your Don't Pass wins on a seven-out, the next shooter starts at +1x mult. | Common |
+| Pit Boss's Pity (note) | Only triggers when you're on the Pass Line. | |
 | Extra chain link [Built] | When you would fall, it snaps instead: the shift counts as survived and the rest of the debt is forgiven. Takes a slot until used. | Very rare |
 
 **Cut a chain [Built]:** a fixed Dealer Break option (once the shop is open) for 25% of the debt. Drops a crew member who hasn't shot yet this shift (never You) through the floor for the rest of the run; seats close up and synergies change.

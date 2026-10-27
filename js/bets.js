@@ -38,6 +38,35 @@ function resolveOdds(amount, total, point) {
   return { outcome: "none", winnings: 0 };
 }
 
+// Don't Pass: the shooter's opposite. Come-out: 2/3 win, 7/11 lose, 12 is a tie.
+// With a point on: a 7 wins, the point loses. Anything else: no decision.
+function resolveDontPass(amount, total, point) {
+  if (point === null) {
+    if (CONFIG.dontComeOutWinners.includes(total)) return { outcome: "win", winnings: amount };
+    if (CONFIG.comeOutWinners.includes(total)) return { outcome: "lose", winnings: 0 };
+    return { outcome: "none", winnings: 0 }; // a 12 (tie) or a new point
+  }
+  if (total === CONFIG.sevenOut) return { outcome: "win", winnings: amount };
+  if (total === point) return { outcome: "lose", winnings: 0 };
+  return { outcome: "none", winnings: 0 };
+}
+
+// Lay Odds: win when the 7 comes before the point. Pays true odds, rounded down.
+function resolveLay(amount, total, point) {
+  if (total === CONFIG.sevenOut) {
+    const [win, per] = CONFIG.layPayouts[point];
+    return { outcome: "win", winnings: Math.floor((amount * win) / per) };
+  }
+  if (total === point) return { outcome: "lose", winnings: 0 };
+  return { outcome: "none", winnings: 0 };
+}
+
+// The most you can lay: enough to win up to 3-4-5x your Don't Pass bet.
+function maxLay(dontAmount, point) {
+  const [win, per] = CONFIG.layPayouts[point];
+  return Math.floor((dontAmount * CONFIG.oddsMaxMultiple[point] * per) / win);
+}
+
 // The most you can have on Odds for this Pass Line bet and point.
 function maxOdds(passAmount, point) {
   return passAmount * CONFIG.oddsMaxMultiple[point];
@@ -53,7 +82,7 @@ function nextPoint(point, total) {
 }
 
 // Settle every bet on the table for one roll.
-// bets looks like { pass: 10, odds: 20, field: 5 }. Empty bets (0) are skipped.
+// bets looks like { pass: 10, odds: 20, dont: 0, lay: 0, field: 5 }. Empty bets (0) are skipped.
 // Bets with no decision this roll are left out of the results.
 // staysUp: whether a winning bet stays on the table (Odds come back to you).
 function resolveRoll(bets, total, point) {
@@ -63,6 +92,12 @@ function resolveRoll(bets, total, point) {
   }
   if (bets.odds > 0 && point !== null) {
     results.push({ bet: "odds", amount: bets.odds, staysUp: false, ...resolveOdds(bets.odds, total, point) });
+  }
+  if (bets.dont > 0) {
+    results.push({ bet: "dont", amount: bets.dont, staysUp: true, ...resolveDontPass(bets.dont, total, point) });
+  }
+  if (bets.lay > 0 && point !== null) {
+    results.push({ bet: "lay", amount: bets.lay, staysUp: false, ...resolveLay(bets.lay, total, point) });
   }
   if (bets.field > 0) {
     results.push({ bet: "field", amount: bets.field, staysUp: true, ...resolveField(bets.field, total) });

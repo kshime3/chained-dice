@@ -37,6 +37,13 @@ function setupTurn(state, prevName, prevMult) {
     state.multNotes.push("Muggsy: winnings x" + CONFIG.muggsyNextShooterX + " this turn");
   }
 
+  // Cold Read: your Don't Pass won on the last seven-out.
+  if (state.coldReadPending) {
+    state.mult += CONFIG.coldReadMult;
+    state.coldReadPending = false;
+    state.multNotes.push("Cold Read: +" + CONFIG.coldReadMult + "x");
+  }
+
   // Mentor: part of Hot Rod's streak carries over.
   if (prevName === "Hot Rod" && prevMult > CONFIG.startingMult) {
     const carried = (prevMult - CONFIG.startingMult) * CONFIG.mentorShare;

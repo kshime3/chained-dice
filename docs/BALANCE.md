@@ -74,3 +74,16 @@ Smart bot with shop, 10,000 runs: survived shift 1 **68%**, shift 2 **40%**, shi
 ## 2026-10-25: Milestone 6b check (shop + Pit Boss phone)
 
 Smart bot that takes -1 way to roll 7 when offered (else free items, else a +1 total): survived shift 1 **66%**, 2 **43%**, 3 **34%**, 4 **24%**, 5 **15%** (was 68/40/29/18/9 without the phone).
+
+## 2026-10-27: Milestone 7 check (Don't Pass)
+
+20,000 runs, smart bots with shop and phone. Survived shift 1 / 3 / 5:
+
+| Strategy | Shift 1 | Shift 3 | Shift 5 |
+| --- | --- | --- | --- |
+| Pass Line + max Odds | 69% | 37% | 19% |
+| Don't Pass + max Lay | 55% | 29% | 8% |
+| Pass Line, but Don't Pass when Jinx shoots | 68% | 32% | 14% |
+
+- Don't Pass loses more runs to going broke: max Lay risks up to 6x the bet.
+- Betting against Jinx doesn't pay: his 7s also come on the come-out, where they **lose** a Don't Pass bet. In real craps the same is true; to make "bet against Jinx" a real strategy the game needs a twist (see IDEAS.md).

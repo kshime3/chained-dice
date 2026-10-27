@@ -42,7 +42,7 @@ function animateDice(finalDice, ms, onDone) {
     onDone();
   }, ms);
 }
-const BET_NAMES = { pass: "Pass Line", odds: "Odds", field: "Field" };
+const BET_NAMES = { pass: "Pass Line", odds: "Odds", dont: "Don't Pass", lay: "Lay Odds", field: "Field" };
 
 function money(n) {
   return "$" + n.toLocaleString();
@@ -89,8 +89,9 @@ function renderState(state) {
   renderCrew(state);
   renderOddsPanel(state);
   renderMult(state);
-  document.getElementById("on-table").textContent = money(b.pass + b.odds + b.field);
+  document.getElementById("on-table").textContent = money(b.pass + b.odds + b.dont + b.lay + b.field);
   document.getElementById("pass-amount").textContent = money(b.pass);
+  document.getElementById("dont-amount").textContent = money(b.dont);
   document.getElementById("field-amount").textContent = money(b.field);
 
   // Point marker
@@ -98,15 +99,20 @@ function renderState(state) {
   puck.textContent = state.point === null ? "OFF · Come-out roll" : "ON · Point is " + state.point;
   puck.className = "puck " + (state.point === null ? "off" : "on");
 
-  // Pass Line locks while a point is on
-  document.getElementById("pass-line").classList.toggle("locked", state.point !== null);
-  document.getElementById("pass-lock").textContent = state.point === null ? "" : "🔒 Locked until the point is hit or a 7 rolls";
+  // Line bets lock while a point is on (the one you're not on is just closed)
+  const pointOn = state.point !== null;
+  for (const [id, lockId, bet] of [["pass-line", "pass-lock", "pass"], ["dont-pass", "dont-lock", "dont"]]) {
+    document.getElementById(id).classList.toggle("locked", pointOn && b[bet] > 0);
+    document.getElementById(id).classList.toggle("disabled", pointOn && b[bet] === 0);
+    document.getElementById(lockId).textContent = pointOn && b[bet] > 0 ? "🔒 Locked until the point is decided" : "";
+  }
 
-  // Odds only open while a point is on
-  const odds = document.getElementById("odds");
-  odds.classList.toggle("disabled", state.point === null);
-  document.getElementById("odds-amount").textContent =
-    state.point === null ? "Opens once a point is set" : money(b.odds) + " / max " + money(maxOdds(b.pass, state.point));
+  // Odds and Lay Odds open while a point is on, behind the matching line bet
+  for (const [id, bet, line, limit] of [["odds", "odds", "pass", maxOdds], ["lay", "lay", "dont", maxLay]]) {
+    const open = pointOn && b[line] > 0;
+    document.getElementById(id).classList.toggle("disabled", !open);
+    document.getElementById(bet + "-amount").textContent = open ? money(b[bet]) + " / max " + money(limit(b[line], state.point)) : "";
+  }
 
   if (state.lastRoll) {
     drawDie("die1", state.lastRoll.dice[0]);
@@ -317,7 +323,8 @@ function renderOddsPanel(state) {
   }
   let summary = whose(name) + " dice: current chance of a 7 is <strong>" + percent(odds[7]) + "</strong> (normal: 16.7%).";
   if (state.point !== null) {
-    summary += " Hitting the " + state.point + " before a 7: <strong>" + percent(pointBeforeSeven(odds, state.point)) + "</strong>.";
+    const hit = pointBeforeSeven(odds, state.point);
+    summary += " The " + state.point + " before a 7: <strong>" + percent(hit) + "</strong> (Pass) · 7 first: <strong>" + percent(1 - hit) + "</strong> (Don't).";
   }
   if (state.dice.note) summary += " " + state.dice.note;
   if (charm) summary += " <strong>Doubles Charm: next roll is a pair!</strong>";
@@ -608,9 +615,10 @@ function cutSplash(name) {
 }
 
 // The SEVEN OUT screen.
-function sevenOutSplash(who, lost, notes) {
+function sevenOutSplash(who, lost, notes, won) {
   return '<div class="splash-title">SEVEN OUT!</div>' +
     "<p>" + (who === "You" ? "You" : who) + " sevened out.</p>" +
+    (won > 0 ? '<p class="splash-big good-text">+' + money(won) + "</p><p>You bet against the shooter, and it paid.</p>" : "") +
     (lost > 0 ? '<p class="splash-big">-' + money(lost) + "</p><p>lost on the table</p>" : "") +
     notes.map((n) => "<p>" + n + "</p>").join("") +
     '<p class="hint">Tap to continue</p>';

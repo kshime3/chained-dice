@@ -175,3 +175,11 @@ Dated log of every decision and why. Newest at the bottom.
 - **Sound is on by default, with a mute button** (remembered per browser). Owner's choice.
 - **Sounds are generated in the browser (Web Audio), not audio files.** Why: nothing to download or host, keeps the plain HTML/JS rule.
 - **Owner: the game is fun but too basic; it needs lots of mechanical growth after this first build.** Claude listed options in IDEAS.md.
+
+## 2026-10-27 (mechanical growth roadmap + Milestone 7)
+
+- **Owner picked growth ideas 1-6.** Roadmap: 7 bet against the shooter, 8 consumables, 9 dice crafting, 10 crew growth, 11 house rules + pit boss challenges, 12 more bets as unlocks + card unlocks (Collection).
+- **Milestone 7, Don't Pass:** come-out 2/3 win, 7/11 lose, 12 is a tie; point phase 7 wins, the point loses; even money. **Lay Odds** behind it pay true odds the other way (1:2 on 4/10, 2:3 on 5/9, 5:6 on 6/8), limited so the win is at most 3-4-5x the Don't Pass bet (so up to 6x the bet).
+- **Pass Line or Don't Pass is required** on every come-out ($5 minimum), **one side at a time**. Don't Pass locks during a point like the Pass Line; Lay Odds can be added or taken back.
+- **Pit Boss's Pity only triggers when you're on the Pass Line** (it would hurt a Don't bettor).
+- **Two new "dark side" cards:** Wrong Way (Uncommon: Don't Pass winnings +50%) and Cold Read (Common: if your Don't Pass wins on a seven-out, the next shooter starts at +1x mult).

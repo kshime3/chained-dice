@@ -2,6 +2,25 @@
 
 Dated session log. Newest at the top.
 
+## 2026-10-27: Session 5, continued (Milestone 7: bet against the shooter)
+
+**Done**
+- Owner picked growth ideas 1-6 and approved the roadmap (7 Don't Pass, 8 consumables, 9 dice crafting, 10 crew growth, 11 house rules + challenges, 12 more bets + unlocks).
+- **Built Milestone 7:** Don't Pass and Lay Odds (logic, table areas, one side per come-out, both count as the required line bet, auto top-up, Clear bets), odds summary shows both sides ("The 6 before a 7" / "7 first"), seven-out splash celebrates a Don't win, new tutorial page, two new cards (Wrong Way, Cold Read), Pit Boss's Pity only for Pass Line bettors. Simulator learned Don't Pass. tests.html: 230 checks, all passing. Still fits one screen on phones.
+
+**Works**
+- Checked in a headless browser: Don't Pass, one-side rule, Lay Odds limit, seven-out win splash.
+
+**Design finding (simulator, docs/BALANCE.md)**
+- Don't Pass with max Lay is weaker than Pass with max Odds for the bot (shift 1: 55% vs 69%), mainly from going broke (Lay risks up to 6x the bet).
+- Betting against Jinx doesn't help (14% vs 19% by shift 5): Jinx's frequent 7s also hit the come-out, where a 7 loses a Don't Pass bet. Ideas to fix are in IDEAS.md; owner to choose.
+
+**Waiting on the owner**
+- Testing Milestone 7, and a decision on the Jinx / Don't Pass finding.
+
+**Exact next step**
+- Milestone 8: consumables (one-use chips).
+
 ## 2026-10-27: Session 5 (polish: fall animation and sound)
 
 **Done**

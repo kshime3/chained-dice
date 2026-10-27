@@ -271,7 +271,7 @@
     applyCardsBeforePayout(oa, oaRes, 4, 4);
     check("Odds Addict: $10 Odds on 4 pays $30 instead of $20", oaRes.find((r) => r.bet === "odds").winnings, 30);
 
-    const pt = withCards("pity");
+    const pt = withCards("pity"); pt.bets.pass = 10; // Pity needs a Pass Line bet
     const ptRes = resolveRoll({ pass: 10, odds: 20, field: 5 }, 7, 6);
     const ptOut = applyCardsBeforePayout(pt, ptRes, 7, 6);
     check("Pity: first seven-out ignored; only the Field loses", [ptOut.pity, ptRes.map((r) => r.bet)], [true, ["field"]]);
@@ -459,6 +459,43 @@
     const carryP = newShiftState(); carryP.perks = ["plus6"]; carryP.freeBuys = 1; carryP.status = "won";
     const nextP = nextShift(carryP);
     check("Perks and free items carry into the next shift", [nextP.perks, nextP.freeBuys], [["plus6"], 1]);
+
+    // Milestone 7: Don't Pass and Lay Odds
+    for (const t of [2, 3]) check("Don't Pass come-out: " + t + " wins $10", resolveDontPass(10, t, null), { outcome: "win", winnings: 10 });
+    for (const t of [7, 11]) check("Don't Pass come-out: " + t + " loses", resolveDontPass(10, t, null).outcome, "lose");
+    check("Don't Pass come-out: 12 is a tie (bet stays)", resolveDontPass(10, 12, null).outcome, "none");
+    check("Don't Pass, point 6: a 7 wins $10", resolveDontPass(10, 7, 6), { outcome: "win", winnings: 10 });
+    check("Don't Pass, point 6: a 6 loses", resolveDontPass(10, 6, 6).outcome, "lose");
+    check("Don't Pass, point 6: a 9 decides nothing", resolveDontPass(10, 9, 6).outcome, "none");
+    check("Lay $20 on 4: a 7 wins $10 (1:2)", resolveLay(20, 7, 4).winnings, 10);
+    check("Lay $30 on 5: a 7 wins $20 (2:3)", resolveLay(30, 7, 5).winnings, 20);
+    check("Lay $30 on 6: a 7 wins $25 (5:6)", resolveLay(30, 7, 6).winnings, 25);
+    check("Lay $10 on 5: a 7 wins $6 (rounded down from $6.67)", resolveLay(10, 7, 5).winnings, 6);
+    check("Lay on 6: the 6 loses", resolveLay(30, 6, 6).outcome, "lose");
+    check("Max Lay on a $10 Don't Pass is $60 on every point (win up to 3-4-5x)", [4, 5, 6, 8, 9, 10].map((p) => maxLay(10, p)), [60, 60, 60, 60, 60, 60]);
+    const dpRoll = resolveRoll({ pass: 0, odds: 0, dont: 10, lay: 60, field: 0 }, 7, 4);
+    check("Seven-out with Don't Pass $10 + Lay $60 on 4: both win (+$10, +$30)", dpRoll.map((r) => r.bet + ":" + r.outcome + ":" + r.winnings), ["dont:win:10", "lay:win:30"]);
+    check("Lay Odds come back to you after winning; Don't Pass stays up", dpRoll.map((r) => r.staysUp), [true, false]);
+
+    const dpState = newShiftState(); dpState.bets.dont = 5;
+    check("Don't Pass counts as the required line bet", canRoll(dpState), true);
+    const dpFund = newShiftState(); dpFund.kitty = 2; dpFund.bets.field = 10;
+    check("Don't Pass also tops up from your other bets", [fundPassLine(dpFund, 5, "dont"), dpFund.bets.dont], [[{ from: "field", amount: 3 }], 5]);
+    check("Money on Don't Pass and Lay counts as yours", (() => { const t = newShiftState(); t.kitty = 0; t.bets.dont = 10; t.bets.lay = 20; return totalMoney(t); })(), 30);
+
+    const pityDont = withCards("pity"); pityDont.point = 6; pityDont.bets = { pass: 0, odds: 0, dont: 10, lay: 0, field: 0 };
+    const pdRes = resolveRoll(pityDont.bets, 7, 6);
+    check("Pit Boss's Pity does NOT cancel a seven-out when you're on Don't Pass", [applyCardsBeforePayout(pityDont, pdRes, 7, 6).pity, pdRes[0].outcome], [false, "win"]);
+    const ww = withCards("wrongWay");
+    const wwRes = resolveRoll({ pass: 0, odds: 0, dont: 10, lay: 0, field: 0 }, 3, null);
+    applyCardsBeforePayout(ww, wwRes, 3, null);
+    check("Wrong Way: Don't Pass $10 win pays $15", wwRes[0].winnings, 15);
+    const cr = withCards("coldRead");
+    applyCardsAfterRoll(cr, [{ bet: "dont", outcome: "win", winnings: 10 }], 7, 6, true);
+    cr.shooterIndex = 1; setupTurn(cr, "Lefty", 1);
+    check("Cold Read: Don't Pass wins a seven-out -> next shooter starts at 2x", cr.mult, 2);
+    const cbDont = withCards(); cbDont.point = 6; cbDont.bets = { pass: 0, odds: 0, dont: 10, lay: 0, field: 0 };
+    check("Reroll offers: a seven-out isn't costly on Don't Pass, the point is", [costlyBets(cbDont, 7).length, costlyBets(cbDont, 6).length], [0, 1]);
 
     // Dice: 10,000 rolls stay in range, and 7 is the most common total
     const counts = {};

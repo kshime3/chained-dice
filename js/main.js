@@ -20,31 +20,45 @@ function placeBet(betName) {
   if (busy() || state.status !== "playing" || state.onBreak) return;
   let amount = selectedChip;
 
-  if (betName === "pass") {
+  // Line bets: Pass Line or Don't Pass, one side per come-out.
+  if (betName === "pass" || betName === "dont") {
+    const other = betName === "pass" ? "dont" : "pass";
     if (state.point !== null) {
-      showMessage("The Pass Line is locked while the point is on. You can add Odds instead.");
+      showMessage("The " + BET_NAMES[betName] + " is locked while the point is on." +
+        (state.bets[betName] > 0 ? " You can add " + BET_NAMES[betName === "pass" ? "odds" : "lay"] + " instead." : ""));
       return;
     }
-    const moves = fundPassLine(state, amount);
+    if (state.bets[other] > 0) {
+      showMessage("You're on the " + BET_NAMES[other] + " this come-out. One side at a time: press Clear bets to switch.");
+      return;
+    }
+    const moves = fundPassLine(state, amount, betName);
     if (moves === null) {
-      showMessage("Not enough money for a " + money(amount) + " Pass Line bet. Try a smaller chip.");
+      showMessage("Not enough money for a " + money(amount) + " " + BET_NAMES[betName] + " bet. Try a smaller chip.");
       return;
     }
     const moved = moves.map((m) => " Moved " + money(m.amount) + " from the " + BET_NAMES[m.from] + ".").join("");
     playSound("chip");
-    showMessage("Pass Line bet is now " + money(state.bets.pass) + "." + moved);
+    showMessage(BET_NAMES[betName] + " bet is now " + money(state.bets[betName]) + "." + moved);
     renderState(state);
     return;
   }
 
-  if (betName === "odds") {
+  // Odds sit behind the Pass Line, Lay Odds behind Don't Pass.
+  if (betName === "odds" || betName === "lay") {
+    const line = betName === "odds" ? "pass" : "dont";
     if (state.point === null) {
-      showMessage("Odds open once a point is set. Place a Pass Line bet and roll first.");
+      showMessage(BET_NAMES[betName] + " open once a point is set. Place a " + BET_NAMES[line] + " bet and roll first.");
       return;
     }
-    const room = maxOdds(state.bets.pass, state.point) - state.bets.odds;
+    if (state.bets[line] === 0) {
+      showMessage(BET_NAMES[betName] + " sit behind a " + BET_NAMES[line] + " bet, and you don't have one this time.");
+      return;
+    }
+    const limit = betName === "odds" ? maxOdds(state.bets.pass, state.point) : maxLay(state.bets.dont, state.point);
+    const room = limit - state.bets[betName];
     if (room <= 0) {
-      showMessage("Your Odds are at the max for this point.");
+      showMessage("Your " + BET_NAMES[betName] + " are at the max for this point.");
       return;
     }
     amount = Math.min(amount, room); // cap at the limit
@@ -61,26 +75,26 @@ function placeBet(betName) {
   renderState(state);
 }
 
-// Take bets back into your kitty. A locked Pass Line stays put.
+// Take bets back into your kitty. A locked Pass Line or Don't Pass stays put.
 function clearBets() {
   if (busy() || state.status !== "playing" || state.onBreak) return;
-  state.kitty += state.bets.odds + state.bets.field;
-  state.bets.odds = 0;
-  state.bets.field = 0;
-  if (state.point === null) {
-    state.kitty += state.bets.pass;
-    state.bets.pass = 0;
-    showMessage("Bets returned to your kitty. Remember: the Pass Line must be played to roll.");
-  } else {
-    showMessage("Odds and Field returned. The Pass Line stays locked until the point is decided.");
+  const b = state.bets;
+  const loose = state.point === null ? ["pass", "dont", "odds", "lay", "field"] : ["odds", "lay", "field"];
+  for (const bet of loose) {
+    state.kitty += b[bet];
+    b[bet] = 0;
   }
+  playSound("chip");
+  showMessage(state.point === null
+    ? "Bets returned to your kitty. Remember: a Pass Line or Don't Pass bet is needed to roll."
+    : "Odds, Lay Odds and Field returned. Your line bet stays locked until the point is decided.");
   renderState(state);
 }
 
 function roll() {
   if (busy() || state.status !== "playing" || state.onBreak) return;
   if (!canRoll(state)) {
-    showMessage("Place at least " + money(CONFIG.tableMinimum) + " on the Pass Line to roll.");
+    showMessage("Place at least " + money(CONFIG.tableMinimum) + " on the Pass Line or Don't Pass to roll.");
     return;
   }
 
@@ -166,7 +180,8 @@ function finishRoll(rolled) {
   const notes = before.notes.concat(cardNotes, crewNotes);
   showMessage(describeRoll(total, results, pointBefore, state.point) + " " + notes.join(" "), sevenOut);
 
-  if (sevenOut) playSound("sevenOut");
+  if (sevenOut && results.some((r) => r.bet === "dont" && r.outcome === "win")) playSound("pointHit");
+  else if (sevenOut) playSound("sevenOut");
   else if (pointHit) playSound("pointHit");
   else if (results.some((r) => r.outcome === "win")) playSound("win");
   else if (results.some((r) => r.outcome === "lose")) playSound("lose");
@@ -176,11 +191,12 @@ function finishRoll(rolled) {
     // Let the seven-out sink in before the Dealer Break (or the fall).
     renderState(state);
     const lost = results.filter((r) => r.outcome === "lose").reduce((sum, r) => sum + r.amount, 0);
-    showSplash(sevenOutSplash(state.sevenOutBy, lost, cardNotes.concat(crewNotes)), "bad", CONFIG.sevenOutSplashMs, renderAll);
+    const won = results.filter((r) => r.outcome === "win" && r.bet !== "field").reduce((sum, r) => sum + r.winnings, 0);
+    showSplash(sevenOutSplash(state.sevenOutBy, lost, cardNotes.concat(crewNotes), won), "bad", CONFIG.sevenOutSplashMs, renderAll);
     return;
   }
   renderAll();
-  if (pointBefore !== null && total === pointBefore) {
+  if (pointHit && results.some((r) => r.bet === "pass" && r.outcome === "win")) {
     const wins = results.filter((r) => r.outcome === "win");
     showSplash(pointWinSplash(pointBefore, wins, boosts), "good", CONFIG.winSplashMs);
   }
@@ -323,6 +339,8 @@ function renderAll() {
 document.getElementById("pass-line").onclick = () => placeBet("pass");
 document.getElementById("odds").onclick = () => placeBet("odds");
 document.getElementById("field").onclick = () => placeBet("field");
+document.getElementById("dont-pass").onclick = () => placeBet("dont");
+document.getElementById("lay").onclick = () => placeBet("lay");
 document.getElementById("roll-button").onclick = roll;
 document.getElementById("dice").onclick = roll; // tapping the dice rolls too
 document.getElementById("clear-button").onclick = clearBets;

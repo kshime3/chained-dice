@@ -46,8 +46,10 @@ const CARD_PREFERENCE = ["muggsy", "oddsAddict", "doubleUp", "pity", "redDice", 
 function atBreak(state, s) {
   if (state.kitty >= amountOwed(state)) { deposit(state, amountOwed(state)); return; }
   if (s.shop && isShopOpen(state)) {
-    const offers = state.stock.map((id, slot) => ({ id, slot })).filter((o) => o.id)
-      .sort((x, y) => CARD_PREFERENCE.indexOf(x.id) - CARD_PREFERENCE.indexOf(y.id));
+    // Don't Pass bots want the dark-side cards first; Pass Line bots skip them.
+    const prefs = s.side === "dont" ? ["wrongWay", "coldRead"].concat(CARD_PREFERENCE) : CARD_PREFERENCE;
+    const offers = state.stock.map((id, slot) => ({ id, slot })).filter((o) => o.id && prefs.includes(o.id))
+      .sort((x, y) => prefs.indexOf(x.id) - prefs.indexOf(y.id));
     for (const o of offers) {
       if (state.kitty - cardPrice(state, o.id) >= s.shopReserve) buyCard(state, o.slot);
     }
@@ -61,16 +63,23 @@ function atBreak(state, s) {
 function placeBets(state, s) {
   // "protect": once you could pay off the debt, bet the minimum until the next Break.
   const safe = s.protect && totalMoney(state) >= amountOwed(state) + CONFIG.tableMinimum;
-  if (state.point === null && state.bets.pass === 0) {
+  // Which side: "pass", "dont", or "against-jinx" (Don't Pass only when Jinx shoots).
+  const shooter = state.crew[state.shooterIndex];
+  const line = s.side === "dont" || (s.side === "against-jinx" && shooter === "Jinx") ? "dont" : "pass";
+  const backing = line === "pass" ? "odds" : "lay";
+  if (state.point === null && state.bets.pass === 0 && state.bets.dont === 0) {
     const size = safe ? CONFIG.tableMinimum : s.passPct ? round5(state.kitty * s.passPct) : s.pass;
-    if (fundPassLine(state, Math.min(size, Math.max(CONFIG.tableMinimum, round5(state.kitty)))) === null) {
-      fundPassLine(state, CONFIG.tableMinimum);
+    if (fundPassLine(state, Math.min(size, Math.max(CONFIG.tableMinimum, round5(state.kitty))), line) === null) {
+      fundPassLine(state, CONFIG.tableMinimum, line);
     }
   }
-  if (!safe && state.point !== null && s.odds > 0 && state.bets.pass > 0) {
-    const want = Math.min(maxOdds(state.bets.pass, state.point), state.bets.pass * s.odds);
-    const add = Math.min(want - state.bets.odds, state.kitty);
-    if (add > 0) { state.kitty -= add; state.bets.odds += add; }
+  const onLine = state.bets.pass > 0 ? "pass" : state.bets.dont > 0 ? "dont" : null;
+  if (!safe && onLine && state.point !== null && s.odds > 0) {
+    const back = onLine === "pass" ? "odds" : "lay";
+    const limit = back === "odds" ? maxOdds(state.bets.pass, state.point) : maxLay(state.bets.dont, state.point);
+    const want = Math.min(limit, back === "odds" ? state.bets.pass * s.odds : limit * s.odds / 5);
+    const add = Math.min(want - state.bets[back], state.kitty);
+    if (add > 0) { state.kitty -= add; state.bets[back] += add; }
   }
 }
 
@@ -147,6 +156,8 @@ const strategies = [
   ["SMART: $10 + max Odds, protect, shop",      { pass: 10, odds: 5, payReserve: null, shop: true, shopReserve: 60, protect: true }],
   ["SMART: $25 + max Odds, protect, shop",      { pass: 25, odds: 5, payReserve: null, shop: true, shopReserve: 60, protect: true }],
   ["SMART: $10 + 2x Odds, protect, shop",       { pass: 10, odds: 2, payReserve: null, shop: true, shopReserve: 60, protect: true }],
+  ["SMART Don't Pass: $10 + max Lay, protect, shop", { pass: 10, odds: 5, payReserve: null, shop: true, shopReserve: 60, protect: true, side: "dont" }],
+  ["SMART: Pass, but Don't Pass against Jinx, shop", { pass: 10, odds: 5, payReserve: null, shop: true, shopReserve: 60, protect: true, side: "against-jinx" }],
 ];
 
 // "node tools/simulate.js 20000 100:200 best" runs only the strategies listed by number.

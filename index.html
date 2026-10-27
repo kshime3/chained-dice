@@ -55,13 +55,24 @@
         <div class="bet-row">
           <div class="bet-area" id="pass-line">
             <div class="bet-title">PASS LINE <span class="bet-amount" id="pass-amount"></span></div>
-            <div class="bet-hint">Come-out: 7, 11 win · 2, 3, 12 lose<br>Point on: point wins · 7 loses</div>
-            <div class="bet-hint" id="pass-lock"></div>
+            <div class="bet-hint">Come-out: 7, 11 win · 2, 3, 12 lose · Point: point wins, 7 loses</div>
+            <div class="bet-hint lock" id="pass-lock"></div>
           </div>
-
           <div class="bet-area" id="odds">
             <div class="bet-title">ODDS <span class="bet-amount" id="odds-amount"></span></div>
             <div class="bet-hint">Pays 2:1 on 4/10 · 3:2 on 5/9 · 6:5 on 6/8</div>
+          </div>
+        </div>
+
+        <div class="bet-row">
+          <div class="bet-area dark-side" id="dont-pass">
+            <div class="bet-title">DON'T PASS <span class="bet-amount" id="dont-amount"></span></div>
+            <div class="bet-hint">Bet against the shooter. Come-out: 2, 3 win · 7, 11 lose · 12 tie · Point: 7 wins</div>
+            <div class="bet-hint lock" id="dont-lock"></div>
+          </div>
+          <div class="bet-area dark-side" id="lay">
+            <div class="bet-title">LAY ODDS <span class="bet-amount" id="lay-amount"></span></div>
+            <div class="bet-hint">Pays 1:2 on 4/10 · 2:3 on 5/9 · 5:6 on 6/8</div>
           </div>
         </div>
       </div>

@@ -72,3 +72,8 @@ Parked ideas and later features. Not in v1 unless moved into the design.
 6. **House rules and pit boss challenges** (already planned): each shift plays differently and gives short goals.
 7. **Dealer loans.** Borrow from the dealer mid-shift at steep interest. A risk lever when you're about to go broke.
 8. **Card upgrades / editions.** Buying a card you own levels it up (Hot Hand II), or cards come in foil/gold versions with extra effects.
+
+## Making "bet against the shooter" pay (from the Milestone 7 simulator finding)
+- **Jinx's come-out curse:** when Jinx shoots, come-out 7s don't count against Don't Pass (they're a tie). Makes him the perfect shooter to bet against.
+- **Crew-specific dark cards:** "Jinx's Shadow" (Don't Pass on Jinx pays 2x), "Hot Rod's Rival" (Don't Pass on Hot Rod gains mult when he sevens out).
+- **Smaller Lay limit option** for the dark side, or a card that lets Lay Odds pay true odds +25%.

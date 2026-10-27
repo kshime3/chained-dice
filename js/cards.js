@@ -15,6 +15,8 @@ const CARDS = {
   greenDice:   { name: "Green Dice",      text: "Every 12 rolled raises your interest rate by 0.5% for the rest of the run." },
   loadedDie:   { name: "Loaded Die",      text: "Once per shift, when a roll would cost you, reroll one die of your choice." },
   reroll:      { name: "Reroll",          text: "Once per shooter, when a roll would cost you, reroll both dice." },
+  wrongWay:    { name: "Wrong Way",       text: "Bet against the shooter and get paid for it: Don't Pass winnings +50%." },
+  coldRead:    { name: "Cold Read",       text: "When your Don't Pass wins on a seven-out, the next shooter starts at +1x mult." },
   chainLink:   { name: "Extra chain link", text: "When you would fall, this snaps instead: the shift counts as survived and the rest of the debt is forgiven. Used up." },
 };
 
@@ -56,7 +58,7 @@ function costlyBets(state, total) {
   return resolveRoll(state.bets, total, state.point).filter((r) => {
     if (r.outcome !== "lose") return false;
     if (r.bet === "pass" && !pointOn && hasCard(state, "redDice")) return false;
-    if (pointOn && total === CONFIG.sevenOut && hasCard(state, "pity") && !state.pityUsed && r.bet !== "field") return false;
+    if (pointOn && total === CONFIG.sevenOut && hasCard(state, "pity") && !state.pityUsed && (r.bet === "pass" || r.bet === "odds")) return false;
     return true;
   });
 }
@@ -107,13 +109,20 @@ function applyCardsBeforePayout(state, results, total, pointBefore) {
   }
 
   // Pit Boss's Pity: the first seven-out of the shift doesn't count.
-  if (hasCard(state, "pity") && !state.pityUsed && pointBefore !== null && total === CONFIG.sevenOut) {
+  if (hasCard(state, "pity") && !state.pityUsed && pointBefore !== null && total === CONFIG.sevenOut && state.bets.pass > 0) {
     state.pityUsed = true;
     pity = true;
     for (const r of results) {
       if (r.bet === "pass" || r.bet === "odds") r.outcome = "none";
     }
     notes.push("Pit Boss's Pity: that seven-out is ignored! Your bets stay and the shooter keeps rolling.");
+  }
+
+  // Wrong Way: Don't Pass winnings +50%.
+  if (hasCard(state, "wrongWay")) {
+    for (const r of results) {
+      if (r.bet === "dont" && r.outcome === "win") r.winnings = Math.floor(r.winnings * (1 + CONFIG.wrongWayExtra));
+    }
   }
 
   // Odds Addict: Odds winnings +50%.
@@ -152,6 +161,12 @@ function applyCardsAfterRoll(state, results, total, pointBefore, sevenOut) {
     state.rattleGain += CONFIG.rattlesnakeMult;
     setMultNote(state, "Rattlesnake", "Rattlesnake: +" + state.rattleGain + "x");
     notes.push("Rattlesnake: +" + CONFIG.rattlesnakeMult + "x mult for this shooter.");
+  }
+
+  // Cold Read: a Don't Pass win on a seven-out warms up the next shooter.
+  if (hasCard(state, "coldRead") && sevenOut && results.some((r) => r.bet === "dont" && r.outcome === "win")) {
+    state.coldReadPending = true;
+    notes.push("Cold Read: the next shooter starts at +" + CONFIG.coldReadMult + "x.");
   }
 
   // Green Dice: every 12 raises interest for the rest of the run.

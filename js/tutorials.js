@@ -19,7 +19,7 @@ function introPages() {
     },
     {
       title: "Step 1: the come-out roll",
-      body: "Before a shooter's first roll (the <strong>come-out</strong>), you must put at least <strong>" + min + " on the Pass Line</strong>. Pick a chip, then click the Pass Line.<br><br>" +
+      body: "Before a shooter's first roll (the <strong>come-out</strong>), you must put at least <strong>" + min + " on the Pass Line</strong> (or Don't Pass, more on that soon). Pick a chip, then click the Pass Line.<br><br>" +
         "<strong>7 or 11:</strong> you win.<br><strong>2, 3 or 12 (craps):</strong> you lose.<br><strong>Any other number</strong> becomes the <strong>point</strong>.",
     },
     {
@@ -33,6 +33,12 @@ function introPages() {
       title: "The Field",
       body: "The <strong>Field</strong> is a one-roll bet you can make any time.<br><br>" +
         "<strong>3, 4, 9, 10, 11:</strong> win even money.<br><strong>2:</strong> pays double. <strong>12:</strong> pays triple.<br><strong>5, 6, 7, 8:</strong> lose.",
+    },
+    {
+      title: "Betting against the shooter",
+      body: "Think a shooter is about to blow it? Bet <strong>Don't Pass</strong> instead of the Pass Line. You need one of the two (at least " + min + ") before every come-out, but only one side at a time.<br><br>" +
+        "<strong>Come-out:</strong> 2 or 3 wins, 7 or 11 loses, 12 is a tie.<br><strong>Point on:</strong> a 7 wins, the point coming back loses.<br><br>" +
+        "Once a point is set you can add <strong>Lay Odds</strong> behind it. Sevens are more likely than the point, so you risk more to win less. Shaky shooters like Jinx are great to bet against.",
     },
     {
       title: "Paying the dealer",

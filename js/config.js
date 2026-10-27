@@ -64,6 +64,8 @@ const CONFIG = {
     loadedDie: "uncommon",
     reroll: "uncommon",
     chainLink: "legendary",
+    wrongWay: "uncommon",
+    coldRead: "common",
   },
 
   // Card numbers
@@ -77,6 +79,8 @@ const CONFIG = {
   doubleUpWays: 1,            // Double Up: + this many ways (out of 36) for each double
   doublesCharmEvery: 3,       // Doubles Charm: every Nth roll of a shooter's turn is a pair
   greenDiceInterestStep: 0.005, // Green Dice: each 12 adds this to the interest rate (0.005 = 0.5%)
+  wrongWayExtra: 0.5,         // Wrong Way: Don't Pass winnings +50%
+  coldReadMult: 1,            // Cold Read: the next shooter starts with this much extra mult
 
   // The Pit Boss phone: after each won shift, pick 1 of these many different perks.
   phoneChoices: 3,
@@ -123,6 +127,15 @@ const CONFIG = {
   // Come-out roll results for the Pass Line.
   comeOutWinners: [7, 11],
   comeOutLosers: [2, 3, 12], // "craps"
+
+  // Don't Pass: on the come-out, these win, and this one is a tie (the bet stays).
+  dontComeOutWinners: [2, 3],
+  dontBarNumber: 12,
+
+  // Lay Odds (behind Don't Pass) pay the other way round, as [win, per bet]:
+  // [1, 2] means win $1 for every $2 laid. Half dollars round down.
+  // The most you can win is limited the same way as Odds (oddsMaxMultiple).
+  layPayouts: { 4: [1, 2], 5: [2, 3], 6: [5, 6], 8: [5, 6], 9: [2, 3], 10: [1, 2] },
 
   // Numbers that become the point on a come-out roll.
   pointNumbers: [4, 5, 6, 8, 9, 10],

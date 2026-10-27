@@ -21,7 +21,7 @@ function newShiftState() {
     debt: shiftScale(1).debt, // what the dealer wants this shift
     kitty: shiftScale(1).cash, // money in your hand, not on the table
     deposited: 0, // paid to the dealer: safe, but out of play
-    bets: { pass: 0, odds: 0, field: 0 },
+    bets: { pass: 0, odds: 0, dont: 0, lay: 0, field: 0 },
     point: null, // null means the next roll is a come-out roll
     shooterIndex: 0, // seat number of the current shooter (0 = first seat)
     onBreak: true, // a Dealer Break happens before each shooter and once at the end
@@ -44,6 +44,7 @@ function newShiftState() {
     stats: newStats(), // run stats for the end screen (carry over between shifts)
     perks: [], // Pit Boss phone perks (carry over between shifts)
     freeBuys: 0, // shop cards you can take for free (from the "free items" perk)
+    coldReadPending: false, // Cold Read: the next shooter gets extra mult
     cards: [], // card ids you own (see cards.js)
     stock: [], // card ids for sale at this Dealer Break (null = sold out)
     shuffles: 0, // Shuffles used this shift (each one costs more)
@@ -62,7 +63,7 @@ function newShiftState() {
 // Money still in play: kitty plus everything on the table (not deposits).
 function totalMoney(state) {
   const b = state.bets;
-  return state.kitty + b.pass + b.odds + b.field;
+  return state.kitty + b.pass + b.odds + b.dont + b.lay + b.field;
 }
 
 function amountOwed(state) {
@@ -74,9 +75,9 @@ function isFinalBreak(state) {
   return state.shooterIndex >= state.crew.length;
 }
 
-// The Pass Line must be played. On a come-out you need the minimum on it.
+// A line bet (Pass Line or Don't Pass) must be played. On a come-out you need the minimum on one.
 function canRoll(state) {
-  return state.point !== null || state.bets.pass >= CONFIG.tableMinimum;
+  return state.point !== null || state.bets.pass >= CONFIG.tableMinimum || state.bets.dont >= CONFIG.tableMinimum;
 }
 
 // Broke: on a come-out, you can't cover the minimum Pass Line bet.
@@ -104,18 +105,18 @@ function deposit(state, amount) {
   return paid;
 }
 
-// Put money on the Pass Line. If your kitty is short, the rest is
-// moved from your other bets (Field first, then Odds).
+// Put money on a line bet ("pass" or "dont"). If your kitty is short, the rest is
+// moved from your other bets (Field first, then Odds, then Lay Odds).
 // Returns the list of moves made, e.g. [{ from: "field", amount: 5 }],
 // or null if you can't cover it at all.
-function fundPassLine(state, amount) {
+function fundPassLine(state, amount, line = "pass") {
   const b = state.bets;
-  if (state.kitty + b.field + b.odds < amount) return null;
+  if (state.kitty + b.field + b.odds + b.lay < amount) return null;
   const moves = [];
   const fromKitty = Math.min(state.kitty, amount);
   state.kitty -= fromKitty;
   let short = amount - fromKitty;
-  for (const bet of ["field", "odds"]) {
+  for (const bet of ["field", "odds", "lay"]) {
     const take = Math.min(b[bet], short);
     if (take > 0) {
       b[bet] -= take;
@@ -123,7 +124,7 @@ function fundPassLine(state, amount) {
       moves.push({ from: bet, amount: take });
     }
   }
-  b.pass += amount;
+  b[line] += amount;
   return moves;
 }
 
