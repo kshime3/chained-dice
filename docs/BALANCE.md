@@ -98,3 +98,16 @@ Smart bot (flat $10 bets, raised to the table minimum when needed), shop + phone
 
 - Surprise: survival to shift 8 went **up** (from ~3%). The old bot bet a flat $10 even against a $4,050 debt, so it could never earn enough late on. The minimum forces bigger bets, and bigger bets are what it takes to clear big debts. A human already scales bets, so for people the minimum mainly removes "coast on $5 bets".
 - What makes later shifts genuinely hard is the **debt compared with the cash you bring in**. The owner noticed the real problem: a big leftover kitty clears the next shifts. "Pay after the first shooter" stops the instant payoff; if shifts still feel easy, the next lever is steeper debts or less cash added. Retune after consumables and dice crafting (they add power).
+
+## 2026-10-28: Rescaled for rising difficulty
+
+**Problem found:** with the old scale, once past shift 2 the bot survived each later shift ~80% of the time, every time. Later shifts were no harder than early ones, because survivors carry a big leftover kitty (and cards) into the next shift. Steeper debts alone barely changed this (every candidate stayed at ~65-70% per shift).
+
+**Fix:** debts that accelerate (x1.5 early, ~x2.2 late) **plus a dealer's cut** (keep half your leftover money). Tested 8,000-20,000 runs per candidate; per-shift survival (survived / reached) for the smart bot:
+
+| Scale | S1 | S2 | S3 | S4 | S5 | S6 | S7 | S8 | Walk out free |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Old, keep all leftover | 68% | 66% | 79% | 83% | 81% | 81% | 82% | 83% | 13% |
+| **New (E3), keep half** | 69% | 73% | 70% | 67% | 62% | 58% | 60% | 59% | **3.0%** |
+
+A bot that bets 10% of what it owes does a bit worse (walk out free 1.7%). A thoughtful human with a good build should do noticeably better; retune after consumables and dice crafting, which add power. Tool: `CARRY=0.5 node tools/simulate.js 20000` and the `SCALING` bots (strategies 18-21).

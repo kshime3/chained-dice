@@ -25,7 +25,7 @@
 > **THE FLOOR HOLDS.**
 > The dealer reaches over and unlocks a link. *Clank.*
 > **6 links to go.**
-> You keep $60. Next: shift 3. You'll get $200 more and owe $500.
+> You have $200 left. The dealer takes his cut, so you carry $100 into the next shift. Next: shift 3. You'll get $175 more and owe $550.
 > [ Answer the phone ]
 
 **Won shift 8 (the last link):**
@@ -86,3 +86,8 @@ About 2.5 seconds, tap to skip, with a new metal "snap" sound.
 ## Scale
 
 Unchanged for shifts 1-5. Shifts 6-8 follow the existing x1.5 growth: $1,800, $2,700, $4,050. A simple bot walks out free about 3-4% of the time; a good human should do better. Endless shifts keep growing x1.5.
+
+## Added 2026-10-28: dealer's cut
+- Win screen: "You have $200 left. The dealer takes his cut, so you carry $100 into the next shift."
+- Next opening Break: "The dealer kept $100 of your leftover money as his cut."
+- How to play, "Paying the dealer": "Money left over when you win a shift carries into the next one, but the dealer takes 50% of it as his cut."

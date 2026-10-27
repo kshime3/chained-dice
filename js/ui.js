@@ -163,6 +163,7 @@ function renderBreak(state) {
     intro = state.shift === 1
       ? "The dealer leans in. \"You owe me " + money(state.debt) + " by the end of the shift. Pay it and I'll unlock a link.\" Pay any time between shooters. Paid money is safe, but you can't bet it."
       : "Shift " + state.shift + ". " + (state.endless ? "Endless mode, no chain left to break. " : left + (left === 1 ? " link" : " links") + " to go. ") +
+        (state.dealerCut > 0 ? "The dealer kept " + money(state.dealerCut) + " of your leftover money as his cut. " : "") +
         "The pit boss slides " + money(state.cashAdded) + " into your kitty. The dealer leans in: \"This time you owe me " + money(state.debt) + ".\" The table minimum is now " + money(tableMin(state)) + ".";
   } else if (isFinalBreak(state)) {
     intro = "Every shooter has sevened out. Last chance to pay before the pit boss judges you.";
@@ -412,7 +413,7 @@ function renderEndScreen(state, handlers) {
       ? "The floor opens, but your spare link snags on the edge and holds. The dealer sighs and forgives the rest of the debt."
       : "The dealer reaches over and unlocks a link. Clank.") +
       (state.endless ? " Endless shift " + state.shift + " survived." : " " + linksLeft + (linksLeft === 1 ? " link" : " links") + " to go.") +
-      " You keep " + kept + "." + nextLine;
+      " You have " + kept + " left. The dealer takes his cut, so you carry " + money(Math.floor(totalMoney(state) * CONFIG.carryOverShare)) + " into the next shift." + nextLine;
     primary = "Answer the phone";
   } else {
     mood = "fell";

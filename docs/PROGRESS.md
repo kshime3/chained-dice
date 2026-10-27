@@ -2,6 +2,19 @@
 
 Dated session log. Newest at the top.
 
+## 2026-10-28: Session 6 (rescale)
+
+**Done**
+- Owner asked to adjust the scales and retest before Milestone 8.
+- Simulator: added bots that scale bets to the debt. Found later shifts were no harder than early ones (~80% each) because leftover money snowballs; steeper debts alone don't fix it.
+- **New scale (E3) + dealer's cut** (keep half your leftover money): each shift is now a bit harder than the last (69, 73, 70, 67, 62, 58, 60, 59%); a simple bot walks out free ~3%. Win screen and next Break explain the cut; tutorial line added. Endless: debt x2.2, min 2.5% of debt. tests.html: 258 checks, all passing.
+
+**Waiting on the owner**
+- Testing the new scale and the dealer's cut.
+
+**Exact next step**
+- Milestone 8: consumables.
+
 ## 2026-10-27: Session 5, continued (Break the Chain)
 
 **Done**

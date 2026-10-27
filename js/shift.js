@@ -39,6 +39,7 @@ function newShiftState() {
     minBet: shiftScale(1).minBet, // the table minimum this shift
     kitty: shiftScale(1).cash, // money in your hand, not on the table
     cashAdded: shiftScale(1).cash, // cash the pit boss added at the start of this shift
+    dealerCut: 0, // leftover money the dealer kept at the start of this shift
     deposited: 0, // paid to the dealer: safe, but out of play
     bets: { pass: 0, odds: 0, dont: 0, lay: 0, field: 0 },
     point: null, // null means the next roll is a come-out roll
@@ -226,7 +227,9 @@ function nextShift(old) {
   state.debt = scale.debt;
   state.minBet = scale.minBet;
   state.cashAdded = scale.cash;
-  state.kitty = totalMoney(old) + scale.cash; // bets left on the table come back to you
+  state.carriedOver = Math.floor(totalMoney(old) * CONFIG.carryOverShare); // bets left on the table come back too
+  state.dealerCut = totalMoney(old) - state.carriedOver;
+  state.kitty = state.carriedOver + scale.cash;
   state.cards = old.cards.slice();
   state.crew = old.crew.slice();
   state.interestRate = old.interestRate;

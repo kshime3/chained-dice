@@ -69,7 +69,9 @@ function placeBets(state, s) {
   const line = s.side === "dont" || (s.side === "against-jinx" && shooter === "Jinx") ? "dont" : "pass";
   const backing = line === "pass" ? "odds" : "lay";
   if (state.point === null && state.bets.pass === 0 && state.bets.dont === 0) {
-    const size = Math.max(tableMin(state), safe ? tableMin(state) : s.passPct ? round5(state.kitty * s.passPct) : s.pass);
+    let size = s.passPct ? round5(state.kitty * s.passPct) : s.pass;
+    if (s.debtPct) size = round5(amountOwed(state) * s.debtPct); // bet in proportion to what's still owed
+    size = Math.max(tableMin(state), safe ? tableMin(state) : size);
     if (fundPassLine(state, Math.min(size, Math.max(tableMin(state), round5(state.kitty))), line) === null) {
       fundPassLine(state, tableMin(state), line);
     }
@@ -137,6 +139,7 @@ function run(label, s, n, scale) {
 vm.runInThisContext(source + "\n" + simulator);
 
 globalThis.ORIGINAL_SHIFTS = CONFIG.shifts.slice();
+if (process.env.CARRY) CONFIG.carryOverShare = Number(process.env.CARRY); // e.g. CARRY=0.5 node tools/simulate.js
 const N = Number(process.argv[2]) || 20000;
 const scaleArg = process.argv[3]; // e.g. "100:200,200:500"
 const scale = (scaleArg || CONFIG.shifts.map((x) => x.cash + ":" + x.debt + ":" + x.minBet).join(",")).split(",").map((p) => p.split(":").map(Number));
@@ -160,6 +163,10 @@ const strategies = [
   ["SMART: $10 + 2x Odds, protect, shop",       { pass: 10, odds: 2, payReserve: null, shop: true, shopReserve: 60, protect: true }],
   ["SMART Don't Pass: $10 + max Lay, protect, shop", { pass: 10, odds: 5, payReserve: null, shop: true, shopReserve: 60, protect: true, side: "dont" }],
   ["SMART: Pass, but Don't Pass against Jinx, shop", { pass: 10, odds: 5, payReserve: null, shop: true, shopReserve: 60, protect: true, side: "against-jinx" }],
+  ["SCALING: 5% of what's owed + max Odds, protect, shop",  { debtPct: 0.05, odds: 5, payReserve: null, shop: true, shopReserve: 60, protect: true }],
+  ["SCALING: 10% of what's owed + max Odds, protect, shop", { debtPct: 0.10, odds: 5, payReserve: null, shop: true, shopReserve: 60, protect: true }],
+  ["SCALING: 10% of what's owed + 2x Odds, protect, shop",  { debtPct: 0.10, odds: 2, payReserve: null, shop: true, shopReserve: 60, protect: true }],
+  ["SCALING: 20% of what's owed + 2x Odds, protect, shop",  { debtPct: 0.20, odds: 2, payReserve: null, shop: true, shopReserve: 60, protect: true }],
 ];
 
 // "node tools/simulate.js 20000 100:200 best" runs only the strategies listed by number.

@@ -8,23 +8,29 @@ const CONFIG = {
   // Shifts: cash added at the start of each shift (to your leftover kitty), and the debt.
   // Tested with tools/simulate.js (see docs/BALANCE.md).
   // minBet: the table minimum for that shift (the smallest line bet, and what you must keep in your kitty).
+  // Debts grow slowly at first and faster later, so each shift is a bit harder than the last
+  // (tested with tools/simulate.js, see docs/BALANCE.md 2026-10-28).
   shifts: [
     { cash: 150, debt: 200, minBet: 5 },
-    { cash: 150, debt: 300, minBet: 10 },
-    { cash: 200, debt: 500, minBet: 15 },
-    { cash: 250, debt: 800, minBet: 25 },
-    { cash: 300, debt: 1200, minBet: 50 },
-    { cash: 350, debt: 1800, minBet: 75 },
-    { cash: 400, debt: 2700, minBet: 100 },
-    { cash: 450, debt: 4050, minBet: 150 },
+    { cash: 200, debt: 300, minBet: 10 },
+    { cash: 175, debt: 550, minBet: 15 },
+    { cash: 175, debt: 1100, minBet: 30 },
+    { cash: 175, debt: 2400, minBet: 60 },
+    { cash: 175, debt: 5500, minBet: 150 },
+    { cash: 175, debt: 12500, minBet: 300 },
+    { cash: 175, debt: 28000, minBet: 700 },
   ],
-  laterDebtGrowth: 1.5, // after the table: each debt is this times the last (rounded to $50)
-  laterCashStep: 50,    // after the table: each shift adds this much more cash than the last
-  laterMinBetPct: 0.04, // after the table: the minimum bet is this share of the debt (rounded to $25)
+  laterDebtGrowth: 2.2,  // endless: each debt is this times the last (rounded to $50)
+  laterCashStep: 0,      // endless: each shift adds this much more cash than the last
+  laterMinBetPct: 0.025, // endless: the minimum bet is this share of the debt (rounded to $25)
 
   // The dealer won't take payments until the first shooter of the shift has rolled.
   // Stops paying off a new shift's debt straight from leftover money. false = pay any time.
   payAfterFirstShooter: true,
+
+  // Dealer's cut: at the end of a won shift you keep this share of your leftover money
+  // (1 = keep it all). Stops a big leftover kitty from clearing the next shifts.
+  carryOverShare: 0.5,
   // Seat order. Each seat shoots until they seven out, then the dice pass on.
   crew: ["Lefty", "Dealer Dee", "Hot Rod", "Jinx", "Ghost", "You"],
 

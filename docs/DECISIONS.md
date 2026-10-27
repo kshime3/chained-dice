@@ -197,3 +197,8 @@ Dated log of every decision and why. Newest at the bottom.
 - **Hot streak indicator** idea logged for later (owner).
 - **Table minimum rises each shift** ($5, $10, $15, $25, $50, $75, $100, $150, then ~4% of the debt rounded to $25). Owner asked; Claude's schedule. Chips step up to $25/$100/$500 once the minimum is $25+.
 - **Paying the dealer opens only after the first shooter of each shift** (toggle `payAfterFirstShooter`). Claude's recommendation to stop clearing a new shift instantly with leftover money. Owner: fine-tune difficulty later at higher levels.
+
+## 2026-10-28 (rescale)
+
+- **New scale (accelerating debts):** $200, $300, $550, $1,100, $2,400, $5,500, $12,500, $28,000; cash added $150, $200, then $175 a shift; minimums $5, $10, $15, $30, $60, $150, $300, $700; endless x2.2 per shift. Why: simulator showed later shifts weren't getting harder.
+- **Dealer's cut: keep half your leftover money** between shifts (`carryOverShare` 0.5). Claude's recommendation after testing; the one lever that made difficulty rise shift by shift. Easy to change or turn off (set to 1).
