@@ -2,6 +2,24 @@
 
 Dated session log. Newest at the top.
 
+## 2026-10-27: Session 5, continued (Break the Chain)
+
+**Done**
+- Owner approved `docs/WORDING.md`. **Built Break the Chain:** 8-link chain in the top bar; link-breaking animation + snap sound at the end of every won shift ("THE FLOOR HOLDS ... N links to go", button "Answer the phone"); after shift 8 "YOU WALK OUT FREE" with stats and Walk away / Double or nothing; endless mode (shift 9+, "FREE · Endless shift N"); "THE FLOOR OPENS" on a fall with links broken (or endless extra shifts); stats hero shows links broken / FREE / endless. Renamed: Spare Link (was Extra chain link), Trapdoor (was Cut a chain), Free Trapdoor (was Remove a character). Tutorials, Break text, fall text updated. tests.html: 241 checks, all passing. Fits one screen on phones.
+- Logged in IDEAS.md: scaling to 100 million+ (later), and the owner's "voluntary link break" card idea.
+
+**Works**
+- Checked in a headless browser: win shift 1 with the animation, shift 2 text, escape at shift 8, Walk away, Double or nothing into endless, endless fall text.
+
+**Broken**
+- Nothing known.
+
+**Waiting on the owner**
+- Testing Break the Chain. Exact rules for the "voluntary link break" card (Claude asked in chat).
+
+**Exact next step**
+- Build the voluntary link-break card once its rules are settled; then Milestone 8 (consumables).
+
 ## 2026-10-27: Session 5, continued (Milestone 7: bet against the shooter)
 
 **Done**

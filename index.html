@@ -23,6 +23,7 @@
       <div>Interest <strong id="interest"></strong></div>
     </div>
     <div class="progress"><div id="progress-fill" class="progress-fill"></div></div>
+    <div id="chain-bar" class="chain-bar"></div>
   </header>
 
   <main class="layout">
@@ -67,7 +68,7 @@
         <div class="bet-row">
           <div class="bet-area dark-side" id="dont-pass">
             <div class="bet-title">DON'T PASS <span class="bet-amount" id="dont-amount"></span></div>
-            <div class="bet-hint">Bet against the shooter. Come-out: 2, 3 win · 7, 11 lose · 12 tie · Point: 7 wins</div>
+            <div class="bet-hint">Come-out: 2, 3 win · 7, 11 lose · 12 tie · Point: 7 wins</div>
             <div class="bet-hint lock" id="dont-lock"></div>
           </div>
           <div class="bet-area dark-side" id="lay">
@@ -111,8 +112,8 @@
         <h3>Your cards <span id="slots"></span></h3>
         <div id="owned" class="card-row"></div>
 
-        <h3>Cut a chain</h3>
-        <p class="hint">Pay to drop a crew member through the floor for the rest of the run. Only crew who haven't shot yet this shift.</p>
+        <h3>Trapdoor</h3>
+        <p class="hint">Pay the dealer to pull the lever under a crew member's seat. They drop away for the rest of the run. Only crew who haven't shot yet this shift.</p>
         <div id="cut-row" class="cut-row"></div>
       </div>
 
@@ -122,7 +123,7 @@
     </div>
   </div>
 
-  <div id="fall-pit" class="fall-pit hidden"><div class="fall-text">The chains release.</div></div>
+  <div id="fall-pit" class="fall-pit hidden"><div class="fall-text">The floor opens.</div></div>
 
   <div id="phone" class="overlay hidden">
     <div class="end-box phone-box">
@@ -158,9 +159,11 @@
 
   <div id="end-screen" class="overlay hidden">
     <div class="end-box">
+      <div id="chain-break" class="chain-break"></div>
       <h2 id="end-title"></h2>
       <p id="end-body"></p>
       <div id="run-stats" class="run-stats"></div>
+      <button id="second-button" class="hidden"></button>
       <button id="play-again" class="big-button">Play again</button>
     </div>
   </div>

@@ -86,6 +86,7 @@ function renderState(state) {
   document.getElementById("paid").textContent = money(state.deposited) + " / " + money(state.debt);
   const progress = Math.min(100, (state.deposited / state.debt) * 100);
   document.getElementById("progress-fill").style.width = progress + "%";
+  renderChainBar(state);
   renderCrew(state);
   renderOddsPanel(state);
   renderMult(state);
@@ -156,9 +157,11 @@ function renderBreak(state) {
 
   let intro;
   if (state.shooterIndex === 0 && state.lastRoll === null) {
+    const left = CONFIG.chainLinks - linksBroken(state);
     intro = state.shift === 1
-      ? "The dealer leans in. \"You owe me " + money(state.debt) + " by the end of the shift.\" Pay any time between shooters. Paid money is safe, but you can't bet it."
-      : "Shift " + state.shift + ". The pit boss slides " + money(state.cashAdded) + " into your kitty. The dealer leans in: \"This time you owe me " + money(state.debt) + ".\"";
+      ? "The dealer leans in. \"You owe me " + money(state.debt) + " by the end of the shift. Pay it and I'll unlock a link.\" Pay any time between shooters. Paid money is safe, but you can't bet it."
+      : "Shift " + state.shift + ". " + (state.endless ? "Endless mode, no chain left to break. " : left + (left === 1 ? " link" : " links") + " to go. ") +
+        "The pit boss slides " + money(state.cashAdded) + " into your kitty. The dealer leans in: \"This time you owe me " + money(state.debt) + ".\"";
   } else if (isFinalBreak(state)) {
     intro = "Every shooter has sevened out. Last chance to pay before the pit boss judges you.";
   } else {
@@ -262,23 +265,23 @@ function renderShop(state, handlers) {
     owned.appendChild(cardBox(id, "Sell for " + money(sellPrice(state, id)), () => handlers.sell(id)));
   }
 
-  // Cut a chain: one button per crew member who hasn't shot yet (Break screen)
+  // Trapdoor: one button per crew member who hasn't shot yet (Break screen)
   const cutRow = document.getElementById("cut-row");
   cutRow.innerHTML = "";
   for (const name of cuttableCrew(state)) {
     const button = document.createElement("button");
-    button.textContent = "Cut " + name + " (" + money(cutChainPrice(state)) + ")";
+    button.textContent = "Trapdoor: " + name + " (" + money(cutChainPrice(state)) + ")";
     button.disabled = !canSpend(state, cutChainPrice(state));
     button.onclick = () => handlers.cut(name);
     cutRow.appendChild(button);
   }
-  if (!cutRow.children.length) cutRow.innerHTML = '<p class="hint">Nobody left to cut this shift.</p>';
+  if (!cutRow.children.length) cutRow.innerHTML = '<p class="hint">Nobody left to drop this shift.</p>';
 
   // Your cards as small badges with hover text (main screen)
   const badges = document.getElementById("my-cards");
   badges.innerHTML = "";
   // Phone perks first (purple), with repeats grouped: "-1 way to roll 7 x2".
-  // One-time perks (Remove a character, free items) don't stay as badges.
+  // One-time perks (Free Trapdoor, free items) don't stay as badges.
   if (state.freeBuys > 0) {
     const free = document.createElement("div");
     free.className = "card-badge perk";
@@ -332,29 +335,108 @@ function renderOddsPanel(state) {
 }
 
 // Show the win or fall screen when the shift is over.
-function renderEndScreen(state) {
+// A chain of links as HTML. broken: how many are already open. breaking: the index
+// of the link that snaps now (-1 for none). big: the large end-of-shift version.
+function chainHtml(broken, breaking, big) {
+  let html = '<div class="chain' + (big ? " big" : "") + '">';
+  for (let i = 0; i < CONFIG.chainLinks; i++) {
+    let cls = "link";
+    if (i < broken) cls += " broken";
+    if (i === breaking) cls += " breaking";
+    html += '<span class="' + cls + '"><span class="half l"></span><span class="half r"></span>';
+    if (i === breaking) {
+      for (let k = 0; k < 7; k++) {
+        html += '<span class="spark" style="--dx:' + (Math.random() * 120 - 60).toFixed(0) + "px;--dy:" + (Math.random() * -70 - 10).toFixed(0) + 'px"></span>';
+      }
+    }
+    html += "</span>";
+  }
+  return html + "</div>";
+}
+
+function renderChainBar(state) {
+  const bar = document.getElementById("chain-bar");
+  if (state.endless) {
+    bar.innerHTML = '<span class="chain-label">FREE · Endless shift ' + state.shift + "</span>";
+    return;
+  }
+  const broken = linksBroken(state);
+  bar.innerHTML = chainHtml(broken, -1, false) + '<span class="chain-label">' + broken + " of " + CONFIG.chainLinks + " links broken</span>";
+  bar.title = "Survive a shift and the dealer unlocks a link. Break all " + CONFIG.chainLinks + " to walk out free.";
+}
+
+// The end of a shift (won), the escape, or the fall.
+// handlers: { primary, secondary } from main.js
+let chainShownFor = ""; // so the link only breaks once per win
+function renderEndScreen(state, handlers) {
   const screen = document.getElementById("end-screen");
   if (state.status === "playing") {
     screen.classList.add("hidden");
     return;
   }
+  const kept = money(totalMoney(state));
   const next = shiftScale(state.shift + 1);
   const nextLine = " Next: shift " + (state.shift + 1) + ". You'll get " + money(next.cash) + " more and owe " + money(next.debt) + ".";
-  const survived = state.shift - 1;
-  const score = " You survived " + survived + (survived === 1 ? " shift." : " shifts.");
-  const texts = {
-    "won": state.savedByLink
-      ? ["The extra link holds!", "You were about to fall, but your Extra chain link snapped instead. The dealer forgives the rest of the debt. You keep " + money(totalMoney(state)) + "." + nextLine]
-      : ["Shift " + state.shift + " survived. The chains hold.", "You paid the dealer " + money(state.debt) + ". You keep " + money(totalMoney(state)) + "." + nextLine],
-    "fell-broke": ["You fall.", "You couldn't cover the " + money(CONFIG.tableMinimum) + " Pass Line. The chains release and the floor opens." + score],
-    "fell-short": ["You fall.", "You only paid " + money(state.deposited) + " of the " + money(state.debt) + " you owed. The chains release." + score],
-  };
-  const [title, body] = texts[state.status];
+  const linksLeft = CONFIG.chainLinks - linksBroken(state);
+  let title, body, primary, secondary = null, showStats = false, mood = "won";
+
+  if (state.status === "won" && hasEscaped(state) && state.walkedAway) {
+    title = "YOU WALK OUT FREE.";
+    body = "You walked away from the table with " + kept + " in your pocket. Nobody stops you.";
+    primary = "Play again";
+    showStats = true;
+  } else if (state.status === "won" && hasEscaped(state)) {
+    title = "YOU WALK OUT FREE.";
+    body = "The last link falls away. You stand up from the table, and nobody stops you. The dealer smiles: \"Double or nothing?\"";
+    primary = "Double or nothing";
+    secondary = "Walk away";
+    showStats = true;
+  } else if (state.status === "won") {
+    title = state.savedByLink ? "THE SPARE LINK CATCHES YOU." : "THE FLOOR HOLDS.";
+    body = (state.savedByLink
+      ? "The floor opens, but your spare link snags on the edge and holds. The dealer sighs and forgives the rest of the debt."
+      : "The dealer reaches over and unlocks a link. Clank.") +
+      (state.endless ? " Endless shift " + state.shift + " survived." : " " + linksLeft + (linksLeft === 1 ? " link" : " links") + " to go.") +
+      " You keep " + kept + "." + nextLine;
+    primary = "Answer the phone";
+  } else {
+    mood = "fell";
+    title = "THE FLOOR OPENS.";
+    const why = state.status === "fell-broke"
+      ? "You couldn't cover the " + money(CONFIG.tableMinimum) + " line bet."
+      : "You only paid " + money(state.deposited) + " of the " + money(state.debt) + " you owed.";
+    body = why + (state.endless
+      ? " You walked out free once. Greed brought you back. You lasted " + (state.shift - 1 - CONFIG.chainLinks) + " extra shifts."
+      : " The chains drag the whole crew down into the dark. You broke " + linksBroken(state) + " of " + CONFIG.chainLinks + " links.");
+    primary = "Play again";
+    showStats = true;
+  }
+
   document.getElementById("end-title").textContent = title;
   document.getElementById("end-body").textContent = body;
-  document.getElementById("play-again").textContent = state.status === "won" ? "Next shift" : "Play again";
-  document.getElementById("run-stats").innerHTML = state.status === "won" ? "" : runStatsHtml(state);
-  screen.className = "overlay " + (state.status === "won" ? "won" : "fell");
+  document.getElementById("run-stats").innerHTML = showStats ? runStatsHtml(state) : "";
+  const first = document.getElementById("play-again");
+  first.textContent = primary;
+  first.onclick = handlers.primary;
+  const second = document.getElementById("second-button");
+  second.classList.toggle("hidden", !secondary);
+  second.textContent = secondary || "";
+  second.onclick = handlers.secondary;
+
+  // The link-breaking animation, once per won shift (not in endless mode).
+  const chainBox = document.getElementById("chain-break");
+  const key = state.shift + ":" + state.status + ":" + state.walkedAway;
+  if (state.status === "won" && !state.endless && !state.walkedAway) {
+    if (chainShownFor !== key) {
+      chainBox.innerHTML = chainHtml(linksBroken(state) - 1, linksBroken(state) - 1, true);
+      playSound("shiftWon");
+      setTimeout(() => playSound("snap"), 900);
+    }
+  } else if (chainShownFor !== key) {
+    chainBox.innerHTML = "";
+  }
+  chainShownFor = key;
+  screen.className = "overlay " + mood;
 }
 
 // ---------- End-of-run stats screen ----------
@@ -429,11 +511,20 @@ function totalsChartSvg(stats) {
 
 function runStatsHtml(state) {
   const st = state.stats;
-  const survived = state.shift - 1;
   const best = bestShooter(st);
   const net = st.totalWon - st.totalLost;
-  let html = '<div class="hero"><div class="hero-number">' + survived + '</div><div class="stat-label">' +
-    (survived === 1 ? "shift survived" : "shifts survived") + "</div></div>";
+  let heroNumber, heroLabel;
+  if (state.endless) {
+    heroNumber = "+" + (state.shift - 1 - CONFIG.chainLinks);
+    heroLabel = "endless shifts after escaping";
+  } else if (hasEscaped(state)) {
+    heroNumber = "FREE";
+    heroLabel = "escaped in " + state.shift + " shifts";
+  } else {
+    heroNumber = linksBroken(state) + " / " + CONFIG.chainLinks;
+    heroLabel = "links broken";
+  }
+  let html = '<div class="hero"><div class="hero-number">' + heroNumber + '</div><div class="stat-label">' + heroLabel + "</div></div>";
   html += '<div class="stat-grid">' +
     statTile("Rolls", st.rolls, st.doubles + " doubles") +
     statTile("Longest run without a 7", st.bestNoSeven + " rolls") +
@@ -568,7 +659,7 @@ function renderMuteButton() {
 }
 
 // The Pit Boss phone: pick one of the offered perks.
-// onPick(id, target) runs once a perk (and, for Remove a character, a crew member) is chosen.
+// onPick(id, target) runs once a perk (and, for Free Trapdoor, a crew member) is chosen.
 let phoneOpen = false;
 function showPhone(state, offer, onPick) {
   const box = document.getElementById("phone");
@@ -591,7 +682,7 @@ function showPhone(state, offer, onPick) {
     button.onclick = () => {
       if (id !== "removeCharacter") return close(id);
       // Pick who goes.
-      document.getElementById("phone-text").textContent = "\"Who goes?\" Pick a crew member to remove for the rest of the run.";
+      document.getElementById("phone-text").textContent = "\"Who drops?\" Pick a crew member. The trapdoor takes them for the rest of the run.";
       choices.innerHTML = "";
       for (const name of state.crew.filter((n) => n !== "You")) {
         const who = document.createElement("button");
@@ -608,10 +699,10 @@ function showPhone(state, offer, onPick) {
   box.classList.remove("hidden");
 }
 
-// The "falls through the floor" screen for Cut a chain.
+// The Trapdoor screen.
 function cutSplash(name) {
-  return '<div class="splash-title">CHAIN CUT</div><p class="splash-big">' + name + " falls through the floor.</p>" +
-    "<p>The seats close up. " + name + " is gone for the rest of the run.</p>" + '<p class="hint">Tap to continue</p>';
+  return '<div class="splash-title">TRAPDOOR.</div><p class="splash-big">' + name + "'s seat drops away.</p>" +
+    "<p>The dealer pulls a lever. " + name + " is gone for the rest of the run, and the seats close up.</p>" + '<p class="hint">Tap to continue</p>';
 }
 
 // The SEVEN OUT screen.

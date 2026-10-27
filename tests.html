@@ -515,6 +515,21 @@
     applyCrewBeforePayout(notJinx, njRes, 7, null);
     check("Other shooters: a come-out 7 still loses Don't Pass", njRes[0].outcome, "lose");
 
+    // Break the Chain: 8 links, walk out free, endless
+    const ch = newShiftState();
+    check("A new run: 0 links broken", linksBroken(ch), 0);
+    ch.status = "won";
+    check("Win shift 1: 1 link broken, not escaped yet", [linksBroken(ch), hasEscaped(ch)], [1, false]);
+    const ch8 = newShiftState(); ch8.shift = 8; ch8.status = "won";
+    check("Win shift 8: all 8 links broken, you walk out free", [linksBroken(ch8), hasEscaped(ch8)], [8, true]);
+    ch8.endless = true;
+    const ch9 = nextShift(ch8);
+    check("Double or nothing: shift 9 is endless", [ch9.shift, ch9.endless, linksBroken(ch9)], [9, true, 8]);
+    ch9.status = "won";
+    check("Winning an endless shift isn't another escape", hasEscaped(ch9), false);
+    check("Spare Link is the new name of the Extra chain link", CARDS.chainLink.name, "Spare Link");
+    check("Free Trapdoor is the new name of Remove a character", perkInfo("removeCharacter").name, "Free Trapdoor");
+
     // Dice: 10,000 rolls stay in range, and 7 is the most common total
     const counts = {};
     let inRange = true;

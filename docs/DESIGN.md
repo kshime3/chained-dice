@@ -4,7 +4,7 @@
 
 ## Premise
 
-You wake up chained to a craps table with your crew. The dealer, the bad guy, says you owe them money by the end of the shift. Pay it and the chains hold. Fail, or go broke, and the chains release and everyone falls through the floor. Then you wake up at the table again.
+You wake up chained to a craps table with your crew. The dealer, the bad guy, says you owe them money by the end of the shift. **The chains are your sentence; the floor is the threat.** Your chain has 8 links: pay off a shift and the dealer unlocks one. Break all 8 and you walk out free. Fail, or go broke, and the floor opens and the chains drag the whole crew down. Then you wake up at the table again.
 
 ## The End Goal
 
@@ -32,6 +32,13 @@ Long term, it becomes a first-person 3D room like Clover Pit: chained at the tab
 5. After the last shooter sevens out: one **final Dealer Break**, then the pit boss judges.
 6. **Win** the moment your payments reach the debt. Leftover kitty is kept. **[Planned, 6b]** The Pit Boss phone rings: pick 1 of 3 perks. **[Built]** Next shift: the new cash is added to your kitty and a bigger debt starts. From shift 2, the shop is open on the opening Break.
 7. **Fall:** the run ends with a **stats screen [Built]**: shifts survived (your score), rolls and doubles, longest run without a 7, longest turn, biggest hit and loss, won/lost at the table, paid to the dealer and interest, spent in the shop, points hit and seven-outs, highest mult, best shooter, a chart of your money over the run (shift starts marked), a chart of every total rolled against what the dice odds expected, and your cards. Play again starts a new run at shift 1.
+
+## Break the Chain  [Built]
+
+- **8 links** (`chainLinks` in config), shown in the top bar. Each won shift breaks one, with a link-breaking animation (glows red-hot, shakes, snaps, sparks) and a snap sound: "THE FLOOR HOLDS. The dealer unlocks a link. N links to go."
+- **Break all 8: "YOU WALK OUT FREE."** with your stats. The dealer offers **"Double or nothing?"**: **Walk away** ends the run as a win; **Double or nothing** starts **endless mode** (shift 9 on, debts keep growing x1.5, played for score).
+- **The floor opens** when you fail: "You broke 3 of 8 links." In endless: "You walked out free once. Greed brought you back."
+- Full wording: `docs/WORDING.md` (approved by owner).
 
 ## Shifts and Scale
 
@@ -113,7 +120,7 @@ Seat order: **Lefty, Dealer Dee, Hot Rod, Jinx, Ghost, You.** Dice are lists of 
 | Common | 5% | 60% |
 | Uncommon | 10% | 30% |
 | Rare | 25% | 9% |
-| Extra chain link | 50% | 1% |
+| Spare Link | 50% | 1% |
 
 - **5 card slots** to start. A "+1 slot" card may come later.
 - Paid from the kitty; tips **don't** count toward the debt. Buying or shuffling can't take the kitty below $5.
@@ -143,9 +150,9 @@ Full list: `docs/Store-Cards-Phone-Scales.xlsx`.
 | Wrong Way [Built] | Don't Pass winnings +50%. | Uncommon |
 | Cold Read [Built] | When your Don't Pass wins on a seven-out, the next shooter starts at +1x mult. | Common |
 | Pit Boss's Pity (note) | Only triggers when you're on the Pass Line. | |
-| Extra chain link [Built] | When you would fall, it snaps instead: the shift counts as survived and the rest of the debt is forgiven. Takes a slot until used. | Very rare |
+| Spare Link [Built] | When you would fall, it snaps instead: the shift counts as survived and the rest of the debt is forgiven. Takes a slot until used. | Very rare |
 
-**Cut a chain [Built]:** a fixed Dealer Break option (once the shop is open) for 25% of the debt. Drops a crew member who hasn't shot yet this shift (never You) through the floor for the rest of the run; seats close up and synergies change.
+**Trapdoor [Built]:** a fixed Dealer Break option (once the shop is open) for 25% of the debt. Drops a crew member who hasn't shot yet this shift (never You) through the floor for the rest of the run; seats close up and synergies change.
 
 **"+1 odds" means +1 way out of 36 [Built]:** one extra combination for that total, so a 2 goes from 1 in 36 to 2 in 37. Dice with fewer faces (like Lefty's) are scaled so their plain combos still count as 36.
 
@@ -168,7 +175,7 @@ Like Clover Pit's phone. After **every won shift**, it rings before the next shi
 
 - **Pit boss challenges:** a small challenge each shooter's turn, with a reward. Own milestone after the shop.
 - **House rules [Planned, Milestone 7]:** from shift 3, one random rule per shift, announced on the opening Dealer Break, with a tutorial the first time. Starter list: **Tight Odds** (Odds capped at 2x), **Short Table** (a random crew member sits out), **High Roller** ($25 minimum), **Stingy Field** (12 pays only double), **Dealer's Cut** (interest halved), **Markup** (shop prices +50%), **Jinxed** (Jinx shoots twice), **Pit Watch** (one of your cards is switched off).
-- **Card unlocks [Planned, Milestone 8]:** new players start with Hot Hand, Snake Eyes, Lucky Seven, Rattlesnake, Red Dice and Double Up. Others unlock by goals: Odds Addict (win $500 total on Odds), Muggsy (5 point-7s), Pit Boss's Pity (fall 5 times), Doubles Charm (3 doubles in one turn), Green Dice ($50 interest in one run), Loaded Die (survive shift 2), Reroll (survive shift 3), Extra chain link (survive shift 4). Each unlock gets an announcement. Progress is saved in the browser; a Collection screen shows locked cards and their goals.
+- **Card unlocks [Planned, Milestone 8]:** new players start with Hot Hand, Snake Eyes, Lucky Seven, Rattlesnake, Red Dice and Double Up. Others unlock by goals: Odds Addict (win $500 total on Odds), Muggsy (5 point-7s), Pit Boss's Pity (fall 5 times), Doubles Charm (3 doubles in one turn), Green Dice ($50 interest in one run), Loaded Die (survive shift 2), Reroll (survive shift 3), Spare Link (survive shift 4). Each unlock gets an announcement. Progress is saved in the browser; a Collection screen shows locked cards and their goals.
 - **Tutorials [Built]:** a 2-page phone tutorial the first time it rings; a 7-page "How to play" intro on first visit (also via the How to play button), a 3-page shop tutorial (including Cut a chain) the first time the shop opens (also via the shop's ? button). [Planned] A phone tutorial. Each shows once per browser.
 
 ## Glossary
@@ -209,7 +216,7 @@ Like Clover Pit's phone. After **every won shift**, it rings before the next shi
 2. [Built] Come-out and point phases, Odds, seven-out
 3. [Built] Shift: buy-in, turns, win and fall. 3.5: paying the dealer
 4. [Built] Crew dice, visible odds (4a); mult and synergies (4b)
-5. [Built] Shop: 5a framework and 8 cards; 5b-1 dice cards; 5b-2 Loaded Die, Reroll, Cut a chain, Extra chain link
+5. [Built] Shop: 5a framework and 8 cards; 5b-1 dice cards; 5b-2 Loaded Die, Reroll, Cut a chain, Spare Link
 6. [Built] Multiple shifts (6a) and the Pit Boss phone (6b)
 7. [Planned] House rules
 8. [Planned] Card unlocks and the Collection screen

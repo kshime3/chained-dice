@@ -191,3 +191,5 @@ Dated log of every decision and why. Newest at the bottom.
 - **8 links.** Each won shift unlocks one. Break all 8 and you **walk out free** (a real win), then the dealer offers **"Double or nothing"** for **endless mode** (play for score).
 - **A chain link breaking animation at the end of every won shift.** Owner's request.
 - Wording draft in `docs/WORDING.md` for owner review before it goes in the game.
+- **Break the Chain built** as written in `docs/WORDING.md` (approved): 8 links, link-break animation, walk out free, Double or nothing into endless mode. Renamed Spare Link, Trapdoor, Free Trapdoor.
+- **Big-number scaling (100 million+) is a later goal,** logged in IDEAS.md. Owner's note.

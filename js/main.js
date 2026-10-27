@@ -206,7 +206,7 @@ function finishRoll(rolled) {
 // Dealer Break buttons
 function payDealer(amount) {
   const paid = deposit(state, amount);
-  if (paid > 0) playSound(state.status === "won" ? "shiftWon" : "pay");
+  if (paid > 0 && state.status !== "won") playSound("pay");
   let text = paid > 0 ? "Paid " + money(paid) + ". That money is safe now, and out of play." : "Nothing more you can pay.";
   if (state.status === "playing" && state.kitty <= CONFIG.tableMinimum) {
     text += " You keep " + money(CONFIG.tableMinimum) + " for your Pass Line bet.";
@@ -248,14 +248,14 @@ function sell(id) {
 }
 
 function cut(name) {
-  if (!confirm("Cut " + name + "'s chain for " + money(cutChainPrice(state)) + "? They fall through the floor for the rest of the run.")) return;
+  if (!confirm("Pay " + money(cutChainPrice(state)) + " to open the trapdoor under " + name + "'s seat? They're gone for the rest of the run.")) return;
   const outcome = cutChain(state, name);
   if (outcome !== "ok") {
-    showBreakMessage(outcome === "money" ? "Not enough. Cutting can't take your kitty below " + money(CONFIG.tableMinimum) + "." : "You can't cut " + name + ".");
+    showBreakMessage(outcome === "money" ? "Not enough. The trapdoor can't take your kitty below " + money(CONFIG.tableMinimum) + "." : "You can't drop " + name + ".");
     renderAll();
     return;
   }
-  showBreakMessage(name + " is gone.");
+  showBreakMessage(name + "'s seat is empty.");
   renderAll();
   playSound("clank");
   showSplash(cutSplash(name), "bad", CONFIG.cutSplashMs);
@@ -296,7 +296,7 @@ function startNextShift() {
   playSound("ring");
   showPhone(state, phoneOffer(state), (id, target) => {
     takePerk(state, id, target);
-    showBreakMessage("New perk: " + perkInfo(id).name + (target ? " (" + target + " is gone)" : "") + ".");
+    showBreakMessage("New perk: " + perkInfo(id).name + (target ? " (" + target + "'s seat dropped away)" : "") + ".");
     renderAll();
   });
   if (!tutorialSeen("phone")) {
@@ -325,9 +325,9 @@ function renderAll() {
   if (state.status.startsWith("fell") && !fallPlayed) {
     fallPlayed = true;
     playSound("fall");
-    playFall(CONFIG.fallMs, () => renderEndScreen(state));
+    playFall(CONFIG.fallMs, () => renderEndScreen(state, endHandlers()));
   } else if (!fallingNow) {
-    renderEndScreen(state);
+    renderEndScreen(state, endHandlers());
   }
 
   // The first time the shop opens, explain it.
@@ -349,7 +349,17 @@ document.getElementById("pay-typed").onclick = payTyped;
 document.getElementById("pay-off").onclick = () => payDealer(amountOwed(state));
 document.getElementById("leave-break").onclick = leaveBreak;
 document.getElementById("shuffle").onclick = shuffle;
-document.getElementById("play-again").onclick = () => (state.status === "won" ? startNextShift() : playAgain());
+// End screen buttons: the next shift, the escape choice, or a new run.
+function endHandlers() {
+  if (state.status !== "won" || state.walkedAway) return { primary: playAgain, secondary: null };
+  if (hasEscaped(state)) {
+    return {
+      primary: () => { state.endless = true; startNextShift(); }, // Double or nothing
+      secondary: () => { state.walkedAway = true; playSound("shiftWon"); renderAll(); }, // Walk away
+    };
+  }
+  return { primary: startNextShift, secondary: null };
+}
 
 document.getElementById("mute").onclick = () => {
   setMuted(!muted);

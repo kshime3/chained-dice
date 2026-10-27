@@ -18,7 +18,7 @@ function perkInfo(id) {
   }
   const perks = {
     minusSeven: { name: "-1 way to roll 7", text: "Every shooter rolls 7s a little less often (-1 way out of 36), for the rest of the run. A 7 never drops below " + CONFIG.minSevenWays + " ways.", rarity: "rare" },
-    removeCharacter: { name: "Remove a character", text: "Pick a crew member (not you). They're removed from the table for the rest of the run. Free.", rarity: "uncommon" },
+    removeCharacter: { name: "Free Trapdoor", text: "Pick a crew member (not you). The dealer opens the trapdoor under their seat, free. They're gone for the rest of the run.", rarity: "uncommon" },
     freeItems: { name: CONFIG.freeItemsCount + " free items", text: "Your next " + CONFIG.freeItemsCount + " cards from the shop are free.", rarity: "uncommon" },
   };
   return perks[id];
@@ -58,7 +58,7 @@ function phoneOffer(state) {
   return offer;
 }
 
-// Take a perk. target: the crew member for "Remove a character".
+// Take a perk. target: the crew member for "Free Trapdoor".
 function takePerk(state, id, target) {
   if (id === "removeCharacter") {
     removeCrew(state, target);

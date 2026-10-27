@@ -1,6 +1,6 @@
 # Chained Dice
 
-A Craps-themed roguelike browser game (in the style of Balatro and Clover Pit). You wake up chained to a craps table with your crew. Hit the pit boss's bankroll target by the end of the shift, or the chains release and everyone falls. Full design: `docs/DESIGN.md`.
+A Craps-themed roguelike browser game (in the style of Balatro and Clover Pit). You wake up chained to a craps table with your crew. Pay the dealer's debt each shift to break a link of your 8-link chain; break all 8 to walk out free (then optional endless mode). Fail and the floor opens. Full design: `docs/DESIGN.md`; game wording: `docs/WORDING.md`.
 
 The owner is a beginner coder working about an hour a day.
 
@@ -30,6 +30,7 @@ docs/DECISIONS.md  dated decision log
 docs/PROGRESS.md   dated session log and next step
 docs/IDEAS.md      parked ideas and later features
 docs/BALANCE.md    simulator results and balance recommendations
+docs/WORDING.md    approved game wording (Break the Chain theme)
 index.html         the game page (open this to play)
 tests.html         rule checks: open to see green/red results
 css/style.css      colors and layout

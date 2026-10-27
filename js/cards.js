@@ -17,7 +17,7 @@ const CARDS = {
   reroll:      { name: "Reroll",          text: "Once per shooter, when a roll would cost you, reroll both dice." },
   wrongWay:    { name: "Wrong Way",       text: "Bet against the shooter and get paid for it: Don't Pass winnings +50%." },
   coldRead:    { name: "Cold Read",       text: "When your Don't Pass wins on a seven-out, the next shooter starts at +1x mult." },
-  chainLink:   { name: "Extra chain link", text: "When you would fall, this snaps instead: the shift counts as survived and the rest of the debt is forgiven. Used up." },
+  chainLink:   { name: "Spare Link",      text: "When the floor opens, this link catches you: the shift counts as survived, a link breaks as normal, and the rest of the debt is forgiven. Used up." },
 };
 
 function hasCard(state, id) {

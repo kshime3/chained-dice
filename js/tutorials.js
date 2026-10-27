@@ -8,7 +8,8 @@ function introPages() {
     {
       title: "You wake up chained to a craps table",
       body: "Your crew is chained up beside you. The dealer leans in: <strong>\"You owe me " + money(CONFIG.shifts[0].debt) +
-        " by the end of the shift.\"</strong><br><br>Pay it and the chains hold. Fail, and the chains release and everyone falls through the floor.<br><br>You start with <strong>" +
+        " by the end of the shift.\"</strong><br><br>Your chain has <strong>" + CONFIG.chainLinks + " links</strong>. Pay off each shift's debt and the dealer unlocks one. <strong>Break all " + CONFIG.chainLinks +
+        " and you walk out free.</strong><br><br>Fail, and the floor opens.<br><br>You start with <strong>" +
         money(CONFIG.shifts[0].cash) + "</strong> in your <strong>kitty</strong> (the money in your hand).",
     },
     {
@@ -44,7 +45,7 @@ function introPages() {
       title: "Paying the dealer",
       body: "Between shooters there's a <strong>Dealer Break</strong>. That's your chance to pay toward the debt.<br><br>" +
         "Paid money is <strong>safe</strong> from bad rolls, but you can't bet it, and you can't take it back. You win the moment the debt is fully paid.<br><br>" +
-        "<strong>You fall if:</strong> you can't afford the " + min + " Pass Line bet, or the last shooter sevens out and you still owe money.",
+        "<strong>The floor opens if:</strong> you can't afford the " + min + " line bet, or the last shooter sevens out and you still owe money.",
     },
     {
       title: "Interest: why paying early pays",
@@ -76,9 +77,9 @@ function shopPages() {
         pct("common") + " of the debt).<br><br>Your cards work on every roll. Hover over one, under the Mult line, to read it.",
     },
     {
-      title: "Cut a chain",
-      body: "Don't like a shooter? For <strong>" + Math.round(CONFIG.cutChainPct * 100) + "% of the debt</strong> you can cut their chain at a Dealer Break. They fall through the floor and are gone <strong>for the rest of the run</strong>.<br><br>" +
-        "You can only cut crew who haven't shot yet this shift, and never yourself. Fewer shooters means fewer rolls to make your money, and the seats close up, so synergies change.",
+      title: "Trapdoor",
+      body: "Don't like a shooter? For <strong>" + Math.round(CONFIG.cutChainPct * 100) + "% of the debt</strong>, the dealer will pull the lever under their seat at a Dealer Break. They drop away and are gone <strong>for the rest of the run</strong>.<br><br>" +
+        "You can only drop crew who haven't shot yet this shift, and never yourself. Fewer shooters means fewer rolls to make your money, and the seats close up, so synergies change.",
     },
   ];
 }
@@ -95,7 +96,7 @@ function phonePages() {
       title: "Which perk?",
       body: "<strong>+1 way to roll a number:</strong> that total comes up a little more often (common).<br>" +
         "<strong>-1 way to roll 7:</strong> fewer seven-outs. The strongest perk, so it's rare, and it gets rarer each time you take it. A 7 never goes away completely.<br>" +
-        "<strong>Remove a character</strong> or <strong>" + CONFIG.freeItemsCount + " free items</strong> (uncommon).<br><br>" +
+        "<strong>Free Trapdoor</strong> or <strong>" + CONFIG.freeItemsCount + " free items</strong> (uncommon).<br><br>" +
         "Careful with <strong>+1 way to roll 7</strong>: it's marked <strong>Risky</strong>. More 7s win come-out rolls, but they also end turns.<br><br>" +
         "Your perks show as purple ☎ badges next to your cards.",
     },

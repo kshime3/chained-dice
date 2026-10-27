@@ -21,7 +21,7 @@ function newStats() {
     totalLost: 0,
     paid: 0,
     interest: 0,
-    spent: 0,             // cards, Shuffles and cut chains
+    spent: 0,             // cards, Shuffles and Trapdoors
     maxMult: 1,
     byShooter: {},        // money made (or lost) during each shooter's turns
     history: [],          // money in play after every roll, for the chart

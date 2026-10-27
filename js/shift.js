@@ -20,6 +20,7 @@ function newShiftState() {
     shift: 1, // which shift of the run this is
     debt: shiftScale(1).debt, // what the dealer wants this shift
     kitty: shiftScale(1).cash, // money in your hand, not on the table
+    cashAdded: shiftScale(1).cash, // cash the pit boss added at the start of this shift
     deposited: 0, // paid to the dealer: safe, but out of play
     bets: { pass: 0, odds: 0, dont: 0, lay: 0, field: 0 },
     point: null, // null means the next roll is a come-out roll
@@ -27,7 +28,7 @@ function newShiftState() {
     onBreak: true, // a Dealer Break happens before each shooter and once at the end
     status: "playing", // "playing", "won", "fell-broke", or "fell-short"
     lastRoll: null,
-    crew: CONFIG.crew.slice(), // seats still at the table (Cut a chain removes one)
+    crew: CONFIG.crew.slice(), // seats still at the table (a Trapdoor removes one)
     dice: diceForShooter(CONFIG.crew[0]), // current shooter's dice
     mult: CONFIG.startingMult, // multiplies winnings this turn
     multNotes: [], // why the mult is what it is (synergies)
@@ -40,7 +41,9 @@ function newShiftState() {
     loadedDieUsed: false, // Loaded Die works once a shift
     rerollUsed: false, // Reroll works once per shooter
     prevShooterMult: 1, // the last shooter's final mult (for Mentor if a seat is cut)
-    savedByLink: false, // true if the Extra chain link saved this shift
+    savedByLink: false, // true if the Spare Link saved this shift
+    endless: false, // true after "Double or nothing": the chain is gone, play for score
+    walkedAway: false, // true if you escaped and chose "Walk away"
     stats: newStats(), // run stats for the end screen (carry over between shifts)
     perks: [], // Pit Boss phone perks (carry over between shifts)
     freeBuys: 0, // shop cards you can take for free (from the "free items" perk)
@@ -136,7 +139,19 @@ function payInterest(state) {
   return state.lastInterest;
 }
 
-// You would fall. The Extra chain link snaps instead, if you have one:
+// Links broken so far: one per won shift (all of them in endless mode).
+function linksBroken(state) {
+  if (state.endless) return CONFIG.chainLinks;
+  const won = state.shift - 1 + (state.status === "won" ? 1 : 0);
+  return Math.min(won, CONFIG.chainLinks);
+}
+
+// True when the last link just broke: you can walk out free.
+function hasEscaped(state) {
+  return !state.endless && state.status === "won" && state.shift >= CONFIG.chainLinks;
+}
+
+// You would fall. The Spare Link catches you instead, if you have one:
 // the shift counts as survived and the rest of the debt is forgiven.
 function fall(state, reason) {
   if (hasCard(state, "chainLink")) {
@@ -148,7 +163,7 @@ function fall(state, reason) {
   state.status = reason;
 }
 
-// Cut a chain: price, who can be cut, and doing it.
+// Trapdoor (the code calls it cutChain): price, who can be dropped, and doing it.
 function cutChainPrice(state) {
   return roundTo5(CONFIG.cutChainPct * state.debt);
 }
@@ -167,7 +182,7 @@ function cutChain(state, name) {
   return "ok";
 }
 
-// Take a crew member off the table for the rest of the run (Cut a chain, phone perk).
+// Take a crew member off the table for the rest of the run (Trapdoor, phone perk).
 function removeCrew(state, name) {
   const wasNext = state.crew[state.shooterIndex] === name;
   state.crew = state.crew.filter((n) => n !== name);
@@ -191,6 +206,7 @@ function nextShift(old) {
   state.interestRate = old.interestRate;
   state.stats = old.stats;
   state.perks = old.perks.slice();
+  state.endless = old.endless;
   state.freeBuys = old.freeBuys;
   state.stats.shiftStarts.push(state.stats.history.length);
   setupTurn(state, null, CONFIG.startingMult);

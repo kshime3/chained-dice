@@ -2,6 +2,9 @@
 // Change a value, save, and refresh the browser to try it.
 
 const CONFIG = {
+  // Your chain: each won shift breaks one link. Break them all and you walk out free.
+  chainLinks: 8,
+
   // Shifts: cash added at the start of each shift (to your leftover kitty), and the debt.
   // Tested with tools/simulate.js (see docs/BALANCE.md).
   shifts: [
@@ -49,7 +52,7 @@ const CONFIG = {
   shuffleStepPct: 0,      // each Shuffle after that costs this much more (0 = same price every time)
   sellBackShare: 0.5,     // selling a card gives back this share of its price
 
-  // Card rarity. "legendary" is the Extra chain link tier.
+  // Card rarity. "legendary" is the Spare Link tier.
   cardRarity: {
     hotHand: "common",
     snakeEyes: "common",
@@ -91,7 +94,7 @@ const CONFIG = {
   minSevenWays: 2,      // a 7 never drops below this many ways out of 36
   freeItemsCount: 2,    // "2 free items": your next this-many shop cards are free
 
-  // Cut a chain: a Dealer Break option once the shop is open.
+  // Trapdoor: a Dealer Break option once the shop is open (drops a crew member for the run).
   cutChainPct: 0.25, // costs this share of the debt
 
   // Interest: at every Dealer Break after a seven-out, this share of the money

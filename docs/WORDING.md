@@ -1,6 +1,6 @@
 # Wording Rework: "Break the Chain" (draft for owner review)
 
-*Status: draft, 2026-10-27. Nothing here is in the game yet. Mark changes and Claude will apply them.*
+*Status: approved by the owner and built, 2026-10-27.*
 
 ## The idea in one line
 
