@@ -2,6 +2,26 @@
 
 Dated session log. Newest at the top.
 
+## 2026-10-27: Session 5 (polish: fall animation and sound)
+
+**Done**
+- **Fall animation:** shake, seats and table tumble into the pit, fade to black on "The chains release.", then the stats screen.
+- **Sound:** new `js/sound.js`, all sounds made in the browser (no files). On by default; 🔊/🔇 mute button (remembered). 13 sounds wired to betting, rolling, wins, seven-outs, paying, buying, cutting, the phone, falling, and winning a shift.
+- Balance: no rule changes since the 6b simulator check (66/43/34/24/15% survival for shifts 1-5).
+- Owner feedback: the game is fun but too basic; it needs a lot of mechanical growth. Claude's suggestions are in IDEAS.md ("Mechanical growth").
+
+**Works**
+- Checked in a headless browser: mute toggles and is remembered, every sound plays without errors, the fall runs and the stats screen follows, Play again restores the table. tests.html: 207 checks, all passing.
+
+**Broken**
+- Nothing known.
+
+**Waiting on the owner**
+- Testing the polish (listen with sound on!), then choosing which mechanical-growth ideas to build next.
+
+**Exact next step**
+- Owner picks from the mechanical-growth list; then plan that milestone.
+
 ## 2026-10-25: Session 4, continued (Milestone 6b: the Pit Boss phone)
 
 **Done**

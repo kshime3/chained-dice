@@ -187,6 +187,8 @@ Like Clover Pit's phone. After **every won shift**, it rings before the next shi
 ## Presentation  [Built]
 
 - Fits on one screen without scrolling on desktop and phones: two columns on wide screens, one compact column on phones.
+- **The fall [Built]:** the screen shakes, the seats, table and chips tumble into the pit one by one, the screen fades to black on "The chains release.", then the stats screen (`fallMs` in config).
+- **Sound [Built]:** made in the browser (no audio files), on by default with a 🔊/🔇 mute button that's remembered. Chip clicks, dice rattle, win chime, point-hit fanfare, a low thud on seven-out, coin sounds for paying and buying, a chain clank, the phone ring, the fall, and a shift-won tune (`soundVolume` in config).
 - Dice are drawn with pips and tumble for a moment before landing (`diceRollMs` in config). Tapping the dice rolls them.
 - **SEVEN OUT screen:** big and red, shows who sevened out and what you lost, for 5 seconds (tap to skip), then the Dealer Break (and the shop tutorial the first time).
 - **POINT HIT screen:** shows total winnings, each bet's winnings, and how much cards and mult boosted them ("normally $12"), for 5 seconds (tap to skip).
@@ -206,5 +208,5 @@ Like Clover Pit's phone. After **every won shift**, it rings before the next shi
 6. [Built] Multiple shifts (6a) and the Pit Boss phone (6b)
 7. [Planned] House rules
 8. [Planned] Card unlocks and the Collection screen
-9. [Planned] Fall animation, polish, itch.io release
+9. [Built] Polish: fall animation and sound. [Only with owner's permission] Any public release.
 10. [After v1] More bets (Place, Hard Ways, Come)

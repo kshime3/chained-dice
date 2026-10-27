@@ -10,7 +10,10 @@
   <header class="top">
     <div class="title-row">
       <h1>Chained Dice</h1>
-      <button id="how-to-play" class="how-to-play">How to play</button>
+      <div class="title-buttons">
+        <button id="mute" class="mute-button"></button>
+        <button id="how-to-play" class="how-to-play">How to play</button>
+      </div>
     </div>
     <div class="money">
       <div>Shift <strong id="shift-number"></strong></div>
@@ -108,6 +111,8 @@
     </div>
   </div>
 
+  <div id="fall-pit" class="fall-pit hidden"><div class="fall-text">The chains release.</div></div>
+
   <div id="phone" class="overlay hidden">
     <div class="end-box phone-box">
       <div class="phone-ring">☎ RING RING</div>
@@ -159,6 +164,7 @@
   <script src="js/stats.js"></script>
   <script src="js/perks.js"></script>
   <script src="js/shift.js"></script>
+  <script src="js/sound.js"></script>
   <script src="js/ui.js"></script>
   <script src="js/tutorials.js"></script>
   <script src="js/main.js"></script>

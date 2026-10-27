@@ -7,7 +7,7 @@ let rolling = false; // true while the dice animation plays
 
 // No betting or rolling while the dice tumble or a splash screen is up.
 function busy() {
-  return rolling || splashOpen || promptOpen || phoneOpen;
+  return rolling || splashOpen || promptOpen || phoneOpen || fallingNow;
 }
 
 function pickChip(value) {
@@ -31,6 +31,7 @@ function placeBet(betName) {
       return;
     }
     const moved = moves.map((m) => " Moved " + money(m.amount) + " from the " + BET_NAMES[m.from] + ".").join("");
+    playSound("chip");
     showMessage("Pass Line bet is now " + money(state.bets.pass) + "." + moved);
     renderState(state);
     return;
@@ -55,6 +56,7 @@ function placeBet(betName) {
 
   state.kitty -= amount;
   state.bets[betName] += amount;
+  playSound("chip");
   showMessage(BET_NAMES[betName] + " bet is now " + money(state.bets[betName]) + ".");
   renderState(state);
 }
@@ -85,6 +87,7 @@ function roll() {
   // The result is decided now; the animation just shows it.
   const rolled = rollDice(currentDice(state), pairDue(state));
   rolling = true;
+  playSound("rattle");
   animateDice(rolled.dice, CONFIG.diceRollMs, () => {
     rolling = false;
     offerRerollOrFinish(rolled);
@@ -113,6 +116,7 @@ function offerRerollOrFinish(rolled) {
       next = rerollOneDie(currentDice(state), rolled, choice === "left" ? 0 : 1);
     }
     rolling = true;
+    playSound("rattle");
     animateDice(next.dice, CONFIG.diceRollMs, () => {
       rolling = false;
       offerRerollOrFinish(next); // the other card may still be available
@@ -162,6 +166,12 @@ function finishRoll(rolled) {
   const notes = before.notes.concat(cardNotes, crewNotes);
   showMessage(describeRoll(total, results, pointBefore, state.point) + " " + notes.join(" "), sevenOut);
 
+  if (sevenOut) playSound("sevenOut");
+  else if (pointHit) playSound("pointHit");
+  else if (results.some((r) => r.outcome === "win")) playSound("win");
+  else if (results.some((r) => r.outcome === "lose")) playSound("lose");
+  else playSound("land");
+
   if (sevenOut) {
     // Let the seven-out sink in before the Dealer Break (or the fall).
     renderState(state);
@@ -179,6 +189,7 @@ function finishRoll(rolled) {
 // Dealer Break buttons
 function payDealer(amount) {
   const paid = deposit(state, amount);
+  if (paid > 0) playSound(state.status === "won" ? "shiftWon" : "pay");
   let text = paid > 0 ? "Paid " + money(paid) + ". That money is safe now, and out of play." : "Nothing more you can pay.";
   if (state.status === "playing" && state.kitty <= CONFIG.tableMinimum) {
     text += " You keep " + money(CONFIG.tableMinimum) + " for your Pass Line bet.";
@@ -207,12 +218,14 @@ function buy(slot) {
     money: "Not enough. Buying can't take your kitty below " + money(CONFIG.tableMinimum) + ".",
     empty: "That one's sold out.",
   };
+  if (outcome === "ok") playSound("buy");
   showBreakMessage(texts[outcome]);
   renderAll();
 }
 
 function sell(id) {
   const got = sellCard(state, id);
+  playSound("chip");
   showBreakMessage("Sold " + CARDS[id].name + " for " + money(got) + ".");
   renderAll();
 }
@@ -227,6 +240,7 @@ function cut(name) {
   }
   showBreakMessage(name + " is gone.");
   renderAll();
+  playSound("clank");
   showSplash(cutSplash(name), "bad", CONFIG.cutSplashMs);
 }
 
@@ -262,6 +276,7 @@ function startNextShift() {
   showBreakMessage("");
   showMessage("Shift " + state.shift + " begins.");
   renderAll();
+  playSound("ring");
   showPhone(state, phoneOffer(state), (id, target) => {
     takePerk(state, id, target);
     showBreakMessage("New perk: " + perkInfo(id).name + (target ? " (" + target + " is gone)" : "") + ".");
@@ -274,6 +289,7 @@ function startNextShift() {
 }
 
 function playAgain() {
+  fallPlayed = false;
   state = newShiftState();
   giveTestCards(state);
   showBreakMessage("");
@@ -281,11 +297,21 @@ function playAgain() {
   renderAll();
 }
 
+let fallPlayed = false; // the fall animation plays once per run
+
 function renderAll() {
   renderState(state);
   renderShop(state, { buy: buy, sell: sell, cut: cut });
   renderBreak(state);
-  renderEndScreen(state);
+
+  // Falling: the floor opens first, then the stats screen.
+  if (state.status.startsWith("fell") && !fallPlayed) {
+    fallPlayed = true;
+    playSound("fall");
+    playFall(CONFIG.fallMs, () => renderEndScreen(state));
+  } else if (!fallingNow) {
+    renderEndScreen(state);
+  }
 
   // The first time the shop opens, explain it.
   if (state.onBreak && state.status === "playing" && isShopOpen(state) && !tutorialSeen("shop")) {
@@ -306,10 +332,16 @@ document.getElementById("leave-break").onclick = leaveBreak;
 document.getElementById("shuffle").onclick = shuffle;
 document.getElementById("play-again").onclick = () => (state.status === "won" ? startNextShift() : playAgain());
 
+document.getElementById("mute").onclick = () => {
+  setMuted(!muted);
+  renderMuteButton();
+  playSound("chip");
+};
 document.getElementById("how-to-play").onclick = () => showTutorial(introPages());
 document.getElementById("shop-help").onclick = () => showTutorial(shopPages());
 
 renderChips(selectedChip, pickChip);
+renderMuteButton();
 drawDie("die1", 1);
 drawDie("die2", 1);
 renderAll();

@@ -13,7 +13,8 @@ body {
 
 h1 { letter-spacing: 2px; font-size: 1.6rem; margin: 0; }
 .title-row { display: flex; align-items: center; justify-content: space-between; }
-.how-to-play { position: relative; z-index: 15; } /* stays clickable above the Dealer Break */
+.title-buttons { position: relative; z-index: 15; display: flex; align-items: center; } /* stays clickable above the Dealer Break */
+.mute-button { font-size: 1.1rem; padding: 6px 10px; }
 
 .money {
   display: flex;
@@ -370,3 +371,38 @@ button:disabled { opacity: 0.4; cursor: not-allowed; }
 .perk-card { background: #f4ecf7; }
 .risky { display: inline-block; align-self: flex-start; background: #c0392b; color: #fff; font-size: 0.7rem; font-weight: bold; border-radius: 4px; padding: 1px 6px; }
 .card-badge.perk { background: #e8daef; border-left-color: #9b59b6; }
+
+/* The fall: shake, then everything drops into the pit */
+body.quake .layout, body.quake .top { animation: quake 0.09s linear infinite; }
+@keyframes quake {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(-4px, 2px); }
+  50% { transform: translate(3px, -2px); }
+  75% { transform: translate(-2px, -3px); }
+  100% { transform: translate(0, 0); }
+}
+body.falling { overflow: hidden; }
+body.falling .seat, body.falling .side > *, body.falling .table, body.falling .controls, body.falling .message {
+  transition: transform 1.2s cubic-bezier(0.55, 0, 1, 0.45), opacity 1.2s ease-in;
+  transition-delay: var(--fall-delay, 0.5s);
+  transform: translateY(115vh) rotate(var(--fall-spin, 10deg));
+  opacity: 0.2;
+}
+.fall-pit {
+  position: fixed;
+  inset: 0;
+  z-index: 16;
+  pointer-events: none;
+  background: #000;
+  animation: pit-open 3s ease-in forwards;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.fall-pit.hidden { display: none; }
+@keyframes pit-open {
+  0%, 35% { opacity: 0; }
+  100% { opacity: 1; }
+}
+.fall-text { color: #ff3b30; font-size: 2.2rem; font-weight: 900; letter-spacing: 3px; opacity: 0; animation: fall-text 3s ease-in forwards; text-shadow: 0 0 14px rgba(255, 59, 48, 0.6); }
+@keyframes fall-text { 0%, 40% { opacity: 0; } 70%, 100% { opacity: 1; } }

@@ -62,3 +62,13 @@ Parked ideas and later features. Not in v1 unless moved into the design.
 
 ## Known small issues
 - A card taken free (phone perk) can be sold for half its normal price. Could make free cards sell for $0.
+
+## Mechanical growth (Claude's suggestions, 2026-10-27; owner to choose)
+1. **Bet against the shooter (Don't Pass / Don't Come).** Makes bad shooters like Jinx valuable instead of just bad. Every seat becomes a decision: bet with them or against them.
+2. **Dice crafting.** Buy and edit faces on any crew member's dice (the "dice edits" from the original design). The Balatro deck-building feel: you shape the dice over a run. Your own dice could be upgraded.
+3. **Consumables (one-use chips).** Like Balatro's tarot/planet cards: "next roll can't be 7", "double the next payout", "swap two seats", "call the point". Short-term power you choose when to spend.
+4. **Crew growth.** Recruit new crew with new quirks, level crew up, crew-specific cards ("Lefty's Glove": Lefty gets his 6s back). Seat-order builds get deeper.
+5. **More bets as unlocks** (Place, Hard Ways, Come, Fire Bet, Different Doubles): more ways to win, and the phone can unlock them.
+6. **House rules and pit boss challenges** (already planned): each shift plays differently and gives short goals.
+7. **Dealer loans.** Borrow from the dealer mid-shift at steep interest. A risk lever when you're about to go broke.
+8. **Card upgrades / editions.** Buying a card you own levels it up (Hot Hand II), or cards come in foil/gold versions with extra effects.

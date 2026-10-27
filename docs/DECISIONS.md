@@ -169,3 +169,9 @@ Dated log of every decision and why. Newest at the bottom.
 
 - **Order:** 6b (the phone), then polish (fall animation, sounds, balance check). House rules and unlocks after that.
 - **Never publish the game anywhere without the owner's explicit permission.** The owner shares the GitHub Pages link with friends for testing. Added to CLAUDE.md working rules.
+
+## 2026-10-27 (polish)
+
+- **Sound is on by default, with a mute button** (remembered per browser). Owner's choice.
+- **Sounds are generated in the browser (Web Audio), not audio files.** Why: nothing to download or host, keeps the plain HTML/JS rule.
+- **Owner: the game is fun but too basic; it needs lots of mechanical growth after this first build.** Claude listed options in IDEAS.md.

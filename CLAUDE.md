@@ -42,13 +42,14 @@ js/cards.js        logic: what each shop card does
 js/shop.js         logic: shop stock, rarity, prices, buy/sell/shuffle
 js/stats.js        logic: run stats for the end-of-run screen
 js/perks.js        logic: Pit Boss phone perks
+js/sound.js        display: sound effects made in the browser (Web Audio), mute setting
 js/ui.js           display: drawing the screen
 js/tutorials.js    display: tutorial pages (intro, shop, phone) and "seen" memory
 js/main.js         wires buttons to logic and display
 tools/simulate.js  balance simulator (Node.js, not part of the game): node tools/simulate.js 20000
 ```
-Testing shortcuts: add `?target=300` to the page address to set shift 1's debt; add `?fast` to skip the dice animation and splash screens; add `?cards=doubleUp,greenDice` to start with those cards (ids are in js/cards.js). Combine with `&`, e.g. `?target=300&fast&cards=doublesCharm`.
+Testing shortcuts: add `?target=300` to the page address to set shift 1's debt; add `?fast` to skip the dice animation, splash screens and fall animation; add `?cards=doubleUp,greenDice` to start with those cards (ids are in js/cards.js). Combine with `&`, e.g. `?target=300&fast&cards=doublesCharm`.
 
 tests.html pins its own numbers (shift 1: $200 cash, $2,000 debt) so tuning config.js doesn't break the checks. Shift cash and debts are in `CONFIG.shifts`; the current debt is `state.debt`.
 
-Scripts load with plain `<script>` tags in a set order (config, logic: dice, bets, crew, cards, shop, stats, perks, shift; then display: ui, tutorials; then main), not ES modules, so double-clicking index.html works.
+Scripts load with plain `<script>` tags in a set order (config, logic: dice, bets, crew, cards, shop, stats, perks, shift; then display: sound, ui, tutorials; then main), not ES modules, so double-clicking index.html works.

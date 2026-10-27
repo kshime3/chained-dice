@@ -529,6 +529,37 @@ function showRerollPrompt(rolled, lose, options, onChoose) {
   box.classList.remove("hidden");
 }
 
+// The fall: the floor shakes, everything drops into the pit, then onDone (the stats screen).
+let fallingNow = false;
+function playFall(ms, onDone) {
+  if (ms <= 0) {
+    onDone();
+    return;
+  }
+  fallingNow = true;
+  const body = document.body;
+  // Each piece falls a moment after the last, spinning a little.
+  document.querySelectorAll(".seat, .side > *, .table, .controls, .message").forEach((el, i) => {
+    el.style.setProperty("--fall-delay", (0.45 + i * 0.05).toFixed(2) + "s");
+    el.style.setProperty("--fall-spin", (Math.random() * 50 - 25).toFixed(0) + "deg");
+  });
+  document.getElementById("fall-pit").classList.remove("hidden");
+  body.classList.add("quake");
+  setTimeout(() => body.classList.add("falling"), 450);
+  setTimeout(() => {
+    body.classList.remove("quake", "falling");
+    document.getElementById("fall-pit").classList.add("hidden");
+    fallingNow = false;
+    onDone();
+  }, ms);
+}
+
+function renderMuteButton() {
+  const button = document.getElementById("mute");
+  button.textContent = muted ? "🔇" : "🔊";
+  button.title = muted ? "Sound is off. Click to turn it on." : "Sound is on. Click to mute.";
+}
+
 // The Pit Boss phone: pick one of the offered perks.
 // onPick(id, target) runs once a perk (and, for Remove a character, a crew member) is chosen.
 let phoneOpen = false;
