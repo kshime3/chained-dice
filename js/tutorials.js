@@ -3,7 +3,7 @@
 // Numbers come from config.js so the text stays correct when we tune.
 
 function introPages() {
-  const min = money(CONFIG.tableMinimum);
+  const min = money(CONFIG.shifts[0].minBet);
   return [
     {
       title: "You wake up chained to a craps table",
@@ -65,7 +65,7 @@ function shopPages() {
       title: "New: the stickman's shop",
       body: "From now on, every Dealer Break has a shop. <strong>Tip the dealer</strong> from your kitty to buy <strong>cards</strong> that bend the rules in your favor.<br><br>" +
         "Tips <strong>don't</strong> count toward your debt. Every dollar you spend here is a dollar you didn't pay the dealer, so choose carefully.<br><br>" +
-        "Buying can never take your kitty below the " + money(CONFIG.tableMinimum) + " Pass Line minimum.",
+        "Buying can never take your kitty below the table minimum (the smallest line bet, which goes up each shift).",
     },
     {
       title: "How cards work",

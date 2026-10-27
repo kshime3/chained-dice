@@ -91,3 +91,10 @@ Smart bot that takes -1 way to roll 7 when offered (else free items, else a +1 t
 ## 2026-10-27: Jinx's come-out curse
 
 With the curse (a come-out 7 is a tie for Don't Pass when Jinx shoots), "Pass Line, but Don't Pass against Jinx" still trails plain Pass Line (shift 5: 14% vs 19%). Reason: Jinx's 7s also make the Pass Line *win* 22% of his come-outs. He's good to bet **with** on the come-out and **against** once a point is set (vs a point of 8, a 7 comes first 67% of the time). You can't switch sides mid-hand, so it's a real choice rather than a free win.
+
+## 2026-10-27: Rising table minimum + pay after the first shooter
+
+Smart bot (flat $10 bets, raised to the table minimum when needed), shop + phone, 10,000 runs: survived shift 1 **68%**, 2 **46%**, 3 **37%**, 4 **30%**, 5 **25%**, 6 **20%**, 7 **17%**, 8 (walk out free) **14%**.
+
+- Surprise: survival to shift 8 went **up** (from ~3%). The old bot bet a flat $10 even against a $4,050 debt, so it could never earn enough late on. The minimum forces bigger bets, and bigger bets are what it takes to clear big debts. A human already scales bets, so for people the minimum mainly removes "coast on $5 bets".
+- What makes later shifts genuinely hard is the **debt compared with the cash you bring in**. The owner noticed the real problem: a big leftover kitty clears the next shifts. "Pay after the first shooter" stops the instant payoff; if shifts still feel easy, the next lever is steeper debts or less cash added. Retune after consumables and dice crafting (they add power).

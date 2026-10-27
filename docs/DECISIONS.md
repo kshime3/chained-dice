@@ -195,3 +195,5 @@ Dated log of every decision and why. Newest at the bottom.
 - **Big-number scaling (100 million+) is a later goal,** logged in IDEAS.md. Owner's note.
 - **Dealer's Bargain (Rare, one use, instant, no slot):** adds a link to your chain (one more shift to walk free) in exchange for -1 way to roll 7 on everyone's dice for the run. Owner chose this over "break a link now, +1 way to 7". Not offered in endless mode.
 - **Hot streak indicator** idea logged for later (owner).
+- **Table minimum rises each shift** ($5, $10, $15, $25, $50, $75, $100, $150, then ~4% of the debt rounded to $25). Owner asked; Claude's schedule. Chips step up to $25/$100/$500 once the minimum is $25+.
+- **Paying the dealer opens only after the first shooter of each shift** (toggle `payAfterFirstShooter`). Claude's recommendation to stop clearing a new shift instantly with leftover money. Owner: fine-tune difficulty later at higher levels.

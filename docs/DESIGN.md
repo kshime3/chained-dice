@@ -44,14 +44,20 @@ Long term, it becomes a first-person 3D room like Clover Pit: chained at the tab
 
 Tested with the simulator (`docs/BALANCE.md`).
 
-| Shift | Cash added | Debt owed | House rule |
-| --- | --- | --- | --- |
-| 1 | $150 | $200 | none |
-| 2 | $150 | $300 | none |
-| 3 | $200 | $500 | 1 random |
-| 4 | $250 | $800 | 1 random |
-| 5 | $300 | $1,200 | 1 random |
-| 6+ | about 1.5x per shift | | 1 random |
+| Shift | Cash added | Debt owed | Table minimum | House rule |
+| --- | --- | --- | --- | --- |
+| 1 | $150 | $200 | $5 | none |
+| 2 | $150 | $300 | $10 | none |
+| 3 | $200 | $500 | $15 | 1 random (planned) |
+| 4 | $250 | $800 | $25 | 1 random |
+| 5 | $300 | $1,200 | $50 | 1 random |
+| 6 | $350 | $1,800 | $75 | 1 random |
+| 7 | $400 | $2,700 | $100 | 1 random |
+| 8 | $450 | $4,050 | $150 | 1 random |
+| 9+ (endless) | +$50 per shift | x1.5 per shift | ~4% of the debt (to $25) | 1 random |
+
+- **Table minimum [Built]:** the smallest line bet, and what you must always keep in your kitty (payments and shopping can't go below it; under it on a come-out, the floor opens). Shown on the table as "Table min $X". Chips shown: $5/$25/$100 while the minimum is under $25, then $25/$100/$500.
+- **Paying opens after the first shooter [Built]** (`payAfterFirstShooter` in config): the dealer won't take payment on a shift's opening Break, so you can't clear a new shift from leftover money before rolling.
 
 **[Built]** All shifts use this scale (`shifts` in config). Cash is **added** to your leftover kitty (bets left on the table come back too). Cards, cut crew and interest boosts carry over; payments and once-a-shift effects (Pity, Loaded Die, Hot Rod's double cost) reset.
 

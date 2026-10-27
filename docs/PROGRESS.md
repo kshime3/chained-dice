@@ -17,8 +17,10 @@ Dated session log. Newest at the top.
 - Owner chose option (b) for the link card: **built "Dealer's Bargain"** (Rare, instant, no slot): +1 link on your chain, -1 way to roll 7 for everyone, for the run. Not offered in endless mode. tests.html: 248 checks, all passing.
 - Logged the owner's **hot streak indicator** idea in IDEAS.md.
 
+- Owner: early shifts feel too easy (big leftover cash clears the next 2-3 shifts). **Built:** a table minimum that rises each shift ($5, $10, $15, $25, $50, $75, $100, $150, then ~4% of the debt), shown on the table; chips step up to $25/$100/$500 once the minimum hits $25; **paying the dealer only opens after the first shooter** of each shift. Phone layout trimmed so it still fits. tests.html: 257 checks, all passing. Simulator note in BALANCE.md (the bot actually does better with forced bigger bets; real difficulty lever is debt vs cash, to retune later).
+
 **Waiting on the owner**
-- Testing Break the Chain and Dealer's Bargain.
+- Testing Break the Chain, Dealer's Bargain, and the rising minimum.
 
 **Exact next step**
 - Milestone 8: consumables (one-use chips).

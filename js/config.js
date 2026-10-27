@@ -7,15 +7,24 @@ const CONFIG = {
 
   // Shifts: cash added at the start of each shift (to your leftover kitty), and the debt.
   // Tested with tools/simulate.js (see docs/BALANCE.md).
+  // minBet: the table minimum for that shift (the smallest line bet, and what you must keep in your kitty).
   shifts: [
-    { cash: 150, debt: 200 },
-    { cash: 150, debt: 300 },
-    { cash: 200, debt: 500 },
-    { cash: 250, debt: 800 },
-    { cash: 300, debt: 1200 },
+    { cash: 150, debt: 200, minBet: 5 },
+    { cash: 150, debt: 300, minBet: 10 },
+    { cash: 200, debt: 500, minBet: 15 },
+    { cash: 250, debt: 800, minBet: 25 },
+    { cash: 300, debt: 1200, minBet: 50 },
+    { cash: 350, debt: 1800, minBet: 75 },
+    { cash: 400, debt: 2700, minBet: 100 },
+    { cash: 450, debt: 4050, minBet: 150 },
   ],
   laterDebtGrowth: 1.5, // after the table: each debt is this times the last (rounded to $50)
   laterCashStep: 50,    // after the table: each shift adds this much more cash than the last
+  laterMinBetPct: 0.04, // after the table: the minimum bet is this share of the debt (rounded to $25)
+
+  // The dealer won't take payments until the first shooter of the shift has rolled.
+  // Stops paying off a new shift's debt straight from leftover money. false = pay any time.
+  payAfterFirstShooter: true,
   // Seat order. Each seat shoots until they seven out, then the dice pass on.
   crew: ["Lefty", "Dealer Dee", "Hot Rod", "Jinx", "Ghost", "You"],
 
@@ -110,9 +119,9 @@ const CONFIG = {
   winSplashMs: 5000,      // how long the "Point hit" winnings screen shows (tap skips)
   cutSplashMs: 4000,      // how long the "falls through the floor" screen shows (tap skips)
 
-  // Money
-  tableMinimum: 5, // also the smallest Pass Line bet, which is required to roll
+  // Chips: three are shown at a time. Small chips while the minimum bet is under $25, big ones after.
   chipValues: [5, 25, 100],
+  bigChipValues: [25, 100, 500],
 
   // Pass Line pays even money (bet $10, win $10).
   passLinePayout: 1,

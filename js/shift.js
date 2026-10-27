@@ -6,12 +6,29 @@ function shiftScale(n) {
   if (n <= table.length) return table[n - 1];
   let scale = table[table.length - 1];
   for (let k = table.length + 1; k <= n; k++) {
+    const debt = Math.round((scale.debt * CONFIG.laterDebtGrowth) / 50) * 50;
     scale = {
       cash: scale.cash + CONFIG.laterCashStep,
-      debt: Math.round((scale.debt * CONFIG.laterDebtGrowth) / 50) * 50,
+      debt: debt,
+      minBet: Math.max(25, Math.round((debt * CONFIG.laterMinBetPct) / 25) * 25),
     };
   }
   return scale;
+}
+
+// The table minimum this shift: the smallest line bet, and what you always keep in your kitty.
+function tableMin(state) {
+  return state.minBet;
+}
+
+// The chips shown this shift.
+function chipsFor(state) {
+  return state.minBet >= 25 ? CONFIG.bigChipValues : CONFIG.chipValues;
+}
+
+// Can you pay the dealer right now? Not until the first shooter of the shift has rolled.
+function canPay(state) {
+  return !CONFIG.payAfterFirstShooter || state.shooterIndex > 0;
 }
 
 // A fresh run: wake up at the table for shift 1.
@@ -19,6 +36,7 @@ function newShiftState() {
   const state = {
     shift: 1, // which shift of the run this is
     debt: shiftScale(1).debt, // what the dealer wants this shift
+    minBet: shiftScale(1).minBet, // the table minimum this shift
     kitty: shiftScale(1).cash, // money in your hand, not on the table
     cashAdded: shiftScale(1).cash, // cash the pit boss added at the start of this shift
     deposited: 0, // paid to the dealer: safe, but out of play
@@ -81,20 +99,21 @@ function isFinalBreak(state) {
 
 // A line bet (Pass Line or Don't Pass) must be played. On a come-out you need the minimum on one.
 function canRoll(state) {
-  return state.point !== null || state.bets.pass >= CONFIG.tableMinimum || state.bets.dont >= CONFIG.tableMinimum;
+  return state.point !== null || state.bets.pass >= tableMin(state) || state.bets.dont >= tableMin(state);
 }
 
 // Broke: on a come-out, you can't cover the minimum Pass Line bet.
 function isBroke(state) {
-  return state.point === null && totalMoney(state) < CONFIG.tableMinimum;
+  return state.point === null && totalMoney(state) < tableMin(state);
 }
 
 // The most you can pay right now. You always keep enough in your kitty
 // for the minimum Pass Line bet, unless this payment clears the debt.
 function maxDeposit(state) {
+  if (!canPay(state)) return 0;
   const owed = amountOwed(state);
   if (state.kitty >= owed) return owed;
-  return Math.max(0, state.kitty - CONFIG.tableMinimum);
+  return Math.max(0, state.kitty - tableMin(state));
 }
 
 // Pay the dealer from your kitty, up to maxDeposit.
@@ -205,6 +224,7 @@ function nextShift(old) {
   state.shift = old.shift + 1;
   const scale = shiftScale(state.shift);
   state.debt = scale.debt;
+  state.minBet = scale.minBet;
   state.cashAdded = scale.cash;
   state.kitty = totalMoney(old) + scale.cash; // bets left on the table come back to you
   state.cards = old.cards.slice();

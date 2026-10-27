@@ -93,7 +93,7 @@ function multReasons(state) {
 function chargeExtra(state, results, times, bets = ["pass", "odds"]) {
   const lost = results.filter((r) => r.outcome === "lose" && bets.includes(r.bet))
     .reduce((sum, r) => sum + r.amount, 0);
-  const extra = Math.min(lost * (times - 1), Math.max(0, state.kitty - CONFIG.tableMinimum));
+  const extra = Math.min(lost * (times - 1), Math.max(0, state.kitty - tableMin(state)));
   state.kitty -= extra;
   return extra;
 }

@@ -3,6 +3,13 @@
 let state = newShiftState();
 giveTestCards(state);
 let selectedChip = CONFIG.chipValues[0];
+
+// Draw this shift's chips; keep the selected chip if it's still there.
+function showChips() {
+  const values = chipsFor(state);
+  if (!values.includes(selectedChip)) selectedChip = values[0];
+  renderChips(values, selectedChip, pickChip);
+}
 let rolling = false; // true while the dice animation plays
 
 // No betting or rolling while the dice tumble or a splash screen is up.
@@ -12,7 +19,7 @@ function busy() {
 
 function pickChip(value) {
   selectedChip = value;
-  renderChips(selectedChip, pickChip);
+  showChips();
 }
 
 // Move chips from your kitty onto a bet.
@@ -94,7 +101,7 @@ function clearBets() {
 function roll() {
   if (busy() || state.status !== "playing" || state.onBreak) return;
   if (!canRoll(state)) {
-    showMessage("Place at least " + money(CONFIG.tableMinimum) + " on the Pass Line or Don't Pass to roll.");
+    showMessage("Place at least " + money(tableMin(state)) + " on the Pass Line or Don't Pass to roll.");
     return;
   }
 
@@ -208,8 +215,8 @@ function payDealer(amount) {
   const paid = deposit(state, amount);
   if (paid > 0 && state.status !== "won") playSound("pay");
   let text = paid > 0 ? "Paid " + money(paid) + ". That money is safe now, and out of play." : "Nothing more you can pay.";
-  if (state.status === "playing" && state.kitty <= CONFIG.tableMinimum) {
-    text += " You keep " + money(CONFIG.tableMinimum) + " for your Pass Line bet.";
+  if (state.status === "playing" && state.kitty <= tableMin(state)) {
+    text += " You keep " + money(tableMin(state)) + " for your Pass Line bet.";
   }
   showBreakMessage(text);
   renderAll();
@@ -222,7 +229,7 @@ function payTyped() {
     return;
   }
   payDealer(typed);
-  document.getElementById("deposit-amount").value = CONFIG.tableMinimum;
+  document.getElementById("deposit-amount").value = Math.max(5, tableMin(state));
 }
 
 // Shop buttons
@@ -232,7 +239,7 @@ function buy(slot) {
   const texts = {
     ok: id && CARDS[id].instant ? CARDS[id].name + ": done. " + (id === "bargain" ? "Your chain now has " + totalLinks(state) + " links, and 7s are a little rarer." : "") : "Bought " + (id && CARDS[id].name) + ".",
     full: "Your card slots are full (" + CONFIG.maxCards + "). Sell a card first.",
-    money: "Not enough. Buying can't take your kitty below " + money(CONFIG.tableMinimum) + ".",
+    money: "Not enough. Buying can't take your kitty below " + money(tableMin(state)) + ".",
     empty: "That one's sold out.",
   };
   if (outcome === "ok") playSound("buy");
@@ -251,7 +258,7 @@ function cut(name) {
   if (!confirm("Pay " + money(cutChainPrice(state)) + " to open the trapdoor under " + name + "'s seat? They're gone for the rest of the run.")) return;
   const outcome = cutChain(state, name);
   if (outcome !== "ok") {
-    showBreakMessage(outcome === "money" ? "Not enough. The trapdoor can't take your kitty below " + money(CONFIG.tableMinimum) + "." : "You can't drop " + name + ".");
+    showBreakMessage(outcome === "money" ? "Not enough. The trapdoor can't take your kitty below " + money(tableMin(state)) + "." : "You can't drop " + name + ".");
     renderAll();
     return;
   }
@@ -265,7 +272,7 @@ function shuffle() {
   const cost = shuffleCost(state);
   showBreakMessage(shuffleStock(state)
     ? "Shuffled for " + money(cost) + ". New cards on the table."
-    : "Not enough. Shuffling can't take your kitty below " + money(CONFIG.tableMinimum) + ".");
+    : "Not enough. Shuffling can't take your kitty below " + money(tableMin(state)) + ".");
   renderAll();
 }
 
@@ -317,6 +324,7 @@ function playAgain() {
 let fallPlayed = false; // the fall animation plays once per run
 
 function renderAll() {
+  showChips();
   renderState(state);
   renderShop(state, { buy: buy, sell: sell, cut: cut });
   renderBreak(state);
@@ -369,7 +377,7 @@ document.getElementById("mute").onclick = () => {
 document.getElementById("how-to-play").onclick = () => showTutorial(introPages());
 document.getElementById("shop-help").onclick = () => showTutorial(shopPages());
 
-renderChips(selectedChip, pickChip);
+showChips();
 renderMuteButton();
 drawDie("die1", 1);
 drawDie("die2", 1);

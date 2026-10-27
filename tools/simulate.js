@@ -39,7 +39,7 @@ function simRoll(state) {
   afterRoll(state, sevenOut);
 }
 
-const round5 = (n) => Math.max(CONFIG.tableMinimum, Math.floor(n / 5) * 5);
+const round5 = (n) => Math.max(5, Math.floor(n / 5) * 5);
 
 // Cards the bot likes best, first to last.
 const CARD_PREFERENCE = ["muggsy", "oddsAddict", "doubleUp", "pity", "redDice", "hotHand", "doublesCharm", "greenDice", "luckySeven", "snakeEyes", "rattlesnake"];
@@ -63,15 +63,15 @@ function atBreak(state, s) {
 
 function placeBets(state, s) {
   // "protect": once you could pay off the debt, bet the minimum until the next Break.
-  const safe = s.protect && totalMoney(state) >= amountOwed(state) + CONFIG.tableMinimum;
+  const safe = s.protect && totalMoney(state) >= amountOwed(state) + tableMin(state);
   // Which side: "pass", "dont", or "against-jinx" (Don't Pass only when Jinx shoots).
   const shooter = state.crew[state.shooterIndex];
   const line = s.side === "dont" || (s.side === "against-jinx" && shooter === "Jinx") ? "dont" : "pass";
   const backing = line === "pass" ? "odds" : "lay";
   if (state.point === null && state.bets.pass === 0 && state.bets.dont === 0) {
-    const size = safe ? CONFIG.tableMinimum : s.passPct ? round5(state.kitty * s.passPct) : s.pass;
-    if (fundPassLine(state, Math.min(size, Math.max(CONFIG.tableMinimum, round5(state.kitty))), line) === null) {
-      fundPassLine(state, CONFIG.tableMinimum, line);
+    const size = Math.max(tableMin(state), safe ? tableMin(state) : s.passPct ? round5(state.kitty * s.passPct) : s.pass);
+    if (fundPassLine(state, Math.min(size, Math.max(tableMin(state), round5(state.kitty))), line) === null) {
+      fundPassLine(state, tableMin(state), line);
     }
   }
   const onLine = state.bets.pass > 0 ? "pass" : state.bets.dont > 0 ? "dont" : null;
@@ -112,7 +112,7 @@ function playShift(s, carry) {
 function run(label, s, n, scale) {
   let wins = 0, broke = 0, short = 0, rolls = 0, left = 0, cards = 0;
   const reached = scale.map(() => 0); // how many runs survived each shift
-  CONFIG.shifts = scale.map(([cash, debt]) => ({ cash: cash, debt: debt }));
+  CONFIG.shifts = scale.map(([cash, debt, minBet], k) => ({ cash: cash, debt: debt, minBet: minBet || (ORIGINAL_SHIFTS[k] || { minBet: 5 }).minBet }));
   for (let i = 0; i < n; i++) {
     let carry = null;
     for (let k = 0; k < scale.length; k++) {
@@ -136,9 +136,10 @@ function run(label, s, n, scale) {
 
 vm.runInThisContext(source + "\n" + simulator);
 
+globalThis.ORIGINAL_SHIFTS = CONFIG.shifts.slice();
 const N = Number(process.argv[2]) || 20000;
 const scaleArg = process.argv[3]; // e.g. "100:200,200:500"
-const scale = (scaleArg || "150:200,150:300,200:500,250:800,300:1200").split(",").map((p) => p.split(":").map(Number));
+const scale = (scaleArg || CONFIG.shifts.map((x) => x.cash + ":" + x.debt + ":" + x.minBet).join(",")).split(",").map((p) => p.split(":").map(Number));
 
 const strategies = [
   ["$5 Pass, no Odds, pay only at the end",      { pass: 5, odds: 0, payReserve: null, shop: false, shopReserve: 0 }],

@@ -66,10 +66,10 @@ function sevenChance(name, state) {
   return diceOdds(Object.assign({}, dice, { extraWays: now.extraWays, totalWays: now.totalWays }))[7];
 }
 
-function renderChips(selectedChip, onPick) {
+function renderChips(values, selectedChip, onPick) {
   const box = document.getElementById("chips");
   box.innerHTML = "";
-  for (const value of CONFIG.chipValues) {
+  for (const value of values) {
     const chip = document.createElement("button");
     chip.className = "chip chip-" + value + (value === selectedChip ? " selected" : "");
     chip.textContent = money(value);
@@ -91,6 +91,7 @@ function renderState(state) {
   renderOddsPanel(state);
   renderMult(state);
   document.getElementById("on-table").textContent = money(b.pass + b.odds + b.dont + b.lay + b.field);
+  document.getElementById("table-min").textContent = "Table min " + money(tableMin(state));
   document.getElementById("pass-amount").textContent = money(b.pass);
   document.getElementById("dont-amount").textContent = money(b.dont);
   document.getElementById("field-amount").textContent = money(b.field);
@@ -105,7 +106,8 @@ function renderState(state) {
   for (const [id, lockId, bet] of [["pass-line", "pass-lock", "pass"], ["dont-pass", "dont-lock", "dont"]]) {
     document.getElementById(id).classList.toggle("locked", pointOn && b[bet] > 0);
     document.getElementById(id).classList.toggle("disabled", pointOn && b[bet] === 0);
-    document.getElementById(lockId).textContent = pointOn && b[bet] > 0 ? "🔒 Locked until the point is decided" : "";
+    document.getElementById(lockId).textContent = pointOn && b[bet] > 0 ? "🔒 Locked" : "";
+    document.getElementById(lockId).title = "Locked until the point is hit or a 7 rolls.";
   }
 
   // Odds and Lay Odds open while a point is on, behind the matching line bet
@@ -161,7 +163,7 @@ function renderBreak(state) {
     intro = state.shift === 1
       ? "The dealer leans in. \"You owe me " + money(state.debt) + " by the end of the shift. Pay it and I'll unlock a link.\" Pay any time between shooters. Paid money is safe, but you can't bet it."
       : "Shift " + state.shift + ". " + (state.endless ? "Endless mode, no chain left to break. " : left + (left === 1 ? " link" : " links") + " to go. ") +
-        "The pit boss slides " + money(state.cashAdded) + " into your kitty. The dealer leans in: \"This time you owe me " + money(state.debt) + ".\"";
+        "The pit boss slides " + money(state.cashAdded) + " into your kitty. The dealer leans in: \"This time you owe me " + money(state.debt) + ".\" The table minimum is now " + money(tableMin(state)) + ".";
   } else if (isFinalBreak(state)) {
     intro = "Every shooter has sevened out. Last chance to pay before the pit boss judges you.";
   } else {
@@ -186,18 +188,23 @@ function renderBreak(state) {
     ? "Interest paid into your kitty: <strong>+" + money(state.lastInterest) + "</strong> (" + rate + " of the " + money(state.deposited) + " you've paid)."
     : "Paid money earns " + rate + " interest at every Break, paid into your kitty.";
 
-  // Pay off debt only works when your kitty covers the whole amount owed.
+  // Paying opens after the first shooter. Pay off debt needs the whole amount.
+  const payOpen = canPay(state);
+  document.getElementById("pay-typed").disabled = !payOpen;
+  document.getElementById("deposit-amount").disabled = !payOpen;
+  document.getElementById("pay-closed").textContent = payOpen ? "" :
+    "The dealer won't take payment until the first shooter has rolled. Shop first, then pay at the next Break.";
   const payOff = document.getElementById("pay-off");
-  payOff.disabled = state.kitty < amountOwed(state);
+  payOff.disabled = !payOpen || state.kitty < amountOwed(state);
   payOff.textContent = "Pay off debt (" + money(amountOwed(state)) + ")";
   payOff.title = payOff.disabled ? "You need the full amount in your kitty to pay off the debt." : "";
   document.getElementById("leave-break").textContent = isFinalBreak(state)
     ? "Face the pit boss"
     : "Next shooter: " + state.crew[state.shooterIndex];
 
-  const warn = !isFinalBreak(state) && totalMoney(state) < CONFIG.tableMinimum;
+  const warn = !isFinalBreak(state) && totalMoney(state) < tableMin(state);
   document.getElementById("break-warning").textContent = warn
-    ? "Warning: you need " + money(CONFIG.tableMinimum) + " to bet the Pass Line. Leave now and you fall."
+    ? "Warning: you need " + money(tableMin(state)) + " to bet the Pass Line. Leave now and you fall."
     : "";
 }
 
@@ -332,7 +339,7 @@ function renderOddsPanel(state) {
     bars += '<div class="' + cls + '"><span class="pct">' + Math.round(odds[t] * 100) + '%</span>' +
       '<div class="fill" style="height: calc(var(--bar-max) * ' + share + ')"></div><span class="num">' + t + "</span></div>";
   }
-  let summary = whose(name) + " dice: current chance of a 7 is <strong>" + percent(odds[7]) + "</strong> (normal: 16.7%).";
+  let summary = whose(name) + " dice: current chance of a 7 is <strong>" + percent(odds[7]) + "</strong><span class=\"hide-mobile\"> (normal: 16.7%)</span>.";
   if (state.point !== null) {
     const hit = pointBeforeSeven(odds, state.point);
     summary += " The " + state.point + " before a 7: <strong>" + percent(hit) + "</strong> (Pass) · 7 first: <strong>" + percent(1 - hit) + "</strong> (Don't).";
@@ -411,7 +418,7 @@ function renderEndScreen(state, handlers) {
     mood = "fell";
     title = "THE FLOOR OPENS.";
     const why = state.status === "fell-broke"
-      ? "You couldn't cover the " + money(CONFIG.tableMinimum) + " line bet."
+      ? "You couldn't cover the " + money(tableMin(state)) + " line bet."
       : "You only paid " + money(state.deposited) + " of the " + money(state.debt) + " you owed.";
     body = why + (state.endless
       ? " You walked out free once. Greed brought you back. You lasted " + (state.shift - 1 - totalLinks(state)) + " extra shifts."

@@ -25,7 +25,8 @@
   <script src="js/shift.js"></script>
   <script>
     // Tests use fixed numbers, so tuning config.js doesn't break them.
-    CONFIG.shifts[0] = { cash: 200, debt: 2000 };
+    CONFIG.shifts[0] = { cash: 200, debt: 2000, minBet: 5 };
+    CONFIG.payAfterFirstShooter = false; // most checks pay at any Break; the rule has its own checks below
     const debtState = (debt) => { const st = newShiftState(); st.debt = debt; return st; };
     CONFIG.interestRate = 0.05;
 
@@ -396,8 +397,9 @@
     check("Without it, you still fall", noLink.status, "fell-short");
 
     // Milestone 6a: multiple shifts
-    check("Shift scale table: shift 3 adds $200 and owes $500", shiftScale(3), { cash: 200, debt: 500 });
-    check("After the table: debt x1.5 (rounded to $50), cash +$50", [shiftScale(6), shiftScale(7)], [{ cash: 350, debt: 1800 }, { cash: 400, debt: 2700 }]);
+    check("Shift scale table: shift 3 adds $200, owes $500, minimum $15", shiftScale(3), { cash: 200, debt: 500, minBet: 15 });
+    check("Shift 8: owes $4,050, minimum $150", [shiftScale(8).debt, shiftScale(8).minBet], [4050, 150]);
+    check("After the table: debt x1.5 (rounded to $50), cash +$50, minimum ~4% (rounded to $25)", shiftScale(9), { cash: 500, debt: 6100, minBet: 250 });
     const s1end = newShiftState(); s1end.kitty = 70; s1end.bets.field = 5; s1end.deposited = 2000; s1end.status = "won";
     s1end.cards = ["hotHand"]; s1end.crew = ["Lefty", "Dealer Dee", "Hot Rod", "Ghost", "You"]; s1end.interestRate = 0.055;
     s1end.pityUsed = true; s1end.loadedDieUsed = true; s1end.hotRodPenaltyUsed = true;
@@ -545,6 +547,26 @@
     let bargainInEndless = false;
     for (let i = 0; i < 300; i++) { const st = newShiftState(); st.endless = true; if (newStock(st).includes("bargain")) bargainInEndless = true; }
     check("Dealer's Bargain is never offered in endless mode", bargainInEndless, false);
+
+    // Rising minimum bet and paying after the first shooter
+    const mb = newShiftState(); mb.status = "won"; mb.kitty = 500;
+    const mb2 = nextShift(mb);
+    check("Shift 2 has a $10 table minimum", tableMin(mb2), 10);
+    mb2.bets.pass = 5;
+    check("A $5 line bet isn't enough to roll in shift 2", canRoll(mb2), false);
+    mb2.bets.pass = 10;
+    check("...$10 is", canRoll(mb2), true);
+    const mb3 = newShiftState(); mb3.kitty = 9; mb3.minBet = 10;
+    check("With a $10 minimum, $9 total on a come-out is broke", isBroke(mb3), true);
+    check("Small chips while the minimum is under $25, big ones after", [chipsFor(newShiftState()), chipsFor(Object.assign(newShiftState(), { minBet: 25 }))], [[5, 25, 100], [25, 100, 500]]);
+    CONFIG.payAfterFirstShooter = true;
+    const pf = newShiftState(); pf.kitty = 5000;
+    check("Paying is closed on a shift's opening Break", [canPay(pf), deposit(pf, 100), pf.deposited], [false, 0, 0]);
+    pf.shooterIndex = 1;
+    check("...and open after the first shooter", deposit(pf, 100), 100);
+    const pfLink = newShiftState(); pfLink.kitty = 50; pfLink.shooterIndex = 1;
+    check("Payments keep the table minimum in the kitty", maxDeposit(pfLink), 45);
+    CONFIG.payAfterFirstShooter = false;
 
     // Dice: 10,000 rolls stay in range, and 7 is the most common total
     const counts = {};

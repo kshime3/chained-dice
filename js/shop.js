@@ -60,7 +60,7 @@ function isShopOpen(state) {
 
 // Spending in the shop can't take your kitty below the minimum Pass Line bet.
 function canSpend(state, amount) {
-  return state.kitty - amount >= CONFIG.tableMinimum;
+  return state.kitty - amount >= tableMin(state);
 }
 
 // Buy the card in a stock slot. Returns "ok", "empty", "full" or "money".
