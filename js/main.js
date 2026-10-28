@@ -106,7 +106,7 @@ function roll() {
   }
 
   // The result is decided now; the animation just shows it.
-  const rolled = rollDice(currentDice(state), pairDue(state));
+  const rolled = rollDice(currentDice(state), nextRollPairs(state));
   rolling = true;
   playSound("rattle");
   animateDice(rolled.dice, CONFIG.diceRollMs, () => {
@@ -149,7 +149,7 @@ function offerRerollOrFinish(rolled) {
 function finishRoll(rolled) {
   const moneyBefore = totalMoney(state);
   const shooter = state.crew[state.shooterIndex];
-  const odds = diceOdds(currentDice(state), pairDue(state));
+  const odds = diceOdds(currentDice(state), nextRollPairs(state));
   state.lastRoll = rolled;
   state.turnRolls += 1;
   const total = state.lastRoll.total;
@@ -157,8 +157,9 @@ function finishRoll(rolled) {
   const results = resolveRoll(state.bets, total, pointBefore);
   for (const r of results) r.plain = r.winnings; // before cards and mult, for the win screen
   const boosts = [];
-  const multUsed = effectiveMult(state);
-  if (multUsed !== 1) boosts.push("Mult " + multUsed + "x" + (multReasons(state).length ? " (" + multReasons(state).join(", ") + ")" : ""));
+  const doubled = !!state.armed.doubleDown && results.some((r) => r.outcome === "win");
+  const multUsed = effectiveMult(state) * (doubled ? 2 : 1);
+  if (multUsed !== 1) boosts.push("Mult " + multUsed + "x" + (multReasons(state).length || doubled ? " (" + multReasons(state).concat(doubled ? ["Double Down x2"] : []).join(", ") + ")" : ""));
   const crewBefore = applyCrewBeforePayout(state, results, total, pointBefore);
   const before = applyCardsBeforePayout(state, results, total, pointBefore);
   if (hasCard(state, "oddsAddict") && results.some((r) => r.bet === "odds" && r.outcome === "win")) boosts.push("Odds Addict (+50% Odds)");
@@ -176,6 +177,8 @@ function finishRoll(rolled) {
     if (r.outcome === "lose") state.bets[r.bet] = 0;
   }
 
+  const compNotes = finishArmed(state, results);
+
   // Pit Boss's Pity keeps the point on after an ignored seven-out.
   state.point = before.pity ? pointBefore : nextPoint(pointBefore, total);
   const sevenOut = !before.pity && pointBefore !== null && total === CONFIG.sevenOut;
@@ -185,7 +188,11 @@ function finishRoll(rolled) {
   recordRoll(state.stats, state, rolled, totalMoney(state) - moneyBefore, sevenOut, pointHit, odds, multUsed, shooter, state.turnRolls);
   afterRoll(state, sevenOut);
 
-  const notes = crewBefore.concat(before.notes, cardNotes, crewNotes);
+  // A free comp for hitting a point at a big mult.
+  if (pointHit && multUsed >= CONFIG.freeCompMult && gainComp(state, randomComp())) {
+    compNotes.push("The dealer is impressed: a free " + COMPS[state.comps[state.comps.length - 1]].name + " comp!");
+  }
+  const notes = crewBefore.concat(before.notes, cardNotes, crewNotes, compNotes);
   showMessage(describeRoll(total, results, pointBefore, state.point) + " " + notes.join(" "), sevenOut);
 
   if (sevenOut && results.some((r) => r.bet === "dont" && r.outcome === "win")) playSound("pointHit");
@@ -252,6 +259,48 @@ function sell(id) {
   playSound("chip");
   showBreakMessage("Sold " + CARDS[id].name + " for " + money(got) + ".");
   renderAll();
+}
+
+// Comp buttons
+function buyCompSlot(slot) {
+  const id = state.compStock[slot];
+  const outcome = buyComp(state, slot);
+  if (outcome === "ok") playSound("buy");
+  showBreakMessage({
+    ok: "Bought " + (id && COMPS[id].name) + ".",
+    full: "Your comp slots are full (" + CONFIG.compSlots + "). Use or sell one first.",
+    money: "Not enough. Buying can't take your kitty below " + money(tableMin(state)) + ".",
+    empty: "That one's sold out.",
+  }[outcome]);
+  renderAll();
+}
+
+function sellCompSlot(index) {
+  const id = state.comps[index];
+  const got = sellComp(state, index);
+  playSound("chip");
+  showBreakMessage("Sold " + COMPS[id].name + " for " + money(got) + ".");
+  renderAll();
+}
+
+function useCompSlot(index) {
+  if (rolling || splashOpen || promptOpen || fallingNow) return;
+  const id = state.comps[index];
+  const finish = (face) => {
+    const text = useComp(state, index, face);
+    if (!text) return;
+    playSound("clank");
+    if (state.onBreak) showBreakMessage(text);
+    else showMessage(text);
+    renderAll();
+  };
+  if (id === "loadedShot") {
+    const faces = [...new Set(state.dice.left)].sort();
+    showChoice("Loaded Shot", "Pick the face for the left die on your next roll.", faces.map((f) => ({ label: String(f), value: f })),
+      (face) => { if (face !== null) finish(face); });
+    return;
+  }
+  finish();
 }
 
 function cut(name) {
@@ -327,6 +376,7 @@ function renderAll() {
   showChips();
   renderState(state);
   renderShop(state, { buy: buy, sell: sell, cut: cut });
+  renderComps(state, { buyComp: buyCompSlot, sellComp: sellCompSlot, useComp: useCompSlot });
   renderBreak(state);
 
   // Falling: the floor opens first, then the stats screen.
@@ -338,10 +388,13 @@ function renderAll() {
     renderEndScreen(state, endHandlers());
   }
 
-  // The first time the shop opens, explain it.
+  // The first time the shop opens, explain it (then comps, on a later visit).
   if (state.onBreak && state.status === "playing" && isShopOpen(state) && !tutorialSeen("shop")) {
     markTutorialSeen("shop");
     showTutorial(shopPages());
+  } else if (state.onBreak && state.status === "playing" && isShopOpen(state) && !tutorialSeen("comps")) {
+    markTutorialSeen("comps");
+    showTutorial(compPages());
   }
 }
 
@@ -376,6 +429,7 @@ document.getElementById("mute").onclick = () => {
 };
 document.getElementById("how-to-play").onclick = () => showTutorial(introPages());
 document.getElementById("shop-help").onclick = () => showTutorial(shopPages());
+document.getElementById("comps-help").onclick = () => showTutorial(compPages());
 
 showChips();
 renderMuteButton();

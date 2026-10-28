@@ -2,6 +2,19 @@
 
 Dated session log. Newest at the top.
 
+## 2026-10-28: Session 6, continued (Milestone 8: comps)
+
+**Done**
+- New owner rules: every milestone ends with a balance retest (in CLAUDE.md); some cards start locked with **hidden** unlock requirements (Milestone 12), so beating the game takes many playthroughs.
+- **Built Milestone 8, comps:** new `js/comps.js`. 8 comps (No Sevens, Double Down, Lucky Pair, Loaded Shot, Insurance, Hot Seat, Seat Swap, Cash Advance), 2 slots, shop row of 2 per Break, sell for half, armed comps glow and change the odds chart, Loaded Shot face picker, free comp on a point hit at 3x+, phone perk "2 free comps", comps tutorial. Comps carry over. Fits one screen on phones (comp buttons share the cards row). tests.html: 276 checks, all passing.
+- **Balance retest:** comps add a little power; curve still rises; no rescale needed (BALANCE.md).
+
+**Waiting on the owner**
+- Testing comps.
+
+**Exact next step**
+- Milestone 9: dice crafting (face edits, reusing the comps system).
+
 ## 2026-10-28: Session 6 (rescale)
 
 **Done**

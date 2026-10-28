@@ -44,7 +44,8 @@ function comboList(diceSet) {
 
 // pairsOnly: only doubles can come up (Doubles Charm).
 function usableCombos(diceSet, pairsOnly) {
-  const combos = comboList(diceSet);
+  let combos = comboList(diceSet);
+  if (diceSet.noSeven) combos = combos.filter((c) => c.a + c.b !== 7); // the No Sevens comp
   return pairsOnly ? combos.filter((c) => c.a === c.b) : combos;
 }
 

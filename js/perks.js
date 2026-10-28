@@ -19,6 +19,7 @@ function perkInfo(id) {
   const perks = {
     minusSeven: { name: "-1 way to roll 7", text: "Every shooter rolls 7s a little less often (-1 way out of 36), for the rest of the run. A 7 never drops below " + CONFIG.minSevenWays + " ways.", rarity: "rare" },
     removeCharacter: { name: "Free Trapdoor", text: "Pick a crew member (not you). The dealer opens the trapdoor under their seat, free. They're gone for the rest of the run.", rarity: "uncommon" },
+    freeComps: { name: CONFIG.freeCompsPerk + " free comps", text: "The dealer slips you " + CONFIG.freeCompsPerk + " random comps (as many as fit in your slots).", rarity: "uncommon" },
     freeItems: { name: CONFIG.freeItemsCount + " free items", text: "Your next " + CONFIG.freeItemsCount + " cards from the shop are free.", rarity: "uncommon" },
   };
   return perks[id];
@@ -42,7 +43,7 @@ function perkWeight(state, id) {
 
 // The phone rings: pick different perks at random, weighted by rarity.
 function phoneOffer(state) {
-  const pool = PERK_TOTALS.map((t) => "plus" + t).concat(["minusSeven", "removeCharacter", "freeItems"]);
+  const pool = PERK_TOTALS.map((t) => "plus" + t).concat(["minusSeven", "removeCharacter", "freeItems", "freeComps"]);
   const offer = [];
   while (offer.length < CONFIG.phoneChoices) {
     const left = pool.filter((id) => !offer.includes(id) && perkWeight(state, id) > 0);
@@ -64,6 +65,8 @@ function takePerk(state, id, target) {
     removeCrew(state, target);
   } else if (id === "freeItems") {
     state.freeBuys += CONFIG.freeItemsCount;
+  } else if (id === "freeComps") {
+    for (let i = 0; i < CONFIG.freeCompsPerk; i++) gainComp(state, randomComp());
   }
   state.perks.push(id);
 }

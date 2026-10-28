@@ -165,6 +165,25 @@ Full list: `docs/Store-Cards-Phone-Scales.xlsx`.
 
 **"+1 odds" means +1 way out of 36 [Built]:** one extra combination for that total, so a 2 goes from 1 in 36 to 2 in 37. Dice with fewer faces (like Lefty's) are scaled so their plain combos still count as 36.
 
+## Comps  [Built, Milestone 8]
+
+One-use items ("comps", casino slang for the house's freebies). Hold up to **2**. The shop offers **2 comps at every Dealer Break** (once the shop is open), priced by strength as a share of the debt; sell for half. Comps carry over between shifts.
+
+| Comp | When | Effect | Price |
+| --- | --- | --- | --- |
+| No Sevens | Next roll | The next roll can't be a 7 | 8% |
+| Double Down | Next winning roll | Pays double (stays armed until a roll wins) | 6% |
+| Lucky Pair | Next roll | The next roll is a pair | 5% |
+| Loaded Shot | Next roll | You pick the left die's face | 7% |
+| Insurance | Next roll | If it loses your line bet, you get it back | 4% |
+| Hot Seat | Any time (not at a Break) | +1x mult for the rest of the turn | 5% |
+| Seat Swap | At a Break | Swap the next two shooters | 4% |
+| Cash Advance | At a Break (after the first shooter) | +25% of the debt now; the debt grows by 1.5x that | 3% |
+
+- Your comps sit in the cards row as blue 🎟 buttons; click to use. Armed comps glow ⚡ and the odds chart shows their effect.
+- **Free comps:** hitting a point at 3x mult or more gives a free comp (if a slot is free); phone perk **"2 free comps"** (Uncommon).
+- Tutorial the first time comps are on sale (also via the ? next to "Comps").
+
 ## The Pit Boss Phone  [Built, Milestone 6b]
 
 Like Clover Pit's phone. After **every won shift**, it rings before the next shift starts: **pick 1 of 3 different permanent perks**. A 2-page tutorial the first time.
@@ -175,6 +194,7 @@ Like Clover Pit's phone. After **every won shift**, it rings before the next shi
 | -1 way to roll 7 | Fewer 7s on everyone's dice. Gets half as likely to be offered each time it's taken; a 7 never drops below 2 ways out of 36. | Rare |
 | Remove a character | Pick a crew member (not You); gone for the rest of the run, free. | Uncommon |
 | 2 free items | Your next 2 shop cards cost $0. | Uncommon |
+| 2 free comps | Two random comps (as many as fit). | Uncommon |
 
 - Perks can be picked again (except where noted); each call offers 3 different ones.
 - Dice perks show as purple ☎ badges next to your cards; remaining free items show too.
@@ -184,7 +204,7 @@ Like Clover Pit's phone. After **every won shift**, it rings before the next shi
 
 - **Pit boss challenges:** a small challenge each shooter's turn, with a reward. Own milestone after the shop.
 - **House rules [Planned, Milestone 7]:** from shift 3, one random rule per shift, announced on the opening Dealer Break, with a tutorial the first time. Starter list: **Tight Odds** (Odds capped at 2x), **Short Table** (a random crew member sits out), **High Roller** ($25 minimum), **Stingy Field** (12 pays only double), **Dealer's Cut** (interest halved), **Markup** (shop prices +50%), **Jinxed** (Jinx shoots twice), **Pit Watch** (one of your cards is switched off).
-- **Card unlocks [Planned, Milestone 8]:** new players start with Hot Hand, Snake Eyes, Lucky Seven, Rattlesnake, Red Dice and Double Up. Others unlock by goals: Odds Addict (win $500 total on Odds), Muggsy (5 point-7s), Pit Boss's Pity (fall 5 times), Doubles Charm (3 doubles in one turn), Green Dice ($50 interest in one run), Loaded Die (survive shift 2), Reroll (survive shift 3), Spare Link (survive shift 4). Each unlock gets an announcement. Progress is saved in the browser; a Collection screen shows locked cards and their goals.
+- **Card unlocks [Planned, Milestone 8]:** new players start with Hot Hand, Snake Eyes, Lucky Seven, Rattlesnake, Red Dice and Double Up. Others unlock by **hidden** goals (the player isn't told how; owner, 2026-10-28): Odds Addict (win $500 total on Odds), Muggsy (5 point-7s), Pit Boss's Pity (fall 5 times), Doubles Charm (3 doubles in one turn), Green Dice ($50 interest in one run), Loaded Die (survive shift 2), Reroll (survive shift 3), Spare Link (survive shift 4). Each unlock gets an announcement. Progress is saved in the browser; a Collection screen shows locked cards as mysteries. Winning should take many playthroughs.
 - **Tutorials [Built]:** a 2-page phone tutorial the first time it rings; a 7-page "How to play" intro on first visit (also via the How to play button), a 3-page shop tutorial (including Cut a chain) the first time the shop opens (also via the shop's ? button). [Planned] A phone tutorial. Each shows once per browser.
 
 ## Glossary
@@ -228,6 +248,6 @@ Like Clover Pit's phone. After **every won shift**, it rings before the next shi
 5. [Built] Shop: 5a framework and 8 cards; 5b-1 dice cards; 5b-2 Loaded Die, Reroll, Cut a chain, Spare Link
 6. [Built] Multiple shifts (6a) and the Pit Boss phone (6b)
 7. [Planned] House rules
-8. [Planned] Card unlocks and the Collection screen
+8. [Built] Comps
 9. [Built] Polish: fall animation and sound. [Only with owner's permission] Any public release.
 10. [After v1] More bets (Place, Hard Ways, Come)

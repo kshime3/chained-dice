@@ -111,3 +111,14 @@ Smart bot (flat $10 bets, raised to the table minimum when needed), shop + phone
 | **New (E3), keep half** | 69% | 73% | 70% | 67% | 62% | 58% | 60% | 59% | **3.0%** |
 
 A bot that bets 10% of what it owes does a bit worse (walk out free 1.7%). A thoughtful human with a good build should do noticeably better; retune after consumables and dice crafting, which add power. Tool: `CARRY=0.5 node tools/simulate.js 20000` and the `SCALING` bots (strategies 18-21).
+
+## 2026-10-28: Milestone 8 retest (comps)
+
+Simulator learned comps (settling, Insurance, Double Down, free comps) and a bot that buys No Sevens / Double Down / Insurance / Hot Seat / Lucky Pair with spare money. 8,000 runs, keep-half carry-over, per-shift survival:
+
+| Bot | S1 | S2 | S3 | S4 | S5 | S6 | S7 | S8 | Walk out free |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Smart, no comps | 69% | 72% | 70% | 67% | 63% | 59% | 61% | 58% | 3.1% |
+| Smart + comps | 70% | 75% | 70% | 68% | 64% | 57% | 61% | 60% | 3.3% |
+
+Comps add a little power; the curve still gets harder shift by shift. **No rescale needed.** Humans who time comps well (Loaded Shot, No Sevens on a big Odds bet) will gain more than the bot.

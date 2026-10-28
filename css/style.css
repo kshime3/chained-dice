@@ -457,3 +457,17 @@ body.falling .seat, body.falling .side > *, body.falling .table, body.falling .c
 #second-button:not(.hidden) { font-size: 1.1rem; padding: 10px 20px; }
 
 .table-min { display: inline-block; font-size: 0.8rem; opacity: 0.85; margin-left: 6px; }
+
+/* Comps */
+.card.comp { background: #eaf6ff; border-color: #3a8fd6; }
+.card.comp .card-rarity { background: #3a8fd6; }
+.card.comp button + button { background: #ddd; font-weight: normal; }
+.my-comps { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-bottom: 6px; }
+.my-comps:empty { display: none; }
+.comp-chip { margin: 0; padding: 4px 10px; font-size: 0.85rem; border-radius: 999px; background: #3a8fd6; color: #fff; font-weight: bold; }
+.comp-chip.armed { background: #ffd84d; color: #222; animation: armed-glow 1s ease-in-out infinite alternate; }
+@keyframes armed-glow { from { box-shadow: 0 0 2px #ffd84d; } to { box-shadow: 0 0 12px #ffd84d; } }
+.armed-text { color: #ffd84d; }
+#choice { z-index: 19; cursor: default; }
+.choice-buttons { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+@media (max-width: 760px) { .layout .my-comps { flex-wrap: nowrap; overflow-x: auto; justify-content: flex-start; } .comp-chip { flex: 0 0 auto; font-size: 0.75rem; padding: 3px 8px; } }

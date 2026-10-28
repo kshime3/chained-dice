@@ -9,19 +9,20 @@ const vm = require("vm");
 
 // Load the logic files exactly as the browser does (no display code).
 globalThis.location = { search: "" };
-const files = ["config", "dice", "bets", "crew", "cards", "shop", "stats", "perks", "shift"];
+const files = ["config", "dice", "bets", "crew", "cards", "shop", "stats", "perks", "comps", "shift"];
 const source = files.map((f) => fs.readFileSync(path.join(__dirname, "..", "js", f + ".js"), "utf8")).join("\n");
 
 const simulator = `
 // One roll, settled the same way main.js finishRoll does it.
 function simRoll(state) {
-  const rolled = rollDice(currentDice(state), pairDue(state));
+  const rolled = rollDice(currentDice(state), nextRollPairs(state));
   state.lastRoll = rolled;
   state.turnRolls += 1;
   const total = rolled.total;
   const pointBefore = state.point;
   const results = resolveRoll(state.bets, total, pointBefore);
-  const multUsed = effectiveMult(state);
+  const doubled = !!state.armed.doubleDown && results.some((r) => r.outcome === "win");
+  const multUsed = effectiveMult(state) * (doubled ? 2 : 1);
   const crewBefore = applyCrewBeforePayout(state, results, total, pointBefore);
   const before = applyCardsBeforePayout(state, results, total, pointBefore);
   applyMult(results, multUsed);
@@ -32,6 +33,8 @@ function simRoll(state) {
     }
     if (r.outcome === "lose") state.bets[r.bet] = 0;
   }
+  finishArmed(state, results);
+  if (pointBefore !== null && total === pointBefore && multUsed >= CONFIG.freeCompMult) gainComp(state, randomComp());
   state.point = before.pity ? pointBefore : nextPoint(pointBefore, total);
   const sevenOut = !before.pity && pointBefore !== null && total === CONFIG.sevenOut;
   applyCardsAfterRoll(state, results, total, pointBefore, sevenOut);
@@ -58,6 +61,29 @@ function atBreak(state, s) {
   if (s.payReserve !== null) {
     const extra = state.kitty - s.payReserve;
     if (extra > 0) deposit(state, extra);
+  }
+}
+
+// Comps bot: buy the useful ones with spare money, use them at sensible moments.
+const COMP_PREFERENCE = ["noSevens", "doubleDown", "insurance", "hotSeat", "luckyPair"];
+
+function buyComps(state, s) {
+  if (!s.comps || !isShopOpen(state)) return;
+  state.compStock.forEach((id, slot) => {
+    if (id && COMP_PREFERENCE.includes(id) && state.kitty - compPrice(state, id) >= s.shopReserve) buyComp(state, slot);
+  });
+}
+
+function useComps(state) {
+  for (let i = state.comps.length - 1; i >= 0; i--) {
+    const id = state.comps[i];
+    if (compBlocked(state, id)) continue;
+    const pointOn = state.point !== null;
+    const bigBet = state.bets.odds + state.bets.lay > 0;
+    if (id === "doubleDown" || id === "hotSeat") useComp(state, i);
+    else if (id === "noSevens" && pointOn && bigBet && state.bets.pass > 0) useComp(state, i);
+    else if (id === "insurance" && pointOn) useComp(state, i);
+    else if (id === "luckyPair" && pointOn && state.point % 2 === 0 && state.bets.pass > 0) useComp(state, i);
   }
 }
 
@@ -99,11 +125,13 @@ function playShift(s, carry) {
   while (state.status === "playing" && rolls < 3000) {
     if (state.onBreak) {
       atBreak(state, s);
+      buyComps(state, s);
       if (state.status !== "playing") break;
       endBreak(state);
       continue;
     }
     placeBets(state, s);
+    if (s.comps) useComps(state);
     simRoll(state);
     rolls++;
   }
@@ -163,6 +191,7 @@ const strategies = [
   ["SMART: $10 + 2x Odds, protect, shop",       { pass: 10, odds: 2, payReserve: null, shop: true, shopReserve: 60, protect: true }],
   ["SMART Don't Pass: $10 + max Lay, protect, shop", { pass: 10, odds: 5, payReserve: null, shop: true, shopReserve: 60, protect: true, side: "dont" }],
   ["SMART: Pass, but Don't Pass against Jinx, shop", { pass: 10, odds: 5, payReserve: null, shop: true, shopReserve: 60, protect: true, side: "against-jinx" }],
+  ["SMART + COMPS: $10 + max Odds, protect, shop, comps", { pass: 10, odds: 5, payReserve: null, shop: true, shopReserve: 60, protect: true, comps: true }],
   ["SCALING: 5% of what's owed + max Odds, protect, shop",  { debtPct: 0.05, odds: 5, payReserve: null, shop: true, shopReserve: 60, protect: true }],
   ["SCALING: 10% of what's owed + max Odds, protect, shop", { debtPct: 0.10, odds: 5, payReserve: null, shop: true, shopReserve: 60, protect: true }],
   ["SCALING: 10% of what's owed + 2x Odds, protect, shop",  { debtPct: 0.10, odds: 2, payReserve: null, shop: true, shopReserve: 60, protect: true }],

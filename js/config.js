@@ -105,10 +105,20 @@ const CONFIG = {
   // The Pit Boss phone: after each won shift, pick 1 of these many different perks.
   phoneChoices: 3,
   // How likely each kind of perk is to be offered. "plusTotal" is shared by the 11 "+1 way to roll N" perks.
-  perkWeights: { plusTotal: 0.6, removeCharacter: 0.15, freeItems: 0.15, minusSeven: 0.1 },
+  perkWeights: { plusTotal: 0.55, removeCharacter: 0.12, freeItems: 0.12, freeComps: 0.12, minusSeven: 0.1 },
   minusSevenRarer: 0.5, // each time you take "-1 way to roll 7", its chance is multiplied by this
   minSevenWays: 2,      // a 7 never drops below this many ways out of 36
   freeItemsCount: 2,    // "2 free items": your next this-many shop cards are free
+
+  // Comps: one-use items. Slots you can hold, how many the shop offers, and prices (share of the debt).
+  compSlots: 2,
+  compShopSlots: 2,
+  compPricePct: { noSevens: 0.08, doubleDown: 0.06, luckyPair: 0.05, loadedShot: 0.07, insurance: 0.04, hotSeat: 0.05, seatSwap: 0.04, cashAdvance: 0.03 },
+  hotSeatMult: 1,        // Hot Seat: + this much mult for the rest of the turn
+  cashAdvancePct: 0.25,  // Cash Advance: lends this share of the debt
+  cashAdvanceCost: 1.5,  // Cash Advance: the debt grows by this times what was lent
+  freeCompMult: 3,       // hitting a point at this mult or more gives you a free comp (if you have a free slot)
+  freeCompsPerk: 2,      // the phone perk "free comps" gives this many
 
   // Trapdoor: a Dealer Break option once the shop is open (drops a crew member for the run).
   cutChainPct: 0.25, // costs this share of the debt

@@ -114,6 +114,11 @@
         <h3>Your cards <span id="slots"></span></h3>
         <div id="owned" class="card-row"></div>
 
+        <h3>Comps <button id="comps-help" class="help-button" title="How comps work">?</button></h3>
+        <p class="hint">One-use items. Hold up to <span id="comp-slots"></span>.</p>
+        <div id="comp-stock" class="card-row"></div>
+        <div id="comp-owned" class="card-row"></div>
+
         <h3>Trapdoor</h3>
         <p class="hint">Pay the dealer to pull the lever under a crew member's seat. They drop away for the rest of the run. Only crew who haven't shot yet this shift.</p>
         <div id="cut-row" class="cut-row"></div>
@@ -133,6 +138,14 @@
       <h2>The Pit Boss is calling</h2>
       <p id="phone-text"></p>
       <div id="phone-choices" class="card-row"></div>
+    </div>
+  </div>
+
+  <div id="choice" class="overlay splash hidden">
+    <div class="splash-content">
+      <div id="choice-title" class="splash-title small"></div>
+      <p id="choice-text"></p>
+      <div id="choice-buttons" class="choice-buttons"></div>
     </div>
   </div>
 
@@ -179,6 +192,7 @@
   <script src="js/shop.js"></script>
   <script src="js/stats.js"></script>
   <script src="js/perks.js"></script>
+  <script src="js/comps.js"></script>
   <script src="js/shift.js"></script>
   <script src="js/sound.js"></script>
   <script src="js/ui.js"></script>

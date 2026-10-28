@@ -22,6 +22,7 @@
   <script src="js/shop.js"></script>
   <script src="js/stats.js"></script>
   <script src="js/perks.js"></script>
+  <script src="js/comps.js"></script>
   <script src="js/shift.js"></script>
   <script>
     // Tests use fixed numbers, so tuning config.js doesn't break them.
@@ -575,6 +576,54 @@
     const cut2 = nextShift(cut1);
     check("Dealer's cut: $301 leftover -> carry $150 (rounded down), dealer keeps $151, plus $200 cash", [cut2.kitty, cut2.dealerCut], [350, 151]);
     CONFIG.carryOverShare = 1;
+
+    // Milestone 8: comps
+    const cp = withCards(); cp.dice = diceForShooter("Hot Rod"); cp.debt = 1000; cp.comps = ["noSevens", "doubleDown"];
+    check("Comps cost a share of the debt (No Sevens 8% of $1,000 = $80)", compPrice(cp, "noSevens"), 80);
+    check("A new shift offers 2 different comps", (() => { const st = newShiftState(); return [st.compStock.length, new Set(st.compStock).size]; })(), [2, 2]);
+    check("Use No Sevens: it's armed and leaves your slots", [useComp(cp, 0), cp.comps, cp.armed.noSevens].slice(1), [["doubleDown"], true]);
+    check("Armed No Sevens: the next roll can't be a 7", diceOdds(currentDice(cp))[7], 0);
+    let sevenSeen = false;
+    for (let i = 0; i < 2000; i++) if (rollDice(currentDice(cp)).total === 7) sevenSeen = true;
+    check("...2,000 rolls, never a 7", sevenSeen, false);
+    finishArmed(cp, []);
+    check("...used up after one roll", [cp.armed.noSevens, diceOdds(currentDice(cp))[7] > 0], [undefined, true]);
+    useComp(cp, 0);
+    finishArmed(cp, [{ bet: "field", outcome: "lose", amount: 5 }]);
+    check("Double Down stays armed through a roll with no win", cp.armed.doubleDown, true);
+    finishArmed(cp, [{ bet: "pass", outcome: "win", winnings: 10 }]);
+    check("...and is used up by a winning roll", cp.armed.doubleDown, undefined);
+
+    const shot = withCards(); shot.dice = diceForShooter("Hot Rod"); shot.comps = ["loadedShot"];
+    useComp(shot, 0, 6);
+    check("Loaded Shot on 6: the left die always shows 6", (() => { for (let i = 0; i < 500; i++) if (rollDice(currentDice(shot)).dice[0] !== 6) return false; return true; })(), true);
+    const lp = withCards(); lp.comps = ["luckyPair"];
+    useComp(lp, 0);
+    check("Lucky Pair: the next roll must be a pair", nextRollPairs(lp), true);
+
+    const ins = withCards(); ins.kitty = 100; ins.comps = ["insurance"];
+    useComp(ins, 0);
+    finishArmed(ins, [{ bet: "pass", outcome: "lose", amount: 25 }, { bet: "odds", outcome: "lose", amount: 50 }]);
+    check("Insurance pays back the lost line bet only ($25, not the Odds)", ins.kitty, 125);
+
+    const hs = withCards(); hs.comps = ["hotSeat"];
+    check("Hot Seat: +1x mult right away", [useComp(hs, 0) !== null, hs.mult], [true, 2]);
+    const brk = newShiftState(); brk.comps = ["hotSeat"]; // newShiftState starts on a Break
+    check("Hot Seat can't be used during a Dealer Break", compBlocked(brk, "hotSeat") !== "", true);
+
+    const sw = newShiftState(); sw.shooterIndex = 3; sw.comps = ["seatSwap"]; sw.prevShooterMult = 1; // Jinx next
+    useComp(sw, 0);
+    check("Seat Swap: Ghost now shoots before Jinx, with Ghost's dice", [sw.crew[3], sw.crew[4], sw.dice.right !== undefined], ["Ghost", "Jinx", true]);
+    const ca = newShiftState(); ca.shooterIndex = 1; ca.debt = 1000; ca.kitty = 100; ca.comps = ["cashAdvance"];
+    useComp(ca, 0);
+    check("Cash Advance: +$250 now, debt grows by $375", [ca.kitty, ca.debt], [350, 1375]);
+    const full = newShiftState(); full.comps = ["hotSeat", "seatSwap"];
+    check("Only 2 comp slots", gainComp(full, "noSevens"), false);
+    const fc = newShiftState();
+    takePerk(fc, "freeComps");
+    check("Phone perk: 2 free comps", fc.comps.length, 2);
+    const carryC = newShiftState(); carryC.comps = ["hotSeat"]; carryC.status = "won";
+    check("Comps carry into the next shift", nextShift(carryC).comps, ["hotSeat"]);
 
     // Dice: 10,000 rolls stay in range, and 7 is the most common total
     const counts = {};

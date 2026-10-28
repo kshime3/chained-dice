@@ -63,6 +63,9 @@ function newShiftState() {
     savedByLink: false, // true if the Spare Link saved this shift
     endless: false, // true after "Double or nothing": the chain is gone, play for score
     extraLinks: 0, // links added by Dealer's Bargain (more shifts to walk free)
+    comps: [], // comp ids you hold (see comps.js)
+    compStock: [], // comps for sale at this Dealer Break
+    armed: {}, // comps armed for the next roll, e.g. { noSevens: true, loadedShot: 4 }
     walkedAway: false, // true if you escaped and chose "Walk away"
     stats: newStats(), // run stats for the end screen (carry over between shifts)
     perks: [], // Pit Boss phone perks (carry over between shifts)
@@ -80,6 +83,7 @@ function newShiftState() {
     lastInterest: 0, // interest paid at the latest Dealer Break
   };
   state.stock = newStock(state);
+  state.compStock = newCompStock();
   return state;
 }
 
@@ -237,6 +241,7 @@ function nextShift(old) {
   state.perks = old.perks.slice();
   state.endless = old.endless;
   state.extraLinks = old.extraLinks;
+  state.comps = old.comps.slice();
   state.freeBuys = old.freeBuys;
   state.stats.shiftStarts.push(state.stats.history.length);
   setupTurn(state, null, CONFIG.startingMult);
@@ -261,6 +266,7 @@ function afterRoll(state, sevenOut) {
     state.onBreak = true;
     if (!isFinalBreak(state)) setupTurn(state, prevName, state.mult);
     state.stock = newStock(state); // fresh cards at every Dealer Break
+    state.compStock = newCompStock();
   } else if (isBroke(state)) {
     fall(state, "fell-broke");
   }

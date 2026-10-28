@@ -202,3 +202,9 @@ Dated log of every decision and why. Newest at the bottom.
 
 - **New scale (accelerating debts):** $200, $300, $550, $1,100, $2,400, $5,500, $12,500, $28,000; cash added $150, $200, then $175 a shift; minimums $5, $10, $15, $30, $60, $150, $300, $700; endless x2.2 per shift. Why: simulator showed later shifts weren't getting harder.
 - **Dealer's cut: keep half your leftover money** between shifts (`carryOverShare` 0.5). Claude's recommendation after testing; the one lever that made difficulty rise shift by shift. Easy to change or turn off (set to 1).
+
+## 2026-10-28 (Milestone 8 plan + rules)
+
+- **Every milestone ends with a balance retest** with the simulator, recorded in BALANCE.md (added to CLAUDE.md working rules). Owner's rule.
+- **Some cards start locked, with hidden unlock requirements.** Locked cards show as mysteries; the goals are not shown to the player. Beating the game should take many playthroughs. Owner's rule; replaces the earlier plan of showing goals in the Collection (Milestone 12).
+- **Milestone 8 = Comps** (one-use items; casino slang for the house's freebies). 2 slots. Shop row of 2 comps per Dealer Break, priced 3-8% of the debt by strength, sell for half. Starter set: No Sevens, Double Down, Lucky Pair, Loaded Shot, Hot Seat, Insurance, Seat Swap, Cash Advance. Also: a phone perk "2 free comps", and a free comp for hitting a point at 3x mult or more. All Claude's recommendations, approved.

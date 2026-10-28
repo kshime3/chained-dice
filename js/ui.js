@@ -320,6 +320,97 @@ function renderShop(state, handlers) {
   }
 }
 
+// Comps: the shop row and your comps on the Break screen, plus Use buttons on the table.
+// handlers: { buyComp(slot), sellComp(index), useComp(index) }
+function renderComps(state, handlers) {
+  document.getElementById("comp-slots").textContent = CONFIG.compSlots;
+  const stock = document.getElementById("comp-stock");
+  stock.innerHTML = "";
+  state.compStock.forEach((id, slot) => {
+    if (!id) {
+      const empty = document.createElement("div");
+      empty.className = "card comp sold-out";
+      empty.textContent = "Sold out";
+      stock.appendChild(empty);
+      return;
+    }
+    stock.appendChild(compBox(id, "Buy " + money(compPrice(state, id)), () => handlers.buyComp(slot),
+      state.comps.length >= CONFIG.compSlots || !canSpend(state, compPrice(state, id))));
+  });
+
+  const owned = document.getElementById("comp-owned");
+  owned.innerHTML = "";
+  state.comps.forEach((id, i) => {
+    const box = compBox(id, "Use", () => handlers.useComp(i), !!compBlocked(state, id));
+    const sell = document.createElement("button");
+    sell.textContent = "Sell for " + money(compSellPrice(state, id));
+    sell.onclick = () => handlers.sellComp(i);
+    box.appendChild(sell);
+    owned.appendChild(box);
+  });
+
+  // On the table: one small Use button per comp you hold, in the same row as your cards
+  // (renderShop has just refilled that row, so comps go in front).
+  const row = document.getElementById("my-cards");
+  const first = row.firstChild;
+  const add = (el) => row.insertBefore(el, first);
+  state.comps.forEach((id, i) => {
+    const blocked = compBlocked(state, id);
+    const button = document.createElement("button");
+    button.className = "comp-chip";
+    button.textContent = "🎟 " + COMPS[id].name;
+    button.title = COMPS[id].text + (blocked ? " (" + blocked + ")" : " Click to use.");
+    button.disabled = !!blocked;
+    button.onclick = () => handlers.useComp(i);
+    add(button);
+  });
+  for (const id of Object.keys(state.armed)) {
+    const tag = document.createElement("span");
+    tag.className = "comp-chip armed";
+    tag.textContent = "⚡ " + COMPS[id].name + " armed";
+    add(tag);
+  }
+}
+
+function compBox(id, buttonText, onClick, disabled) {
+  const c = COMPS[id];
+  const box = document.createElement("div");
+  box.className = "card comp";
+  box.innerHTML = '<div class="card-name">🎟 ' + c.name + '</div><div class="card-rarity comp-when">' +
+    { roll: "next roll", now: "use any time", break: "at a Break" }[c.when] + '</div><div class="card-text">' + c.text + "</div>";
+  const button = document.createElement("button");
+  button.textContent = buttonText;
+  button.disabled = !!disabled;
+  button.onclick = onClick;
+  box.appendChild(button);
+  return box;
+}
+
+// A small pick-one screen. options: [{ label, value }]. onChoose(value) or onChoose(null) for Cancel.
+function showChoice(title, text, options, onChoose) {
+  const box = document.getElementById("choice");
+  document.getElementById("choice-title").textContent = title;
+  document.getElementById("choice-text").textContent = text;
+  const buttons = document.getElementById("choice-buttons");
+  buttons.innerHTML = "";
+  const done = (value) => {
+    box.classList.add("hidden");
+    onChoose(value);
+  };
+  for (const o of options) {
+    const b = document.createElement("button");
+    b.className = "big-button";
+    b.textContent = o.label;
+    b.onclick = () => done(o.value);
+    buttons.appendChild(b);
+  }
+  const cancel = document.createElement("button");
+  cancel.textContent = "Cancel";
+  cancel.onclick = () => done(null);
+  buttons.appendChild(cancel);
+  box.classList.remove("hidden");
+}
+
 // Bar chart of the current shooter's chance of each total.
 function renderOddsPanel(state) {
   const panel = document.getElementById("odds-panel");
@@ -328,7 +419,7 @@ function renderOddsPanel(state) {
     panel.innerHTML = "";
     return;
   }
-  const charm = pairDue(state);
+  const charm = nextRollPairs(state);
   const odds = diceOdds(currentDice(state), charm);
   let bars = "";
   for (let t = 2; t <= 12; t++) {
@@ -346,7 +437,9 @@ function renderOddsPanel(state) {
     summary += " The " + state.point + " before a 7: <strong>" + percent(hit) + "</strong> (Pass) · 7 first: <strong>" + percent(1 - hit) + "</strong> (Don't).";
   }
   if (state.dice.note) summary += " " + state.dice.note;
-  if (charm) summary += " <strong>Doubles Charm: next roll is a pair!</strong>";
+  if (pairDue(state)) summary += " <strong>Doubles Charm: next roll is a pair!</strong>";
+  const armed = Object.keys(state.armed).map((id) => COMPS[id].name + (id === "loadedShot" ? " (left die " + state.armed[id] + ")" : ""));
+  if (armed.length) summary += ' <strong class="armed-text">Armed: ' + armed.join(", ") + ".</strong>";
   panel.innerHTML = '<div class="bars">' + bars + '</div><div class="odds-summary">' + summary + "</div>";
 }
 

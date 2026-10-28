@@ -49,7 +49,7 @@ function currentDice(state) {
     for (let face = 1; face <= 6; face++) set.extraWays.push([face, face, CONFIG.doubleUpWays]);
   }
   set.totalWays = perkTotalWays(state);
-  return set;
+  return applyArmedDice(state, set); // armed comps (No Sevens, Loaded Shot)
 }
 
 // Doubles Charm: is the next roll a guaranteed pair?
