@@ -122,3 +122,14 @@ Simulator learned comps (settling, Insurance, Double Down, free comps) and a bot
 | Smart + comps | 70% | 75% | 70% | 68% | 64% | 57% | 61% | 60% | 3.3% |
 
 Comps add a little power; the curve still gets harder shift by shift. **No rescale needed.** Humans who time comps well (Loaded Shot, No Sevens on a big Odds bet) will gain more than the bot.
+
+## 2026-10-28: Milestone 9 retest (dice crafting)
+
+Bot now buys Nudge / Copycat / Chisel and uses each to leave its own dice the fewest 7s. 8,000 runs, keep-half carry-over:
+
+| Bot | S1 | S2 | S3 | S4 | S5 | S6 | S7 | S8 | Walk out free |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Smart, no comps | 69% | 72% | 71% | 67% | 62% | 57% | 62% | 62% | 3.3% |
+| Smart + comps + dice edits | 70% | 71% | 69% | 65% | 59% | 55% | 57% | 56% | 2.3% |
+
+Dice edits only help on **your** turn (1 shooter in 6), so a bot that spends money on them does slightly worse. Curve still rises; **no rescale needed**. Edits will matter more once "You" cards exist (extra turns, betting bigger on your own turn); retest then.

@@ -11,7 +11,11 @@ const PIP_SPOTS = {
 };
 
 function drawDie(id, value) {
-  const die = document.getElementById(id);
+  drawDieEl(document.getElementById(id), value);
+}
+
+// Draw pips for a value into any die element.
+function drawDieEl(die, value) {
   die.innerHTML = "";
   for (let spot = 0; spot < 9; spot++) {
     const cell = document.createElement("span");
@@ -60,7 +64,7 @@ function percent(p) {
 // Chance of a 7 for a crew member, for hover cards and the break screen.
 // Ghost's 7 chance is the same whichever side he picks, so evens is used.
 function sevenChance(name, state) {
-  const set = CONFIG.crewDice[name];
+  const set = name === "You" && state ? state.myDice : CONFIG.crewDice[name];
   const dice = set.right === "ghost" ? { left: set.left, right: CONFIG.ghostFaces.evens } : set;
   const now = state ? currentDice(state) : { extraWays: [], totalWays: [] };
   return diceOdds(Object.assign({}, dice, { extraWays: now.extraWays, totalWays: now.totalWays }))[7];
@@ -131,12 +135,14 @@ function renderCrew(state) {
   state.crew.forEach((name, i) => {
     const seat = document.createElement("div");
     seat.className = "seat" + (i === state.shooterIndex ? " shooting" : "") + (i < state.shooterIndex ? " done" : "");
-    seat.innerHTML = "⛓<br>" + name;
+    const crafted = name === "You" && isEdited(state);
+    seat.innerHTML = "⛓<br>" + name + (crafted ? " 🔨" : "");
     const info = CREW_INFO[name];
     if (info) {
       const tip = document.createElement("div");
       tip.className = "tooltip";
-      tip.innerHTML = "<strong>" + name + "</strong><br>Dice: " + info.dice + "<br>Style: " + info.style +
+      const faces = name === "You" ? "<br>Left die: " + state.myDice.left.join(" ") + "<br>Right die: " + state.myDice.right.join(" ") : "";
+      tip.innerHTML = "<strong>" + name + "</strong><br>Dice: " + info.dice + faces + "<br>Style: " + info.style +
         "<br>Current chance of a 7: <strong>" + percent(sevenChance(name, state)) + "</strong> (normal dice: 16.7%)";
       seat.appendChild(tip);
     }
@@ -384,6 +390,98 @@ function compBox(id, buttonText, onClick, disabled) {
   button.onclick = onClick;
   box.appendChild(button);
   return box;
+}
+
+// The dice workshop: pick a face on your dice, choose the change, watch it reforge.
+// edit: "nudge" | "copycat" | "chisel". onApply({ die, index, value }) returns true if it worked.
+let workshopOpen = false;
+function showWorkshop(state, edit, onApply, onCancel) {
+  const box = document.getElementById("workshop");
+  const names = { nudge: "Nudge", copycat: "Copycat", chisel: "Chisel" };
+  const how = {
+    nudge: "Pick a face, then move it up or down by 1.",
+    copycat: "Pick the face to replace, then the face to copy onto it (same die).",
+    chisel: "Pick a face, then carve it into any number.",
+  };
+  document.getElementById("workshop-title").textContent = "🔨 " + names[edit];
+  document.getElementById("workshop-text").textContent = how[edit];
+  const options = document.getElementById("workshop-options");
+  const now = percent(sevenWays(state.myDice) / 36);
+  let busyForging = false;
+
+  const drawRows = (selected) => {
+    for (const die of ["left", "right"]) {
+      const row = document.getElementById("workshop-" + die);
+      row.innerHTML = "";
+      state.myDice[die].forEach((value, index) => {
+        const tile = document.createElement("button");
+        tile.className = "die face-tile" + (selected && selected.die === die && selected.index === index ? " selected" : "");
+        drawDieEl(tile, value);
+        tile.onclick = () => { if (!busyForging) pickFace(die, index); };
+        row.appendChild(tile);
+      });
+    }
+  };
+
+  const pickFace = (die, index) => {
+    drawRows({ die: die, index: index });
+    const from = state.myDice[die][index];
+    let choices;
+    if (edit === "nudge") choices = ["up", "down"].map((c) => ({ value: editedValue(state, edit, die, index, c), label: c === "up" ? "▲ Up" : "▼ Down" }));
+    else if (edit === "copycat") choices = state.myDice[die].map((v, i) => i).filter((i) => i !== index && state.myDice[die][i] !== from)
+      .map((i) => ({ value: state.myDice[die][i], label: "Copy the " + state.myDice[die][i] }));
+    else choices = [1, 2, 3, 4, 5, 6].filter((v) => v !== from).map((v) => ({ value: v, label: "Carve a " + v }));
+    // One button per distinct result, showing what it does to your 7s.
+    const seen = new Set();
+    options.innerHTML = '<p class="hint">Your ' + die + " die's " + from + ". Your chance of a 7 now: " + now +
+      ". (Editing one die alone never changes your 7s; edit both to change them.)</p>";
+    for (const c of choices) {
+      if (seen.has(c.value)) continue;
+      seen.add(c.value);
+      const after = sevenWays(previewDice(state, die, index, c.value));
+      const blocked = after < CONFIG.minSevenWays - 1e-9;
+      const b = document.createElement("button");
+      b.className = "big-button";
+      b.disabled = blocked;
+      const changes = editChanges(state, previewDice(state, die, index, c.value), 2)
+        .map((x) => x.total + "s " + percent(x.before) + " → " + percent(x.after)).join(", ");
+      b.innerHTML = c.label + " → " + c.value + '<br><span class="hint">' +
+        (blocked ? "Not allowed: too few ways to roll 7" : (changes || "no change in totals") + (Math.abs(after / 36 - sevenWays(state.myDice) / 36) > 1e-9 ? "" : " · 7s stay " + now)) + "</span>";
+      b.onclick = () => forge(die, index, c.value);
+      options.appendChild(b);
+    }
+    if (!seen.size) options.innerHTML += '<p class="hint">Nothing to copy: every other face on this die already matches.</p>';
+  };
+
+  // The reforge: the face rises, flips, and lands as its new number.
+  const forge = (die, index, value) => {
+    if (!onApply({ die: die, index: index, value: value })) return;
+    busyForging = true;
+    options.innerHTML = "";
+    playSound("clank");
+    const tile = document.getElementById("workshop-" + die).children[index];
+    tile.classList.add("reforging");
+    setTimeout(() => { drawDieEl(tile, value); playSound("snap"); }, 550);
+    setTimeout(() => {
+      tile.classList.remove("reforging");
+      tile.classList.add("forged");
+    }, 1200);
+    setTimeout(() => close(), 2000);
+  };
+
+  const close = () => {
+    workshopOpen = false;
+    box.classList.add("hidden");
+  };
+  document.getElementById("workshop-cancel").onclick = () => {
+    if (busyForging) return;
+    close();
+    onCancel();
+  };
+  options.innerHTML = "";
+  drawRows(null);
+  workshopOpen = true;
+  box.classList.remove("hidden");
 }
 
 // A small pick-one screen. options: [{ label, value }]. onChoose(value) or onChoose(null) for Cancel.

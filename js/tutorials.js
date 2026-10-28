@@ -110,6 +110,7 @@ function compPages() {
       title: "Comps",
       body: "The dealer also sells <strong>comps</strong>: one-use items you hold until the perfect moment. You can hold <strong>" + CONFIG.compSlots + "</strong>.<br><br>" +
         "Some arm for your <strong>next roll</strong> (No Sevens, Double Down, Lucky Pair, Loaded Shot, Insurance), one works <strong>right away</strong> (Hot Seat), and some only work <strong>at a Dealer Break</strong> (Seat Swap, Cash Advance).<br><br>" +
+"<strong>Dice edits</strong> (Nudge, Copycat, Chisel) are comps too: use one at a Break to change a face on <strong>your own</strong> dice for the rest of the run.<br><br>" +
         "Your comps sit on the table with a 🎟. Click one to use it. An armed comp glows ⚡ until the roll it's waiting for.<br><br>" +
         "Hit a point at " + CONFIG.freeCompMult + "x mult or more and the dealer may slip you a free one.",
     },

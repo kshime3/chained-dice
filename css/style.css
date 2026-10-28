@@ -471,3 +471,24 @@ body.falling .seat, body.falling .side > *, body.falling .table, body.falling .c
 #choice { z-index: 19; cursor: default; }
 .choice-buttons { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
 @media (max-width: 760px) { .layout .my-comps { flex-wrap: nowrap; overflow-x: auto; justify-content: flex-start; } .comp-chip { flex: 0 0 auto; font-size: 0.75rem; padding: 3px 8px; } }
+
+/* Dice workshop */
+#workshop { z-index: 19; }
+.workshop-box { border: 3px solid #ff9f43; max-width: 560px; }
+.workshop-die { margin: 8px 0; }
+.face-row { display: flex; justify-content: center; gap: 8px; margin-top: 4px; }
+.face-tile { width: 46px; height: 46px; padding: 5px; margin: 0; cursor: pointer; border: none; }
+.face-tile .pip::after { width: 8px; height: 8px; }
+.face-tile:hover { box-shadow: 0 0 0 3px #ffd84d; }
+.face-tile.selected { box-shadow: 0 0 0 4px #ff9f43, 0 0 16px #ff9f43; }
+.face-tile.reforging { animation: reforge 1.2s ease-in-out forwards; position: relative; z-index: 2; }
+.face-tile.forged { box-shadow: 0 0 0 4px #7dff9b, 0 0 18px #7dff9b; }
+@keyframes reforge {
+  0% { transform: scale(1) rotateY(0); }
+  25% { transform: scale(1.7) rotateY(0); box-shadow: 0 0 24px #ff6a2b; }
+  50% { transform: scale(1.7) rotateY(90deg); box-shadow: 0 0 30px #ff3b30; }
+  75% { transform: scale(1.7) rotateY(180deg); box-shadow: 0 0 24px #ffd84d; }
+  100% { transform: scale(1) rotateY(360deg); }
+}
+#workshop-options .big-button { font-size: 1rem; padding: 8px 14px; }
+#workshop-options .hint { font-size: 0.75rem; }

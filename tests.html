@@ -22,6 +22,7 @@
   <script src="js/shop.js"></script>
   <script src="js/stats.js"></script>
   <script src="js/perks.js"></script>
+  <script src="js/crafting.js"></script>
   <script src="js/comps.js"></script>
   <script src="js/shift.js"></script>
   <script>
@@ -624,6 +625,33 @@
     check("Phone perk: 2 free comps", fc.comps.length, 2);
     const carryC = newShiftState(); carryC.comps = ["hotSeat"]; carryC.status = "won";
     check("Comps carry into the next shift", nextShift(carryC).comps, ["hotSeat"]);
+
+    // Milestone 9: dice crafting (your dice only)
+    const dc0 = newShiftState();
+    check("Your dice start normal (1-6 on both)", [dc0.myDice.left, dc0.myDice.right], [[1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6]]);
+    check("Nudge up: 3 -> 4", editedValue(dc0, "nudge", "left", 2, "up"), 4);
+    check("Nudge wraps: up from 6 is 1, down from 1 is 6", [editedValue(dc0, "nudge", "left", 5, "up"), editedValue(dc0, "nudge", "left", 0, "down")], [1, 6]);
+    check("Copycat copies another face of the same die", editedValue(dc0, "copycat", "right", 0, 5), 6);
+    const dc1 = newShiftState(); dc1.shooterIndex = 1; dc1.onBreak = true; dc1.comps = ["chisel"];
+    const msg = useComp(dc1, 0, { die: "left", index: 0, value: 6 });
+    check("Chisel your left 1 into a 6: saved, comp used", [dc1.myDice.left, dc1.comps.length, msg !== null], [[6, 2, 3, 4, 5, 6], 0, true]);
+    check("...one die alone doesn't change your 7s (still 6 of 36)", Math.round(sevenWays(dc1.myDice)), 6);
+    const dcOdds = diceOdds({ left: dc1.myDice.left, right: dc1.myDice.right });
+    check("...but 12s double (2/36) and 2s become impossible", [Math.round(dcOdds[12] * 36), dcOdds[2]], [2, 0]);
+    editFace(dc1, "right", 0, 6);
+    check("Edit both dice (right 1 -> 6 too): now only 4 ways to roll 7", Math.round(sevenWays(dc1.myDice)), 4);
+    const dc2 = newShiftState(); dc2.myDice = { left: [6, 6, 6, 6, 6, 6], right: [1, 2, 3, 3, 3, 3] };
+    check("7-floor: an edit that leaves fewer than 2 ways to roll 7 is refused", [editFace(dc2, "right", 0, 3), dc2.myDice.right[0]], ["seven-floor", 1]);
+    const dc3 = newShiftState(); dc3.shooterIndex = 5; dc3.myDice.left = [6, 2, 3, 4, 5, 6]; // You shoot next
+    editFace(dc3, "right", 0, 6);
+    check("If you're next to shoot, your new dice apply straight away", dc3.dice.right, [6, 2, 3, 4, 5, 6]);
+    const dc4 = newShiftState(); dc4.shooterIndex = 4; dc4.myDice.right = [6, 6, 3, 4, 5, 6]; dc4.prevShooterMult = 1;
+    afterRoll(Object.assign(dc4, { onBreak: false, kitty: 100 }), true); // Ghost sevens out -> your turn
+    check("Your turn uses your crafted dice", dc4.dice.right, [6, 6, 3, 4, 5, 6]);
+    const dc5 = newShiftState(); dc5.myDice.left = [6, 6, 3, 4, 5, 6]; dc5.status = "won";
+    check("Crafted dice carry into the next shift", nextShift(dc5).myDice.left, [6, 6, 3, 4, 5, 6]);
+    const dcGone = newShiftState(); dcGone.onBreak = true; dcGone.crew = ["Lefty", "Jinx"];
+    check("Can't edit when You aren't at the table", compBlocked(dcGone, "nudge") !== "", true);
 
     // Dice: 10,000 rolls stay in range, and 7 is the most common total
     const counts = {};

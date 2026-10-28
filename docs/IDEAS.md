@@ -87,3 +87,6 @@ Parked ideas and later features. Not in v1 unless moved into the design.
 ## Hot streak indicator (owner, 2026-10-27)
 - A visible **hot streak** counter: every roll in a row where you win money adds 1; a roll that loses money resets it. Show it on screen (flames that grow?).
 - Later, cards and perks can use it to raise mult ("+0.1x mult per streak", "at 5 in a row, double the next payout"). Hot Hand already tracks something similar (winning rolls in a row, reset on a losing roll); the indicator would make it visible to everyone, with or without the card.
+
+## "You" cards (owner, 2026-10-28)
+- Now that only your dice can be crafted, add cards that make **your turn** special: **take an extra turn** (shoot twice per shift), "your winnings x2 on your own turn", "your seat moves to first", "your crafted faces also apply to the next shooter". These make dice crafting pay off. Candidate for Milestone 10 (crew growth).

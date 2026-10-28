@@ -10,6 +10,9 @@ const COMPS = {
   hotSeat:     { name: "Hot Seat",     when: "now",   text: "+1x mult for the rest of this shooter's turn." },
   seatSwap:    { name: "Seat Swap",    when: "break", text: "Swap the next two shooters." },
   cashAdvance: { name: "Cash Advance", when: "break", text: "The dealer lends you 25% of the debt right now, but your debt grows by 1.5x what he lent." },
+  nudge:       { name: "Nudge",        when: "break", edit: true, text: "Dice edit: move one face on your dice up or down by 1 (6 wraps to 1, 1 wraps to 6)." },
+  copycat:     { name: "Copycat",      when: "break", edit: true, text: "Dice edit: copy one face of your die over another face on the same die." },
+  chisel:      { name: "Chisel",       when: "break", edit: true, text: "Dice edit: carve one face on your dice into any number from 1 to 6." },
 };
 
 function compPrice(state, id) {
@@ -20,13 +23,15 @@ function compSellPrice(state, id) {
   return Math.floor(compPrice(state, id) * CONFIG.sellBackShare);
 }
 
-// Fresh comps for sale: different ones at random.
+// Fresh comps for sale: different ones at random (dice edits Copycat and Chisel are rarer).
 function newCompStock() {
-  const ids = Object.keys(COMPS);
   const stock = [];
-  while (stock.length < CONFIG.compShopSlots && stock.length < ids.length) {
-    const id = ids[Math.floor(Math.random() * ids.length)];
-    if (!stock.includes(id)) stock.push(id);
+  while (stock.length < CONFIG.compShopSlots) {
+    const left = Object.keys(COMPS).filter((id) => !stock.includes(id));
+    if (left.length === 0) break;
+    const weight = (id) => (CONFIG.compWeights[id] === undefined ? 1 : CONFIG.compWeights[id]);
+    let pick = Math.random() * left.reduce((sum, id) => sum + weight(id), 0);
+    stock.push(left.find((id) => (pick -= weight(id)) < 0) || left[left.length - 1]);
   }
   return stock;
 }
@@ -74,16 +79,24 @@ function compBlocked(state, id) {
   if (when === "roll" && state.armed[id]) return "Already armed for the next roll.";
   if (id === "seatSwap" && state.shooterIndex + 1 >= state.crew.length) return "There aren't two shooters left to swap.";
   if (id === "cashAdvance" && !canPay(state)) return "The dealer won't lend until the first shooter has rolled.";
+  if (COMPS[id].edit && !state.crew.includes("You")) return "You're not at the table.";
   return "";
 }
 
-// Use the comp in slot `index`. face: the chosen face for Loaded Shot.
+// Use the comp in slot `index`. face: the chosen face for Loaded Shot, or for a dice edit
+// { die: "left" | "right", index: 0-5, value: 1-6 }.
 // Returns a sentence for the message, or null if it can't be used.
 function useComp(state, index, face) {
   const id = state.comps[index];
   if (!id || compBlocked(state, id)) return null;
-  state.comps.splice(index, 1);
   const c = COMPS[id];
+  if (c.edit) {
+    const before = state.myDice[face.die][face.index];
+    if (editFace(state, face.die, face.index, face.value) !== "ok") return null;
+    state.comps.splice(index, 1);
+    return c.name + ": your " + face.die + " die's " + before + " is now a " + face.value + ".";
+  }
+  state.comps.splice(index, 1);
   if (c.when === "roll") {
     state.armed[id] = id === "loadedShot" ? face : true;
     return c.name + " is armed for your next roll.";

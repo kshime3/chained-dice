@@ -2,6 +2,20 @@
 
 Dated session log. Newest at the top.
 
+## 2026-10-28: Session 6, continued (Milestone 9: dice crafting)
+
+**Done**
+- Owner chose: edit **only your own dice**; Nudge wraps (6 -> 1, 1 -> 6); sold in the comps row; 7-floor rule; a workshop animation.
+- **Built Milestone 9:** new `js/crafting.js`; your dice live in `state.myDice` and carry over. Three edit comps (Nudge, Copycat, Chisel; rarer ones show up less). Dice workshop: pick a face, see which totals each option changes, watch the face rise, flip and reforge. 🔨 on your seat; hover lists your faces. tests.html: 289 checks, all passing. Fits one screen on phones.
+- Design note: editing one die alone never changes your 7s (explained in the workshop).
+- **Balance retest:** no rescale needed (BALANCE.md). Edits only help your own turn; "You" cards idea logged in IDEAS.md.
+
+**Waiting on the owner**
+- Testing dice crafting.
+
+**Exact next step**
+- Milestone 10: crew growth (and "You" cards like an extra turn).
+
 ## 2026-10-28: Session 6, continued (Milestone 8: comps)
 
 **Done**

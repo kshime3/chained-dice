@@ -208,3 +208,12 @@ Dated log of every decision and why. Newest at the bottom.
 - **Every milestone ends with a balance retest** with the simulator, recorded in BALANCE.md (added to CLAUDE.md working rules). Owner's rule.
 - **Some cards start locked, with hidden unlock requirements.** Locked cards show as mysteries; the goals are not shown to the player. Beating the game should take many playthroughs. Owner's rule; replaces the earlier plan of showing goals in the Collection (Milestone 12).
 - **Milestone 8 = Comps** (one-use items; casino slang for the house's freebies). 2 slots. Shop row of 2 comps per Dealer Break, priced 3-8% of the debt by strength, sell for half. Starter set: No Sevens, Double Down, Lucky Pair, Loaded Shot, Hot Seat, Insurance, Seat Swap, Cash Advance. Also: a phone perk "2 free comps", and a free comp for hitting a point at 3x mult or more. All Claude's recommendations, approved.
+
+## 2026-10-28 (Milestone 9 plan)
+
+- **Dice crafting edits only YOUR dice** (owner). Makes "You" the shooter you build up; opens future "You" cards (extra turn, etc.).
+- **Three edits, sold in the comps row, used at a Dealer Break:** Nudge (a face +1 or -1, wrapping: up from 6 is 1, down from 1 is 6; Common), Copycat (copy one face over another on the same die; Uncommon), Chisel (set a face to any number; Rare).
+- **7-floor safety rule:** an edit is refused if your dice would have fewer than 2 ways (out of 36) to roll a 7.
+- **Workshop animation:** you pick the face on your die and watch it flip and reforge into the new face (owner's request).
+- **Workshop previews show which totals an edit changes** (not just 7s), since editing one die alone never changes the chance of a 7. Claude's call after testing.
+- **Copycat and Chisel show up less often in the shop** (`compWeights`: 0.6x and 0.35x).

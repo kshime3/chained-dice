@@ -2,7 +2,9 @@
 
 // The dice a shooter uses for their turn.
 // Ghost picks evens or odds for his right die at the start of each turn.
-function diceForShooter(name) {
+// myDice: your own (craftable) dice, used when name is "You".
+function diceForShooter(name, myDice) {
+  if (name === "You" && myDice) return { left: myDice.left.slice(), right: myDice.right.slice(), bannedPairs: [], note: "" };
   const set = CONFIG.crewDice[name] || NORMAL_DICE;
   if (set.right !== "ghost") {
     return { left: set.left, right: set.right, bannedPairs: set.bannedPairs || [], note: "" };
@@ -20,7 +22,7 @@ function diceForShooter(name) {
 // prevName / prevMult: the shooter who just sevened out, and their final mult.
 function setupTurn(state, prevName, prevMult) {
   const name = state.crew[state.shooterIndex];
-  state.dice = diceForShooter(name);
+  state.dice = diceForShooter(name, state.myDice);
   state.mult = CONFIG.startingMult;
   state.multNotes = [];
   state.coldTable = false;
@@ -146,7 +148,7 @@ const CREW_INFO = {
     style: "Streaky: some totals vanish for his whole turn.",
   },
   "You": {
-    dice: "Normal dice.",
-    style: "Your dice can be upgraded at the dealer's shop (Milestone 5).",
+    dice: "Your own dice. Edit their faces with Nudge, Copycat and Chisel comps from the shop.",
+    style: "The one shooter you can build up.",
   },
 };

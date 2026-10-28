@@ -113,7 +113,10 @@ const CONFIG = {
   // Comps: one-use items. Slots you can hold, how many the shop offers, and prices (share of the debt).
   compSlots: 2,
   compShopSlots: 2,
-  compPricePct: { noSevens: 0.08, doubleDown: 0.06, luckyPair: 0.05, loadedShot: 0.07, insurance: 0.04, hotSeat: 0.05, seatSwap: 0.04, cashAdvance: 0.03 },
+  compPricePct: { noSevens: 0.08, doubleDown: 0.06, luckyPair: 0.05, loadedShot: 0.07, insurance: 0.04, hotSeat: 0.05, seatSwap: 0.04, cashAdvance: 0.03,
+                  nudge: 0.05, copycat: 0.08, chisel: 0.15 },
+  // How often each comp shows up in the shop (1 = normal). Stronger dice edits are rarer.
+  compWeights: { copycat: 0.6, chisel: 0.35 },
   hotSeatMult: 1,        // Hot Seat: + this much mult for the rest of the turn
   cashAdvancePct: 0.25,  // Cash Advance: lends this share of the debt
   cashAdvanceCost: 1.5,  // Cash Advance: the debt grows by this times what was lent

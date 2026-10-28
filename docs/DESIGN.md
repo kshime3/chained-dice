@@ -103,7 +103,7 @@ Seat order: **Lefty, Dealer Dee, Hot Rod, Jinx, Ghost, You.** Dice are lists of 
 | Hot Rod | Normal | 16.7% | +1x mult per winning roll; first seven-out of the shift costs double |
 | Jinx | Faces 1, 2, 3, 3, 4, 4 | 22.2% | Nothing above 8. **Cursed [Built]:** when he shoots, a come-out 7 is only a tie for Don't Pass |
 | Ghost | Right die evens-only or odds-only, picked each turn | 16.7% | Streaky |
-| You | Normal | 16.7% | Upgradable later |
+| You | Normal, **craftable** (Milestone 9) | 16.7% | The shooter you build up |
 
 **Synergies (seat order matters):**
 - **Mentor (Hot Rod to Jinx):** half of Hot Rod's mult bonus carries over.
@@ -184,6 +184,21 @@ One-use items ("comps", casino slang for the house's freebies). Hold up to **2**
 - **Free comps:** hitting a point at 3x mult or more gives a free comp (if a slot is free); phone perk **"2 free comps"** (Uncommon).
 - Tutorial the first time comps are on sale (also via the ? next to "Comps").
 
+## Dice Crafting  [Built, Milestone 9]
+
+Edit the faces of **your own dice** (only yours: "You" is the shooter you build up). Edits last the whole run.
+
+| Edit (a comp) | Effect | Price | Shop chance |
+| --- | --- | --- | --- |
+| Nudge | One face +1 or -1 (up from 6 is 1, down from 1 is 6) | 5% | normal |
+| Copycat | Copy one face over another on the same die | 8% | 0.6x |
+| Chisel | Carve one face into any number 1-6 | 15% | 0.35x |
+
+- Used at a Dealer Break in the **dice workshop**: pick a face on your left or right die, pick the change (each option shows which totals it changes), then the face rises, flips and lands as its new number.
+- **7-floor rule:** an edit is refused if your dice would have fewer than 2 ways (of 36) to roll a 7.
+- Note: changing one die alone never changes your 7s (any face has exactly one partner that makes 7). Edit both dice to change them; one-die edits change the other totals.
+- Your seat shows 🔨 once edited; your hover card lists your faces.
+
 ## The Pit Boss Phone  [Built, Milestone 6b]
 
 Like Clover Pit's phone. After **every won shift**, it rings before the next shift starts: **pick 1 of 3 different permanent perks**. A 2-page tutorial the first time.
@@ -249,5 +264,5 @@ Like Clover Pit's phone. After **every won shift**, it rings before the next shi
 6. [Built] Multiple shifts (6a) and the Pit Boss phone (6b)
 7. [Planned] House rules
 8. [Built] Comps
-9. [Built] Polish: fall animation and sound. [Only with owner's permission] Any public release.
+9. [Built] Dice crafting (your dice). Polish: fall animation and sound [Built]. [Only with owner's permission] Any public release.
 10. [After v1] More bets (Place, Hard Ways, Come)

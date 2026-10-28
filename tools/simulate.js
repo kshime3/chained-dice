@@ -9,7 +9,7 @@ const vm = require("vm");
 
 // Load the logic files exactly as the browser does (no display code).
 globalThis.location = { search: "" };
-const files = ["config", "dice", "bets", "crew", "cards", "shop", "stats", "perks", "comps", "shift"];
+const files = ["config", "dice", "bets", "crew", "cards", "shop", "stats", "perks", "crafting", "comps", "shift"];
 const source = files.map((f) => fs.readFileSync(path.join(__dirname, "..", "js", f + ".js"), "utf8")).join("\n");
 
 const simulator = `
@@ -65,7 +65,32 @@ function atBreak(state, s) {
 }
 
 // Comps bot: buy the useful ones with spare money, use them at sensible moments.
-const COMP_PREFERENCE = ["noSevens", "doubleDown", "insurance", "hotSeat", "luckyPair"];
+const COMP_PREFERENCE = ["chisel", "copycat", "nudge", "noSevens", "doubleDown", "insurance", "hotSeat", "luckyPair"];
+
+// Dice edits: try every option and keep the one that leaves your dice the fewest 7s.
+function bestEdit(state, edit) {
+  let best = null;
+  for (const die of ["left", "right"]) {
+    for (let index = 0; index < 6; index++) {
+      const choices = edit === "nudge" ? ["up", "down"] : edit === "copycat" ? [0, 1, 2, 3, 4, 5].filter((i) => i !== index) : [1, 2, 3, 4, 5, 6];
+      for (const c of choices) {
+        const value = editedValue(state, edit, die, index, c);
+        const ways = sevenWays(previewDice(state, die, index, value));
+        if (ways >= CONFIG.minSevenWays && (!best || ways < best.ways)) best = { die: die, index: index, value: value, ways: ways };
+      }
+    }
+  }
+  return best;
+}
+
+function useEdits(state) {
+  for (let i = state.comps.length - 1; i >= 0; i--) {
+    const id = state.comps[i];
+    if (!isEdit(id) || compBlocked(state, id)) continue;
+    const choice = bestEdit(state, id);
+    if (choice) useComp(state, i, choice);
+  }
+}
 
 function buyComps(state, s) {
   if (!s.comps || !isShopOpen(state)) return;
@@ -126,6 +151,7 @@ function playShift(s, carry) {
     if (state.onBreak) {
       atBreak(state, s);
       buyComps(state, s);
+      if (s.comps) useEdits(state);
       if (state.status !== "playing") break;
       endBreak(state);
       continue;

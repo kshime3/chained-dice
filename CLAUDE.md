@@ -44,7 +44,8 @@ js/cards.js        logic: what each shop card does
 js/shop.js         logic: shop stock, rarity, prices, buy/sell/shuffle
 js/stats.js        logic: run stats for the end-of-run screen
 js/perks.js        logic: Pit Boss phone perks
-js/comps.js        logic: comps (one-use items: shop row, slots, armed for the next roll)
+js/crafting.js     logic: dice crafting (editing faces of YOUR dice, 7-floor rule)
+js/comps.js        logic: comps (one-use items: shop row, slots, armed for the next roll; dice edits)
 js/sound.js        display: sound effects made in the browser (Web Audio), mute setting
 js/ui.js           display: drawing the screen
 js/tutorials.js    display: tutorial pages (intro, shop, comps, phone) and "seen" memory
@@ -55,4 +56,4 @@ Testing shortcuts: add `?target=300` to the page address to set shift 1's debt; 
 
 tests.html pins its own numbers (shift 1: $200 cash, $2,000 debt) so tuning config.js doesn't break the checks. Shift cash and debts are in `CONFIG.shifts`; the current debt is `state.debt`.
 
-Scripts load with plain `<script>` tags in a set order (config, logic: dice, bets, crew, cards, shop, stats, perks, comps, shift; then display: sound, ui, tutorials; then main), not ES modules, so double-clicking index.html works.
+Scripts load with plain `<script>` tags in a set order (config, logic: dice, bets, crew, cards, shop, stats, perks, crafting, comps, shift; then display: sound, ui, tutorials; then main), not ES modules, so double-clicking index.html works.

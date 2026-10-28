@@ -14,7 +14,7 @@ let rolling = false; // true while the dice animation plays
 
 // No betting or rolling while the dice tumble or a splash screen is up.
 function busy() {
-  return rolling || splashOpen || promptOpen || phoneOpen || fallingNow;
+  return rolling || splashOpen || promptOpen || phoneOpen || fallingNow || workshopOpen;
 }
 
 function pickChip(value) {
@@ -294,6 +294,17 @@ function useCompSlot(index) {
     else showMessage(text);
     renderAll();
   };
+  if (COMPS[id].edit) {
+    if (compBlocked(state, id)) return;
+    showWorkshop(state, id, (choice) => {
+      const text = useComp(state, index, choice);
+      if (!text) return false;
+      showBreakMessage(text);
+      setTimeout(renderAll, 2000); // after the reforge animation
+      return true;
+    }, () => {});
+    return;
+  }
   if (id === "loadedShot") {
     const faces = [...new Set(state.dice.left)].sort();
     showChoice("Loaded Shot", "Pick the face for the left die on your next roll.", faces.map((f) => ({ label: String(f), value: f })),

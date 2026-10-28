@@ -66,6 +66,7 @@ function newShiftState() {
     comps: [], // comp ids you hold (see comps.js)
     compStock: [], // comps for sale at this Dealer Break
     armed: {}, // comps armed for the next roll, e.g. { noSevens: true, loadedShot: 4 }
+    myDice: { left: [1, 2, 3, 4, 5, 6], right: [1, 2, 3, 4, 5, 6] }, // your dice (dice crafting edits these)
     walkedAway: false, // true if you escaped and chose "Walk away"
     stats: newStats(), // run stats for the end screen (carry over between shifts)
     perks: [], // Pit Boss phone perks (carry over between shifts)
@@ -242,6 +243,7 @@ function nextShift(old) {
   state.endless = old.endless;
   state.extraLinks = old.extraLinks;
   state.comps = old.comps.slice();
+  state.myDice = { left: old.myDice.left.slice(), right: old.myDice.right.slice() };
   state.freeBuys = old.freeBuys;
   state.stats.shiftStarts.push(state.stats.history.length);
   setupTurn(state, null, CONFIG.startingMult);
