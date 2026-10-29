@@ -100,3 +100,8 @@ Unchanged for shifts 1-5. Shifts 6-8 follow the existing x1.5 growth: $1,800, $2
 - Dark Side Only: Pass Line shows "Closed: Dark Side Only"; clicking it: "House rule, Dark Side Only: no Pass Line this shift. Bet the Don't Pass instead."
 - Challenge box: "🎯 Roll 3 doubles (2/3) → $110 cash"; done: "🎯 Challenge done: Roll 3 doubles ✓"; message: "Challenge complete! The pit boss hands you $110 cash."
 - Free shuffle button: "Shuffle (free x1)"; message "Free shuffle from the pit boss."
+
+## Added 2026-10-29: unlocks (Milestone 12a)
+- Unlock screen: "🔓 UNLOCKED! Odds Addict. New card. It can show up from your next run. See it in the 📖 Collection."
+- Collection: "22 of 46 found. Locked things unlock by playing. How? That's for you to discover." Locked tile: "??? 🔒 Locked".
+- How to play, last page "Many runs": "You probably won't walk out free on your first try. That's the point. Many cards, comps and crew start locked. Each unlocks when you do something special during a run. What? That's for you to discover."

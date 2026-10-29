@@ -192,3 +192,23 @@ Simulator only (`START_CREW=3`): the 3 starters left out join the hire pool, and
 - Only **23-26%** of bot runs get through the first 2 shifts (was 46%). Seats fill to about 5 by the end of shift 2 and 6 by shift 4.
 - Dropping Jinx immediately is **worse** for the bot: it costs 25% of the debt early and one shooter's rolls. Cutting him is a real decision, not a free win.
 - Fine for the owner's goal (first runs should fail); Milestone 12 unlocks are what should make escaping possible over many runs. Tools: `START_CREW=6` to compare with a full table, `CUT_JINX=1`, `SEATS=1`.
+
+## 2026-10-29: Milestone 12a retest (unlocks)
+
+The bots now play with unlocks. Normal runs use everything unlocked (comparable with older results); `LOCKED=1` plays as a brand-new player; `CAREER=200` plays run after run keeping unlocks until the bot walks out free.
+
+| Smart bot, 8,000 runs | S1 | S2 | S3 | S4 | S5 | S6 | S7 | S8 | Walk out free |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| New player (everything locked) | 59% | 42% | 54% | 60% | 53% | 43% | 50% | 44% | 0.4% |
+| Everything unlocked | 58% | 40% | 52% | 55% | 47% | 48% | 47% | 43% | 0.3% |
+
+Careers (200 each, up to 1,000 runs):
+
+| Bot | Escaped within 1,000 runs | Median runs to first escape | Unlocks found after 5 / 10 / 50 / 200 runs (of 24) |
+| --- | --- | --- | --- |
+| Smart | 98% | 196 | 11 / 14 / 18 / 19 |
+| Smart + comps | 97% | 219 | 13 / 17 / 21 / 22 |
+
+- **Finding: unlocks don't make the bot stronger.** A new player escapes about as often as a fully unlocked one, so the ~200-run median is just a 0.4% chance repeated, not progress. A flat-betting bot gets little from cards in general (seen since Milestone 10). For unlocks to *feel* like getting closer to winning, they need to add real power. Owner to decide how (see PROGRESS.md).
+- Unlocks come quickly: about half in the first 5 runs. Never unlocked by the bot: Green Dice (it pays the debt all at once, so earns little interest) and Jinx's Shadow (it never drops Jinx). Humans will.
+- Shift-by-shift difficulty unchanged: no rescale.

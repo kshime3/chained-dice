@@ -12,6 +12,7 @@
       <h1>Chained Dice</h1>
       <div class="title-buttons">
         <button id="mute" class="mute-button"></button>
+        <button id="collection-button" class="how-to-play" title="Collection: everything you've unlocked">📖<span class="hide-mobile"> Collection</span></button>
         <button id="how-to-play" class="how-to-play">How to play</button>
       </div>
     </div>
@@ -187,6 +188,16 @@
     <div id="splash-content" class="splash-content"></div>
   </div>
 
+  <div id="collection" class="overlay hidden">
+    <div class="end-box collection-box">
+      <h2>📖 Collection</h2>
+      <p id="collection-count" class="hint"></p>
+      <div id="collection-body"></div>
+      <button id="collection-close" class="big-button">Close</button>
+      <div><button id="collection-reset" class="link-button">Reset all progress</button></div>
+    </div>
+  </div>
+
   <div id="tutorial" class="overlay tutorial hidden">
     <div class="end-box">
       <div id="tutorial-step" class="hint"></div>
@@ -220,6 +231,7 @@
   <script src="js/perks.js"></script>
   <script src="js/crafting.js"></script>
   <script src="js/comps.js"></script>
+  <script src="js/unlocks.js"></script>
   <script src="js/rules.js"></script>
   <script src="js/shift.js"></script>
   <script src="js/sound.js"></script>

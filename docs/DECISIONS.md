@@ -238,3 +238,11 @@ Dated log of every decision and why. Newest at the bottom.
 - **Difficulty goal restated (owner):** players should *not* beat the game on the first run. Winning should come from unlocking cards and more over many runs, so each run feels fresh. A very low first-run escape rate is fine; unlocks (Milestone 12) are what should make escaping possible.
 - **Starting with 3 shooters (you + 2 crew): tested in the simulator only, not built yet.** Results in BALANCE.md; waiting on the owner's choice.
 - **Built: start with 3 seats, same debts** (owner, 2026-10-29). You + **Jinx always** + 1 random starter. The other starters can be hired (pool = recruits + unseated starters). Owner: the first runs, before unlocks, should make even shifts 1-2 very hard; forcing Jinx also gives a reason to use the Trapdoor. Dropped crew can never be hired back.
+
+## 2026-10-29 (Milestone 12a: unlocks)
+
+- **Milestone 12 split:** 12a = unlocks + Collection (built); 12b = new bets as unlocks (next).
+- **Fully hidden goals** (owner): locked things show only "???" in the Collection, no hints. Found items are listed first so a mystery's position doesn't give away its rarity.
+- **Locked from the start:** 19 cards, 3 comps (Loaded Shot, Copycat, Chisel) and 2 recruits (Lucky Lou, The Professor). Unlock list as drafted (owner approved).
+- **Unlocks show up from the next run** (owner), not mid-run.
+- Progress saved in the browser (`localStorage`); tests.html never touches it. "Reset all progress" on the Collection screen.

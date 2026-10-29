@@ -2,6 +2,20 @@
 
 Dated session log. Newest at the top.
 
+## 2026-10-29: Session 7, continued (Milestone 12a: unlocks)
+
+**Done**
+- Owner chose: fully hidden goals; also lock some comps (Loaded Shot, Copycat, Chisel) and recruits (Lucky Lou, The Professor); unlocks show up from the next run; draft unlock list approved.
+- **Built 12a:** new `js/unlocks.js` (24 locked items, hidden goals, progress saved in the browser). "🔓 UNLOCKED!" screen, 📖 Collection screen (found first, "???" mysteries, reset link), "Many runs" page in How to play, `?unlockAll` shortcut. Splash screens now queue instead of hiding each other. tests.html: 358 checks, all passing. Fits one screen on phones.
+- **Balance:** simulator career mode. Bot needs a median of ~200 runs to first escape, but unlocks don't make it stronger (new player 0.4% vs all unlocked 0.3%). Details in BALANCE.md.
+
+**Waiting on the owner**
+- How unlocks should add real power (so runs build toward a win), and whether unlocks come too fast (half in 5 runs).
+- Testing 12a.
+
+**Exact next step**
+- Act on the owner's answer; then 12b: new bets (Hard Ways, Place, Come, Fire Bet) as unlocks.
+
 ## 2026-10-29: Session 7, continued (3-seat start with Jinx)
 
 **Done**

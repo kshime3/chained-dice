@@ -9,7 +9,7 @@ const vm = require("vm");
 
 // Load the logic files exactly as the browser does (no display code).
 globalThis.location = { search: "" };
-const files = ["config", "dice", "bets", "crew", "cards", "shop", "stats", "perks", "crafting", "comps", "rules", "shift"];
+const files = ["config", "dice", "bets", "crew", "cards", "shop", "stats", "perks", "crafting", "comps", "unlocks", "rules", "shift"];
 const source = files.map((f) => fs.readFileSync(path.join(__dirname, "..", "js", f + ".js"), "utf8")).join("\n");
 
 const simulator = `
@@ -35,12 +35,13 @@ function simRoll(state) {
     if (r.outcome === "lose") state.bets[r.bet] = 0;
   }
   finishArmed(state, results);
-  if (pointBefore !== null && total === pointBefore && multUsed >= CONFIG.freeCompMult) gainComp(state, randomComp());
+  if (pointBefore !== null && total === pointBefore && multUsed >= CONFIG.freeCompMult) gainComp(state, randomComp(state));
   state.point = before.pity ? pointBefore : nextPoint(pointBefore, total);
   const sevenOut = !before.pity && pointBefore !== null && total === CONFIG.sevenOut;
   applyCardsAfterRoll(state, results, total, pointBefore, sevenOut);
   const pointHit = pointBefore !== null && total === pointBefore;
   applyCrewEffects(state, results, sevenOut, pointHit);
+  trackRollUnlocks(state, { results: results, pointHit: pointHit, sevenOut: sevenOut, doubles: rolled.dice[0] === rolled.dice[1], multUsed: multUsed, shooter: shooter });
   if (shooter === "You") trackChallenge(state, results, { pointHit: pointHit, total: total, doubles: rolled.dice[0] === rolled.dice[1], sevenOut: sevenOut, multUsed: multUsed });
   afterRoll(state, sevenOut);
 }
@@ -212,6 +213,10 @@ function run(label, s, n, scale) {
 vm.runInThisContext(source + "\n" + simulator);
 
 globalThis.ORIGINAL_SHIFTS = CONFIG.shifts.slice();
+// Unlocks: the bots normally play with everything unlocked (comparable with older results).
+// LOCKED=1 plays as a brand-new player. Nothing is ever saved.
+CONFIG.saveProgress = false;
+CONFIG.unlockEverything = !process.env.LOCKED;
 if (process.env.CARRY) CONFIG.carryOverShare = Number(process.env.CARRY); // e.g. CARRY=0.5 node tools/simulate.js
 // NORULES=1 switches off house rules and challenges (to measure what they change).
 if (process.env.NORULES) { globalThis.pickHouseRule = () => null; globalThis.newChallenge = () => null; }
@@ -258,9 +263,51 @@ if (process.argv[4] === "cards") {
   for (const id of Object.keys(CARDS)) {
     console.log("   " + run("+ " + CARDS[id].name, Object.assign({}, base, { startCards: [id] }), N, scale));
   }
+  console.log("  share of careers that unlocked each one: " + Object.keys(UNLOCKS).map((id) => unlockName(id) + " " + Math.round(100 * (perId[id] || 0) / careers) + "%").join(", "));
   process.exit(0);
 }
 
-strategies.forEach(([label, s], i) => {
+if (!process.env.CAREER) strategies.forEach(([label, s], i) => {
   if (!pick || pick.includes(i)) console.log(String(i).padStart(2) + " " + run(label, s, N, scale));
 });
+
+// CAREER=100: a bot plays run after run, keeping its unlocks, until it walks out free
+// (at most CAREER_CAP runs). Shows how many playthroughs it takes, and how fast unlocks come.
+// Example: CAREER=100 node tools/simulate.js 0 "" 13
+if (process.env.CAREER) {
+  const careers = Number(process.env.CAREER), cap = Number(process.env.CAREER_CAP) || 500;
+  const [label, s] = strategies[pick ? pick[0] : 13];
+  CONFIG.unlockEverything = false;
+  CONFIG.shifts = scale.map(([cash, debt, minBet], k) => ({ cash: cash, debt: debt, minBet: minBet || (ORIGINAL_SHIFTS[k] || { minBet: 5 }).minBet }));
+  const checkpoints = [1, 5, 10, 25, 50, 100, 200];
+  const found = {}; checkpoints.forEach((c) => (found[c] = 0));
+  const escapes = [];
+  const perId = {};
+  for (let c = 0; c < careers; c++) {
+    resetProfile();
+    let escapedAt = null;
+    for (let runNo = 1; runNo <= cap && escapedAt === null; runNo++) {
+      let carry = null;
+      for (let k = 0; k < scale.length; k++) {
+        const r = playShift(s, carry);
+        if (r.status !== "won") break;
+        if (k === scale.length - 1) escapedAt = runNo;
+        carry = r;
+      }
+      takeFreshUnlocks();
+      if (found[runNo] !== undefined) found[runNo] += profile().unlocked.length;
+    }
+    // A career that escaped early keeps its unlock count for later checkpoints.
+    for (const cp of checkpoints) if (escapedAt !== null && cp > escapedAt) found[cp] += profile().unlocked.length;
+    escapes.push(escapedAt);
+    for (const id of profile().unlocked) perId[id] = (perId[id] || 0) + 1;
+  }
+  const done = escapes.filter((x) => x !== null).sort((a, b) => a - b);
+  const total = Object.keys(UNLOCKS).length;
+  console.log("CAREER: " + label + ", " + careers + " careers, up to " + cap + " runs each");
+  console.log("  walked out free within " + cap + " runs: " + (100 * done.length / careers).toFixed(0) + "%" +
+    (done.length ? " | runs needed: fastest " + done[0] + ", median " + done[Math.floor(done.length / 2)] + " (of those who escaped)" : ""));
+  console.log("  unlocks found (of " + total + ") after run: " + checkpoints.map((cp) => cp + ": " + (found[cp] / careers).toFixed(1)).join(" | "));
+  console.log("  share of careers that unlocked each one: " + Object.keys(UNLOCKS).map((id) => unlockName(id) + " " + Math.round(100 * (perId[id] || 0) / careers) + "%").join(", "));
+  process.exit(0);
+}

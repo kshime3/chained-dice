@@ -55,6 +55,9 @@ const CONFIG = {
   // Hiring new crew at a Dealer Break (only into an empty seat).
   recruits: ["Snake", "Big Mo", "The Professor", "Lucky Lou"],
   maxSeats: 6,        // most people at the table, including you
+  // Unlocks (js/unlocks.js): progress is saved in the browser.
+  saveProgress: true,      // tests.html turns this off so checks never touch your progress
+  unlockEverything: false, // testing: ?unlockAll in the address turns this on
   startingCrew: 3,    // seats filled at the start of a run, including you (the rest are hired)
   alwaysStarts: ["Jinx"], // crew who are always at the table when a run starts
   hireOffers: 2,      // candidates offered at each Break
@@ -173,6 +176,7 @@ const CONFIG = {
   fallMs: 3200,     // how long the floor-opening animation lasts when you fall
   diceRollMs: 600, // how long the dice-rolling animation lasts (0 = no animation)
   sevenOutSplashMs: 5000, // how long the SEVEN OUT screen shows before the Dealer Break (tap skips)
+  unlockSplashMs: 6000,   // how long the "Unlocked" screen shows (tap skips)
   winSplashMs: 5000,      // how long the "Point hit" winnings screen shows (tap skips)
   cutSplashMs: 4000,      // how long the "falls through the floor" screen shows (tap skips)
 

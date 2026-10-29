@@ -66,7 +66,7 @@ function takePerk(state, id, target) {
   } else if (id === "freeItems") {
     state.freeBuys += CONFIG.freeItemsCount;
   } else if (id === "freeComps") {
-    for (let i = 0; i < CONFIG.freeCompsPerk; i++) gainComp(state, randomComp());
+    for (let i = 0; i < CONFIG.freeCompsPerk; i++) gainComp(state, randomComp(state));
   }
   state.perks.push(id);
 }

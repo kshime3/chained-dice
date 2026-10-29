@@ -38,6 +38,8 @@ function setupTurn(state, prevName, prevMult) {
   state.hotRodGain = 0;
   state.rattleGain = 0;
   state.turnRolls = 0;
+  state.turnDoubles = 0; // for unlocks
+  state.turnWon = 0;
   state.rerollUsed = false; // Reroll works once per shooter
   state.louGain = 0;
   state.challenge = name === "You" ? newChallenge(state) : null; // pit boss challenge on your turn

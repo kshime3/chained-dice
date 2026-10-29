@@ -37,7 +37,7 @@ function newStock(state) {
   const stock = [];
   for (let slot = 0; slot < CONFIG.shopSlots; slot++) {
     const pool = Object.keys(CARDS).filter((id) => !state.cards.includes(id) && !stock.includes(id) &&
-      !(id === "bargain" && state.endless) && // no chain to add a link to in endless mode
+      !(id === "bargain" && state.endless) && available(state, id) && // no chain to add a link to in endless mode
       (!CARDS[id].crew || state.roster.includes(CARDS[id].crew))); // crew cards need that person at the table
     if (pool.length === 0) {
       stock.push(null);

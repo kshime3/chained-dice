@@ -24,10 +24,10 @@ function compSellPrice(state, id) {
 }
 
 // Fresh comps for sale: different ones at random (dice edits Copycat and Chisel are rarer).
-function newCompStock() {
+function newCompStock(state) {
   const stock = [];
   while (stock.length < CONFIG.compShopSlots) {
-    const left = Object.keys(COMPS).filter((id) => !stock.includes(id));
+    const left = Object.keys(COMPS).filter((id) => !stock.includes(id) && available(state, id));
     if (left.length === 0) break;
     const weight = (id) => (CONFIG.compWeights[id] === undefined ? 1 : CONFIG.compWeights[id]);
     let pick = Math.random() * left.reduce((sum, id) => sum + weight(id), 0);
@@ -43,8 +43,8 @@ function gainComp(state, id) {
   return true;
 }
 
-function randomComp() {
-  const ids = Object.keys(COMPS);
+function randomComp(state) {
+  const ids = Object.keys(COMPS).filter((id) => available(state, id));
   return ids[Math.floor(Math.random() * ids.length)];
 }
 
@@ -94,6 +94,7 @@ function useComp(state, index, face) {
     const before = state.myDice[face.die][face.index];
     if (editFace(state, face.die, face.index, face.value) !== "ok") return null;
     state.comps.splice(index, 1);
+    trackEdit(id);
     return c.name + ": your " + face.die + " die's " + before + " is now a " + face.value + ".";
   }
   state.comps.splice(index, 1);

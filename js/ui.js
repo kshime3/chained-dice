@@ -865,8 +865,13 @@ function describeRoll(total, results, pointBefore, pointAfter) {
 
 // A full-screen splash (seven-out, point hit). Tap to skip; onDone runs after.
 let splashOpen = false;
+let splashQueue = []; // splashes waiting for the current one to close
 function showSplash(html, kind, ms, onDone) {
   const box = document.getElementById("splash");
+  if (splashOpen) {
+    splashQueue.push([html, kind, ms, onDone]);
+    return;
+  }
   let closed = false;
   const close = () => {
     if (closed) return;
@@ -874,6 +879,7 @@ function showSplash(html, kind, ms, onDone) {
     splashOpen = false;
     box.classList.add("hidden");
     if (onDone) onDone();
+    if (splashQueue.length && !splashOpen) showSplash(...splashQueue.shift());
   };
   splashOpen = true;
   document.getElementById("splash-content").innerHTML = html;
@@ -1053,4 +1059,40 @@ function showMessage(text, bad) {
     box.appendChild(big);
   }
   box.appendChild(document.createTextNode(text));
+}
+
+// ---------- Unlocks ----------
+
+function tutorialOpen() {
+  return !document.getElementById("tutorial").classList.contains("hidden");
+}
+
+function unlockSplash(ids) {
+  const kind = { card: "card", comp: "comp", crew: "crew member you can hire" };
+  return '<div class="splash-title">🔓 UNLOCKED!</div>' +
+    ids.map((id) => '<p class="splash-big">' + unlockName(id) + '</p><p class="hint">New ' + kind[UNLOCKS[id].kind] + "</p>").join("") +
+    "<p>It can show up from your <strong>next run</strong>. See it in the 📖 Collection.</p>" +
+    '<p class="hint">Tap to continue</p>';
+}
+
+// The Collection: everything unlocked, and locked things as mysteries (no hints).
+function renderCollection() {
+  const tile = (id, title, text, rarity) => isUnlocked(id)
+    ? '<div class="collection-tile ' + (rarity || "") + '"><strong>' + title + "</strong><br>" + text + "</div>"
+    : '<div class="collection-tile locked"><strong>???</strong><br>🔒 Locked</div>';
+  // Found things first (common first), then the mysteries, so a mystery's place gives nothing away.
+  const order = (ids) => ids.filter(isUnlocked).concat(ids.filter((id) => !isUnlocked(id)));
+  const cards = order(Object.keys(CARDS).sort((a, b) => RARITY_ORDER.indexOf(CONFIG.cardRarity[b]) - RARITY_ORDER.indexOf(CONFIG.cardRarity[a])));
+  const crew = order(CONFIG.crew.filter((n) => n !== "You").concat(CONFIG.recruits));
+  let html = "<h3>Cards</h3><div class=\"collection-grid\">" + cards.map((id) => tile(id, CARDS[id].name, CARDS[id].text, CONFIG.cardRarity[id])).join("") + "</div>";
+  html += "<h3>Comps</h3><div class=\"collection-grid\">" + order(Object.keys(COMPS)).map((id) => tile(id, COMPS[id].name, COMPS[id].text)).join("") + "</div>";
+  html += "<h3>Crew</h3><div class=\"collection-grid\">" + crew.map((n) => tile(n, n, CREW_INFO[n].style)).join("") + "</div>";
+  const all = cards.concat(Object.keys(COMPS), crew);
+  document.getElementById("collection-count").textContent = all.filter(isUnlocked).length + " of " + all.length + " found. Locked things unlock by playing. How? That's for you to discover.";
+  document.getElementById("collection-body").innerHTML = html;
+}
+
+function showCollection() {
+  renderCollection();
+  document.getElementById("collection").classList.remove("hidden");
 }

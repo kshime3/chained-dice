@@ -55,7 +55,13 @@ function introPages() {
         "At every Dealer Break (after each seven-out), you get <strong>" + Math.round(CONFIG.interestRate * 100) +
         "% of everything you've paid so far</strong>, added to your cash.<br><br>" +
         "Example: you've paid " + money(100) + ", so you get " + money(Math.floor(100 * CONFIG.interestRate)) + " at the next Break.<br><br>" +
-        "The current interest rate is always shown at the top of the screen.<br><br>Good luck.",
+        "The current interest rate is always shown at the top of the screen.",
+    },
+    {
+      title: "Many runs",
+      body: "You probably won't walk out free on your first try. That's the point.<br><br>" +
+        "Many cards, comps and crew start <strong>locked</strong>. Each unlocks when you do something special during a run. What? That's for you to discover.<br><br>" +
+        "New unlocks show up from your <strong>next run</strong>. See what you've found in the 📖 <strong>Collection</strong>.<br><br>Good luck.",
     },
   ];
 }

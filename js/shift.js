@@ -63,6 +63,7 @@ function newShiftState() {
     roster: roster, // who's at the table (carries over; Trapdoor removes, Hire adds)
     crew: roster.slice(), // the shooting order this shift (built from the roster and your cards)
     dropped: [], // crew who fell through a Trapdoor: gone for the run, never hireable again
+    locked: lockedNow(), // cards, comps and crew still locked when this run started
     dice: diceForShooter(roster[0]), // current shooter's dice
     mult: CONFIG.startingMult, // multiplies winnings this turn
     multNotes: [], // why the mult is what it is (synergies)
@@ -105,7 +106,7 @@ function newShiftState() {
     lastInterest: 0, // interest paid at the latest Dealer Break
   };
   state.stock = newStock(state);
-  state.compStock = newCompStock();
+  state.compStock = newCompStock(state);
   state.hireOffers = newHireOffers(state);
   return state;
 }
@@ -157,7 +158,10 @@ function deposit(state, amount) {
   state.cash -= paid;
   state.deposited += paid;
   state.stats.paid += paid;
-  if (state.deposited >= state.debt) state.status = "won";
+  if (state.deposited >= state.debt && state.status !== "won") {
+    state.status = "won";
+    trackShiftWon(state);
+  }
   return paid;
 }
 
@@ -190,6 +194,7 @@ function payInterest(state) {
   state.lastInterest = Math.floor(state.deposited * rate);
   state.cash += state.lastInterest;
   state.stats.interest += state.lastInterest;
+  trackInterest(state);
   return state.lastInterest;
 }
 
@@ -217,9 +222,11 @@ function fall(state, reason) {
     state.cards = state.cards.filter((id) => id !== "chainLink");
     state.savedByLink = true;
     state.status = "won";
+    trackShiftWon(state);
     return;
   }
   state.status = reason;
+  trackFall();
 }
 
 // Trapdoor (the code calls it cutChain): price, who can be dropped, and doing it.
@@ -247,6 +254,7 @@ function removeCrew(state, name) {
   state.roster = state.roster.filter((n) => n !== name);
   state.crew = state.crew.filter((n) => n !== name);
   if (!state.dropped.includes(name)) state.dropped.push(name);
+  trackDropped(name);
   // If the next shooter was removed, the seat after them steps up (synergies included).
   if (wasNext && !isFinalBreak(state)) {
     setupTurn(state, state.crew[state.shooterIndex - 1] || null, state.prevShooterMult);
@@ -268,6 +276,7 @@ function nextShift(old) {
   state.cards = old.cards.slice();
   state.roster = old.roster.slice();
   state.dropped = old.dropped.slice();
+  state.locked = old.locked.slice();
   state.interestRate = old.interestRate;
   state.stats = old.stats;
   state.perks = old.perks.slice();
@@ -282,7 +291,7 @@ function nextShift(old) {
   state.crew = turnOrder(state);
   setupTurn(state, null, CONFIG.startingMult);
   state.stock = newStock(state);
-  state.compStock = newCompStock();
+  state.compStock = newCompStock(state);
   state.hireOffers = newHireOffers(state);
   return state;
 }
@@ -316,7 +325,7 @@ function priceX(state) {
 
 function newHireOffers(state) {
   // New recruits, plus starting crew who weren't seated this run (never anyone dropped).
-  const pool = CONFIG.recruits.concat(CONFIG.crew).filter((n) => n !== "You" && !state.roster.includes(n) && !state.dropped.includes(n));
+  const pool = CONFIG.recruits.concat(CONFIG.crew).filter((n) => n !== "You" && !state.roster.includes(n) && !state.dropped.includes(n) && available(state, n));
   const offers = [];
   while (offers.length < CONFIG.hireOffers && pool.length) offers.push(pool.splice(Math.floor(Math.random() * pool.length), 1)[0]);
   return offers;
@@ -331,6 +340,8 @@ function hire(state, name) {
   state.stats.spent += hirePrice(state);
   state.roster.push(name);
   state.hireOffers = state.hireOffers.filter((n) => n !== name);
+  state.stats.hires += 1;
+  trackHire(state);
   // They shoot this shift, last (but before an Encore turn).
   const encoreAtEnd = state.crew.length > 1 && state.crew[state.crew.length - 1] === "You" && state.crew.filter((n) => n === "You").length > 1;
   const at = encoreAtEnd ? state.crew.length - 1 : state.crew.length;
@@ -356,7 +367,7 @@ function afterRoll(state, sevenOut) {
     state.onBreak = true;
     if (!isFinalBreak(state)) setupTurn(state, prevName, state.mult);
     state.stock = newStock(state); // fresh cards at every Dealer Break
-    state.compStock = newCompStock();
+    state.compStock = newCompStock(state);
     state.hireOffers = newHireOffers(state);
   } else if (isBroke(state)) {
     fall(state, "fell-broke");

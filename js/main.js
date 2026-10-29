@@ -1,5 +1,7 @@
 // Connects the buttons to the game logic and the display.
 
+// Testing shortcut: ?unlockAll makes every card, comp and crew member available (nothing is saved).
+if (new URLSearchParams(location.search).has("unlockAll")) CONFIG.unlockEverything = true;
 let state = newShiftState();
 giveTestCards(state);
 giveTestRule(state);
@@ -194,11 +196,12 @@ function finishRoll(rolled) {
     ? trackChallenge(state, results, { pointHit: pointHit, total: total, doubles: rolled.dice[0] === rolled.dice[1], sevenOut: sevenOut, multUsed: multUsed })
     : null;
   if (challengeNote) compNotes.push(challengeNote);
+  trackRollUnlocks(state, { results: results, pointHit: pointHit, sevenOut: sevenOut, doubles: rolled.dice[0] === rolled.dice[1], multUsed: multUsed, shooter: shooter });
   recordRoll(state.stats, state, rolled, totalMoney(state) - moneyBefore, sevenOut, pointHit, odds, multUsed, shooter, state.turnRolls);
   afterRoll(state, sevenOut);
 
   // A free comp for hitting a point at a big mult.
-  if (pointHit && multUsed >= CONFIG.freeCompMult && gainComp(state, randomComp())) {
+  if (pointHit && multUsed >= CONFIG.freeCompMult && gainComp(state, randomComp(state))) {
     compNotes.push("The dealer is impressed: a free " + COMPS[state.comps[state.comps.length - 1]].name + " comp!");
   }
   const notes = crewBefore.concat(before.notes, cardNotes, crewNotes, compNotes);
@@ -222,7 +225,7 @@ function finishRoll(rolled) {
   renderAll();
   if (pointHit && results.some((r) => r.bet === "pass" && r.outcome === "win")) {
     const wins = results.filter((r) => r.outcome === "win");
-    showSplash(pointWinSplash(pointBefore, wins, boosts), "good", CONFIG.winSplashMs);
+    showSplash(pointWinSplash(pointBefore, wins, boosts), "good", CONFIG.winSplashMs, announceUnlocks);
   }
 }
 
@@ -354,7 +357,7 @@ function cut(name) {
   showBreakMessage(name + "'s seat is empty.");
   renderAll();
   playSound("clank");
-  showSplash(cutSplash(name), "bad", CONFIG.cutSplashMs);
+  showSplash(cutSplash(name), "bad", CONFIG.cutSplashMs, announceUnlocks);
 }
 
 function shuffle() {
@@ -454,6 +457,14 @@ function renderAll() {
     markTutorialSeen("comps");
     showTutorial(compPages());
   }
+  announceUnlocks();
+}
+
+// New unlocks: announce them once nothing else is on screen.
+function announceUnlocks() {
+  if (busy() || tutorialOpen() || profile().fresh.length === 0) return;
+  playSound("pointHit");
+  showSplash(unlockSplash(takeFreshUnlocks()), "good", CONFIG.unlockSplashMs, renderAll);
 }
 
 document.getElementById("pass-line").onclick = () => placeBet("pass");
@@ -489,6 +500,13 @@ document.getElementById("mute").onclick = () => {
   playSound("chip");
 };
 document.getElementById("how-to-play").onclick = () => showTutorial(introPages());
+document.getElementById("collection-button").onclick = showCollection;
+document.getElementById("collection-close").onclick = () => document.getElementById("collection").classList.add("hidden");
+document.getElementById("collection-reset").onclick = () => {
+  if (!confirm("Lock everything again and erase all unlock progress? Your current run isn't affected.")) return;
+  resetProfile();
+  renderCollection();
+};
 document.getElementById("shop-help").onclick = () => showTutorial(shopPages());
 document.getElementById("comps-help").onclick = () => showTutorial(compPages());
 

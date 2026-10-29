@@ -99,7 +99,7 @@ function trackChallenge(state, results, info) {
   const what = rewardText(state, c.reward);
   if (c.reward === "cash") state.cash += roundTo5(CONFIG.challengeCashPct * state.debt);
   if (c.reward === "debtCut") state.debt = Math.max(state.deposited, state.debt - roundTo5(CONFIG.challengeDebtCutPct * state.debt));
-  if (c.reward === "comp" && !gainComp(state, randomComp())) return "Challenge complete! (Your comp slots were full, so the pit boss kept the comp.)";
+  if (c.reward === "comp" && !gainComp(state, randomComp(state))) return "Challenge complete! (Your comp slots were full, so the pit boss kept the comp.)";
   if (c.reward === "shuffle") state.freeShuffles += 1;
   return "Challenge complete! The pit boss hands you " + what + ".";
 }

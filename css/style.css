@@ -513,3 +513,12 @@ body.falling .seat, body.falling .side > *, body.falling .table, body.falling .c
   .shooter, .mult { display: inline-block; margin-right: 8px; }
 }
 .house-rule.hidden, .challenge.hidden { display: none; }
+
+/* Collection (unlocks) */
+.collection-box { max-width: 760px; }
+.collection-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 6px; text-align: left; }
+.collection-tile { background: #f5f0e1; color: #111; border-left: 6px solid #999; border-radius: 6px; padding: 6px 8px; font-size: 0.8rem; }
+.collection-tile.uncommon { border-left-color: #27ae60; }
+.collection-tile.rare { border-left-color: #2980b9; }
+.collection-tile.legendary { border-left-color: #f39c12; }
+.collection-tile.locked { background: #333; color: #888; border-left-color: #555; text-align: center; }
