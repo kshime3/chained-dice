@@ -497,3 +497,18 @@ body.falling .seat, body.falling .side > *, body.falling .table, body.falling .c
 .card.hire-card { background: #f3efe6; border-color: #8e6b3a; }
 .card.hire-card .card-rarity { background: #8e6b3a; }
 .selected-option { outline: 3px solid #ffd84d; }
+
+/* House rules and pit boss challenges */
+.rule-row { display: flex; flex-wrap: wrap; gap: 4px 6px; align-items: flex-start; }
+.house-rule { position: relative; display: inline-block; margin: 4px 0 2px; padding: 3px 8px; border-radius: 6px; background: #3b2a10; border: 1px solid #c9a227; color: #f5d76e; font-size: 0.85rem; cursor: help; }
+.house-rule.boss { background: #3b1010; border-color: #e74c3c; color: #ff9f8f; }
+.house-rule .tooltip { display: none; position: absolute; top: 110%; left: 0; width: 240px; background: #fff; color: #111; padding: 8px 10px; border-radius: 8px; z-index: 10; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); }
+.house-rule:hover .tooltip { display: block; }
+.challenge { margin: 4px 0 2px; padding: 3px 8px; border-radius: 6px; background: #10283b; border: 1px dashed #6ec1ff; color: #cde9ff; font-size: 0.85rem; }
+.challenge.done { border-style: solid; border-color: #27ae60; color: #9be7b4; background: #0f2a1a; }
+.card-badge.switched-off { opacity: 0.45; text-decoration: line-through; }
+@media (max-width: 760px) {
+  .rule-row { flex-wrap: nowrap; overflow-x: auto; }
+  .house-rule, .challenge { flex: 0 0 auto; white-space: nowrap; font-size: 0.72rem; margin: 1px 0 0; padding: 1px 6px; }
+  .shooter, .mult { display: inline-block; margin-right: 8px; }
+}

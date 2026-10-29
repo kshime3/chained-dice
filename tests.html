@@ -24,6 +24,7 @@
   <script src="js/perks.js"></script>
   <script src="js/crafting.js"></script>
   <script src="js/comps.js"></script>
+  <script src="js/rules.js"></script>
   <script src="js/shift.js"></script>
   <script>
     // Tests use fixed numbers, so tuning config.js doesn't break them.
@@ -707,6 +708,75 @@
     check("...Snake shoots last this shift", h.crew[h.crew.length - 1], "Snake");
     h.status = "won";
     check("...and keeps the seat next shift", nextShift(h).roster.includes("Snake"), true);
+    }
+
+    // House rules and pit boss challenges (Milestone 11)
+    {
+    const withRule = (id, extra) => { const st = newShiftState(); st.houseRule = Object.assign({ id: id }, extra || {}); return st; };
+    check("No house rule on shift 1", newShiftState().houseRule, null);
+    const s3 = newShiftState(); s3.shift = 3;
+    check("A normal house rule from shift 3", !!pickHouseRule(s3) && !HOUSE_RULES[pickHouseRule(s3).id].boss, true);
+    const s8 = newShiftState(); s8.shift = totalLinks(s8);
+    check("A boss rule on the last link", HOUSE_RULES[pickHouseRule(s8).id].boss, true);
+    let pw = false;
+    for (let i = 0; i < 300; i++) { const st = newShiftState(); st.shift = 4; st.cards = []; if (pickHouseRule(st).id === "pitWatch") pw = true; }
+    check("Pit Watch never picked when you own no cards", pw, false);
+    const hs = withRule("highStakes");
+    check("High Stakes: table min $5 -> $10", tableMin(hs), 10);
+    const to = withRule("tightOdds"); to.point = 4; to.bets.pass = 10; to.bets.dont = 10;
+    check("Tight Odds: Odds max 2x the line ($20)", backingLimit(to, "odds"), 20);
+    check("Tight Odds: Lay on 4 max $40 (wins $20)", backingLimit(to, "lay"), 40);
+    const si = withRule("skimmedInterest"); si.deposited = 1000;
+    check("Skimmed Interest: 5% -> 2.5% ($25 on $1,000)", payInterest(si), 25);
+    const mk = withRule("markup");
+    check("Markup: Shuffle 1.5x", shuffleCost(mk), roundTo5(shuffleCost(newShiftState()) * 1.5));
+    check("Markup: hiring 1.5x", hirePrice(mk), roundTo5(hirePrice(newShiftState()) * 1.5));
+    const pwst = withRule("pitWatch", { disabled: "doublesCharm" }); pwst.cards = ["doublesCharm", "greenDice"];
+    check("Pit Watch: the watched card is off, others work", [hasCard(pwst, "doublesCharm"), hasCard(pwst, "greenDice")], [false, true]);
+    const hd = withRule("houseDie", { x: 3 }); hd.shooterIndex = hd.crew.indexOf("You"); setupTurn(hd);
+    check("House Die: your left die always shows 3", currentDice(hd).left, [3]);
+    check("...7 still possible (16.7%)", pct(diceOdds(currentDice(hd))[7]), 16.7);
+    const hdNo = withRule("houseDie", { x: 1 }); hdNo.shooterIndex = hdNo.crew.indexOf("You"); hdNo.myDice = { left: [1, 2, 3, 4, 5, 6], right: [1, 2, 3, 4, 5, 5] }; setupTurn(hdNo);
+    check("House Die skipped when it would leave no 7 (left 1, right has no 6)", currentDice(hdNo).left, [1, 2, 3, 4, 5, 6]);
+    const hdPair = withRule("houseDie", { x: 6 }); hdPair.shooterIndex = hdPair.crew.indexOf("You"); hdPair.myDice = { left: [1, 2, 3, 4, 5, 6], right: [1, 1, 2, 3, 4, 5] }; setupTurn(hdPair); hdPair.armed.luckyPair = true;
+    check("House Die skipped when a guaranteed pair can't be rolled with it", currentDice(hdPair).left.length, 6);
+    check("Dark Side Only: no Pass Line", [passAllowed(withRule("darkSideOnly")), passAllowed(newShiftState())], [false, true]);
+    const cd = withRule("coldDice"); cd.mult = 3;
+    check("Cold Dice: mult capped at 1x", effectiveMult(cd), 1);
+    const sh = withRule("sevenHeaven"); const shRes = [{ bet: "pass", amount: 10, outcome: "win", winnings: 10 }];
+    applyCrewBeforePayout(sh, shRes, 7, null);
+    check("Seven Heaven: come-out 7 is a tie for the Pass Line", shRes[0].outcome, "none");
+    const nfl = withRule("noFreeLunch"); nfl.point = 6;
+    const r1 = [{ bet: "pass", amount: 10, outcome: "win", winnings: 10 }, { bet: "odds", amount: 10, outcome: "win", winnings: 12 }];
+    applyCrewBeforePayout(nfl, r1, 6, 6);
+    check("No Free Lunch: first point pays nothing", [r1[0].winnings, r1[1].winnings, r1[0].outcome], [0, 0, "win"]);
+    const r2 = [{ bet: "pass", amount: 10, outcome: "win", winnings: 10 }];
+    applyCrewBeforePayout(nfl, r2, 6, 6);
+    check("...the same shooter's second point pays", r2[0].winnings, 10);
+
+    // Challenges
+    check("No challenge on shift 1", newChallenge(newShiftState()), null);
+    const ch = newShiftState(); ch.shift = 2; ch.debt = 1000; ch.kitty = 100;
+    ch.challenge = { id: "doubles", progress: 0, done: false, reward: "cash" };
+    const info = (o) => Object.assign({ pointHit: false, total: 6, doubles: false, sevenOut: false, multUsed: 1 }, o);
+    trackChallenge(ch, [], info({ doubles: true })); trackChallenge(ch, [], info({ doubles: true }));
+    check("Doubles challenge: 2 of 3", [ch.challenge.progress, ch.challenge.done], [2, false]);
+    check("...third doubles completes it and pays 10% of the debt", [!!trackChallenge(ch, [], info({ doubles: true })), ch.kitty], [true, 200]);
+    check("...and only pays once", [trackChallenge(ch, [], info({ doubles: true })), ch.kitty], [null, 200]);
+    const dc = newShiftState(); dc.debt = 1000; dc.challenge = { id: "hardPoint", progress: 0, done: false, reward: "debtCut" };
+    trackChallenge(dc, [], info({ pointHit: true, total: 6 }));
+    check("Hard point: a 6 doesn't count", dc.challenge.done, false);
+    trackChallenge(dc, [], info({ pointHit: true, total: 10 }));
+    check("...a 10 does: debt $1,000 -> $950", dc.debt, 950);
+    const fs = newShiftState(); fs.challenge = { id: "dontWin", progress: 0, done: false, reward: "shuffle" };
+    trackChallenge(fs, [{ bet: "dont", outcome: "win" }], info({}));
+    check("Don't Pass win -> a free Shuffle", [fs.freeShuffles, shuffleCost(fs)], [1, 0]);
+    const lh = newShiftState(); lh.challenge = { id: "longHaul", progress: 0, done: false, reward: "comp" };
+    for (let i = 0; i < 5; i++) trackChallenge(lh, [], info({}));
+    trackChallenge(lh, [], info({ sevenOut: true }));
+    check("Long haul: a seven-out roll doesn't count", lh.challenge.progress, 5);
+    trackChallenge(lh, [], info({}));
+    check("...the 6th safe roll pays a free comp", lh.comps.length, 1);
     }
 
     // Dice: 10,000 rolls stay in range, and 7 is the most common total

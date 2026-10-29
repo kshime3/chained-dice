@@ -18,12 +18,12 @@ function shiftScale(n) {
 
 // The table minimum this shift: the smallest line bet, and what you always keep in your kitty.
 function tableMin(state) {
-  return state.minBet;
+  return state.minBet * (rule(state, "highStakes") ? CONFIG.highStakesX : 1);
 }
 
 // The chips shown this shift.
 function chipsFor(state) {
-  return state.minBet >= 25 ? CONFIG.bigChipValues : CONFIG.chipValues;
+  return tableMin(state) >= 25 ? CONFIG.bigChipValues : CONFIG.chipValues;
 }
 
 // Can you pay the dealer right now? Not until the first shooter of the shift has rolled.
@@ -70,6 +70,10 @@ function newShiftState() {
     myDice: { left: [1, 2, 3, 4, 5, 6], right: [1, 2, 3, 4, 5, 6] }, // your dice (dice crafting edits these)
     hireOffers: [], // crew you can hire at this Dealer Break
     ghostPick: "evens", // Ghost Story: the side you choose for Ghost's die
+    houseRule: null, // this shift's house rule, e.g. { id: "houseDie", x: 4 } (see rules.js)
+    challenge: null, // the pit boss challenge for your current turn
+    freeShuffles: 0, // Shuffles you can use for free (challenge reward)
+    firstPointPaid: {}, // No Free Lunch: shooters who've already had their unpaid first point
     walkedAway: false, // true if you escaped and chose "Walk away"
     stats: newStats(), // run stats for the end screen (carry over between shifts)
     perks: [], // Pit Boss phone perks (carry over between shifts)
@@ -105,6 +109,11 @@ function amountOwed(state) {
 // True once every shooter has had a turn.
 function isFinalBreak(state) {
   return state.shooterIndex >= state.crew.length;
+}
+
+// Dark Side Only (a house rule): no Pass Line this shift.
+function passAllowed(state) {
+  return !rule(state, "darkSideOnly");
 }
 
 // A line bet (Pass Line or Don't Pass) must be played. On a come-out you need the minimum on one.
@@ -163,7 +172,8 @@ function fundPassLine(state, amount, line = "pass") {
 
 // Interest: a share of everything you've paid, into your kitty (rounded down).
 function payInterest(state) {
-  state.lastInterest = Math.floor(state.deposited * state.interestRate);
+  const rate = state.interestRate * (rule(state, "skimmedInterest") ? CONFIG.skimmedInterestX : 1);
+  state.lastInterest = Math.floor(state.deposited * rate);
   state.kitty += state.lastInterest;
   state.stats.interest += state.lastInterest;
   return state.lastInterest;
@@ -251,6 +261,8 @@ function nextShift(old) {
   state.myDice = { left: old.myDice.left.slice(), right: old.myDice.right.slice() };
   state.freeBuys = old.freeBuys;
   state.stats.shiftStarts.push(state.stats.history.length);
+  state.freeShuffles = old.freeShuffles;
+  state.houseRule = pickHouseRule(state);
   state.crew = turnOrder(state);
   setupTurn(state, null, CONFIG.startingMult);
   state.stock = newStock(state);
@@ -278,7 +290,12 @@ function addEncoreTurn(state) {
 
 // Hiring: new crew can join while a seat is empty (fewer than maxSeats at the table).
 function hirePrice(state) {
-  return roundTo5(CONFIG.hirePricePct * state.debt);
+  return roundTo5(CONFIG.hirePricePct * state.debt * priceX(state));
+}
+
+// Markup (a house rule) raises shop prices.
+function priceX(state) {
+  return rule(state, "markup") ? CONFIG.markupX : 1;
 }
 
 function newHireOffers(state) {

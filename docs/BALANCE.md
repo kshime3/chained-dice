@@ -146,3 +146,18 @@ Bot learned the 9 new cards and hiring (Lucky Lou / The Professor first). 8,000 
 
 - The game itself isn't much harder (ignoring the new cards: 2.6% vs 3.3% before; a bigger card pool makes favourites a little rarer).
 - A flat-betting bot gets little from the new cards: they're situational build pieces (an extra turn, x2 on your own turn), not raw power. **No rescale.** Watch in playtesting whether Encore (Rare) and High Roller feel worth their price.
+
+## 2026-10-29: Milestone 11 retest (house rules, boss rules, challenges)
+
+Simulator learned the rules (they're in the game's own logic files) and challenges; under Dark Side Only the bot bets Don't Pass. It doesn't otherwise adapt to a rule. 8,000 runs, keep-half carry-over, per-shift survival:
+
+| Bot | S1 | S2 | S3 | S4 | S5 | S6 | S7 | S8 | Walk out free |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Smart, rules off (`NORULES=1`) | 68% | 68% | 64% | 57% | 53% | 51% | 49% | 55% | 1.2% |
+| Smart, rules on | 68% | 67% | 58% | 54% | 45% | 39% | 44% | 36% | 0.4% |
+| Smart + comps, rules on | 69% | 67% | 55% | 56% | 47% | 50% | 48% | 44% | 0.7% |
+| Smart, rules on, debts 3-8 trimmed 10% | 67% | 66% | 63% | 54% | 47% | 41% | 45% | 46% | 0.6% |
+
+- House rules cost a flat-betting bot about 5-10 points per shift from shift 3, and the boss rule on shift 8 about 10-20. Escapes roughly halve.
+- Trimming the debts barely helps (same lesson as before: debts aren't the main lever). The curve still gets harder shift by shift, so **no rescale for now**: a human can adapt to a rule (smaller bets under Tight Odds, Don't Pass bots aren't hurt by Dark Side Only), the bot can't. If playtesting feels too punishing, the levers are: rules from shift 4 instead of 3, or a softer boss rule list.
+- Found by the simulator: House Die plus a guaranteed pair (Doubles Charm, Lucky Pair) could leave no possible roll. Fixed (House Die skips that shooter), with a test.

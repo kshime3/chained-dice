@@ -52,6 +52,7 @@ function usableCombos(diceSet, pairsOnly) {
 // Roll a shooter's two dice and return both faces plus their total.
 function rollDice(diceSet = NORMAL_DICE, pairsOnly = false) {
   const combos = usableCombos(diceSet, pairsOnly);
+  if (combos.length === 0 && pairsOnly) return rollDice(diceSet, false); // these dice can't roll a pair: roll normally
   const totalWeight = combos.reduce((sum, c) => sum + c.weight, 0);
   let pick = Math.random() * totalWeight;
   for (const c of combos) {
@@ -81,6 +82,7 @@ function rerollOneDie(diceSet, rolled, which) {
 // Returns { 2: 0.0278, 3: 0.0556, ... } (0.0278 means 2.78%).
 function diceOdds(diceSet = NORMAL_DICE, pairsOnly = false) {
   const combos = usableCombos(diceSet, pairsOnly);
+  if (combos.length === 0 && pairsOnly) return rollDice(diceSet, false); // these dice can't roll a pair: roll normally
   const totalWeight = combos.reduce((sum, c) => sum + c.weight, 0);
   const odds = {};
   for (let t = 2; t <= 12; t++) odds[t] = 0;

@@ -16,7 +16,7 @@ const COMPS = {
 };
 
 function compPrice(state, id) {
-  return roundTo5(CONFIG.compPricePct[id] * state.debt);
+  return roundTo5(CONFIG.compPricePct[id] * state.debt * priceX(state));
 }
 
 function compSellPrice(state, id) {

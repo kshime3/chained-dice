@@ -48,13 +48,15 @@ Tested with the simulator (`docs/BALANCE.md`).
 | --- | --- | --- | --- | --- |
 | 1 | $150 | $200 | $5 | none |
 | 2 | $200 | $300 | $10 | none |
-| 3 | $175 | $550 | $15 | 1 random (planned) |
+| 3 | $175 | $550 | $15 | 1 random |
 | 4 | $175 | $1,100 | $30 | 1 random |
 | 5 | $175 | $2,400 | $60 | 1 random |
 | 6 | $175 | $5,500 | $150 | 1 random |
 | 7 | $175 | $12,500 | $300 | 1 random |
-| 8 | $175 | $28,000 | $700 | 1 random |
-| 9+ (endless) | $175 | x2.2 per shift | 2.5% of the debt (to $25) | 1 random |
+| 8 | $175 | $28,000 | $700 | 1 boss rule |
+| 9+ (endless) | $175 | x2.2 per shift | 2.5% of the debt (to $25) | 1 random (normal or boss) |
+
+(The boss rule lands on the last link, so a Dealer's Bargain pushes it later.)
 
 - **Dealer's cut [Built]:** when you win a shift, you carry only **half** your leftover money into the next one (`carryOverShare` in config). The win screen and the next opening Break say how much he kept.
 
@@ -251,8 +253,17 @@ Like Clover Pit's phone. After **every won shift**, it rings before the next shi
 
 ## More Planned Ideas
 
-- **Pit boss challenges:** a small challenge each shooter's turn, with a reward. Own milestone after the shop.
-- **House rules [Planned, Milestone 7]:** from shift 3, one random rule per shift, announced on the opening Dealer Break, with a tutorial the first time. Starter list: **Tight Odds** (Odds capped at 2x), **Short Table** (a random crew member sits out), **High Roller** ($25 minimum), **Stingy Field** (12 pays only double), **Dealer's Cut** (interest halved), **Markup** (shop prices +50%), **Jinxed** (Jinx shoots twice), **Pit Watch** (one of your cards is switched off).
+- **House rules [Built, Milestone 11]** (`js/rules.js`): from shift 3, one random rule per shift, shown as a gold 📜 tag under the shooter (hover or tap to read) and on the opening Dealer Break, with a tutorial the first time.
+  - **Tight Odds:** Odds and Lay Odds limited to 2x the line bet (Lay: win at most 2x).
+  - **High Stakes:** table minimum doubled.
+  - **Skimmed Interest:** interest halved.
+  - **Markup:** cards, comps, Shuffle and Hire cost 50% more.
+  - **Pit Watch:** one of your cards (random) is switched off for the shift. Only picked if you own a card.
+  - **House Die:** every shooter's left die shows the same number (1-6, random) all shift. Skipped for a shooter when it would leave no way to roll 7, or no possible roll (a guaranteed pair the right die can't match). Loaded Shot overrides it.
+  - **Dark Side Only:** no Pass Line; only Don't Pass and Lay Odds.
+  - Dropped by the owner: Short Table, Stingy Field, Jinxed.
+- **Boss rules [Built]:** the last link (shift 8 normally) always gets a red 👑 boss rule. **No Free Lunch** (each shooter's first point pays nothing; bets come back), **Cold Dice** (all mult capped at 1x), **Seven Heaven** (come-out 7s don't pay the Pass Line; it's a tie). Endless shifts pick from normal and boss rules.
+- **Pit boss challenges [Built, Milestone 11]:** from shift 2, a challenge on **your own turn only**, shown in a blue 🎯 box with progress. Hit the point; Make 2 points; Hit a point of 4 or 10; Win the Field 3 times; Roll 3 doubles; Survive 6 rolls without a seven-out; Win a Don't Pass bet; Win a bet at 3x mult or more. Reward (random, shown up front): cash (10% of the debt), money off the debt (5%), a free comp, or a free Shuffle. Tutorial the first time.
 - **Card unlocks [Planned, Milestone 8]:** new players start with Hot Hand, Snake Eyes, Lucky Seven, Rattlesnake, Red Dice and Double Up. Others unlock by **hidden** goals (the player isn't told how; owner, 2026-10-28): Odds Addict (win $500 total on Odds), Muggsy (5 point-7s), Pit Boss's Pity (fall 5 times), Doubles Charm (3 doubles in one turn), Green Dice ($50 interest in one run), Loaded Die (survive shift 2), Reroll (survive shift 3), Spare Link (survive shift 4). Each unlock gets an announcement. Progress is saved in the browser; a Collection screen shows locked cards as mysteries. Winning should take many playthroughs.
 - **Tutorials [Built]:** a 2-page phone tutorial the first time it rings; a 7-page "How to play" intro on first visit (also via the How to play button), a 3-page shop tutorial (including Cut a chain) the first time the shop opens (also via the shop's ? button). [Planned] A phone tutorial. Each shows once per browser.
 
@@ -296,7 +307,7 @@ Like Clover Pit's phone. After **every won shift**, it rings before the next shi
 4. [Built] Crew dice, visible odds (4a); mult and synergies (4b)
 5. [Built] Shop: 5a framework and 8 cards; 5b-1 dice cards; 5b-2 Loaded Die, Reroll, Cut a chain, Spare Link
 6. [Built] Multiple shifts (6a) and the Pit Boss phone (6b)
-7. [Planned] House rules
+7. [Built] Don't Pass (Milestone 7). House rules + pit boss challenges: [Built] Milestone 11
 8. [Built] Comps
 9. [Built] Dice crafting (your dice). Polish: fall animation and sound [Built]. [Only with owner's permission] Any public release.
 10. [After v1] More bets (Place, Hard Ways, Come)

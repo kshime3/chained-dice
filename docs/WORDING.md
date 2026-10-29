@@ -91,3 +91,12 @@ Unchanged for shifts 1-5. Shifts 6-8 follow the existing x1.5 growth: $1,800, $2
 - Win screen: "You have $200 left. The dealer takes his cut, so you carry $100 into the next shift."
 - Next opening Break: "The dealer kept $100 of your leftover money as his cut."
 - How to play, "Paying the dealer": "Money left over when you win a shift carries into the next one, but the dealer takes 50% of it as his cut."
+
+## Added 2026-10-29: house rules and challenges (Milestone 11)
+- Table tag: "📜 House rule: Tight Odds" (gold); last link: "👑 Boss rule: No Free Lunch" (red). Hover or tap for the full text.
+- Opening Break adds: "House rule this shift: Markup. Shop prices are 50% higher (cards, comps, Shuffle, Hire)."
+- House Die: "Every shooter's left die is set to 4 this shift (unless that leaves no way to roll 7)."
+- Pit Watch: "The pit boss is watching your Doubles Charm. It's switched off this shift." (badge greyed with 👁)
+- Dark Side Only: Pass Line shows "Closed: Dark Side Only"; clicking it: "House rule, Dark Side Only: no Pass Line this shift. Bet the Don't Pass instead."
+- Challenge box: "🎯 Roll 3 doubles (2/3) → $110 cash"; done: "🎯 Challenge done: Roll 3 doubles ✓"; message: "Challenge complete! The pit boss hands you $110 cash."
+- Free shuffle button: "Shuffle (free x1)"; message "Free shuffle from the pit boss."

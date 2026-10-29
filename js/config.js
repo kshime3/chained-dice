@@ -149,6 +149,16 @@ const CONFIG = {
   freeCompMult: 3,       // hitting a point at this mult or more gives you a free comp (if you have a free slot)
   freeCompsPerk: 2,      // the phone perk "free comps" gives this many
 
+  // House rules and pit boss challenges
+  houseRulesFromShift: 3,     // one random house rule per shift from here (a boss rule on the last chain shift)
+  tightOddsX: 2,              // Tight Odds: Odds and Lay Odds win at most this many times your line bet
+  highStakesX: 2,             // High Stakes: table minimum multiplied by this
+  skimmedInterestX: 0.5,      // Skimmed Interest: interest multiplied by this
+  markupX: 1.5,               // Markup: shop prices multiplied by this
+  challengesFromShift: 2,     // pit boss challenges on your own turn from this shift
+  challengeCashPct: 0.10,     // challenge reward: cash, this share of the debt
+  challengeDebtCutPct: 0.05,  // challenge reward: this share of the debt taken off
+
   // Trapdoor: a Dealer Break option once the shop is open (drops a crew member for the run).
   cutChainPct: 0.25, // costs this share of the debt
 

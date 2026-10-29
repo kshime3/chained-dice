@@ -224,3 +224,10 @@ Dated log of every decision and why. Newest at the bottom.
 - **Hiring** at the Dealer Break, only into an empty seat; **max 6 seats** (`maxSeats`). Owner's idea for later: start with fewer crew (e.g. 3) and recruit up to 6, to help the game grow and scale (`startingCrew` setting, logged in IDEAS.md).
 - **Encore:** your extra turn comes after the last shooter, before the final Dealer Break.
 - New crew to hire: Snake, Big Mo, The Professor, Lucky Lou. (Big Mo's dice adjusted so he can still roll a 7: faces 1, 4, 5, 5, 6, 6.)
+
+## 2026-10-29 (Milestone 11 plan)
+
+- **House rules (shifts 3-7, one random per shift):** Tight Odds (Odds/Lay limited to 2x), High Stakes (table minimum x2), Skimmed Interest (interest halved), Markup (shop prices +50%), Pit Watch (one of your cards switched off), **House Die** (owner: every shooter's left die is set to a random X this shift; skipped for a shooter it would leave with no way to roll 7), **Dark Side Only** (owner: no Pass Line, only Don't Pass and Lay Odds). Dropped by owner: Short Table, Stingy Field (too weak), Jinxed.
+- **Boss rule on the last chain shift (shift 8):** one of No Free Lunch (owner: each shooter's first point pays nothing), Cold Dice (mult capped at 1x), Seven Heaven (come-out 7s don't pay the Pass Line). Endless shifts get a random rule from either list.
+- **Pit boss challenges only on your own turn,** from shift 2; random rewards scaled to the debt (cash, free comp, debt cut, free Shuffle); no penalty for failing.
+- Renamed to avoid clashes: "High Roller" rule -> **High Stakes**; "Dealer's Cut" rule -> **Skimmed Interest**.

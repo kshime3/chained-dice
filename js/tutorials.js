@@ -122,6 +122,28 @@ function compPages() {
   ];
 }
 
+function houseRulePages() {
+  return [
+    {
+      title: "House rules",
+      body: "From shift " + CONFIG.houseRulesFromShift + " on, the house sets <strong>one rule</strong> for the shift: tighter Odds, a doubled table minimum, a card switched off, no Pass Line, and more.<br><br>" +
+        "This shift's rule shows as a gold 📜 tag under the shooter. Hover or tap it to read it again.<br><br>" +
+        "On the <strong>last link</strong> of your chain, the pit boss steps in with a red 👑 <strong>boss rule</strong>. Build for it.",
+    },
+  ];
+}
+
+function challengePages() {
+  return [
+    {
+      title: "Pit boss challenges",
+      body: "On <strong>your</strong> turn, the pit boss sets you a challenge, like \"Hit the point\" or \"Roll 3 doubles\". It shows in a blue 🎯 box.<br><br>" +
+        "Finish it before you seven out and he pays you: cash, money off the debt, a free comp, or a free Shuffle.<br><br>" +
+        "One challenge per turn. Ignore it if it doesn't suit you.",
+    },
+  ];
+}
+
 // Remember which tutorials were seen. Storage can fail (private windows), so it's optional.
 function tutorialSeen(name) {
   try {

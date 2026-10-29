@@ -9,12 +9,13 @@ const vm = require("vm");
 
 // Load the logic files exactly as the browser does (no display code).
 globalThis.location = { search: "" };
-const files = ["config", "dice", "bets", "crew", "cards", "shop", "stats", "perks", "crafting", "comps", "shift"];
+const files = ["config", "dice", "bets", "crew", "cards", "shop", "stats", "perks", "crafting", "comps", "rules", "shift"];
 const source = files.map((f) => fs.readFileSync(path.join(__dirname, "..", "js", f + ".js"), "utf8")).join("\n");
 
 const simulator = `
 // One roll, settled the same way main.js finishRoll does it.
 function simRoll(state) {
+  const shooter = state.crew[state.shooterIndex];
   const rolled = rollDice(currentDice(state), nextRollPairs(state));
   state.lastRoll = rolled;
   state.turnRolls += 1;
@@ -38,7 +39,9 @@ function simRoll(state) {
   state.point = before.pity ? pointBefore : nextPoint(pointBefore, total);
   const sevenOut = !before.pity && pointBefore !== null && total === CONFIG.sevenOut;
   applyCardsAfterRoll(state, results, total, pointBefore, sevenOut);
-  applyCrewEffects(state, results, sevenOut, pointBefore !== null && total === pointBefore);
+  const pointHit = pointBefore !== null && total === pointBefore;
+  applyCrewEffects(state, results, sevenOut, pointHit);
+  if (shooter === "You") trackChallenge(state, results, { pointHit: pointHit, total: total, doubles: rolled.dice[0] === rolled.dice[1], sevenOut: sevenOut, multUsed: multUsed });
   afterRoll(state, sevenOut);
 }
 
@@ -117,7 +120,8 @@ function placeBets(state, s) {
   const safe = s.protect && totalMoney(state) >= amountOwed(state) + tableMin(state);
   // Which side: "pass", "dont", or "against-jinx" (Don't Pass only when Jinx shoots).
   const shooter = state.crew[state.shooterIndex];
-  const line = s.side === "dont" || (s.side === "against-jinx" && shooter === "Jinx") ? "dont" : "pass";
+  // House rule Dark Side Only: Don't Pass is the only line bet.
+  const line = s.side === "dont" || (s.side === "against-jinx" && shooter === "Jinx") || !passAllowed(state) ? "dont" : "pass";
   const backing = line === "pass" ? "odds" : "lay";
   if (state.point === null && state.bets.pass === 0 && state.bets.dont === 0) {
     let size = s.passPct ? round5(state.kitty * s.passPct) : s.pass;
@@ -200,6 +204,8 @@ vm.runInThisContext(source + "\n" + simulator);
 
 globalThis.ORIGINAL_SHIFTS = CONFIG.shifts.slice();
 if (process.env.CARRY) CONFIG.carryOverShare = Number(process.env.CARRY); // e.g. CARRY=0.5 node tools/simulate.js
+// NORULES=1 switches off house rules and challenges (to measure what they change).
+if (process.env.NORULES) { globalThis.pickHouseRule = () => null; globalThis.newChallenge = () => null; }
 const N = Number(process.argv[2]) || 20000;
 const scaleArg = process.argv[3]; // e.g. "100:200,200:500"
 const scale = (scaleArg || CONFIG.shifts.map((x) => x.cash + ":" + x.debt + ":" + x.minBet).join(",")).split(",").map((p) => p.split(":").map(Number));

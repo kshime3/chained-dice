@@ -2,6 +2,19 @@
 
 Dated session log. Newest at the top.
 
+## 2026-10-29: Session 7, continued (Milestone 11: house rules + challenges)
+
+**Done**
+- Owner chose: drop Short Table, Stingy Field and Jinxed; add **House Die** (left die fixed to a random 1-6) and **Dark Side Only**; a boss rule on the last link (No Free Lunch, Cold Dice, Seven Heaven); challenges on your own turn only.
+- **Built Milestone 11:** new `js/rules.js`. 7 house rules from shift 3, 3 boss rules on the last link, 8 pit boss challenges from shift 2 with 4 reward types (cash, debt cut, free comp, free Shuffle). Gold/red rule tag (hover or tap), rule line on the opening Break, blue challenge box with progress, greyed Pit Watch badge, closed Pass Line under Dark Side Only, free Shuffle button. Two short tutorials. Testing shortcut `?rule=id`. tests.html: 339 checks, all passing. Fits one screen on phones.
+- **Balance retest:** rules make shifts 3-8 harder for the bot (walk out free 1.2% -> 0.4-0.7%). Curve still rises; scale left alone pending the owner's playtest (BALANCE.md). Simulator found and we fixed a House Die + guaranteed-pair bug.
+
+**Waiting on the owner**
+- Testing Milestone 11, and saying whether the difficulty feels right.
+
+**Exact next step**
+- Milestone 12: more bets as unlocks, and locked cards with hidden unlock requirements.
+
 ## 2026-10-29: Session 7 (Milestone 10: crew growth)
 
 **Done**

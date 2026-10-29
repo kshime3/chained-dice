@@ -32,8 +32,9 @@ const CARDS = {
   chainLink:   { name: "Spare Link",      text: "When the floor opens, this link catches you: the shift counts as survived, a link breaks as normal, and the rest of the debt is forgiven. Used up." },
 };
 
+// Pit Watch (a house rule) switches one of your cards off for the shift.
 function hasCard(state, id) {
-  return state.cards.includes(id);
+  return state.cards.includes(id) && !(state.houseRule && state.houseRule.disabled === id);
 }
 
 // Round to the nearest $5, never below $5.
@@ -46,7 +47,8 @@ function roundTo5(n) {
 function effectiveMult(state) {
   const hotHand = hasCard(state, "hotHand") ? state.hotStreak * CONFIG.hotHandPerWin : 0;
   const highRoller = hasCard(state, "highRoller") && state.crew[state.shooterIndex] === "You" ? CONFIG.highRollerX : 1;
-  return (state.mult + hotHand) * state.payoutX * highRoller;
+  const mult = (state.mult + hotHand) * state.payoutX * highRoller;
+  return rule(state, "coldDice") ? Math.min(1, mult) : mult; // boss rule: mult capped at 1x
 }
 
 // One-use cards that work the moment you buy them.
@@ -62,7 +64,7 @@ function currentDice(state) {
     for (let face = 1; face <= 6; face++) set.extraWays.push([face, face, CONFIG.doubleUpWays]);
   }
   set.totalWays = perkTotalWays(state);
-  return applyArmedDice(state, set); // armed comps (No Sevens, Loaded Shot)
+  return applyHouseDie(state, applyArmedDice(state, set)); // armed comps, then the House Die rule
 }
 
 // Doubles Charm: is the next roll a guaranteed pair?

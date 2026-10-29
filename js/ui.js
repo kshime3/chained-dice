@@ -96,6 +96,8 @@ function renderState(state) {
   renderCrew(state);
   renderOddsPanel(state);
   renderMult(state);
+  renderHouseRule(state);
+  renderChallenge(state);
   document.getElementById("on-table").textContent = money(b.pass + b.odds + b.dont + b.lay + b.field);
   document.getElementById("table-min").textContent = "Table min " + money(tableMin(state));
   document.getElementById("pass-amount").textContent = money(b.pass);
@@ -114,6 +116,12 @@ function renderState(state) {
     document.getElementById(id).classList.toggle("disabled", pointOn && b[bet] === 0);
     document.getElementById(lockId).textContent = pointOn && b[bet] > 0 ? "🔒 Locked" : "";
     document.getElementById(lockId).title = "Locked until the point is hit or a 7 rolls.";
+  }
+
+  // Dark Side Only: the Pass Line is closed all shift
+  if (!passAllowed(state)) {
+    document.getElementById("pass-line").classList.add("disabled");
+    document.getElementById("pass-lock").textContent = "Closed: Dark Side Only";
   }
 
   // Odds and Lay Odds open while a point is on, behind the matching line bet
@@ -157,6 +165,41 @@ function renderCrew(state) {
     : "Every shooter has had a turn.";
 }
 
+// This shift's house rule as a tag with hover text.
+function houseRuleText(state) {
+  const r = state.houseRule;
+  if (!r) return "";
+  const info = HOUSE_RULES[r.id];
+  let text = info.text;
+  if (r.id === "houseDie") text = "Every shooter's left die is set to " + r.x + " this shift (unless that leaves no way to roll 7).";
+  if (r.id === "pitWatch") text = "The pit boss is watching your " + CARDS[r.disabled].name + ". It's switched off this shift.";
+  return text;
+}
+
+function renderHouseRule(state) {
+  const box = document.getElementById("house-rule");
+  box.classList.toggle("hidden", !state.houseRule);
+  if (!state.houseRule) return;
+  const info = HOUSE_RULES[state.houseRule.id];
+  box.className = "house-rule" + (info.boss ? " boss" : "");
+  box.innerHTML = (info.boss ? "👑 Boss rule: " : "📜 House rule: ") + "<strong>" + info.name + "</strong>" +
+    '<div class="tooltip">' + houseRuleText(state) + "</div>";
+}
+
+// The pit boss challenge on your turn.
+function renderChallenge(state) {
+  const box = document.getElementById("challenge");
+  const c = state.challenge;
+  const show = !!c && state.crew[state.shooterIndex] === "You";
+  box.classList.toggle("hidden", !show);
+  if (!show) return;
+  const info = CHALLENGES[c.id];
+  box.className = "challenge" + (c.done ? " done" : "");
+  box.innerHTML = c.done
+    ? "🎯 Challenge done: " + info.text + " ✓"
+    : "🎯 " + info.text + (info.target > 1 ? " (" + c.progress + "/" + info.target + ")" : "") + " → " + rewardText(state, c.reward);
+}
+
 // The Dealer Break: pay toward the debt between shooters.
 function renderBreak(state) {
   const screen = document.getElementById("break-screen");
@@ -174,6 +217,7 @@ function renderBreak(state) {
       : "Shift " + state.shift + ". " + (state.endless ? "Endless mode, no chain left to break. " : left + (left === 1 ? " link" : " links") + " to go. ") +
         (state.dealerCut > 0 ? "The dealer kept " + money(state.dealerCut) + " of your leftover money as his cut. " : "") +
         "The pit boss slides " + money(state.cashAdded) + " into your kitty. The dealer leans in: \"This time you owe me " + money(state.debt) + ".\" The table minimum is now " + money(tableMin(state)) + ".";
+    if (state.houseRule) intro += " " + (HOUSE_RULES[state.houseRule.id].boss ? "Boss rule" : "House rule") + " this shift: " + HOUSE_RULES[state.houseRule.id].name + ". " + houseRuleText(state);
   } else if (isFinalBreak(state)) {
     intro = "Every shooter has sevened out. Last chance to pay before the pit boss judges you.";
   } else {
@@ -271,7 +315,9 @@ function renderShop(state, handlers) {
     const label = price === 0 ? "Take it FREE (" + state.freeBuys + " left)" : "Buy " + money(price);
     stockBox.appendChild(cardBox(id, label, () => handlers.buy(slot), full || !canSpend(state, price)));
   });
-  document.getElementById("shuffle").textContent = "Shuffle (" + money(shuffleCost(state)) + ")";
+  document.getElementById("shuffle").textContent = state.freeShuffles > 0
+    ? "Shuffle (free x" + state.freeShuffles + ")"
+    : "Shuffle (" + money(shuffleCost(state)) + ")";
   document.getElementById("shuffle").disabled = !canSpend(state, shuffleCost(state));
 
   // Your cards, with Sell buttons (break screen)
@@ -351,8 +397,10 @@ function renderShop(state, handlers) {
   }
   for (const id of state.cards) {
     const badge = document.createElement("div");
-    badge.className = "card-badge " + CONFIG.cardRarity[id];
-    badge.innerHTML = CARDS[id].name + '<div class="tooltip"><strong>' + CARDS[id].name + "</strong><br>" + CARDS[id].text + "</div>";
+    const off = rule(state, "pitWatch") && state.houseRule.disabled === id;
+    badge.className = "card-badge " + CONFIG.cardRarity[id] + (off ? " switched-off" : "");
+    badge.innerHTML = (off ? "👁 " : "") + CARDS[id].name + '<div class="tooltip"><strong>' + CARDS[id].name + "</strong><br>" + CARDS[id].text +
+      (off ? "<br><em>Switched off this shift (Pit Watch).</em>" : "") + "</div>";
     badges.appendChild(badge);
   }
 }

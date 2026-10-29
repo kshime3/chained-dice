@@ -40,6 +40,7 @@ function setupTurn(state, prevName, prevMult) {
   state.turnRolls = 0;
   state.rerollUsed = false; // Reroll works once per shooter
   state.louGain = 0;
+  state.challenge = name === "You" ? newChallenge(state) : null; // pit boss challenge on your turn
 
   // Muggsy: after a point-7, this shooter's winnings are multiplied.
   if (state.muggsyPending) {
@@ -88,6 +89,17 @@ function applyMult(results, mult) {
 // Jinx's come-out curse: when he shoots, a come-out 7 doesn't beat Don't Pass (it's a tie).
 function applyCrewBeforePayout(state, results, total, pointBefore) {
   const notes = [];
+  // Boss rules
+  if (rule(state, "sevenHeaven") && pointBefore === null && total === CONFIG.sevenOut) {
+    for (const r of results) if (r.bet === "pass" && r.outcome === "win") { r.outcome = "none"; notes.push("Seven Heaven: come-out 7s don't pay."); }
+  }
+  if (rule(state, "noFreeLunch") && pointBefore !== null && total === pointBefore && !state.firstPointPaid[state.shooterIndex]) {
+    state.firstPointPaid[state.shooterIndex] = true;
+    for (const r of results) {
+      if ((r.bet === "pass" || r.bet === "odds") && r.outcome === "win") r.winnings = 0;
+    }
+    notes.push("No Free Lunch: this shooter's first point pays nothing.");
+  }
   const name = state.crew[state.shooterIndex];
   if (CONFIG.jinxCurse && name === "Jinx" && pointBefore === null && total === CONFIG.sevenOut) {
     for (const r of results) {
@@ -120,7 +132,11 @@ function setupTurnDiceOnly(state) {
 
 // Odds / Lay Odds limit, with The Professor doubling it on his turn.
 function backingLimit(state, back) {
-  const base = back === "odds" ? maxOdds(state.bets.pass, state.point) : maxLay(state.bets.dont, state.point);
+  let base = back === "odds" ? maxOdds(state.bets.pass, state.point) : maxLay(state.bets.dont, state.point);
+  if (rule(state, "tightOdds")) { // house rule: win at most 2x the line bet
+    const [win, per] = CONFIG.layPayouts[state.point];
+    base = Math.min(base, back === "odds" ? state.bets.pass * CONFIG.tightOddsX : Math.floor((state.bets.dont * CONFIG.tightOddsX * per) / win));
+  }
   return state.crew[state.shooterIndex] === "The Professor" ? base * CONFIG.professorOddsX : base;
 }
 

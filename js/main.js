@@ -2,6 +2,7 @@
 
 let state = newShiftState();
 giveTestCards(state);
+giveTestRule(state);
 let selectedChip = CONFIG.chipValues[0];
 
 // Draw this shift's chips; keep the selected chip if it's still there.
@@ -28,6 +29,10 @@ function placeBet(betName) {
   let amount = selectedChip;
 
   // Line bets: Pass Line or Don't Pass, one side per come-out.
+  if (betName === "pass" && !passAllowed(state)) {
+    showMessage("House rule, Dark Side Only: no Pass Line this shift. Bet the Don't Pass instead.");
+    return;
+  }
   if (betName === "pass" || betName === "dont") {
     const other = betName === "pass" ? "dont" : "pass";
     if (state.point !== null) {
@@ -185,6 +190,10 @@ function finishRoll(rolled) {
   const cardNotes = applyCardsAfterRoll(state, results, total, pointBefore, sevenOut);
   const crewNotes = applyCrewEffects(state, results, sevenOut, pointBefore !== null && total === pointBefore);
   const pointHit = pointBefore !== null && total === pointBefore;
+  const challengeNote = shooter === "You"
+    ? trackChallenge(state, results, { pointHit: pointHit, total: total, doubles: rolled.dice[0] === rolled.dice[1], sevenOut: sevenOut, multUsed: multUsed })
+    : null;
+  if (challengeNote) compNotes.push(challengeNote);
   recordRoll(state.stats, state, rolled, totalMoney(state) - moneyBefore, sevenOut, pointHit, odds, multUsed, shooter, state.turnRolls);
   afterRoll(state, sevenOut);
 
@@ -197,7 +206,7 @@ function finishRoll(rolled) {
 
   if (sevenOut && results.some((r) => r.bet === "dont" && r.outcome === "win")) playSound("pointHit");
   else if (sevenOut) playSound("sevenOut");
-  else if (pointHit) playSound("pointHit");
+  else if (pointHit || challengeNote) playSound("pointHit");
   else if (results.some((r) => r.outcome === "win")) playSound("win");
   else if (results.some((r) => r.outcome === "lose")) playSound("lose");
   else playSound("land");
@@ -351,7 +360,7 @@ function cut(name) {
 function shuffle() {
   const cost = shuffleCost(state);
   showBreakMessage(shuffleStock(state)
-    ? "Shuffled for " + money(cost) + ". New cards on the table."
+    ? (cost > 0 ? "Shuffled for " + money(cost) + "." : "Free shuffle from the pit boss.") + " New cards on the table."
     : "Not enough. Shuffling can't take your kitty below " + money(tableMin(state)) + ".");
   renderAll();
 }
@@ -361,7 +370,11 @@ function leaveBreak() {
   showBreakMessage("");
   if (state.status === "playing") {
     const next = state.crew[state.shooterIndex];
-    showMessage((next === "You" ? "Your turn to shoot." : next + " steps up to shoot.") + " Place your Pass Line bet.");
+    showMessage((next === "You" ? "Your turn to shoot." : next + " steps up to shoot.") + (passAllowed(state) ? " Place your Pass Line bet." : " Dark Side Only: place your Don't Pass bet."));
+    if (next === "You" && state.challenge && !tutorialSeen("challenges")) {
+      markTutorialSeen("challenges");
+      showTutorial(challengePages());
+    }
   }
   renderAll();
 }
@@ -374,9 +387,16 @@ function giveTestCards(st) {
   st.stock = newStock(st);
 }
 
+// Testing shortcut: ?rule=houseDie forces that house rule every shift.
+function giveTestRule(st) {
+  const wanted = new URLSearchParams(location.search).get("rule");
+  if (wanted) st.houseRule = pickHouseRule(st, wanted);
+}
+
 // After a won shift: the next shift starts, and the Pit Boss phone rings first.
 function startNextShift() {
   state = nextShift(state);
+  giveTestRule(state);
   showBreakMessage("");
   showMessage("Shift " + state.shift + " begins.");
   renderAll();
@@ -386,16 +406,23 @@ function startNextShift() {
     showBreakMessage("New perk: " + perkInfo(id).name + (target ? " (" + target + "'s seat dropped away)" : "") + ".");
     renderAll();
   });
+  let pages = [];
   if (!tutorialSeen("phone")) {
     markTutorialSeen("phone");
-    showTutorial(phonePages());
+    pages = pages.concat(phonePages());
   }
+  if (state.houseRule && !tutorialSeen("houseRules")) {
+    markTutorialSeen("houseRules");
+    pages = pages.concat(houseRulePages());
+  }
+  if (pages.length) showTutorial(pages);
 }
 
 function playAgain() {
   fallPlayed = false;
   state = newShiftState();
   giveTestCards(state);
+  giveTestRule(state);
   showBreakMessage("");
   showMessage("You wake up chained to the table.");
   renderAll();
@@ -435,6 +462,7 @@ document.getElementById("field").onclick = () => placeBet("field");
 document.getElementById("dont-pass").onclick = () => placeBet("dont");
 document.getElementById("lay").onclick = () => placeBet("lay");
 document.getElementById("roll-button").onclick = roll;
+document.getElementById("house-rule").onclick = () => showMessage(HOUSE_RULES[state.houseRule.id].name + ": " + houseRuleText(state));
 document.getElementById("dice").onclick = roll; // tapping the dice rolls too
 document.getElementById("clear-button").onclick = clearBets;
 document.getElementById("pay-typed").onclick = payTyped;

@@ -4,7 +4,7 @@ const RARITY_ORDER = ["legendary", "rare", "uncommon", "common"];
 
 // Price of a card: a share of the shift's debt, rounded to the nearest $5.
 function cardPrice(state, id) {
-  return roundTo5(CONFIG.rarityPricePct[CONFIG.cardRarity[id]] * state.debt);
+  return roundTo5(CONFIG.rarityPricePct[CONFIG.cardRarity[id]] * state.debt * priceX(state));
 }
 
 // What you actually pay: free while you have free items from the phone.
@@ -17,7 +17,8 @@ function sellPrice(state, id) {
 }
 
 function shuffleCost(state) {
-  return roundTo5((CONFIG.shuffleBasePct + CONFIG.shuffleStepPct * state.shuffles) * state.debt);
+  if (state.freeShuffles > 0) return 0;
+  return roundTo5((CONFIG.shuffleBasePct + CONFIG.shuffleStepPct * state.shuffles) * state.debt * priceX(state));
 }
 
 // Pick a rarity tier using the chances in config.js.
@@ -96,7 +97,8 @@ function shuffleStock(state) {
   if (!canSpend(state, cost)) return false;
   state.kitty -= cost;
   state.stats.spent += cost;
-  state.shuffles += 1;
+  if (state.freeShuffles > 0) state.freeShuffles -= 1;
+  else state.shuffles += 1;
   state.stock = newStock(state);
   return true;
 }
