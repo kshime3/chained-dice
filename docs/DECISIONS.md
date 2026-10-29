@@ -248,3 +248,10 @@ Dated log of every decision and why. Newest at the bottom.
 - Progress saved in the browser (`localStorage`); tests.html never touches it. "Reset all progress" on the Collection screen.
 - **Unlocks must add power** (owner chose 1 + 2 + 4): locked cards made stronger and starters trimmed (measured with the simulator); a fixed **Reputation** ladder (every 3 unlocks, a lasting bonus); slower unlock goals (about half by run 20). Target: the bot's first escape around run 30-60.
 - Reputation counts real unlocks only, so `?unlockAll` and tests.html get no bonuses. Interest bonus and free-Shuffle bonus were tried and replaced by "-1 way to roll 7" (they did little for most play styles).
+
+## 2026-10-29 (Milestone 12b: more bets)
+
+- **All four new bets** (owner): Hard Ways, Place, Come & Don't Come, Fire Bet. Each is an unlock group with a hidden goal (drafts approved, then tuned).
+- **The mult applies to them** (owner). Fire Bet payouts trimmed to 24/99/299 and capped at one table minimum because of it.
+- Kept simple: Hard Ways and Place bets are off on come-outs; no odds behind Come bets; a second "More bets" board instead of squeezing the main board.
+- Place bets turned out to be strong (with mult cards), so their goal was raised to 150 points rather than cutting their payouts (lower payouts barely changed the result).

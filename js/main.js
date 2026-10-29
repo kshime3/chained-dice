@@ -30,6 +30,33 @@ function placeBet(betName) {
   if (busy() || state.status !== "playing" || state.onBreak) return;
   let amount = selectedChip;
 
+  // The new bets (More bets board).
+  if (betGroup(betName)) {
+    const check = extraBetCheck(state, betName);
+    const why = {
+      locked: "That bet is still locked.",
+      noPoint: BET_NAMES[betName] + " bets open once a point is set.",
+      fireLate: "The Fire Bet goes down before a shooter's first roll.",
+      fireMax: "The Fire Bet is at its max (" + money(fireMax(state)) + ").",
+    };
+    if (check !== "ok") {
+      showMessage(why[check]);
+      return;
+    }
+    if (betName === "fire") amount = Math.min(amount, fireMax(state) - state.bets.fire);
+    if (amount > state.cash) {
+      showMessage("Not enough cash for a " + money(amount) + " bet.");
+      return;
+    }
+    state.cash -= amount;
+    state.bets[betName] += amount;
+    playSound("chip");
+    showMessage(BET_NAMES[betName] + (betName === "fire" ? "" : " bet") + " is now " + money(state.bets[betName]) + "." +
+      ((betGroup(betName) === "hardWays" || betGroup(betName) === "placeBets") && state.point === null ? " (Off until a point is set.)" : ""));
+    renderState(state);
+    return;
+  }
+
   // Line bets: Pass Line or Don't Pass, one side per come-out.
   if (betName === "pass" && !passAllowed(state)) {
     showMessage("House rule, Dark Side Only: no Pass Line this shift. Bet the Don't Pass instead.");
@@ -93,7 +120,8 @@ function placeBet(betName) {
 function clearBets() {
   if (busy() || state.status !== "playing" || state.onBreak) return;
   const b = state.bets;
-  const loose = state.point === null ? ["pass", "dont", "odds", "lay", "field"] : ["odds", "lay", "field"];
+  let loose = state.point === null ? ["pass", "dont"].concat(looseBets()) : looseBets();
+  if (state.turnRolls === 0) loose = loose.concat("fire"); // the Fire Bet locks in at the first roll
   for (const bet of loose) {
     state.cash += b[bet];
     b[bet] = 0;
@@ -101,7 +129,7 @@ function clearBets() {
   playSound("chip");
   showMessage(state.point === null
     ? "Bets returned to you. Remember: a Pass Line or Don't Pass bet is needed to roll."
-    : "Odds, Lay Odds and Field returned. Your line bet stays locked until the point is decided.");
+    : "Loose bets returned. Your line bet (and any Come bets on a number) stay until they're decided.");
   renderState(state);
 }
 
@@ -125,7 +153,7 @@ function roll() {
 // Loaded Die / Reroll: if this roll would cost you, offer to reroll it first.
 function offerRerollOrFinish(rolled) {
   const options = rerollOptions(state);
-  const lose = costlyBets(state, rolled.total);
+  const lose = costlyBets(state, rolled.total, rolled.dice);
   if (!(options.oneDie || options.bothDice) || lose.length === 0) {
     finishRoll(rolled);
     return;
@@ -161,7 +189,7 @@ function finishRoll(rolled) {
   state.turnRolls += 1;
   const total = state.lastRoll.total;
   const pointBefore = state.point;
-  const results = resolveRoll(state.bets, total, pointBefore);
+  const results = resolveRoll(state.bets, total, pointBefore, { dice: rolled.dice, firePoints: state.firePoints });
   for (const r of results) r.plain = r.winnings; // before cards and mult, for the win screen
   const boosts = [];
   const doubled = !!state.armed.doubleDown && results.some((r) => r.outcome === "win");
@@ -172,17 +200,8 @@ function finishRoll(rolled) {
   if (hasCard(state, "oddsAddict") && results.some((r) => r.bet === "odds" && r.outcome === "win")) boosts.push("Odds Addict (+50% Odds)");
   applyMult(results, multUsed);
 
-  // Pay winners and remove losers.
-  for (const r of results) {
-    if (r.outcome === "win") {
-      state.cash += r.winnings;
-      if (!r.staysUp) {
-        state.cash += r.amount; // bet comes back to you
-        state.bets[r.bet] = 0;
-      }
-    }
-    if (r.outcome === "lose") state.bets[r.bet] = 0;
-  }
+  // Pay winners, remove losers, move Come bets.
+  settleResults(state, results);
 
   const compNotes = finishArmed(state, results);
 
@@ -192,6 +211,7 @@ function finishRoll(rolled) {
   const cardNotes = applyCardsAfterRoll(state, results, total, pointBefore, sevenOut);
   const crewNotes = applyCrewEffects(state, results, sevenOut, pointBefore !== null && total === pointBefore);
   const pointHit = pointBefore !== null && total === pointBefore;
+  if (pointHit && !state.firePoints.includes(pointBefore)) state.firePoints.push(pointBefore); // Fire Bet
   const challengeNote = shooter === "You"
     ? trackChallenge(state, results, { pointHit: pointHit, total: total, doubles: rolled.dice[0] === rolled.dice[1], sevenOut: sevenOut, multUsed: multUsed })
     : null;
@@ -473,6 +493,16 @@ document.getElementById("field").onclick = () => placeBet("field");
 document.getElementById("dont-pass").onclick = () => placeBet("dont");
 document.getElementById("lay").onclick = () => placeBet("lay");
 document.getElementById("roll-button").onclick = roll;
+document.getElementById("board-toggle").onclick = () => {
+  showingExtraBoard = !showingExtraBoard;
+  renderState(state);
+  // The first time each new bet shows up, explain it.
+  const fresh = Object.keys(BET_GROUPS).filter((g) => showingExtraBoard && available(state, g) && !tutorialSeen("bet." + g));
+  if (fresh.length) {
+    fresh.forEach((g) => markTutorialSeen("bet." + g));
+    showTutorial(fresh.map((g) => ({ title: BET_GROUPS[g].name, body: BET_GROUPS[g].text })));
+  }
+};
 document.getElementById("house-rule").onclick = () => showMessage(HOUSE_RULES[state.houseRule.id].name + ": " + houseRuleText(state));
 document.getElementById("dice").onclick = roll; // tapping the dice rolls too
 document.getElementById("clear-button").onclick = clearBets;

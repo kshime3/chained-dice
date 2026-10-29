@@ -2,6 +2,19 @@
 
 Dated session log. Newest at the top.
 
+## 2026-10-29: Session 7, continued (Milestone 12b: more bets)
+
+**Done**
+- Owner chose: all four bets (Hard Ways, Place, Come & Don't Come, Fire Bet), mult applies, draft goals.
+- **Built 12b:** new bet rules in `js/bets.js` (one shared `settleResults` for game and simulator), a second "➕ More bets" board, per-bet tutorial on first view, Collection "Bets" section, unlock goals. Pity now covers the new bets. tests.html: 390 checks, all passing. Fits one screen on phones.
+- **Balance:** Place bets are strong with mult cards; their goal raised to 150 points. Bot median first escape 32-38 runs (target 30-60); new player still ~0.1% per run.
+
+**Waiting on the owner**
+- Playtesting the new bets and the overall progression.
+
+**Exact next step**
+- Owner's choice: polish pass, 3D dice, more content, or more playtesting fixes.
+
 ## 2026-10-29: Session 7, continued (Milestone 12a: making unlocks matter)
 
 **Done**

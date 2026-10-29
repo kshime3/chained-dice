@@ -38,6 +38,7 @@ function setupTurn(state, prevName, prevMult) {
   state.hotRodGain = 0;
   state.rattleGain = 0;
   state.turnRolls = 0;
+  state.firePoints = []; // Fire Bet: different points this shooter makes
   state.turnDoubles = 0; // for unlocks
   state.turnWon = 0;
   state.rerollUsed = false; // Reroll works once per shooter

@@ -31,6 +31,11 @@ const UNLOCKS = {
   // Crew you can hire
   "Lucky Lou":     { kind: "crew", done: (c, g) => c.bigMultPoints >= g.luckyLou },
   "The Professor": { kind: "crew", done: (c, g) => c.hires >= g.professor },
+  // Bets (Milestone 12b)
+  hardWays:      { kind: "bet", done: (c, g) => c.hardPairs >= g.hardWays },
+  placeBets:     { kind: "bet", done: (c, g) => c.pointsHit >= g.placeBets },
+  fireBet:       { kind: "bet", done: (c, g) => c.turnPoints >= g.fireBet },
+  comeBets:      { kind: "bet", done: (c, g) => c.runPoints >= g.comeBets },
 };
 
 const SAVE_KEY = "chainedDice.profile";
@@ -42,6 +47,7 @@ function newProfile() {
       bestShift: 0, oddsWon: 0, pointSevens: 0, falls: 0, turnDoubles: 0, runInterest: 0,
       dontWins: 0, jinxDropped: 0, crewWins: {}, ownTurnRolls: 0, ownTurnWon: 0, runHires: 0,
       edits: 0, nudges: 0, copycats: 0, pointsHit: 0, bigMultPoints: 0, hires: 0,
+      hardPairs: 0, turnPoints: 0, runPoints: 0,
     },
     fresh: [], // just unlocked, waiting to be announced (not saved)
     freshPerks: [], // Reputation bonuses just earned, announced with them
@@ -125,7 +131,14 @@ function trackRollUnlocks(state, info) {
   c.oddsWon += wins.filter((r) => r.bet === "odds").reduce((sum, r) => sum + r.winnings, 0);
   c.dontWins += wins.filter((r) => r.bet === "dont").length;
   if (info.sevenOut && state.rollsSincePoint === 1) c.pointSevens += 1;
-  if (info.pointHit) c.pointsHit += 1;
+  if (info.pointHit) {
+    c.pointsHit += 1;
+    state.stats.runPoints = (state.stats.runPoints || 0) + 1;
+    best("runPoints", state.stats.runPoints);
+  }
+  const total = state.lastRoll ? state.lastRoll.total : 0;
+  if (info.doubles && [4, 6, 8, 10].includes(total)) c.hardPairs += 1;
+  best("turnPoints", (state.firePoints || []).length);
   if (info.pointHit && info.multUsed >= 3) c.bigMultPoints += 1;
   if (info.doubles) state.turnDoubles = (state.turnDoubles || 0) + 1;
   best("turnDoubles", state.turnDoubles || 0);
@@ -226,9 +239,27 @@ function applyLegacy(state) {
   if (hasLegacy(state, "spareLink")) state.cards.push("chainLink");
 }
 
+// The new bets, as unlockable groups.
+const BET_GROUPS = {
+  hardWays:  { name: "Hard Ways", text: "Bet a 4, 6, 8 or 10 comes as a pair (2+2, 3+3...) before a 7 or the plain way. Pays 7 to 1 (4, 10) or 9 to 1 (6, 8). Off on come-out rolls." },
+  placeBets: { name: "Place Bets", text: "Bet a number (4, 5, 6, 8, 9, 10) comes before a 7. It stays up and keeps paying: 9 to 5 (4, 10), 7 to 5 (5, 9), 7 to 6 (6, 8). Off on come-out rolls." },
+  comeBets:  { name: "Come & Don't Come", text: "A second Pass Line (or Don't Pass) started while the point is on. Its own come-out: 7/11 win, 2/3/12 lose; any other number becomes its own point." },
+  fireBet:   { name: "Fire Bet", text: "A small bet before a shooter's first roll. Pays big if they make 4, 5 or 6 different points before sevening out." },
+};
+
+// Which unlock group a table bet belongs to ("hard6" -> "hardWays"), or null for the main bets.
+function betGroup(bet) {
+  if (/^hard\d+$/.test(bet)) return "hardWays";
+  if (/^place\d+$/.test(bet)) return "placeBets";
+  if (bet === "come" || bet === "dontCome") return "comeBets";
+  if (bet === "fire") return "fireBet";
+  return null;
+}
+
 // A friendly name for any unlockable id.
 function unlockName(id) {
   if (CARDS[id]) return CARDS[id].name;
   if (COMPS[id]) return COMPS[id].name;
+  if (BET_GROUPS[id]) return BET_GROUPS[id].name;
   return id; // crew are named by their id
 }

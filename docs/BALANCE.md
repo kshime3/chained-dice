@@ -235,3 +235,20 @@ Careers (200 each, unlocks and Reputation kept between runs):
 - New players: only ~1 in 4 bot runs survive shifts 1-2, and escapes are about 1 in 1,000. Veterans escape about 1 run in 15.
 - These bots are simple (flat bets, no rerolls, never drop Jinx), so a thoughtful player should land inside 30-60 runs. If playtests say it's still too long, the next levers are `reputationEvery` (3 -> 2) or the unlock goals.
 - Bot never unlocks Green Dice, Jinx's Shadow or Front of the Line (it pays at the end, never drops Jinx, hires slowly); humans will.
+
+## 2026-10-29: Milestone 12b retest (more bets)
+
+Bots learned: a Fire Bet (one table minimum) on each fresh shooter, and Place 6 and 8 (in $6 steps) while a point is on, once unlocked. `NOEXTRA=1`, `NOFIRE=1`, `NOPLACE=1` switch these off.
+
+| Smart bot, 8,000 runs | S1 | S2 | S3 | S4 | S5 | S6 | S7 | S8 | Walk out free |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Brand-new player | 58% | 41% | 51% | 50% | 42% | 36% | 44% | 25% | 0.1% |
+| Veteran, no new bets | 100% | 100% | 75% | 73% | 69% | 61% | 51% | 52% | 6.0% |
+| Veteran, Place bets only | 100% | 100% | 80% | 84% | 80% | 72% | 65% | 65% | 16.3% |
+| Veteran, Fire Bet only | 100% | 100% | 71% | 71% | 69% | 60% | 57% | 52% | 6.2% |
+| Veteran, both | 100% | 100% | 75% | 81% | 78% | 72% | 66% | 64% | 14.4% |
+
+Careers (200 each): median runs to first escape **38** (smart) and **32** (smart + comps), inside the 30-60 target. Unlocks found after 10 / 25 / 50 runs (of 28): 9-12 / 17-21 / 20-24.
+
+- Path: with easy goals the median fell to 21-24 runs. Harder goals for all four helped little; Place bets were the driver (6 and 8 win often, feeding Hot Hand and other mult cards). Cutting Place payouts to 1:1 on 6/8 barely changed it, so payouts stay at casino odds and the Place goal went from 25 to 150 points hit.
+- The Fire Bet is a fun long shot but adds almost nothing on average.

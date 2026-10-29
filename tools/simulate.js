@@ -21,25 +21,20 @@ function simRoll(state) {
   state.turnRolls += 1;
   const total = rolled.total;
   const pointBefore = state.point;
-  const results = resolveRoll(state.bets, total, pointBefore);
+  const results = resolveRoll(state.bets, total, pointBefore, { dice: rolled.dice, firePoints: state.firePoints });
   const doubled = !!state.armed.doubleDown && results.some((r) => r.outcome === "win");
   const multUsed = effectiveMult(state) * (doubled ? 2 : 1);
   const crewBefore = applyCrewBeforePayout(state, results, total, pointBefore);
   const before = applyCardsBeforePayout(state, results, total, pointBefore);
   applyMult(results, multUsed);
-  for (const r of results) {
-    if (r.outcome === "win") {
-      state.cash += r.winnings;
-      if (!r.staysUp) { state.cash += r.amount; state.bets[r.bet] = 0; }
-    }
-    if (r.outcome === "lose") state.bets[r.bet] = 0;
-  }
+  settleResults(state, results);
   finishArmed(state, results);
   if (pointBefore !== null && total === pointBefore && multUsed >= CONFIG.freeCompMult) gainComp(state, randomComp(state));
   state.point = before.pity ? pointBefore : nextPoint(pointBefore, total);
   const sevenOut = !before.pity && pointBefore !== null && total === CONFIG.sevenOut;
   applyCardsAfterRoll(state, results, total, pointBefore, sevenOut);
   const pointHit = pointBefore !== null && total === pointBefore;
+  if (pointHit && !state.firePoints.includes(pointBefore)) state.firePoints.push(pointBefore); // Fire Bet
   applyCrewEffects(state, results, sevenOut, pointHit);
   trackRollUnlocks(state, { results: results, pointHit: pointHit, sevenOut: sevenOut, doubles: rolled.dice[0] === rolled.dice[1], multUsed: multUsed, shooter: shooter });
   if (shooter === "You") trackChallenge(state, results, { pointHit: pointHit, total: total, doubles: rolled.dice[0] === rolled.dice[1], sevenOut: sevenOut, multUsed: multUsed });
@@ -133,6 +128,23 @@ function placeBets(state, s) {
     size = Math.max(tableMin(state), safe ? tableMin(state) : size);
     if (fundPassLine(state, Math.min(size, Math.max(tableMin(state), round5(state.cash))), line) === null) {
       fundPassLine(state, tableMin(state), line);
+    }
+  }
+  // New bets, once unlocked (NOEXTRA=1 turns this off): a Fire Bet on each fresh shooter,
+  // and Place 6 and 8 while a point is on (in $6 steps so they pay 7:6 cleanly).
+  if (!process.env.NOEXTRA && !safe) {
+    if (!process.env.NOFIRE && state.turnRolls === 0 && state.bets.fire === 0 && extraBetCheck(state, "fire") === "ok" && state.cash > fireMax(state) * 4) {
+      state.cash -= fireMax(state);
+      state.bets.fire += fireMax(state);
+    }
+    if (!process.env.NOPLACE && state.point !== null && available(state, "placeBets")) {
+      const unit = 6 * Math.ceil(tableMin(state) / 6);
+      for (const n of [6, 8]) {
+        if (n !== state.point && state.bets["place" + n] === 0 && state.cash > unit * 4) {
+          state.cash -= unit;
+          state.bets["place" + n] += unit;
+        }
+      }
     }
   }
   const onLine = state.bets.pass > 0 ? "pass" : state.bets.dont > 0 ? "dont" : null;

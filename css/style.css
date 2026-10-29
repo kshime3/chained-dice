@@ -525,3 +525,12 @@ body.falling .seat, body.falling .side > *, body.falling .table, body.falling .c
 .rep-ladder { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 4px; text-align: left; }
 .rep-step { background: #2a2a2a; color: #aaa; border-radius: 6px; padding: 4px 8px; font-size: 0.8rem; }
 .rep-step.earned { background: #3b2a10; color: #f5d76e; border: 1px solid #c9a227; }
+
+/* More bets board */
+.extra-row { display: flex; gap: 4px; margin-top: 4px; }
+.extra-tile { flex: 1 1 0; min-width: 0; margin-top: 0; padding: 4px; text-align: center; }
+.extra-tile .bet-title { font-size: 0.8rem; }
+.extra-tile .bet-hint { font-size: 0.65rem; }
+.extra-tile.off { opacity: 0.6; }
+.extra-note { margin: 4px 0 0; font-size: 0.7rem; }
+@media (max-width: 760px) { .extra-tile .bet-title { font-size: 0.7rem; } .extra-tile .bet-hint { font-size: 0.58rem; } }

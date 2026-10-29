@@ -46,7 +46,13 @@ function animateDice(finalDice, ms, onDone) {
     onDone();
   }, ms);
 }
-const BET_NAMES = { pass: "Pass Line", odds: "Odds", dont: "Don't Pass", lay: "Lay Odds", field: "Field" };
+const BET_NAMES = { pass: "Pass Line", odds: "Odds", dont: "Don't Pass", lay: "Lay Odds", field: "Field", come: "Come", dontCome: "Don't Come", fire: "Fire Bet" };
+for (const n of [4, 5, 6, 8, 9, 10]) {
+  BET_NAMES["hard" + n] = "Hard " + n;
+  BET_NAMES["place" + n] = "Place " + n;
+  BET_NAMES["come" + n] = "Come bet on " + n;
+  BET_NAMES["dcome" + n] = "Don't Come bet on " + n;
+}
 
 function money(n) {
   return "$" + n.toLocaleString();
@@ -98,7 +104,8 @@ function renderState(state) {
   renderMult(state);
   renderHouseRule(state);
   renderChallenge(state);
-  document.getElementById("on-table").textContent = money(b.pass + b.odds + b.dont + b.lay + b.field);
+  document.getElementById("on-table").textContent = money(betsTotal(b));
+  renderExtraBoard(state);
   document.getElementById("table-min").textContent = "Table min " + money(tableMin(state));
   document.getElementById("pass-amount").textContent = money(b.pass);
   document.getElementById("dont-amount").textContent = money(b.dont);
@@ -849,6 +856,7 @@ function describeRoll(total, results, pointBefore, pointAfter) {
       lines.push(name + " wins " + money(r.winnings) + shown + ".");
     }
     if (r.outcome === "lose") lines.push(name + " loses " + money(r.amount) + ".");
+    if (r.outcome === "move") lines.push(name + " moves to the " + r.to.replace(/\D/g, "") + ".");
   }
 
   if (pointBefore === null && pointAfter !== null) {
@@ -1068,7 +1076,7 @@ function tutorialOpen() {
 }
 
 function unlockSplash(ids, perks) {
-  const kind = { card: "card", comp: "comp", crew: "crew member you can hire" };
+  const kind = { card: "card", comp: "comp", crew: "crew member you can hire", bet: "bet (find it under ➕ More bets)" };
   const perkText = (id) => CONFIG.reputation.find((r) => r.id === id).text;
   return '<div class="splash-title">🔓 UNLOCKED!</div>' +
     ids.map((id) => '<p class="splash-big">' + unlockName(id) + '</p><p class="hint">New ' + kind[UNLOCKS[id].kind] + "</p>").join("") +
@@ -1101,7 +1109,8 @@ function renderCollection() {
   let html = "<h3>Cards</h3><div class=\"collection-grid\">" + cards.map((id) => tile(id, CARDS[id].name, CARDS[id].text, CONFIG.cardRarity[id])).join("") + "</div>";
   html += "<h3>Comps</h3><div class=\"collection-grid\">" + order(Object.keys(COMPS)).map((id) => tile(id, COMPS[id].name, COMPS[id].text)).join("") + "</div>";
   html += "<h3>Crew</h3><div class=\"collection-grid\">" + crew.map((n) => tile(n, n, CREW_INFO[n].style)).join("") + "</div>";
-  const all = cards.concat(Object.keys(COMPS), crew);
+  html += "<h3>Bets</h3><div class=\"collection-grid\">" + order(Object.keys(BET_GROUPS)).map((g) => tile(g, BET_GROUPS[g].name, BET_GROUPS[g].text)).join("") + "</div>";
+  const all = cards.concat(Object.keys(COMPS), crew, Object.keys(BET_GROUPS));
   document.getElementById("collection-count").textContent = all.filter(isUnlocked).length + " of " + all.length + " found. Locked things unlock by playing. How? That's for you to discover.";
   document.getElementById("collection-body").innerHTML = reputationHtml() + html;
 }
@@ -1109,4 +1118,45 @@ function renderCollection() {
 function showCollection() {
   renderCollection();
   document.getElementById("collection").classList.remove("hidden");
+}
+
+// ---------- More bets (Milestone 12b) ----------
+
+let showingExtraBoard = false; // which bet board is on the table
+
+// The second bet board: only the bet groups this run has unlocked.
+function renderExtraBoard(state) {
+  const groups = Object.keys(BET_GROUPS).filter((g) => available(state, g));
+  const toggle = document.getElementById("board-toggle");
+  toggle.classList.toggle("hidden", groups.length === 0);
+  if (groups.length === 0) showingExtraBoard = false;
+  toggle.textContent = showingExtraBoard ? "⬅ Main bets" : "➕ More bets";
+  document.getElementById("main-board").classList.toggle("hidden", showingExtraBoard);
+  const board = document.getElementById("extra-board");
+  board.classList.toggle("hidden", !showingExtraBoard);
+  if (!showingExtraBoard) return;
+  const b = state.bets;
+  const pointOn = state.point !== null;
+  const tile = (bet, title, sub, off) => '<div class="bet-area extra-tile' + (off ? " off" : "") + '" data-bet="' + bet + '"><div class="bet-title">' + title +
+    ' <span class="bet-amount">' + (b[bet] ? money(b[bet]) : "") + '</span></div><div class="bet-hint">' + sub + "</div></div>";
+  const moved = (prefix) => [4, 5, 6, 8, 9, 10].filter((n) => b[prefix + n] > 0).map((n) => "on " + n + ": " + money(b[prefix + n])).join(" · ");
+  let html = "";
+  if (groups.includes("hardWays")) {
+    html += '<div class="extra-row">' + [4, 6, 8, 10].map((n) => tile("hard" + n, "HARD " + n, n / 2 + "+" + n / 2 + " · " + CONFIG.hardWaysPayouts[n] + ":1", !pointOn)).join("") + "</div>";
+  }
+  if (groups.includes("placeBets")) {
+    html += '<div class="extra-row">' + [4, 5, 6, 8, 9, 10].map((n) => tile("place" + n, "PLACE " + n, CONFIG.placePayouts[n].join(":"), !pointOn)).join("") + "</div>";
+  }
+  const last = [];
+  if (groups.includes("comeBets")) {
+    last.push(tile("come", "COME", moved("come") || "7/11 win · needs a point", !pointOn));
+    last.push(tile("dontCome", "DON'T COME", moved("dcome") || "2/3 win · needs a point", !pointOn));
+  }
+  if (groups.includes("fireBet")) {
+    last.push(tile("fire", "🔥 FIRE", state.firePoints.length + " different points · max " + money(fireMax(state)), state.turnRolls > 0 && !b.fire));
+  }
+  if (last.length) html += '<div class="extra-row">' + last.join("") + "</div>";
+  html += '<p class="hint extra-note">Hard Ways and Place bets are off on come-out rolls. Tap a bet to add your chip.</p>';
+  board.innerHTML = html;
+  for (const el of board.querySelectorAll("[data-bet]")) el.onclick = () => placeBet(el.dataset.bet);
 }

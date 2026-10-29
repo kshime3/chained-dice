@@ -8,7 +8,7 @@ const CARDS = {
   rattlesnake: { name: "Rattlesnake",     text: "Rolling snake eyes (1+1) adds +" + CONFIG.rattlesnakeMult + "x mult for the rest of this shooter's turn." },
   redDice:     { name: "Red Dice",        text: "Craps (2, 3, 12) on the come-out wins the Pass Line at even money instead of losing." },
   oddsAddict:  { name: "Odds Addict",     text: "Odds bets pay " + Math.round(CONFIG.oddsAddictExtra * 100) + "% extra." },
-  pity:        { name: "Pit Boss's Pity", text: "The first seven-out of the shift (any shooter) is ignored. Pass Line and Odds stay, and the shooter keeps rolling." },
+  pity:        { name: "Pit Boss's Pity", text: "The first seven-out of the shift (any shooter) is ignored. Your bets stay (except the Field), and the shooter keeps rolling." },
   muggsy:      { name: "Muggsy",          text: "A 7 right after the point is set costs your Pass Line twice. But the next shooter's winnings are x" + CONFIG.muggsyNextShooterX + " for their whole turn." },
   doubleUp:    { name: "Double Up",       text: "Doubles come up more: +1 way (out of 36) for each double, on everyone's dice. Fewer 7s, too." },
   doublesCharm:{ name: "Doubles Charm",   text: "Every 3rd roll of each shooter's turn is guaranteed to be a pair. Pairs can never make 7." },
@@ -74,13 +74,13 @@ function pairDue(state) {
 
 // Would this roll cost you money? Counts Red Dice and an unused Pit Boss's Pity,
 // since those would save the bet anyway. Returns the bets that would lose.
-function costlyBets(state, total) {
+function costlyBets(state, total, dice) {
   const pointOn = state.point !== null;
-  return resolveRoll(state.bets, total, state.point).filter((r) => {
+  return resolveRoll(state.bets, total, state.point, { dice: dice, firePoints: state.firePoints }).filter((r) => {
     if (r.outcome !== "lose") return false;
     if (r.bet === "pass" && !pointOn && hasCard(state, "redDice")) return false;
     if (r.bet === "dont" && !pointOn && total === CONFIG.sevenOut && CONFIG.jinxCurse && state.crew[state.shooterIndex] === "Jinx") return false;
-    if (pointOn && total === CONFIG.sevenOut && hasCard(state, "pity") && !state.pityUsed && (r.bet === "pass" || r.bet === "odds")) return false;
+    if (pointOn && total === CONFIG.sevenOut && hasCard(state, "pity") && !state.pityUsed && state.bets.pass > 0 && !["field", "come", "dontCome"].includes(r.bet)) return false;
     return true;
   });
 }
@@ -136,7 +136,8 @@ function applyCardsBeforePayout(state, results, total, pointBefore) {
     state.pityUsed = true;
     pity = true;
     for (const r of results) {
-      if (r.bet === "pass" || r.bet === "odds") r.outcome = "none";
+      // Every bet that this 7 would beat stays up (not the one-roll Field, Come and Don't Come).
+      if (r.outcome === "lose" && !["field", "come", "dontCome"].includes(r.bet)) r.outcome = "none";
     }
     notes.push("Pit Boss's Pity: that seven-out is ignored! Your bets stay and the shooter keeps rolling.");
   }

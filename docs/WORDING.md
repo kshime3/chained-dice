@@ -107,3 +107,8 @@ Unchanged for shifts 1-5. Shifts 6-8 follow the existing x1.5 growth: $1,800, $2
 - How to play, last page "Many runs": "You probably won't walk out free on your first try. That's the point. Many cards, comps and crew start locked. Each unlocks when you do something special during a run. What? That's for you to discover."
 - Collection "⭐ Reputation": "Every 3 unlocks, the house remembers you: a lasting bonus from your next run on." Earned steps show "✓ +$25 starting cash"; later ones "9 unlocks: -1 way to roll 7 on everyone's dice".
 - Unlock screen extra line: "⭐ Reputation up! From your next run: +1 comp slot".
+
+## Added 2026-10-29: more bets (Milestone 12b)
+- Button: "➕ More bets" / "⬅ Main bets". Board note: "Hard Ways and Place bets are off on come-out rolls. Tap a bet to add your chip."
+- Messages: "Come bets open once a point is set." "The Fire Bet goes down before a shooter's first roll." "Place 6 bet is now $12. (Off until a point is set.)" Roll text: "Come moves to the 5." "Come bet on 5 wins $10."
+- Unlock screen: "New bet (find it under ➕ More bets)". Tutorial pages per bet use the Collection text.

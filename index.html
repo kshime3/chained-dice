@@ -54,6 +54,7 @@
           </div>
         </div>
 
+        <div id="main-board">
         <div class="bet-area" id="field">
           <div class="bet-title">FIELD <span class="bet-amount" id="field-amount"></span></div>
           <div class="bet-hint">2 pays double · 3 4 9 10 11 · 12 pays triple</div>
@@ -82,12 +83,15 @@
             <div class="bet-hint">Pays 1:2 on 4/10 · 2:3 on 5/9 · 5:6 on 6/8</div>
           </div>
         </div>
+        </div>
+        <div id="extra-board" class="extra-board hidden"></div>
       </div>
 
       <div class="controls">
         <div id="chips" class="chips"></div>
         <button id="roll-button" class="big-button">Roll</button>
         <button id="clear-button">Clear bets</button>
+        <button id="board-toggle" class="hidden">➕ More bets</button>
       </div>
 
       <div id="message" class="message">You wake up chained to the table. Pick a chip, put it on the Pass Line, then roll.</div>

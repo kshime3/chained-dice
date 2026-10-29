@@ -81,6 +81,10 @@ const CONFIG = {
     chisel: 2,          // Copycats used
     luckyLou: 3,        // points hit at 3x mult or more, all runs
     professor: 8,       // crew hired, all runs
+    hardWays: 40,       // pairs rolled that make 4, 6, 8 or 10, all runs
+    placeBets: 150,     // points hit, all runs
+    fireBet: 4,         // different points made by one shooter in one turn
+    comeBets: 15,       // points hit in one run
   },
   // Reputation: every few unlocks earns the next lasting bonus (from the next run on).
   reputationEvery: 3,
@@ -263,6 +267,11 @@ const CONFIG = {
 
   // Odds pay "true odds", written as [win, per bet].
   // [3, 2] means win $3 for every $2 bet. Half dollars round down.
+  // More bets (Milestone 12b, unlocked by hidden goals). Profit per $1, or [win, per].
+  hardWaysPayouts: { 4: 7, 6: 9, 8: 9, 10: 7 }, // a pair (2+2, 3+3...) before a 7 or the easy way
+  placePayouts: { 4: [9, 5], 5: [7, 5], 6: [7, 6], 8: [7, 6], 9: [7, 5], 10: [9, 5] }, // the number before a 7
+  firePayouts: { 4: 24, 5: 99, 6: 299 }, // different points made by one shooter (trimmed: the mult applies too)
+  fireBetMaxX: 1, // the Fire Bet can be at most this many table minimums
   oddsPayouts: { 4: [2, 1], 5: [3, 2], 6: [6, 5], 8: [6, 5], 9: [3, 2], 10: [2, 1] },
 
   // A seven during the point phase ends the shooter's turn.

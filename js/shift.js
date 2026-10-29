@@ -54,7 +54,8 @@ function newShiftState() {
     cashAdded: shiftScale(1).cash, // cash the pit boss added at the start of this shift
     dealerCut: 0, // leftover money the dealer kept at the start of this shift
     deposited: 0, // paid to the dealer: safe, but out of play
-    bets: { pass: 0, odds: 0, dont: 0, lay: 0, field: 0 },
+    bets: emptyBets(),
+    firePoints: [], // different points the current shooter has made (Fire Bet)
     point: null, // null means the next roll is a come-out roll
     shooterIndex: 0, // seat number of the current shooter (0 = first seat)
     onBreak: true, // a Dealer Break happens before each shooter and once at the end
@@ -114,8 +115,7 @@ function newShiftState() {
 
 // Money still in play: cash plus everything on the table (not deposits).
 function totalMoney(state) {
-  const b = state.bets;
-  return state.cash + b.pass + b.odds + b.dont + b.lay + b.field;
+  return state.cash + betsTotal(state.bets);
 }
 
 function amountOwed(state) {
@@ -128,6 +128,21 @@ function isFinalBreak(state) {
 }
 
 // Dark Side Only (a house rule): no Pass Line this shift.
+// Can you put a chip on one of the new bets right now? Returns "ok" or a reason:
+// "locked", "noPoint" (Come bets need a point), "fireLate" (the shooter already rolled), "fireMax".
+function extraBetCheck(state, bet) {
+  if (!available(state, betGroup(bet))) return "locked";
+  if ((bet === "come" || bet === "dontCome") && state.point === null) return "noPoint";
+  if (bet === "fire" && state.turnRolls > 0) return "fireLate";
+  if (bet === "fire" && state.bets.fire >= fireMax(state)) return "fireMax";
+  return "ok";
+}
+
+// The Fire Bet is small: at most CONFIG.fireBetMaxX table minimums.
+function fireMax(state) {
+  return tableMin(state) * CONFIG.fireBetMaxX;
+}
+
 function passAllowed(state) {
   return !rule(state, "darkSideOnly");
 }
@@ -139,7 +154,9 @@ function canRoll(state) {
 
 // Broke: on a come-out, you can't cover the minimum Pass Line bet.
 function isBroke(state) {
-  return state.point === null && totalMoney(state) < tableMin(state);
+  // Only money you could still put on a line bet counts (not Come bets on a number).
+  const free = state.cash + state.bets.pass + state.bets.dont + looseBets().reduce((sum, bet) => sum + state.bets[bet], 0);
+  return state.point === null && free < tableMin(state);
 }
 
 // The most you can pay right now. You always keep enough in cash
@@ -172,12 +189,13 @@ function deposit(state, amount) {
 // or null if you can't cover it at all.
 function fundPassLine(state, amount, line = "pass") {
   const b = state.bets;
-  if (state.cash + b.field + b.odds + b.lay < amount) return null;
+  const loose = looseBets();
+  if (state.cash + loose.reduce((sum, bet) => sum + b[bet], 0) < amount) return null;
   const moves = [];
   const fromCash = Math.min(state.cash, amount);
   state.cash -= fromCash;
   let short = amount - fromCash;
-  for (const bet of ["field", "odds", "lay"]) {
+  for (const bet of loose) {
     const take = Math.min(b[bet], short);
     if (take > 0) {
       b[bet] -= take;
