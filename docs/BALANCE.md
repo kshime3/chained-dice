@@ -97,11 +97,11 @@ With the curse (a come-out 7 is a tie for Don't Pass when Jinx shoots), "Pass Li
 Smart bot (flat $10 bets, raised to the table minimum when needed), shop + phone, 10,000 runs: survived shift 1 **68%**, 2 **46%**, 3 **37%**, 4 **30%**, 5 **25%**, 6 **20%**, 7 **17%**, 8 (walk out free) **14%**.
 
 - Surprise: survival to shift 8 went **up** (from ~3%). The old bot bet a flat $10 even against a $4,050 debt, so it could never earn enough late on. The minimum forces bigger bets, and bigger bets are what it takes to clear big debts. A human already scales bets, so for people the minimum mainly removes "coast on $5 bets".
-- What makes later shifts genuinely hard is the **debt compared with the cash you bring in**. The owner noticed the real problem: a big leftover kitty clears the next shifts. "Pay after the first shooter" stops the instant payoff; if shifts still feel easy, the next lever is steeper debts or less cash added. Retune after consumables and dice crafting (they add power).
+- What makes later shifts genuinely hard is the **debt compared with the cash you bring in**. The owner noticed the real problem: a big leftover cash clears the next shifts. "Pay after the first shooter" stops the instant payoff; if shifts still feel easy, the next lever is steeper debts or less cash added. Retune after consumables and dice crafting (they add power).
 
 ## 2026-10-28: Rescaled for rising difficulty
 
-**Problem found:** with the old scale, once past shift 2 the bot survived each later shift ~80% of the time, every time. Later shifts were no harder than early ones, because survivors carry a big leftover kitty (and cards) into the next shift. Steeper debts alone barely changed this (every candidate stayed at ~65-70% per shift).
+**Problem found:** with the old scale, once past shift 2 the bot survived each later shift ~80% of the time, every time. Later shifts were no harder than early ones, because survivors carry a big leftover cash (and cards) into the next shift. Steeper debts alone barely changed this (every candidate stayed at ~65-70% per shift).
 
 **Fix:** debts that accelerate (x1.5 early, ~x2.2 late) **plus a dealer's cut** (keep half your leftover money). Tested 8,000-20,000 runs per candidate; per-shift survival (survived / reached) for the smart bot:
 
@@ -161,3 +161,20 @@ Simulator learned the rules (they're in the game's own logic files) and challeng
 - House rules cost a flat-betting bot about 5-10 points per shift from shift 3, and the boss rule on shift 8 about 10-20. Escapes roughly halve.
 - Trimming the debts barely helps (same lesson as before: debts aren't the main lever). The curve still gets harder shift by shift, so **no rescale for now**: a human can adapt to a rule (smaller bets under Tight Odds, Don't Pass bots aren't hurt by Dark Side Only), the bot can't. If playtesting feels too punishing, the levers are: rules from shift 4 instead of 3, or a softer boss rule list.
 - Found by the simulator: House Die plus a guaranteed pair (Doubles Charm, Lucky Pair) could leave no possible roll. Fixed (House Die skips that shooter), with a test.
+
+## 2026-10-29: Test: start with 3 shooters (you + 2 random crew)
+
+Simulator only (`START_CREW=3`): the 3 starters left out join the hire pool, and the bot hires into empty seats (best shooters first, never Jinx). House rules on, 8,000 runs, keep-half carry-over, per-shift survival:
+
+| Setup | S1 | S2 | S3 | S4 | S5 | S6 | S7 | S8 | Walk out free |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 6 shooters, current scale (M11) | 68% | 67% | 58% | 54% | 45% | 39% | 44% | 36% | 0.4% |
+| 3 shooters, current scale | 59% | 43% | 53% | 55% | 44% | 41% | 46% | 33% | 0.2% |
+| 3 shooters, shift 1 owes $150, shift 2 owes $225 | 70% | 57% | 45% | 52% | 46% | 40% | 47% | 38% | 0.3% |
+
+(Second bot, with comps, within about 5 points of these.)
+
+- Seats fill fast: after each won shift the bot has about 3.2, 5.1, 5.8, then 6.0 seats. Hiring costs 20% of the debt, which is cheap early.
+- Fewer shooters means fewer chances to win money each shift, so **shifts 1-2 get much harder** on the current scale. Lowering the first two debts brings shift 1 back to normal. Shift 3 ($550) is then the wall while the table is still growing.
+- From shift 4 on the table is full and it plays like today.
+- Tools: `START_CREW=3 node tools/simulate.js 8000`, and `SEATS=1` prints the seats filled after each shift.

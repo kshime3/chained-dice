@@ -60,9 +60,9 @@ function isShopOpen(state) {
   return state.shift > 1 || state.shooterIndex >= CONFIG.shopOpensAfterShooter;
 }
 
-// Spending in the shop can't take your kitty below the minimum Pass Line bet.
+// Spending in the shop can't take your cash below the minimum Pass Line bet.
 function canSpend(state, amount) {
-  return state.kitty - amount >= tableMin(state);
+  return state.cash - amount >= tableMin(state);
 }
 
 // Buy the card in a stock slot. Returns "ok", "empty", "full" or "money".
@@ -73,7 +73,7 @@ function buyCard(state, slot) {
   const price = buyPrice(state, id);
   if (!canSpend(state, price)) return "money";
   if (state.freeBuys > 0) state.freeBuys -= 1;
-  state.kitty -= price;
+  state.cash -= price;
   state.stats.spent += price;
   if (CARDS[id].instant) useInstantCard(state, id); // used right away, takes no slot
   else state.cards.push(id);
@@ -87,7 +87,7 @@ function buyCard(state, slot) {
 function sellCard(state, id) {
   if (!state.cards.includes(id)) return 0;
   state.cards = state.cards.filter((c) => c !== id);
-  state.kitty += sellPrice(state, id);
+  state.cash += sellPrice(state, id);
   return sellPrice(state, id);
 }
 
@@ -95,7 +95,7 @@ function sellCard(state, id) {
 function shuffleStock(state) {
   const cost = shuffleCost(state);
   if (!canSpend(state, cost)) return false;
-  state.kitty -= cost;
+  state.cash -= cost;
   state.stats.spent += cost;
   if (state.freeShuffles > 0) state.freeShuffles -= 1;
   else state.shuffles += 1;

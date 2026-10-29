@@ -161,7 +161,7 @@ function applyCrewEffects(state, results, sevenOut, pointHit) {
     notes.push("Hot Rod heats up: mult is now " + state.mult + "x.");
   }
 
-  // Hot Rod's first seven-out costs extra, taken from your kitty.
+  // Hot Rod's first seven-out costs extra, taken from your cash.
   // It never takes you below the minimum Pass Line bet.
   // Lucky Lou: + mult every time he hits a point.
   if (pointHit && name === "Lucky Lou") {
@@ -175,7 +175,7 @@ function applyCrewEffects(state, results, sevenOut, pointHit) {
     state.hotRodPenaltyUsed = true;
     const extra = chargeExtra(state, results, CONFIG.hotRodSevenOutCost);
     if (extra > 0) {
-      notes.push("Hot Rod's seven-out costs double: another $" + extra + " from your kitty.");
+      notes.push("Hot Rod's seven-out costs double: another $" + extra + " from your cash.");
     }
   }
   return notes;

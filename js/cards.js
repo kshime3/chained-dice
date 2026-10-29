@@ -109,8 +109,8 @@ function multReasons(state) {
 function chargeExtra(state, results, times, bets = ["pass", "odds"]) {
   const lost = results.filter((r) => r.outcome === "lose" && bets.includes(r.bet))
     .reduce((sum, r) => sum + r.amount, 0);
-  const extra = Math.min(lost * (times - 1), Math.max(0, state.kitty - tableMin(state)));
-  state.kitty -= extra;
+  const extra = Math.min(lost * (times - 1), Math.max(0, state.cash - tableMin(state)));
+  state.cash -= extra;
   return extra;
 }
 
@@ -181,12 +181,12 @@ function applyCardsAfterRoll(state, results, total, pointBefore, sevenOut) {
 
   if (hasCard(state, "snakeEyes") && total === 2) {
     const bonus = roundTo5(CONFIG.snakeEyesBonusPct * state.debt);
-    state.kitty += bonus;
+    state.cash += bonus;
     notes.push("Snake Eyes: +$" + bonus + " bonus.");
   }
   if (hasCard(state, "luckySeven") && pointBefore === null && total === 7) {
     const bonus = roundTo5(CONFIG.luckySevenBonusPct * state.debt);
-    state.kitty += bonus;
+    state.cash += bonus;
     notes.push("Lucky Seven: +$" + bonus + " bonus.");
   }
   if (hasCard(state, "rattlesnake") && total === 2) {
@@ -221,7 +221,7 @@ function applyCardsAfterRoll(state, results, total, pointBefore, sevenOut) {
   if (hasCard(state, "muggsy") && sevenOut && state.rollsSincePoint === 1) {
     const extra = chargeExtra(state, results, CONFIG.muggsyCost, ["pass"]);
     state.muggsyPending = true;
-    notes.push("Muggsy: point-7! " + (extra > 0 ? "Another $" + extra + " from your kitty. " : "") +
+    notes.push("Muggsy: point-7! " + (extra > 0 ? "Another $" + extra + " from your cash. " : "") +
       "The next shooter's winnings are x" + CONFIG.muggsyNextShooterX + ".");
   }
   if (pointBefore === null && state.point !== null) state.rollsSincePoint = 0;

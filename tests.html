@@ -90,81 +90,81 @@
 
     // Shift rules
     const s1 = newShiftState();
-    check("Shift starts: $200 kitty, $0 paid, shooter 1, on a Dealer break", [s1.kitty, s1.deposited, s1.shooterIndex, s1.onBreak], [200, 0, 0, true]);
+    check("Shift starts: $200 cash, $0 paid, shooter 1, on a Dealer break", [s1.cash, s1.deposited, s1.shooterIndex, s1.onBreak], [200, 0, 0, true]);
     check("Can't roll a come-out with no Pass Line", canRoll(s1), false);
-    s1.kitty = 195; s1.bets.pass = 5;
+    s1.cash = 195; s1.bets.pass = 5;
     check("Can roll with $5 on the Pass Line", canRoll(s1), true);
 
     // Broke
-    const broke = newShiftState(); broke.kitty = 4;
+    const broke = newShiftState(); broke.cash = 4;
     check("$4 total on a come-out is broke", isBroke(broke), true);
-    const notBroke = newShiftState(); notBroke.kitty = 0; notBroke.bets.field = 5;
-    check("$0 kitty but $5 on the Field is not broke", isBroke(notBroke), false);
-    const pointOn = newShiftState(); pointOn.kitty = 0; pointOn.bets.pass = 5; pointOn.point = 6;
-    check("$0 kitty with a point on is not broke", isBroke(pointOn), false);
-    const paidUp = newShiftState(); paidUp.kitty = 3; paidUp.deposited = 500;
+    const notBroke = newShiftState(); notBroke.cash = 0; notBroke.bets.field = 5;
+    check("$0 cash but $5 on the Field is not broke", isBroke(notBroke), false);
+    const pointOn = newShiftState(); pointOn.cash = 0; pointOn.bets.pass = 5; pointOn.point = 6;
+    check("$0 cash with a point on is not broke", isBroke(pointOn), false);
+    const paidUp = newShiftState(); paidUp.cash = 3; paidUp.deposited = 500;
     check("Deposits don't count toward covering a bet", isBroke(paidUp), true);
 
     // Auto-moving money to the Pass Line
-    const mv = newShiftState(); mv.kitty = 2; mv.bets.field = 10;
-    check("Kitty $2 + Field $10: $5 Pass moves $3 from Field", fundPassLine(mv, 5), [{ from: "field", amount: 3 }]);
-    check("...leaving kitty $0, Field $7, Pass $5", [mv.kitty, mv.bets.field, mv.bets.pass], [0, 7, 5]);
-    const mv2 = newShiftState(); mv2.kitty = 50;
-    check("Enough in kitty: nothing moved", fundPassLine(mv2, 25), []);
-    const mv3 = newShiftState(); mv3.kitty = 2; mv3.bets.field = 2;
-    check("Can't cover $5 at all: refused, nothing changes", [fundPassLine(mv3, 5), mv3.kitty, mv3.bets.field], [null, 2, 2]);
+    const mv = newShiftState(); mv.cash = 2; mv.bets.field = 10;
+    check("Cash $2 + Field $10: $5 Pass moves $3 from Field", fundPassLine(mv, 5), [{ from: "field", amount: 3 }]);
+    check("...leaving cash $0, Field $7, Pass $5", [mv.cash, mv.bets.field, mv.bets.pass], [0, 7, 5]);
+    const mv2 = newShiftState(); mv2.cash = 50;
+    check("Enough in cash: nothing moved", fundPassLine(mv2, 25), []);
+    const mv3 = newShiftState(); mv3.cash = 2; mv3.bets.field = 2;
+    check("Can't cover $5 at all: refused, nothing changes", [fundPassLine(mv3, 5), mv3.cash, mv3.bets.field], [null, 2, 2]);
 
     // Paying the dealer
     const d = newShiftState();
     check("Pay $50: $50 paid", deposit(d, 50), 50);
-    check("...kitty $150, paid $50, still owe $1,950", [d.kitty, d.deposited, amountOwed(d)], [150, 50, 1950]);
+    check("...cash $150, paid $50, still owe $1,950", [d.cash, d.deposited, amountOwed(d)], [150, 50, 1950]);
     check("Paying everything keeps $5 back for the Pass Line", deposit(d, 999), 145);
-    check("...kitty $5 left", d.kitty, 5);
-    check("Kitty at $5: nothing more can be paid", deposit(d, 5), 0);
-    const d3 = newShiftState(); d3.kitty = 100; d3.deposited = 1900;
-    check("Paying off the whole debt may use every last dollar", [deposit(d3, 100), d3.kitty, d3.status], [100, 0, "won"]);
-    const d2 = newShiftState(); d2.kitty = 300; d2.deposited = 1900;
+    check("...cash $5 left", d.cash, 5);
+    check("Cash at $5: nothing more can be paid", deposit(d, 5), 0);
+    const d3 = newShiftState(); d3.cash = 100; d3.deposited = 1900;
+    check("Paying off the whole debt may use every last dollar", [deposit(d3, 100), d3.cash, d3.status], [100, 0, "won"]);
+    const d2 = newShiftState(); d2.cash = 300; d2.deposited = 1900;
     check("Owe $100 with $300: only $100 is paid", deposit(d2, 300), 100);
-    check("Paying in full wins at once, extra stays in kitty", [d2.status, d2.kitty], ["won", 200]);
+    check("Paying in full wins at once, extra stays in cash", [d2.status, d2.cash], ["won", 200]);
 
     // Turns and breaks
-    const so1 = newShiftState(); so1.onBreak = false; so1.kitty = 100;
+    const so1 = newShiftState(); so1.onBreak = false; so1.cash = 100;
     afterRoll(so1, true);
     check("A seven-out passes the dice and starts a Dealer break", [so1.shooterIndex, so1.onBreak, so1.status], [1, true, "playing"]);
     endBreak(so1);
     check("Leaving the break: next shooter plays", [so1.onBreak, so1.status], [false, "playing"]);
 
-    const last = newShiftState(); last.onBreak = false; last.kitty = 5000; last.shooterIndex = 5;
+    const last = newShiftState(); last.onBreak = false; last.cash = 5000; last.shooterIndex = 5;
     afterRoll(last, true);
     check("Last shooter sevens out: a final Dealer break, not a fall yet", [isFinalBreak(last), last.onBreak, last.status], [true, true, "playing"]);
     deposit(last, 5000);
     check("Paying in full on the final break wins", last.status, "won");
 
-    const short = newShiftState(); short.kitty = 500; short.shooterIndex = 6;
+    const short = newShiftState(); short.cash = 500; short.shooterIndex = 6;
     endBreak(short);
     check("Leaving the final break still owing: fall", short.status, "fell-short");
 
-    const brokeRoll = newShiftState(); brokeRoll.onBreak = false; brokeRoll.kitty = 0;
+    const brokeRoll = newShiftState(); brokeRoll.onBreak = false; brokeRoll.cash = 0;
     afterRoll(brokeRoll, false);
     check("Going broke on a come-out: fall", brokeRoll.status, "fell-broke");
     // Interest on paid money
-    const in1 = newShiftState(); in1.onBreak = false; in1.kitty = 50; in1.deposited = 100;
+    const in1 = newShiftState(); in1.onBreak = false; in1.cash = 50; in1.deposited = 100;
     afterRoll(in1, true);
-    check("Interest: $100 paid -> +$5 into the kitty at the Break", [in1.lastInterest, in1.kitty], [5, 55]);
+    check("Interest: $100 paid -> +$5 into the cash at the Break", [in1.lastInterest, in1.cash], [5, 55]);
     const in2 = newShiftState(); in2.deposited = 30;
     check("Interest rounds down: $30 paid -> $1", payInterest(in2), 1);
     check("Nothing paid -> no interest", payInterest(newShiftState()), 0);
-    const in3 = newShiftState(); in3.onBreak = false; in3.kitty = 0; in3.deposited = 100; in3.shooterIndex = 1;
+    const in3 = newShiftState(); in3.onBreak = false; in3.cash = 0; in3.deposited = 100; in3.shooterIndex = 1;
     afterRoll(in3, true);
-    check("Interest can save you: $0 kitty + $5 interest -> Break, not a fall", [in3.status, in3.kitty], ["playing", 5]);
+    check("Interest can save you: $0 cash + $5 interest -> Break, not a fall", [in3.status, in3.cash], ["playing", 5]);
 
-    const zero = newShiftState(); zero.onBreak = false; zero.kitty = 0; zero.shooterIndex = 1;
+    const zero = newShiftState(); zero.onBreak = false; zero.cash = 0; zero.shooterIndex = 1;
     afterRoll(zero, true);
     check("Seven-out with $0: fall at once, no Dealer break", [zero.status, zero.onBreak], ["fell-broke", false]);
-    const low = newShiftState(); low.onBreak = false; low.kitty = 20; low.shooterIndex = 1;
+    const low = newShiftState(); low.onBreak = false; low.cash = 20; low.shooterIndex = 1;
     afterRoll(low, true);
     check("Seven-out with $20: Dealer break as usual", [low.status, low.onBreak], ["playing", true]);
-    const brokeBreak = newShiftState(); brokeBreak.kitty = 3; brokeBreak.shooterIndex = 2;
+    const brokeBreak = newShiftState(); brokeBreak.cash = 3; brokeBreak.shooterIndex = 2;
     endBreak(brokeBreak);
     check("Leaving a break unable to cover $5: fall", brokeBreak.status, "fell-broke");
 
@@ -187,7 +187,7 @@
     let jinxHigh = false;
     for (let i = 0; i < 5000; i++) { if (rollDice(diceForShooter("Jinx")).total > 8) jinxHigh = true; }
     check("Jinx: 5,000 rolls, never above 8", jinxHigh, false);
-    const sh = newShiftState(); sh.onBreak = false; sh.kitty = 100;
+    const sh = newShiftState(); sh.onBreak = false; sh.cash = 100;
     afterRoll(sh, true);
     check("After a seven-out, the next shooter's dice are loaded (Lefty -> Dee)", sh.dice.bannedPairs, [[1, 6]]);
 
@@ -196,7 +196,7 @@
     applyMult(m, 2.5);
     check("Mult 2.5x: $10 win pays $25, $5 win pays $12 (rounded down)", m.map((r) => r.winnings), [25, 12, 0]);
 
-    const atIndex = (i) => { const st = newShiftState(); st.onBreak = false; st.kitty = 100; st.shooterIndex = i; setupTurn(st, null, 1); return st; };
+    const atIndex = (i) => { const st = newShiftState(); st.onBreak = false; st.cash = 100; st.shooterIndex = i; setupTurn(st, null, 1); return st; };
     const rod = atIndex(2);
     applyCrewEffects(rod, [{ bet: "pass", outcome: "win" }], false);
     applyCrewEffects(rod, [{ bet: "field", outcome: "win" }], false);
@@ -204,14 +204,14 @@
     check("Hot Rod: two winning rolls and a loss -> 3x", rod.mult, 3);
     check("...and the mult lists the reason once: \"Hot Rod streak: +2x\"", multReasons(rod), ["Hot Rod streak: +2x"]);
 
-    const rod2 = atIndex(2); rod2.kitty = 100;
+    const rod2 = atIndex(2); rod2.cash = 100;
     applyCrewEffects(rod2, [{ bet: "pass", outcome: "lose", amount: 10 }, { bet: "odds", outcome: "lose", amount: 20 }, { bet: "field", outcome: "lose", amount: 5 }], true);
-    check("Hot Rod's seven-out costs double: Pass $10 + Odds $20 -> another $30", rod2.kitty, 70);
+    check("Hot Rod's seven-out costs double: Pass $10 + Odds $20 -> another $30", rod2.cash, 70);
     applyCrewEffects(rod2, [{ bet: "pass", outcome: "lose", amount: 10 }], true);
-    check("...only the first time each shift", rod2.kitty, 70);
-    const rod3 = atIndex(2); rod3.kitty = 12;
+    check("...only the first time each shift", rod2.cash, 70);
+    const rod3 = atIndex(2); rod3.cash = 12;
     applyCrewEffects(rod3, [{ bet: "pass", outcome: "lose", amount: 50 }], true);
-    check("...but never below the $5 minimum", rod3.kitty, 5);
+    check("...but never below the $5 minimum", rod3.cash, 5);
 
     const jinx = atIndex(3); setupTurn(jinx, "Hot Rod", 5);
     check("Mentor: Hot Rod ends at 5x -> Jinx starts at 3x", jinx.mult, 3);
@@ -225,7 +225,7 @@
     applyCrewEffects(ghost, [{ bet: "pass", outcome: "win" }], false);
     check("...the first win lifts it back to 1x", [ghost.mult, ghost.coldTable], [1, false]);
 
-    const flow = newShiftState(); flow.onBreak = false; flow.kitty = 100; flow.shooterIndex = 2; flow.mult = 4;
+    const flow = newShiftState(); flow.onBreak = false; flow.cash = 100; flow.shooterIndex = 2; flow.mult = 4;
     afterRoll(flow, true);
     check("Full flow: Hot Rod sevens out at 4x -> Jinx starts at 2.5x", [flow.crew[flow.shooterIndex], flow.mult], ["Jinx", 2.5]);
 
@@ -244,23 +244,23 @@
     }
     check("Cards you own never show up in the stock", ownedInStock, false);
 
-    const b1 = newShiftState(); b1.kitty = 300; b1.stock = ["hotHand", "redDice", "pity"];
-    check("Buy Hot Hand ($100)", [buyCard(b1, 0), b1.kitty, b1.cards, b1.stock[0]], ["ok", 200, ["hotHand"], null]);
+    const b1 = newShiftState(); b1.cash = 300; b1.stock = ["hotHand", "redDice", "pity"];
+    check("Buy Hot Hand ($100)", [buyCard(b1, 0), b1.cash, b1.cards, b1.stock[0]], ["ok", 200, ["hotHand"], null]);
     check("Buying the same slot again: sold out", buyCard(b1, 0), "empty");
-    check("Can't buy if it would leave less than $5", [buyCard(b1, 1), b1.kitty], ["money", 200]);
-    b1.kitty = 205;
-    check("...exactly $5 left is fine", [buyCard(b1, 1), b1.kitty], ["ok", 5]);
-    const b2 = newShiftState(); b2.kitty = 5000; b2.cards = ["hotHand", "snakeEyes", "luckySeven", "rattlesnake", "redDice"]; b2.stock = ["pity", null, null];
+    check("Can't buy if it would leave less than $5", [buyCard(b1, 1), b1.cash], ["money", 200]);
+    b1.cash = 205;
+    check("...exactly $5 left is fine", [buyCard(b1, 1), b1.cash], ["ok", 5]);
+    const b2 = newShiftState(); b2.cash = 5000; b2.cards = ["hotHand", "snakeEyes", "luckySeven", "rattlesnake", "redDice"]; b2.stock = ["pity", null, null];
     check("5 cards: slots are full", buyCard(b2, 0), "full");
-    check("Sell Snake Eyes for $50", [sellCard(b2, "snakeEyes"), b2.cards.length, b2.kitty], [50, 4, 5050]);
-    const sf = newShiftState(); sf.kitty = 1000;
-    check("Shuffle costs 5% of the debt every time ($100, then $100)", [shuffleCost(sf), shuffleStock(sf), shuffleCost(sf), sf.kitty], [100, true, 100, 900]);
+    check("Sell Snake Eyes for $50", [sellCard(b2, "snakeEyes"), b2.cards.length, b2.cash], [50, 4, 5050]);
+    const sf = newShiftState(); sf.cash = 1000;
+    check("Shuffle costs 5% of the debt every time ($100, then $100)", [shuffleCost(sf), shuffleStock(sf), shuffleCost(sf), sf.cash], [100, true, 100, 900]);
     check("Shop is closed before the first shooter", isShopOpen(newShiftState()), false);
     const open1 = newShiftState(); open1.shooterIndex = 1;
     check("Shop opens after the first shooter", isShopOpen(open1), true);
 
     // Cards in play. Helper: a state that owns the given cards.
-    const withCards = (...ids) => { const st = newShiftState(); st.onBreak = false; st.kitty = 1000; st.cards = ids; return st; };
+    const withCards = (...ids) => { const st = newShiftState(); st.onBreak = false; st.cash = 1000; st.cards = ids; return st; };
     const passLose = (amt) => [{ bet: "pass", outcome: "lose", amount: amt, winnings: 0 }];
 
     const rd = withCards("redDice");
@@ -285,15 +285,15 @@
 
     const se = withCards("snakeEyes", "rattlesnake");
     applyCardsAfterRoll(se, [], 2, 6, false);
-    check("Snake Eyes: a 2 pays 10% of the debt ($200)", se.kitty, 1200);
+    check("Snake Eyes: a 2 pays 10% of the debt ($200)", se.cash, 1200);
     check("Rattlesnake: a 2 adds +1x mult", se.mult, 2);
     check("...and shows as a mult reason", multReasons(se), ["Rattlesnake: +1x"]);
 
     const ls = withCards("luckySeven");
     applyCardsAfterRoll(ls, [], 7, null, false);
-    check("Lucky Seven: a come-out 7 pays 5% ($100)", ls.kitty, 1100);
+    check("Lucky Seven: a come-out 7 pays 5% ($100)", ls.cash, 1100);
     applyCardsAfterRoll(ls, [], 7, 6, true);
-    check("...but not a seven-out", ls.kitty, 1100);
+    check("...but not a seven-out", ls.cash, 1100);
 
     const hh = withCards("hotHand");
     applyCardsAfterRoll(hh, [{ bet: "field", outcome: "win" }], 3, null, false);
@@ -307,18 +307,18 @@
     const mg = withCards("muggsy");
     mg.point = 6; applyCardsAfterRoll(mg, [], 6, null, false); // point set
     applyCardsAfterRoll(mg, passLose(10), 7, 6, true);           // seven on the very next roll
-    check("Muggsy: point-7 charges another $10", mg.kitty, 990);
+    check("Muggsy: point-7 charges another $10", mg.cash, 990);
     const mgOdds = withCards("muggsy");
     mgOdds.point = 6; applyCardsAfterRoll(mgOdds, [], 6, null, false);
     applyCardsAfterRoll(mgOdds, [{ bet: "pass", outcome: "lose", amount: 10 }, { bet: "odds", outcome: "lose", amount: 50 }], 7, 6, true);
-    check("Muggsy charges the Pass Line only, not Odds ($10, not $60)", mgOdds.kitty, 990);
+    check("Muggsy charges the Pass Line only, not Odds ($10, not $60)", mgOdds.cash, 990);
     mg.shooterIndex = 1; setupTurn(mg, "Lefty", 1);
     check("...and the next shooter's winnings are x2", effectiveMult(mg), 2);
     const mg2 = withCards("muggsy");
     mg2.point = 6; applyCardsAfterRoll(mg2, [], 6, null, false);
     applyCardsAfterRoll(mg2, [], 9, 6, false);
     applyCardsAfterRoll(mg2, passLose(10), 7, 6, true);
-    check("Muggsy: a 7 two rolls after the point is a normal seven-out", [mg2.kitty, mg2.muggsyPending], [1000, false]);
+    check("Muggsy: a 7 two rolls after the point is a normal seven-out", [mg2.cash, mg2.muggsyPending], [1000, false]);
 
     // 5b-1 dice cards
     const du = withCards("doubleUp"); du.dice = diceForShooter("Hot Rod"); // normal dice
@@ -376,27 +376,27 @@
     check("Loaded Die rerolling the right die keeps the left one", keptLeft, true);
 
     check("Cut a chain costs 25% of the debt ($50 at $200)", cutChainPrice(debtState(200)), 50);
-    const ct = newShiftState(); ct.kitty = 2000; ct.shooterIndex = 2; ct.onBreak = true; // Lefty and Dee have shot
+    const ct = newShiftState(); ct.cash = 2000; ct.shooterIndex = 2; ct.onBreak = true; // Lefty and Dee have shot
     check("Can cut only crew who haven't shot, never You", cuttableCrew(ct), ["Hot Rod", "Jinx", "Ghost"]);
     check("Can't cut someone who already shot", cutChain(ct, "Lefty"), "not-allowed");
     ct.prevShooterMult = 1;
-    check("Cut Hot Rod: $500 paid, Jinx is up next", [cutChain(ct, "Hot Rod"), ct.kitty, ct.crew[ct.shooterIndex]], ["ok", 1500, "Jinx"]);
+    check("Cut Hot Rod: $500 paid, Jinx is up next", [cutChain(ct, "Hot Rod"), ct.cash, ct.crew[ct.shooterIndex]], ["ok", 1500, "Jinx"]);
     check("...and Jinx now rolls Jinx's dice", pct(diceOdds(ct.dice)[7]), 22.2);
     check("...5 seats left", ct.crew.length, 5);
-    const ct2 = newShiftState(); ct2.kitty = 2000; ct2.shooterIndex = 4; ct2.onBreak = true; // Ghost is next
+    const ct2 = newShiftState(); ct2.cash = 2000; ct2.shooterIndex = 4; ct2.onBreak = true; // Ghost is next
     cutChain(ct2, "Ghost");
     check("Cutting the last crew seat before You: You shoot next", ct2.crew[ct2.shooterIndex], "You");
-    const ct3 = newShiftState(); ct3.kitty = 500; ct3.shooterIndex = 1;
-    check("Cutting can't take the kitty below $5", cutChain(ct3, "Jinx"), "money");
+    const ct3 = newShiftState(); ct3.cash = 500; ct3.shooterIndex = 1;
+    check("Cutting can't take the cash below $5", cutChain(ct3, "Jinx"), "money");
 
-    const cl = newShiftState(); cl.cards = ["chainLink", "hotHand"]; cl.kitty = 50; cl.shooterIndex = 6;
+    const cl = newShiftState(); cl.cards = ["chainLink", "hotHand"]; cl.cash = 50; cl.shooterIndex = 6;
     endBreak(cl);
     check("Extra chain link: falling short becomes a survived shift", [cl.status, cl.savedByLink], ["won", true]);
     check("...and the link is used up", cl.cards, ["hotHand"]);
-    const cl2 = newShiftState(); cl2.onBreak = false; cl2.kitty = 0; cl2.cards = ["chainLink"];
+    const cl2 = newShiftState(); cl2.onBreak = false; cl2.cash = 0; cl2.cards = ["chainLink"];
     afterRoll(cl2, false);
     check("Extra chain link also saves you from going broke", cl2.status, "won");
-    const noLink = newShiftState(); noLink.kitty = 50; noLink.shooterIndex = 6;
+    const noLink = newShiftState(); noLink.cash = 50; noLink.shooterIndex = 6;
     endBreak(noLink);
     check("Without it, you still fall", noLink.status, "fell-short");
 
@@ -404,12 +404,12 @@
     check("Shift scale table: shift 3 adds $175, owes $550, minimum $15", shiftScale(3), { cash: 175, debt: 550, minBet: 15 });
     check("Shift 8: owes $28,000, minimum $700", [shiftScale(8).debt, shiftScale(8).minBet], [28000, 700]);
     check("Endless: debt x2.2 (rounded to $50), same cash, minimum 2.5% (rounded to $25)", shiftScale(9), { cash: 175, debt: 61600, minBet: 1550 });
-    const s1end = newShiftState(); s1end.kitty = 70; s1end.bets.field = 5; s1end.deposited = 2000; s1end.status = "won";
+    const s1end = newShiftState(); s1end.cash = 70; s1end.bets.field = 5; s1end.deposited = 2000; s1end.status = "won";
     s1end.cards = ["hotHand"]; s1end.roster = s1end.crew = ["Lefty", "Dealer Dee", "Hot Rod", "Ghost", "You"]; s1end.interestRate = 0.055;
     s1end.pityUsed = true; s1end.loadedDieUsed = true; s1end.hotRodPenaltyUsed = true;
     const s2 = nextShift(s1end);
     check("Next shift: shift 2, owes $300, nothing paid yet", [s2.shift, s2.debt, s2.deposited, s2.status], [2, 300, 0, "playing"]);
-    check("...kitty = leftover $75 (incl. the Field bet) + $200", [s2.kitty, s2.bets.field], [275, 0]);
+    check("...cash = leftover $75 (incl. the Field bet) + $200", [s2.cash, s2.bets.field], [275, 0]);
     check("...cards, cut crew and interest carry over", [s2.cards, s2.crew.length, s2.interestRate], [["hotHand"], 5, 0.055]);
     check("...once-a-shift effects reset", [s2.pityUsed, s2.loadedDieUsed, s2.hotRodPenaltyUsed], [false, false, false]);
     check("...starts on a Dealer Break with Lefty up", [s2.onBreak, s2.shooterIndex, s2.crew[0]], [true, 0, "Lefty"]);
@@ -417,7 +417,7 @@
     check("Prices follow the new debt (Common = 5% of $300 = $15)", cardPrice(s2, "hotHand"), 15);
 
     // Run stats
-    const rs = newShiftState(); rs.kitty = 100;
+    const rs = newShiftState(); rs.cash = 100;
     recordRoll(rs.stats, rs, { dice: [3, 3], total: 6 }, 40, false, true, diceOdds(), 2, "Hot Rod", 3);
     recordRoll(rs.stats, rs, { dice: [2, 4], total: 6 }, 0, false, false, diceOdds(), 1, "Hot Rod", 4);
     recordRoll(rs.stats, rs, { dice: [3, 4], total: 7 }, -25, true, false, diceOdds(), 1, "Hot Rod", 5);
@@ -427,7 +427,7 @@
     check("Stats: 2 rolls without a 7, longest turn Hot Rod 5 rolls", [st.bestNoSeven, st.longestTurn], [2, { name: "Hot Rod", rolls: 5 }]);
     check("Stats: expected 7s add up the odds (3 x 1/6 = 0.5)", Math.round(st.expected[7] * 100) / 100, 0.5);
     check("Stats: best shooter Hot Rod +$15, highest mult 2x", [bestShooter(st), st.maxMult], [{ name: "Hot Rod", amount: 15 }, 2]);
-    const rs2 = newShiftState(); rs2.kitty = 1000; deposit(rs2, 100); rs2.stock = ["hotHand", null, null]; buyCard(rs2, 0);
+    const rs2 = newShiftState(); rs2.cash = 1000; deposit(rs2, 100); rs2.stock = ["hotHand", null, null]; buyCard(rs2, 0);
     check("Stats: paid $100, spent $100 on a card", [rs2.stats.paid, rs2.stats.spent], [100, 100]);
     rs2.status = "won"; rs2.stats.history.push(1, 2, 3);
     const rs3 = nextShift(rs2);
@@ -458,9 +458,9 @@
     const onlyYou = newShiftState(); onlyYou.roster = onlyYou.crew = ["You"];
     check("Remove a character isn't offered when only You are left", perkWeight(onlyYou, "removeCharacter"), 0);
 
-    const fi = newShiftState(); fi.kitty = 300; fi.stock = ["hotHand", "redDice", "pity"];
+    const fi = newShiftState(); fi.cash = 300; fi.stock = ["hotHand", "redDice", "pity"];
     takePerk(fi, "freeItems");
-    check("2 free items: the next 2 cards cost $0", [buyPrice(fi, "pity"), buyCard(fi, 2), buyCard(fi, 1), fi.kitty], [0, "ok", "ok", 300]);
+    check("2 free items: the next 2 cards cost $0", [buyPrice(fi, "pity"), buyCard(fi, 2), buyCard(fi, 1), fi.cash], [0, "ok", "ok", 300]);
     check("...then prices are back to normal", buyPrice(fi, "hotHand"), 100);
     const carryP = newShiftState(); carryP.perks = ["plus6"]; carryP.freeBuys = 1; carryP.status = "won";
     const nextP = nextShift(carryP);
@@ -485,9 +485,9 @@
 
     const dpState = newShiftState(); dpState.bets.dont = 5;
     check("Don't Pass counts as the required line bet", canRoll(dpState), true);
-    const dpFund = newShiftState(); dpFund.kitty = 2; dpFund.bets.field = 10;
+    const dpFund = newShiftState(); dpFund.cash = 2; dpFund.bets.field = 10;
     check("Don't Pass also tops up from your other bets", [fundPassLine(dpFund, 5, "dont"), dpFund.bets.dont], [[{ from: "field", amount: 3 }], 5]);
-    check("Money on Don't Pass and Lay counts as yours", (() => { const t = newShiftState(); t.kitty = 0; t.bets.dont = 10; t.bets.lay = 20; return totalMoney(t); })(), 30);
+    check("Money on Don't Pass and Lay counts as yours", (() => { const t = newShiftState(); t.cash = 0; t.bets.dont = 10; t.bets.lay = 20; return totalMoney(t); })(), 30);
 
     const pityDont = withCards("pity"); pityDont.point = 6; pityDont.bets = { pass: 0, odds: 0, dont: 10, lay: 0, field: 0 };
     const pdRes = resolveRoll(pityDont.bets, 7, 6);
@@ -537,7 +537,7 @@
     check("Free Trapdoor is the new name of Remove a character", perkInfo("removeCharacter").name, "Free Trapdoor");
 
     // Dealer's Bargain
-    const bg = newShiftState(); bg.kitty = 2000; bg.dice = diceForShooter("Hot Rod"); bg.stock = ["bargain", null, null];
+    const bg = newShiftState(); bg.cash = 2000; bg.dice = diceForShooter("Hot Rod"); bg.stock = ["bargain", null, null];
     bg.cards = ["hotHand", "snakeEyes", "luckySeven", "rattlesnake", "redDice"]; // slots full
     check("Dealer's Bargain: can buy with full slots, and it takes no slot", [buyCard(bg, 0), bg.cards.length], ["ok", 5]);
     check("...the chain now has 9 links", totalLinks(bg), 9);
@@ -553,30 +553,30 @@
     check("Dealer's Bargain is never offered in endless mode", bargainInEndless, false);
 
     // Rising minimum bet and paying after the first shooter
-    const mb = newShiftState(); mb.status = "won"; mb.kitty = 500;
+    const mb = newShiftState(); mb.status = "won"; mb.cash = 500;
     const mb2 = nextShift(mb);
     check("Shift 2 has a $10 table minimum", tableMin(mb2), 10);
     mb2.bets.pass = 5;
     check("A $5 line bet isn't enough to roll in shift 2", canRoll(mb2), false);
     mb2.bets.pass = 10;
     check("...$10 is", canRoll(mb2), true);
-    const mb3 = newShiftState(); mb3.kitty = 9; mb3.minBet = 10;
+    const mb3 = newShiftState(); mb3.cash = 9; mb3.minBet = 10;
     check("With a $10 minimum, $9 total on a come-out is broke", isBroke(mb3), true);
     check("Small chips while the minimum is under $25, big ones after", [chipsFor(newShiftState()), chipsFor(Object.assign(newShiftState(), { minBet: 25 }))], [[5, 25, 100], [25, 100, 500]]);
     CONFIG.payAfterFirstShooter = true;
-    const pf = newShiftState(); pf.kitty = 5000;
+    const pf = newShiftState(); pf.cash = 5000;
     check("Paying is closed on a shift's opening Break", [canPay(pf), deposit(pf, 100), pf.deposited], [false, 0, 0]);
     pf.shooterIndex = 1;
     check("...and open after the first shooter", deposit(pf, 100), 100);
-    const pfLink = newShiftState(); pfLink.kitty = 50; pfLink.shooterIndex = 1;
-    check("Payments keep the table minimum in the kitty", maxDeposit(pfLink), 45);
+    const pfLink = newShiftState(); pfLink.cash = 50; pfLink.shooterIndex = 1;
+    check("Payments keep the table minimum in the cash", maxDeposit(pfLink), 45);
     CONFIG.payAfterFirstShooter = false;
 
     // Dealer's cut
     CONFIG.carryOverShare = 0.5;
-    const cut1 = newShiftState(); cut1.kitty = 301; cut1.status = "won";
+    const cut1 = newShiftState(); cut1.cash = 301; cut1.status = "won";
     const cut2 = nextShift(cut1);
-    check("Dealer's cut: $301 leftover -> carry $150 (rounded down), dealer keeps $151, plus $200 cash", [cut2.kitty, cut2.dealerCut], [350, 151]);
+    check("Dealer's cut: $301 leftover -> carry $150 (rounded down), dealer keeps $151, plus $200 cash", [cut2.cash, cut2.dealerCut], [350, 151]);
     CONFIG.carryOverShare = 1;
 
     // Milestone 8: comps
@@ -603,10 +603,10 @@
     useComp(lp, 0);
     check("Lucky Pair: the next roll must be a pair", nextRollPairs(lp), true);
 
-    const ins = withCards(); ins.kitty = 100; ins.comps = ["insurance"];
+    const ins = withCards(); ins.cash = 100; ins.comps = ["insurance"];
     useComp(ins, 0);
     finishArmed(ins, [{ bet: "pass", outcome: "lose", amount: 25 }, { bet: "odds", outcome: "lose", amount: 50 }]);
-    check("Insurance pays back the lost line bet only ($25, not the Odds)", ins.kitty, 125);
+    check("Insurance pays back the lost line bet only ($25, not the Odds)", ins.cash, 125);
 
     const hs = withCards(); hs.comps = ["hotSeat"];
     check("Hot Seat: +1x mult right away", [useComp(hs, 0) !== null, hs.mult], [true, 2]);
@@ -616,9 +616,9 @@
     const sw = newShiftState(); sw.shooterIndex = 3; sw.comps = ["seatSwap"]; sw.prevShooterMult = 1; // Jinx next
     useComp(sw, 0);
     check("Seat Swap: Ghost now shoots before Jinx, with Ghost's dice", [sw.crew[3], sw.crew[4], sw.dice.right !== undefined], ["Ghost", "Jinx", true]);
-    const ca = newShiftState(); ca.shooterIndex = 1; ca.debt = 1000; ca.kitty = 100; ca.comps = ["cashAdvance"];
+    const ca = newShiftState(); ca.shooterIndex = 1; ca.debt = 1000; ca.cash = 100; ca.comps = ["cashAdvance"];
     useComp(ca, 0);
-    check("Cash Advance: +$250 now, debt grows by $375", [ca.kitty, ca.debt], [350, 1375]);
+    check("Cash Advance: +$250 now, debt grows by $375", [ca.cash, ca.debt], [350, 1375]);
     const full = newShiftState(); full.comps = ["hotSeat", "seatSwap"];
     check("Only 2 comp slots", gainComp(full, "noSevens"), false);
     const fc = newShiftState();
@@ -647,7 +647,7 @@
     editFace(dc3, "right", 0, 6);
     check("If you're next to shoot, your new dice apply straight away", dc3.dice.right, [6, 2, 3, 4, 5, 6]);
     const dc4 = newShiftState(); dc4.shooterIndex = 4; dc4.myDice.right = [6, 6, 3, 4, 5, 6]; dc4.prevShooterMult = 1;
-    afterRoll(Object.assign(dc4, { onBreak: false, kitty: 100 }), true); // Ghost sevens out -> your turn
+    afterRoll(Object.assign(dc4, { onBreak: false, cash: 100 }), true); // Ghost sevens out -> your turn
     check("Your turn uses your crafted dice", dc4.dice.right, [6, 6, 3, 4, 5, 6]);
     const dc5 = newShiftState(); dc5.myDice.left = [6, 6, 3, 4, 5, 6]; dc5.status = "won";
     check("Crafted dice carry into the next shift", nextShift(dc5).myDice.left, [6, 6, 3, 4, 5, 6]);
@@ -656,7 +656,7 @@
 
     {
     // Milestone 10: crew cards, "You" cards, hiring
-    const at = (name, ...cards) => { const st = newShiftState(); st.onBreak = false; st.kitty = 1000; st.cards = cards; st.shooterIndex = st.crew.indexOf(name); setupTurn(st, st.crew[st.shooterIndex - 1] || null, 1); return st; };
+    const at = (name, ...cards) => { const st = newShiftState(); st.onBreak = false; st.cash = 1000; st.cards = cards; st.shooterIndex = st.crew.indexOf(name); setupTurn(st, st.crew[st.shooterIndex - 1] || null, 1); return st; };
     check("Lefty's Glove: Lefty's 7s go from 16% to 16.7% (right die gets its 6)", pct(diceOdds(at("Lefty", "leftysGlove").dice)[7]), 16.7);
     const ledger = at("Dealer Dee", "deesLedger");
     const ledgerRes = resolveRoll({ pass: 10, odds: 10, dont: 0, lay: 0, field: 0 }, 4, 4);
@@ -665,9 +665,9 @@
     const lighter = at("Hot Rod", "rodsLighter");
     applyCrewEffects(lighter, [{ bet: "pass", outcome: "win" }], false, false);
     check("Rod's Lighter: Hot Rod +1.5x per win", lighter.mult, 2.5);
-    const rodOut = at("Hot Rod", "rodsLighter"); rodOut.kitty = 100;
+    const rodOut = at("Hot Rod", "rodsLighter"); rodOut.cash = 100;
     applyCrewEffects(rodOut, [{ bet: "pass", outcome: "lose", amount: 20 }], true, false);
-    check("...and his seven-out doesn't cost double", rodOut.kitty, 100);
+    check("...and his seven-out doesn't cost double", rodOut.cash, 100);
     const shadow = at("Jinx", "jinxShadow");
     const shadowRes = resolveRoll({ pass: 0, odds: 0, dont: 10, lay: 0, field: 0 }, 3, null);
     applyCardsBeforePayout(shadow, shadowRes, 3, null);
@@ -701,10 +701,10 @@
     const lou = newShiftState(); lou.crew.push("Lucky Lou"); lou.shooterIndex = 6;
     applyCrewEffects(lou, [{ bet: "pass", outcome: "win" }], false, true);
     check("Lucky Lou: +1x mult when he hits a point", lou.mult, 2);
-    const h = newShiftState(); h.kitty = 1000; h.hireOffers = ["Snake", "Big Mo"];
+    const h = newShiftState(); h.cash = 1000; h.hireOffers = ["Snake", "Big Mo"];
     check("Can't hire with every seat full (6)", hire(h, "Snake"), "full");
     removeCrew(h, "Jinx");
-    check("After a Trapdoor: hire Snake for 20% of the debt", [hire(h, "Snake"), h.kitty, h.roster.length], ["ok", 600, 6]);
+    check("After a Trapdoor: hire Snake for 20% of the debt", [hire(h, "Snake"), h.cash, h.roster.length], ["ok", 600, 6]);
     check("...Snake shoots last this shift", h.crew[h.crew.length - 1], "Snake");
     h.status = "won";
     check("...and keeps the seat next shift", nextShift(h).roster.includes("Snake"), true);
@@ -756,13 +756,13 @@
 
     // Challenges
     check("No challenge on shift 1", newChallenge(newShiftState()), null);
-    const ch = newShiftState(); ch.shift = 2; ch.debt = 1000; ch.kitty = 100;
+    const ch = newShiftState(); ch.shift = 2; ch.debt = 1000; ch.cash = 100;
     ch.challenge = { id: "doubles", progress: 0, done: false, reward: "cash" };
     const info = (o) => Object.assign({ pointHit: false, total: 6, doubles: false, sevenOut: false, multUsed: 1 }, o);
     trackChallenge(ch, [], info({ doubles: true })); trackChallenge(ch, [], info({ doubles: true }));
     check("Doubles challenge: 2 of 3", [ch.challenge.progress, ch.challenge.done], [2, false]);
-    check("...third doubles completes it and pays 10% of the debt", [!!trackChallenge(ch, [], info({ doubles: true })), ch.kitty], [true, 200]);
-    check("...and only pays once", [trackChallenge(ch, [], info({ doubles: true })), ch.kitty], [null, 200]);
+    check("...third doubles completes it and pays 10% of the debt", [!!trackChallenge(ch, [], info({ doubles: true })), ch.cash], [true, 200]);
+    check("...and only pays once", [trackChallenge(ch, [], info({ doubles: true })), ch.cash], [null, 200]);
     const dc = newShiftState(); dc.debt = 1000; dc.challenge = { id: "hardPoint", progress: 0, done: false, reward: "debtCut" };
     trackChallenge(dc, [], info({ pointHit: true, total: 6 }));
     check("Hard point: a 6 doesn't count", dc.challenge.done, false);

@@ -23,7 +23,7 @@ function pickChip(value) {
   showChips();
 }
 
-// Move chips from your kitty onto a bet.
+// Move chips from your cash onto a bet.
 function placeBet(betName) {
   if (busy() || state.status !== "playing" || state.onBreak) return;
   let amount = selectedChip;
@@ -75,30 +75,30 @@ function placeBet(betName) {
     }
     amount = Math.min(amount, room); // cap at the limit
   }
-  if (amount > state.kitty) {
-    showMessage("Not enough money in your kitty for a " + money(amount) + " bet.");
+  if (amount > state.cash) {
+    showMessage("Not enough cash for a " + money(amount) + " bet.");
     return;
   }
 
-  state.kitty -= amount;
+  state.cash -= amount;
   state.bets[betName] += amount;
   playSound("chip");
   showMessage(BET_NAMES[betName] + " bet is now " + money(state.bets[betName]) + ".");
   renderState(state);
 }
 
-// Take bets back into your kitty. A locked Pass Line or Don't Pass stays put.
+// Take bets back into your cash. A locked Pass Line or Don't Pass stays put.
 function clearBets() {
   if (busy() || state.status !== "playing" || state.onBreak) return;
   const b = state.bets;
   const loose = state.point === null ? ["pass", "dont", "odds", "lay", "field"] : ["odds", "lay", "field"];
   for (const bet of loose) {
-    state.kitty += b[bet];
+    state.cash += b[bet];
     b[bet] = 0;
   }
   playSound("chip");
   showMessage(state.point === null
-    ? "Bets returned to your kitty. Remember: a Pass Line or Don't Pass bet is needed to roll."
+    ? "Bets returned to you. Remember: a Pass Line or Don't Pass bet is needed to roll."
     : "Odds, Lay Odds and Field returned. Your line bet stays locked until the point is decided.");
   renderState(state);
 }
@@ -173,9 +173,9 @@ function finishRoll(rolled) {
   // Pay winners and remove losers.
   for (const r of results) {
     if (r.outcome === "win") {
-      state.kitty += r.winnings;
+      state.cash += r.winnings;
       if (!r.staysUp) {
-        state.kitty += r.amount; // bet comes back to you
+        state.cash += r.amount; // bet comes back to you
         state.bets[r.bet] = 0;
       }
     }
@@ -231,7 +231,7 @@ function payDealer(amount) {
   const paid = deposit(state, amount);
   if (paid > 0 && state.status !== "won") playSound("pay");
   let text = paid > 0 ? "Paid " + money(paid) + ". That money is safe now, and out of play." : "Nothing more you can pay.";
-  if (state.status === "playing" && state.kitty <= tableMin(state)) {
+  if (state.status === "playing" && state.cash <= tableMin(state)) {
     text += " You keep " + money(tableMin(state)) + " for your Pass Line bet.";
   }
   showBreakMessage(text);
@@ -255,7 +255,7 @@ function buy(slot) {
   const texts = {
     ok: id && CARDS[id].instant ? CARDS[id].name + ": done. " + (id === "bargain" ? "Your chain now has " + totalLinks(state) + " links, and 7s are a little rarer." : "") : "Bought " + (id && CARDS[id].name) + ".",
     full: "Your card slots are full (" + CONFIG.maxCards + "). Sell a card first.",
-    money: "Not enough. Buying can't take your kitty below " + money(tableMin(state)) + ".",
+    money: "Not enough. Buying can't take your cash below " + money(tableMin(state)) + ".",
     empty: "That one's sold out.",
   };
   if (outcome === "ok") playSound("buy");
@@ -278,7 +278,7 @@ function buyCompSlot(slot) {
   showBreakMessage({
     ok: "Bought " + (id && COMPS[id].name) + ".",
     full: "Your comp slots are full (" + CONFIG.compSlots + "). Use or sell one first.",
-    money: "Not enough. Buying can't take your kitty below " + money(tableMin(state)) + ".",
+    money: "Not enough. Buying can't take your cash below " + money(tableMin(state)) + ".",
     empty: "That one's sold out.",
   }[outcome]);
   renderAll();
@@ -329,7 +329,7 @@ function hireCrew(name) {
   showBreakMessage({
     ok: name + " takes a seat. They'll shoot this shift" + (state.crew[state.shooterIndex] === name ? ", starting now." : ", last in line."),
     full: "Every seat is taken. Open a Trapdoor to make room.",
-    money: "Not enough. Hiring can't take your kitty below " + money(tableMin(state)) + ".",
+    money: "Not enough. Hiring can't take your cash below " + money(tableMin(state)) + ".",
     gone: name + " already found a seat.",
   }[outcome]);
   renderAll();
@@ -347,7 +347,7 @@ function cut(name) {
   if (!confirm("Pay " + money(cutChainPrice(state)) + " to open the trapdoor under " + name + "'s seat? They're gone for the rest of the run.")) return;
   const outcome = cutChain(state, name);
   if (outcome !== "ok") {
-    showBreakMessage(outcome === "money" ? "Not enough. The trapdoor can't take your kitty below " + money(tableMin(state)) + "." : "You can't drop " + name + ".");
+    showBreakMessage(outcome === "money" ? "Not enough. The trapdoor can't take your cash below " + money(tableMin(state)) + "." : "You can't drop " + name + ".");
     renderAll();
     return;
   }
@@ -361,7 +361,7 @@ function shuffle() {
   const cost = shuffleCost(state);
   showBreakMessage(shuffleStock(state)
     ? (cost > 0 ? "Shuffled for " + money(cost) + "." : "Free shuffle from the pit boss.") + " New cards on the table."
-    : "Not enough. Shuffling can't take your kitty below " + money(tableMin(state)) + ".");
+    : "Not enough. Shuffling can't take your cash below " + money(tableMin(state)) + ".");
   renderAll();
 }
 

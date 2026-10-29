@@ -10,7 +10,7 @@ function introPages() {
       body: "Your crew is chained up beside you. The dealer leans in: <strong>\"You owe me " + money(CONFIG.shifts[0].debt) +
         " by the end of the shift.\"</strong><br><br>Your chain has <strong>" + CONFIG.chainLinks + " links</strong>. Pay off each shift's debt and the dealer unlocks one. <strong>Break all " + CONFIG.chainLinks +
         " and you walk out free.</strong><br><br>Fail, and the floor opens.<br><br>You start with <strong>" +
-        money(CONFIG.shifts[0].cash) + "</strong> in your <strong>kitty</strong> (the money in your hand).",
+        money(CONFIG.shifts[0].cash) + "</strong> in <strong>cash</strong> (the money in your hand).",
     },
     {
       title: "The shooters",
@@ -52,7 +52,7 @@ function introPages() {
       title: "Interest: why paying early pays",
       body: "Money you've paid the dealer earns <strong>interest</strong>.<br><br>" +
         "At every Dealer Break (after each seven-out), you get <strong>" + Math.round(CONFIG.interestRate * 100) +
-        "% of everything you've paid so far</strong>, paid into your kitty.<br><br>" +
+        "% of everything you've paid so far</strong>, added to your cash.<br><br>" +
         "Example: you've paid " + money(100) + ", so you get " + money(Math.floor(100 * CONFIG.interestRate)) + " at the next Break.<br><br>" +
         "The current interest rate is always shown at the top of the screen.<br><br>Good luck.",
     },
@@ -64,9 +64,9 @@ function shopPages() {
   return [
     {
       title: "New: the stickman's shop",
-      body: "From now on, every Dealer Break has a shop. <strong>Tip the dealer</strong> from your kitty to buy <strong>cards</strong> that bend the rules in your favor.<br><br>" +
+      body: "From now on, every Dealer Break has a shop. <strong>Tip the dealer</strong> from your cash to buy <strong>cards</strong> that bend the rules in your favor.<br><br>" +
         "Tips <strong>don't</strong> count toward your debt. Every dollar you spend here is a dollar you didn't pay the dealer, so choose carefully.<br><br>" +
-        "Buying can never take your kitty below the table minimum (the smallest line bet, which goes up each shift).",
+        "Buying can never take your cash below the table minimum (the smallest line bet, which goes up each shift).",
     },
     {
       title: "How cards work",

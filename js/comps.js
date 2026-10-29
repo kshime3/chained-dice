@@ -55,7 +55,7 @@ function buyComp(state, slot) {
   if (state.comps.length >= CONFIG.compSlots) return "full";
   const price = compPrice(state, id);
   if (!canSpend(state, price)) return "money";
-  state.kitty -= price;
+  state.cash -= price;
   state.stats.spent += price;
   state.comps.push(id);
   state.compStock[slot] = null;
@@ -67,7 +67,7 @@ function sellComp(state, index) {
   if (!id) return 0;
   state.comps.splice(index, 1);
   const got = compSellPrice(state, id);
-  state.kitty += got;
+  state.cash += got;
   return got;
 }
 
@@ -115,7 +115,7 @@ function useComp(state, index, face) {
   if (id === "cashAdvance") {
     const lent = roundTo5(CONFIG.cashAdvancePct * state.debt);
     const added = roundTo5(lent * CONFIG.cashAdvanceCost);
-    state.kitty += lent;
+    state.cash += lent;
     state.debt += added;
     return "Cash Advance: +$" + lent + " now. Your debt grows by $" + added + ".";
   }
@@ -142,7 +142,7 @@ function finishArmed(state, results) {
     const lost = results.filter((r) => r.outcome === "lose" && (r.bet === "pass" || r.bet === "dont"))
       .reduce((sum, r) => sum + r.amount, 0);
     if (lost > 0) {
-      state.kitty += lost;
+      state.cash += lost;
       notes.push("Insurance pays back your $" + lost + " line bet.");
     }
   }

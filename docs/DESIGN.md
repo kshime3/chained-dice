@@ -25,12 +25,12 @@ Long term, it becomes a first-person 3D room like Clover Pit: chained at the tab
 
 ## Core Loop  [Built]
 
-1. **Wake up** at the table with the shift's starting cash in your **kitty**.
+1. **Wake up** at the table with the shift's starting cash in your **cash**.
 2. **Dealer Break:** pay toward the debt (and later, shop).
 3. **The current shooter rolls.** You bet on every roll, whoever is shooting. The shooter keeps rolling until they **seven out**.
 4. **Dealer Break** after every seven-out, then the next shooter steps up.
 5. After the last shooter sevens out: one **final Dealer Break**, then the pit boss judges.
-6. **Win** the moment your payments reach the debt. Leftover kitty is kept. **[Planned, 6b]** The Pit Boss phone rings: pick 1 of 3 perks. **[Built]** Next shift: the new cash is added to your kitty and a bigger debt starts. From shift 2, the shop is open on the opening Break.
+6. **Win** the moment your payments reach the debt. Leftover cash is kept. **[Planned, 6b]** The Pit Boss phone rings: pick 1 of 3 perks. **[Built]** Next shift: the new cash is added to your cash and a bigger debt starts. From shift 2, the shop is open on the opening Break.
 7. **Fall:** the run ends with a **stats screen [Built]**: shifts survived (your score), rolls and doubles, longest run without a 7, longest turn, biggest hit and loss, won/lost at the table, paid to the dealer and interest, spent in the shop, points hit and seven-outs, highest mult, best shooter, a chart of your money over the run (shift starts marked), a chart of every total rolled against what the dice odds expected, and your cards. Play again starts a new run at shift 1.
 
 ## Break the Chain  [Built]
@@ -60,23 +60,23 @@ Tested with the simulator (`docs/BALANCE.md`).
 
 - **Dealer's cut [Built]:** when you win a shift, you carry only **half** your leftover money into the next one (`carryOverShare` in config). The win screen and the next opening Break say how much he kept.
 
-- **Table minimum [Built]:** the smallest line bet, and what you must always keep in your kitty (payments and shopping can't go below it; under it on a come-out, the floor opens). Shown on the table as "Table min $X". Chips shown: $5/$25/$100 while the minimum is under $25, then $25/$100/$500.
+- **Table minimum [Built]:** the smallest line bet, and what you must always keep in cash (payments and shopping can't go below it; under it on a come-out, the floor opens). Shown on the table as "Table min $X". Chips shown: $5/$25/$100 while the minimum is under $25, then $25/$100/$500.
 - **Paying opens after the first shooter [Built]** (`payAfterFirstShooter` in config): the dealer won't take payment on a shift's opening Break, so you can't clear a new shift from leftover money before rolling.
 
 **[Built]** All shifts use this scale (`shifts` in config). Cash is **added** to what you carry over (half your leftover money after the dealer's cut; bets left on the table count too). Cards, cut crew and interest boosts carry over; payments and once-a-shift effects (Pity, Loaded Die, Hot Rod's double cost) reset.
 
 ## Paying the Dealer  [Built]
 
-- **Kitty:** the money in your hand. You bet from it.
+- **Cash:** the money in your hand. You bet from it.
 - **Dealer Break:** before the first shooter, after every seven-out, and once more after the last shooter.
-- **Payments** come from the kitty, are safe from bad rolls, are out of play, and **can't be taken back**.
-- You can't pay more than you owe, and a partial payment always leaves the **$5 minimum Pass Line bet** in your kitty.
-- **Pay off debt** is greyed out until your kitty covers the whole debt.
-- **Interest [Built]:** at every Dealer Break after a seven-out, 5% of everything you've paid so far (rounded down) goes into your kitty. Shown at the top of the screen. Rewards paying early.
+- **Payments** come from the cash, are safe from bad rolls, are out of play, and **can't be taken back**.
+- You can't pay more than you owe, and a partial payment always leaves the **$5 minimum Pass Line bet** in your cash.
+- **Pay off debt** is greyed out until your cash covers the whole debt.
+- **Interest [Built]:** at every Dealer Break after a seven-out, 5% of everything you've paid so far (rounded down) goes into your cash. Shown at the top of the screen. Rewards paying early.
 
 ## Losing (the Fall)  [Built, animation Planned]
 
-- **Broke:** on a come-out, your kitty plus money on the table can't cover the $5 minimum Pass Line bet.
+- **Broke:** on a come-out, your cash plus money on the table can't cover the $5 minimum Pass Line bet.
 - **Short:** you leave the final Dealer Break still owing.
 - A seven-out that leaves you broke (and unable to pay off the debt) is an instant fall, with no Dealer Break.
 - [Planned] The floor opens and everyone drops, then the run restarts.
@@ -85,10 +85,10 @@ Tested with the simulator (`docs/BALANCE.md`).
 
 - **Come-out roll:** 7 or 11 wins the Pass Line. 2, 3 or 12 (craps) loses it. Any other number (4, 5, 6, 8, 9, 10) becomes the **point**.
 - **Point phase:** hitting the point wins the Pass Line. A 7 is a **seven-out**: Pass Line and Odds lose, and the shooter changes.
-- **Pass Line is required** (minimum $5) to roll a come-out. If your kitty is short, money moves automatically from your other bets (Field first, then Odds). Once a point is set, the Pass Line is locked.
+- **Pass Line is required** (minimum $5) to roll a come-out. If your cash is short, money moves automatically from your other bets (Field first, then Odds). Once a point is set, the Pass Line is locked.
 - **Don't Pass [Built, Milestone 7]:** bet against the shooter. Come-out: 2/3 win, 7/11 lose, 12 is a tie. Point on: a 7 wins, the point loses. Even money. A Pass Line **or** Don't Pass bet ($5+) is required on every come-out, one side at a time; it locks during a point.
 - **Lay Odds [Built]:** behind Don't Pass while a point is on. Pays 1:2 on 4/10, 2:3 on 5/9, 5:6 on 6/8 (rounded down). You can lay enough to win up to 3-4-5x your Don't Pass bet (6x the bet on every point). Can be taken back.
-- **Odds:** only while a point is on, up to 3x the Pass Line on 4/10, 4x on 5/9, 5x on 6/8. Pays true odds (2:1, 3:2, 6:5), rounded down. Can be taken back at any time. A winning Odds bet returns to your kitty.
+- **Odds:** only while a point is on, up to 3x the Pass Line on 4/10, 4x on 5/9, 5x on 6/8. Pays true odds (2:1, 3:2, 6:5), rounded down. Can be taken back at any time. A winning Odds bet returns to your cash.
 - **Field:** one-roll bet. 3, 4, 9, 10, 11 pay even money; 2 pays double; 12 pays triple; 5, 6, 7, 8 lose.
 - Winning Pass Line and Field bets are paid and stay on the table. "Clear bets" takes back everything that isn't locked.
 - **Chips:** $5, $25, $100. No maximum bet.
@@ -111,7 +111,7 @@ Seat order: **Lefty, Dealer Dee, Hot Rod, Jinx, Ghost, You.** Dice are lists of 
 - **Mentor (Hot Rod to Jinx):** half of Hot Rod's mult bonus carries over.
 - **Cold Table (Jinx to Ghost):** -0.5x mult until the first winning roll.
 
-**Hot Rod's double cost:** your losing Pass Line and Odds are charged again from the kitty, never below the $5 minimum.
+**Hot Rod's double cost:** your losing Pass Line and Odds are charged again from the cash, never below the $5 minimum.
 
 ## Mult  [Built]
 
@@ -133,10 +133,10 @@ Seat order: **Lefty, Dealer Dee, Hot Rod, Jinx, Ghost, You.** Dice are lists of 
 | Spare Link | 50% | 1% |
 
 - **5 card slots** to start. A "+1 slot" card may come later.
-- Paid from the kitty; tips **don't** count toward the debt. Buying or shuffling can't take the kitty below $5.
+- Paid from the cash; tips **don't** count toward the debt. Buying or shuffling can't take the cash below $5.
 - Cards you own never appear in the stock. Selling gives back half the price.
 - Presentation (3D, later): run by the stickman; open it by clicking his bank of chips.
-- **[Open]** Card packs, like Balatro. A second currency (tickets)? Leaning toward kitty money only.
+- **[Open]** Card packs, like Balatro. A second currency (tickets)? Leaning toward cash money only.
 
 ## Cards  [Planned]
 
@@ -271,8 +271,8 @@ Like Clover Pit's phone. After **every won shift**, it rings before the next shi
 
 - **Shift** (also "session"): one round. Pay the debt by the end or fall.
 - **Debt:** what the dealer demands this shift (the goal).
-- **Kitty:** money in your hand. You bet, shop and pay from it.
-- **Interest:** a share of your paid money, added to your kitty at each Dealer Break.
+- **Cash:** money in your hand. You bet, shop and pay from it.
+- **Interest:** a share of your paid money, added to your cash at each Dealer Break.
 - **On table:** money currently in bets.
 - **Paid / deposited:** money given to the dealer toward the debt. Safe, but gone from play.
 - **Dealer Break:** the pause between shooters to pay (and shop).

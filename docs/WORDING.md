@@ -62,13 +62,13 @@
 > **You wake up chained to a craps table.**
 > Your crew is chained up beside you. The dealer leans in: "You owe me $200 by the end of the shift."
 > Your chain has **8 links**. Pay off each shift's debt and the dealer unlocks one. **Break all 8 and you walk out free.**
-> Fail, and the floor opens. You start with $150 in your kitty.
+> Fail, and the floor opens. You start with $150 in your cash.
 
 **How to play, "Paying the dealer" page:** the "You fall if…" line becomes "**The floor opens if:** you can't afford the $5 line bet, or the last shooter sevens out and you still owe money."
 
 **Opening Dealer Break, shift 1:** "The dealer leans in. 'You owe me $200 by the end of the shift. Pay it and I'll unlock a link.' Pay any time between shooters. Paid money is safe, but you can't bet it."
 
-**Opening Dealer Break, later shifts:** "Shift 3. 6 links to go. The pit boss slides $200 into your kitty. The dealer leans in: 'This time you owe me $500.'"
+**Opening Dealer Break, later shifts:** "Shift 3. 6 links to go. The pit boss slides $200 in cash. The dealer leans in: 'This time you owe me $500.'"
 
 **Shop tutorial, page 3** (was "Cut a chain"): "**Trapdoor.** Don't like a shooter? For 25% of the debt, the dealer will pull the lever under their seat. They drop away for the rest of the run…"
 

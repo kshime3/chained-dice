@@ -2,6 +2,19 @@
 
 Dated session log. Newest at the top.
 
+## 2026-10-29: Session 7, continued (3-shooter test, "kitty" -> "cash")
+
+**Done**
+- Simulated starting with 3 shooters (you + 2 crew, hire up to 6). It needs easier shifts 1-2 ($150 / $225 owed), then plays like today from shift 4. Results in BALANCE.md. Not built into the game yet.
+- Renamed "kitty" to "cash" in the game, tests, simulator and docs. tests.html: 339 checks, all passing. Still fits one screen on phones.
+- Owner restated the goal: nobody should beat it on the first run; unlocks over many runs should make it beatable.
+
+**Waiting on the owner**
+- Build the 3-shooter start, or keep 6? Testing Milestone 11.
+
+**Exact next step**
+- Milestone 12: card unlocks with hidden requirements (the main way players get stronger across runs), plus more bets as unlocks.
+
 ## 2026-10-29: Session 7, continued (Milestone 11: house rules + challenges)
 
 **Done**
@@ -159,7 +172,7 @@ Dated session log. Newest at the top.
 
 **Done**
 - Owner approved the Milestone 6 plan (see DECISIONS.md); 6 split into 6a (shifts) and 6b (phone).
-- **Built 6a:** the debt now lives in the game state (`state.debt`, `state.shift`); `shifts` table in config plus x1.5 growth after shift 5. After a won shift, "Next shift" carries kitty, cards, cut crew and interest into the next shift with new cash added. The shop opens on the opening Break from shift 2. "Shift N" shows at the top; falling shows "You survived N shifts". Simulator updated to play real multi-shift runs. tests.html: 188 checks, all passing.
+- **Built 6a:** the debt now lives in the game state (`state.debt`, `state.shift`); `shifts` table in config plus x1.5 growth after shift 5. After a won shift, "Next shift" carries cash, cards, cut crew and interest into the next shift with new cash added. The shop opens on the opening Break from shift 2. "Shift N" shows at the top; falling shows "You survived N shifts". Simulator updated to play real multi-shift runs. tests.html: 188 checks, all passing.
 
 **Works**
 - Checked in a headless browser: win shift 1, next shift intro and prices at $300 debt, cards carried, fall shows the score, Play again resets. Still fits one screen on phones.
@@ -194,7 +207,7 @@ Dated session log. Newest at the top.
 - Testing 5b-2.
 
 **Exact next step**
-- Milestone 6: multiple shifts at the new scale (cash added to leftover kitty, cards and cut crew carry over), and the Pit Boss phone (pick 1 of 3 perks after each won shift, with its own tutorial).
+- Milestone 6: multiple shifts at the new scale (cash added to leftover cash, cards and cut crew carry over), and the Pit Boss phone (pick 1 of 3 perks after each won shift, with its own tutorial).
 
 ## 2026-10-24: Session 3 (Milestone 5b-1)
 
@@ -238,7 +251,7 @@ Dated session log. Newest at the top.
 
 - Tutorials: a 6-page How to play intro (first visit, plus a button), a 2-page shop tutorial (first time the shop opens, plus a ? button), capital-B "Dealer Break". New `js/tutorials.js`.
 
-- Interest built: 5% of paid money into the kitty at every Break after a seven-out, shown at the top, explained on a new 7th intro page.
+- Interest built: 5% of paid money into the cash at every Break after a seven-out, shown at the top, explained on a new 7th intro page.
 - Tapping the dice rolls them. Dice now drawn with pips and tumble for 0.6s. New `?fast` testing shortcut.
 - New layout fits one screen without scrolling (checked at 1366x768, 1920x1080, 390x844, 360x740). tests.html: 142 checks, all passing.
 - Owner decided: finish the base game first, add more bets after v1.
@@ -266,7 +279,7 @@ Dated session log. Newest at the top.
 **Broken**
 - Nothing known.
 
-- Owner tested 4b, then asked for a fix: "Pay all I can" replaced by "Pay off debt", greyed out until the kitty covers the full debt.
+- Owner tested 4b, then asked for a fix: "Pay all I can" replaced by "Pay off debt", greyed out until the cash covers the full debt.
 
 **Waiting on the owner**
 - Quick test of the Pay off debt button.
@@ -297,7 +310,7 @@ Dated session log. Newest at the top.
 **Done this session (overall)**
 - Project set up with git, notes, GitHub repo (kshime3/chained-dice, public) and GitHub Pages (https://kshime3.github.io/chained-dice/).
 - Milestones 1, 2, 3 and 3.5 built, tested by owner, committed and pushed.
-- Final tweaks: "Pay all I can" (and Pay) always keep $5 in the kitty for the Pass Line, unless paying off the whole debt. Hovering a seat shows that character's planned dice and style. New `js/crew.js`. tests.html: 84 checks, all passing.
+- Final tweaks: "Pay all I can" (and Pay) always keep $5 in the cash for the Pass Line, unless paying off the whole debt. Hovering a seat shows that character's planned dice and style. New `js/crew.js`. tests.html: 84 checks, all passing.
 
 **Works**
 - Full shift: dealer breaks, paying the debt, six shooters with normal dice, Pass Line/Odds/Field, win and both kinds of fall, Play again.
@@ -316,7 +329,7 @@ Dated session log. Newest at the top.
 
 **Done**
 - Owner adjusted the Milestone 3 rules (see DECISIONS.md and the new DESIGN.md section).
-- **Built Milestone 3.5:** "Bankroll" is now "Kitty". Dealer break screen before the first shooter, after each seven-out, and a final one after the last shooter. Pay a typed amount or "Pay all I can". Progress bar shows money paid. Win the moment the debt is paid. Pass Line auto-tops-up from the Field/Odds when the kitty is short. Warning on the break screen if leaving would mean falling. tests.html: 81 checks, all passing.
+- **Built Milestone 3.5:** "Bankroll" is now "Cash". Dealer break screen before the first shooter, after each seven-out, and a final one after the last shooter. Pay a typed amount or "Pay all I can". Progress bar shows money paid. Win the moment the debt is paid. Pass Line auto-tops-up from the Field/Odds when the cash is short. Warning on the break screen if leaving would mean falling. tests.html: 81 checks, all passing.
 
 **Works**
 - Checked in a headless browser: opening break, paying, auto-move, seven-out break, falling broke, falling short.

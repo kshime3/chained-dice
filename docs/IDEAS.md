@@ -45,7 +45,7 @@ Parked ideas and later features. Not in v1 unless moved into the design.
 ## From the owner's spreadsheet (2026-10-23), not built yet
 - **Pit Boss phone** (like Clover Pit's phone): offers permanent perks between shifts. Includes +1 odds for any total, -1 odds for 7, remove a character, 2 free shop items, and new side bets (Fire Bet, Different Doubles).
 - **Card packs** like Balatro.
-- **Interest on the kitty** (Green Dice card).
+- **Interest on the cash** (Green Dice card).
 - **Presentation:** the shop is run by the stickman; open it by clicking the bank of chips next to him.
 - **Possible second currency** (tickets) for the shop. Open question.
 
@@ -92,4 +92,4 @@ Parked ideas and later features. Not in v1 unless moved into the design.
 - Now that only your dice can be crafted, add cards that make **your turn** special: **take an extra turn** (shoot twice per shift), "your winnings x2 on your own turn", "your seat moves to first", "your crafted faces also apply to the next shooter". These make dice crafting pay off. Candidate for Milestone 10 (crew growth).
 
 ## Starting crew size (owner, 2026-10-29)
-- If 6 shooters feels like too many, start with 3 crew and let recruiting grow the table to a maximum of 6. Helps the game grow and scale over a run. Would need a `startingCrew` setting and more recruits.
+- If 6 shooters feels like too many, start with 3 crew and let recruiting grow the table to a maximum of 6. Helps the game grow and scale over a run. Would need a `startingCrew` setting and more recruits. **Simulated 2026-10-29** (BALANCE.md): works if shifts 1-2 owe less ($150 / $225); the table fills to 6 by shift 4.

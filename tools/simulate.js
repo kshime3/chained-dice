@@ -29,8 +29,8 @@ function simRoll(state) {
   applyMult(results, multUsed);
   for (const r of results) {
     if (r.outcome === "win") {
-      state.kitty += r.winnings;
-      if (!r.staysUp) { state.kitty += r.amount; state.bets[r.bet] = 0; }
+      state.cash += r.winnings;
+      if (!r.staysUp) { state.cash += r.amount; state.bets[r.bet] = 0; }
     }
     if (r.outcome === "lose") state.bets[r.bet] = 0;
   }
@@ -47,22 +47,25 @@ function simRoll(state) {
 
 const round5 = (n) => Math.max(5, Math.floor(n / 5) * 5);
 
+// Who the bot hires into an empty seat, best first (never Jinx).
+const HIRE_PREFERENCE = ["Lucky Lou", "The Professor", "Big Mo", "Snake", "Lefty", "Hot Rod", "Dealer Dee", "Ghost"];
+
 // Cards the bot likes best, first to last.
 const CARD_PREFERENCE = ["muggsy", "oddsAddict", "doubleUp", "pity", "redDice", "hotHand", "doublesCharm", "greenDice", "luckySeven", "snakeEyes", "rattlesnake", "encore", "highRoller", "rodsLighter", "deesLedger", "leftysGlove", "frontOfLine", "sleightOfHand"];
 
 function atBreak(state, s) {
-  if (state.kitty >= amountOwed(state)) { deposit(state, amountOwed(state)); return; }
+  if (state.cash >= amountOwed(state)) { deposit(state, amountOwed(state)); return; }
   if (s.shop && isShopOpen(state)) {
     // Don't Pass bots want the dark-side cards first; Pass Line bots skip them.
     const prefs = s.side === "dont" ? ["wrongWay", "coldRead"].concat(CARD_PREFERENCE) : CARD_PREFERENCE;
     const offers = state.stock.map((id, slot) => ({ id, slot })).filter((o) => o.id && prefs.includes(o.id))
       .sort((x, y) => prefs.indexOf(x.id) - prefs.indexOf(y.id));
     for (const o of offers) {
-      if (state.kitty - cardPrice(state, o.id) >= s.shopReserve) buyCard(state, o.slot);
+      if (state.cash - cardPrice(state, o.id) >= s.shopReserve) buyCard(state, o.slot);
     }
   }
   if (s.payReserve !== null) {
-    const extra = state.kitty - s.payReserve;
+    const extra = state.cash - s.payReserve;
     if (extra > 0) deposit(state, extra);
   }
 }
@@ -98,7 +101,7 @@ function useEdits(state) {
 function buyComps(state, s) {
   if (!s.comps || !isShopOpen(state)) return;
   state.compStock.forEach((id, slot) => {
-    if (id && COMP_PREFERENCE.includes(id) && state.kitty - compPrice(state, id) >= s.shopReserve) buyComp(state, slot);
+    if (id && COMP_PREFERENCE.includes(id) && state.cash - compPrice(state, id) >= s.shopReserve) buyComp(state, slot);
   });
 }
 
@@ -124,10 +127,10 @@ function placeBets(state, s) {
   const line = s.side === "dont" || (s.side === "against-jinx" && shooter === "Jinx") || !passAllowed(state) ? "dont" : "pass";
   const backing = line === "pass" ? "odds" : "lay";
   if (state.point === null && state.bets.pass === 0 && state.bets.dont === 0) {
-    let size = s.passPct ? round5(state.kitty * s.passPct) : s.pass;
+    let size = s.passPct ? round5(state.cash * s.passPct) : s.pass;
     if (s.debtPct) size = round5(amountOwed(state) * s.debtPct); // bet in proportion to what's still owed
     size = Math.max(tableMin(state), safe ? tableMin(state) : size);
-    if (fundPassLine(state, Math.min(size, Math.max(tableMin(state), round5(state.kitty))), line) === null) {
+    if (fundPassLine(state, Math.min(size, Math.max(tableMin(state), round5(state.cash))), line) === null) {
       fundPassLine(state, tableMin(state), line);
     }
   }
@@ -136,8 +139,8 @@ function placeBets(state, s) {
     const back = onLine === "pass" ? "odds" : "lay";
     const limit = backingLimit(state, back);
     const want = Math.min(limit, back === "odds" ? state.bets.pass * s.odds : limit * s.odds / 5);
-    const add = Math.min(want - state.bets[back], state.kitty);
-    if (add > 0) { state.kitty -= add; state.bets[back] += add; }
+    const add = Math.min(want - state.bets[back], state.cash);
+    if (add > 0) { state.cash -= add; state.bets[back] += add; }
   }
 }
 
@@ -150,6 +153,14 @@ function playShift(s, carry) {
     takePerk(state, pick, state.crew.find((n) => n === "Jinx") || state.crew[0]);
   }
   if (s.startCards && !carry) { state.cards = s.startCards.slice(); state.stock = newStock(state); }
+  // START_CREW=3: you plus random crew fill the first seats; the rest can be hired later.
+  if (START_CREW && !carry) {
+    const others = CONFIG.crew.filter((n) => n !== "You").sort(() => Math.random() - 0.5).slice(0, START_CREW - 1);
+    state.roster = CONFIG.crew.filter((n) => n === "You" || others.includes(n));
+    state.crew = state.roster.slice();
+    state.hireOffers = newHireOffers(state);
+    setupTurn(state);
+  }
   let rolls = 0;
   while (state.status === "playing" && rolls < 3000) {
     if (state.onBreak) {
@@ -157,8 +168,8 @@ function playShift(s, carry) {
       buyComps(state, s);
       // Hire into an empty seat: Lucky Lou or The Professor first.
       if (s.shop && isShopOpen(state)) {
-        for (const name of ["Lucky Lou", "The Professor", "Big Mo", "Snake"]) {
-          if (state.hireOffers.includes(name) && state.kitty - hirePrice(state) >= s.shopReserve) hire(state, name);
+        for (const name of HIRE_PREFERENCE) {
+          if (state.hireOffers.includes(name) && state.cash - hirePrice(state) >= s.shopReserve) hire(state, name);
         }
       }
       if (s.comps) useEdits(state);
@@ -178,6 +189,7 @@ function playShift(s, carry) {
 function run(label, s, n, scale) {
   let wins = 0, broke = 0, short = 0, rolls = 0, left = 0, cards = 0;
   const reached = scale.map(() => 0); // how many runs survived each shift
+  const seats = [];
   CONFIG.shifts = scale.map(([cash, debt, minBet], k) => ({ cash: cash, debt: debt, minBet: minBet || (ORIGINAL_SHIFTS[k] || { minBet: 5 }).minBet }));
   for (let i = 0; i < n; i++) {
     let carry = null;
@@ -190,10 +202,13 @@ function run(label, s, n, scale) {
       }
       if (r.status !== "won") break;
       reached[k]++;
+      seats[k] = (seats[k] || 0) + r.roster.length;
       carry = r;
     }
   }
   const pct = (x) => (100 * x / n).toFixed(1).padStart(5) + "%";
+  // SEATS=1 also prints the average number of seats filled after each won shift.
+  if (process.env.SEATS) console.log("   seats after each won shift: " + reached.map((x, k) => (seats[k] / x).toFixed(1)).join(" "));
   return label.padEnd(44) + " win " + pct(wins) + " | broke " + pct(broke) + " | short " + pct(short) +
     " | rolls " + (rolls / n).toFixed(0).padStart(3) + " | cards " + (cards / n).toFixed(1) +
     (scale.length > 1 ? " | survived shift " + reached.map((x, k) => (k + 1) + ":" + pct(x)).join(" ") : "");
@@ -206,6 +221,9 @@ globalThis.ORIGINAL_SHIFTS = CONFIG.shifts.slice();
 if (process.env.CARRY) CONFIG.carryOverShare = Number(process.env.CARRY); // e.g. CARRY=0.5 node tools/simulate.js
 // NORULES=1 switches off house rules and challenges (to measure what they change).
 if (process.env.NORULES) { globalThis.pickHouseRule = () => null; globalThis.newChallenge = () => null; }
+// START_CREW=3 starts with you plus 2 crew; the other starters join the hire pool.
+globalThis.START_CREW = Number(process.env.START_CREW) || 0;
+if (START_CREW) CONFIG.recruits = CONFIG.recruits.concat(CONFIG.crew.filter((n) => n !== "You"));
 const N = Number(process.argv[2]) || 20000;
 const scaleArg = process.argv[3]; // e.g. "100:200,200:500"
 const scale = (scaleArg || CONFIG.shifts.map((x) => x.cash + ":" + x.debt + ":" + x.minBet).join(",")).split(",").map((p) => p.split(":").map(Number));
@@ -214,7 +232,7 @@ const strategies = [
   ["$5 Pass, no Odds, pay only at the end",      { pass: 5, odds: 0, payReserve: null, shop: false, shopReserve: 0 }],
   ["$10 Pass + max Odds, pay only at the end",   { pass: 10, odds: 5, payReserve: null, shop: false, shopReserve: 0 }],
   ["$25 Pass + max Odds, pay only at the end",   { pass: 25, odds: 5, payReserve: null, shop: false, shopReserve: 0 }],
-  ["10% of kitty + 2x Odds, keep $100, pay rest", { passPct: 0.1, odds: 2, payReserve: 100, shop: false, shopReserve: 0 }],
+  ["10% of cash + 2x Odds, keep $100, pay rest", { passPct: 0.1, odds: 2, payReserve: 100, shop: false, shopReserve: 0 }],
   ["$10 Pass + max Odds, keep $100, pay rest",   { pass: 10, odds: 5, payReserve: 100, shop: false, shopReserve: 0 }],
   ["$10 Pass + max Odds, shop, pay at the end",  { pass: 10, odds: 5, payReserve: null, shop: true, shopReserve: 60 }],
   ["$10 Pass + max Odds, shop, keep $100",       { pass: 10, odds: 5, payReserve: 100, shop: true, shopReserve: 60 }],
@@ -222,7 +240,7 @@ const strategies = [
   ["$5 Pass + max Odds, shop, pay at the end",   { pass: 5, odds: 5, payReserve: null, shop: true, shopReserve: 40 }],
   ["$10 Pass + 2x Odds, shop, pay at the end",   { pass: 10, odds: 2, payReserve: null, shop: true, shopReserve: 60 }],
   ["$10 Pass + max Odds, shop, keep $60, pay rest", { pass: 10, odds: 5, payReserve: 60, shop: true, shopReserve: 60 }],
-  ["15% of kitty + max Odds, shop, pay at end",  { passPct: 0.15, odds: 5, payReserve: null, shop: true, shopReserve: 40 }],
+  ["15% of cash + max Odds, shop, pay at end",  { passPct: 0.15, odds: 5, payReserve: null, shop: true, shopReserve: 40 }],
   ["SMART: $10 + max Odds, protect, no shop",   { pass: 10, odds: 5, payReserve: null, shop: false, shopReserve: 0, protect: true }],
   ["SMART: $10 + max Odds, protect, shop",      { pass: 10, odds: 5, payReserve: null, shop: true, shopReserve: 60, protect: true }],
   ["SMART: $25 + max Odds, protect, shop",      { pass: 25, odds: 5, payReserve: null, shop: true, shopReserve: 60, protect: true }],

@@ -87,7 +87,7 @@ function renderChips(values, selectedChip, onPick) {
 function renderState(state) {
   const b = state.bets;
   document.getElementById("shift-number").textContent = state.shift;
-  document.getElementById("kitty").textContent = money(state.kitty);
+  document.getElementById("cash").textContent = money(state.cash);
   document.getElementById("interest").textContent = Math.round(state.interestRate * 1000) / 10 + "%";
   document.getElementById("paid").textContent = money(state.deposited) + " / " + money(state.debt);
   const progress = Math.min(100, (state.deposited / state.debt) * 100);
@@ -216,7 +216,7 @@ function renderBreak(state) {
       ? "The dealer leans in. \"You owe me " + money(state.debt) + " by the end of the shift. Pay it and I'll unlock a link.\" Pay any time between shooters. Paid money is safe, but you can't bet it."
       : "Shift " + state.shift + ". " + (state.endless ? "Endless mode, no chain left to break. " : left + (left === 1 ? " link" : " links") + " to go. ") +
         (state.dealerCut > 0 ? "The dealer kept " + money(state.dealerCut) + " of your leftover money as his cut. " : "") +
-        "The pit boss slides " + money(state.cashAdded) + " into your kitty. The dealer leans in: \"This time you owe me " + money(state.debt) + ".\" The table minimum is now " + money(tableMin(state)) + ".";
+        "The pit boss hands you " + money(state.cashAdded) + " in cash. The dealer leans in: \"This time you owe me " + money(state.debt) + ".\" The table minimum is now " + money(tableMin(state)) + ".";
     if (state.houseRule) intro += " " + (HOUSE_RULES[state.houseRule.id].boss ? "Boss rule" : "House rule") + " this shift: " + HOUSE_RULES[state.houseRule.id].name + ". " + houseRuleText(state);
   } else if (isFinalBreak(state)) {
     intro = "Every shooter has sevened out. Last chance to pay before the pit boss judges you.";
@@ -236,11 +236,11 @@ function renderBreak(state) {
   // The shop opens after the first shooter (its tutorial is shown by main.js).
   document.getElementById("shop-section").classList.toggle("hidden", !isShopOpen(state));
   document.getElementById("break-owed").textContent = money(amountOwed(state));
-  document.getElementById("break-kitty").textContent = money(state.kitty);
+  document.getElementById("break-cash").textContent = money(state.cash);
   const rate = Math.round(state.interestRate * 1000) / 10 + "%";
   document.getElementById("break-interest").innerHTML = state.lastInterest > 0
-    ? "Interest paid into your kitty: <strong>+" + money(state.lastInterest) + "</strong> (" + rate + " of the " + money(state.deposited) + " you've paid)."
-    : "Paid money earns " + rate + " interest at every Break, paid into your kitty.";
+    ? "Interest added to your cash: <strong>+" + money(state.lastInterest) + "</strong> (" + rate + " of the " + money(state.deposited) + " you've paid)."
+    : "Paid money earns " + rate + " interest at every Break, added to your cash.";
 
   // Paying opens after the first shooter. Pay off debt needs the whole amount.
   const payOpen = canPay(state);
@@ -249,9 +249,9 @@ function renderBreak(state) {
   document.getElementById("pay-closed").textContent = payOpen ? "" :
     "The dealer won't take payment until the first shooter has rolled. Shop first, then pay at the next Break.";
   const payOff = document.getElementById("pay-off");
-  payOff.disabled = !payOpen || state.kitty < amountOwed(state);
+  payOff.disabled = !payOpen || state.cash < amountOwed(state);
   payOff.textContent = "Pay off debt (" + money(amountOwed(state)) + ")";
-  payOff.title = payOff.disabled ? "You need the full amount in your kitty to pay off the debt." : "";
+  payOff.title = payOff.disabled ? "You need the full amount in cash to pay off the debt." : "";
   document.getElementById("leave-break").textContent = isFinalBreak(state)
     ? "Face the pit boss"
     : "Next shooter: " + state.crew[state.shooterIndex];
@@ -824,7 +824,7 @@ function runStatsHtml(state) {
     statTile("Highest mult", st.maxMult + "x") +
     statTile("Best shooter", best ? best.name : "-", best ? (best.amount >= 0 ? "+" : "-") + money(Math.abs(best.amount)) + " for you" : "") +
     "</div>";
-  html += '<h3>Your money over the run</h3><p class="hint">Kitty plus bets after every roll. Drops at a Break are payments to the dealer; dashed lines mark new shifts.</p>' + moneyChartSvg(st);
+  html += '<h3>Your money over the run</h3><p class="hint">Cash plus bets after every roll. Drops at a Break are payments to the dealer; dashed lines mark new shifts.</p>' + moneyChartSvg(st);
   html += '<h3>Every total you rolled</h3><p class="hint"><span class="legend-bar"></span> times rolled &nbsp; <span class="legend-tick"></span> expected from the dice odds</p>' + totalsChartSvg(st);
   html += "<h3>Phone perks</h3>" + (state.perks.length
     ? '<div class="my-cards">' + [...new Set(state.perks)].map((id) => '<div class="card-badge perk">☎ ' + perkInfo(id).name +

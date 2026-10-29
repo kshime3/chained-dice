@@ -5,9 +5,9 @@ const CONFIG = {
   // Your chain: each won shift breaks one link. Break them all and you walk out free.
   chainLinks: 8,
 
-  // Shifts: cash added at the start of each shift (to your leftover kitty), and the debt.
+  // Shifts: cash added at the start of each shift (to your leftover cash), and the debt.
   // Tested with tools/simulate.js (see docs/BALANCE.md).
-  // minBet: the table minimum for that shift (the smallest line bet, and what you must keep in your kitty).
+  // minBet: the table minimum for that shift (the smallest line bet, and what you must keep in cash).
   // Debts grow slowly at first and faster later, so each shift is a bit harder than the last
   // (tested with tools/simulate.js, see docs/BALANCE.md 2026-10-28).
   shifts: [
@@ -29,7 +29,7 @@ const CONFIG = {
   payAfterFirstShooter: true,
 
   // Dealer's cut: at the end of a won shift you keep this share of your leftover money
-  // (1 = keep it all). Stops a big leftover kitty from clearing the next shifts.
+  // (1 = keep it all). Stops a big leftover cash from clearing the next shifts.
   carryOverShare: 0.5,
   // Seat order. Each seat shoots until they seven out, then the dice pass on.
   crew: ["Lefty", "Dealer Dee", "Hot Rod", "Jinx", "Ghost", "You"],
@@ -163,7 +163,7 @@ const CONFIG = {
   cutChainPct: 0.25, // costs this share of the debt
 
   // Interest: at every Dealer Break after a seven-out, this share of the money
-  // you've paid the dealer so far is paid into your kitty (rounded down).
+  // you've paid the dealer so far is added to your cash (rounded down).
   interestRate: 0.05,
 
   // Presentation

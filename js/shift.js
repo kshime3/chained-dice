@@ -16,7 +16,7 @@ function shiftScale(n) {
   return scale;
 }
 
-// The table minimum this shift: the smallest line bet, and what you always keep in your kitty.
+// The table minimum this shift: the smallest line bet, and what you always keep in cash.
 function tableMin(state) {
   return state.minBet * (rule(state, "highStakes") ? CONFIG.highStakesX : 1);
 }
@@ -37,7 +37,7 @@ function newShiftState() {
     shift: 1, // which shift of the run this is
     debt: shiftScale(1).debt, // what the dealer wants this shift
     minBet: shiftScale(1).minBet, // the table minimum this shift
-    kitty: shiftScale(1).cash, // money in your hand, not on the table
+    cash: shiftScale(1).cash, // money in your hand, not on the table
     cashAdded: shiftScale(1).cash, // cash the pit boss added at the start of this shift
     dealerCut: 0, // leftover money the dealer kept at the start of this shift
     deposited: 0, // paid to the dealer: safe, but out of play
@@ -96,10 +96,10 @@ function newShiftState() {
   return state;
 }
 
-// Money still in play: kitty plus everything on the table (not deposits).
+// Money still in play: cash plus everything on the table (not deposits).
 function totalMoney(state) {
   const b = state.bets;
-  return state.kitty + b.pass + b.odds + b.dont + b.lay + b.field;
+  return state.cash + b.pass + b.odds + b.dont + b.lay + b.field;
 }
 
 function amountOwed(state) {
@@ -126,38 +126,38 @@ function isBroke(state) {
   return state.point === null && totalMoney(state) < tableMin(state);
 }
 
-// The most you can pay right now. You always keep enough in your kitty
+// The most you can pay right now. You always keep enough in cash
 // for the minimum Pass Line bet, unless this payment clears the debt.
 function maxDeposit(state) {
   if (!canPay(state)) return 0;
   const owed = amountOwed(state);
-  if (state.kitty >= owed) return owed;
-  return Math.max(0, state.kitty - tableMin(state));
+  if (state.cash >= owed) return owed;
+  return Math.max(0, state.cash - tableMin(state));
 }
 
-// Pay the dealer from your kitty, up to maxDeposit.
+// Pay the dealer from your cash, up to maxDeposit.
 // Returns how much was actually paid. Paying in full wins the shift.
 function deposit(state, amount) {
   const paid = Math.min(amount, maxDeposit(state));
   if (paid <= 0) return 0;
-  state.kitty -= paid;
+  state.cash -= paid;
   state.deposited += paid;
   state.stats.paid += paid;
   if (state.deposited >= state.debt) state.status = "won";
   return paid;
 }
 
-// Put money on a line bet ("pass" or "dont"). If your kitty is short, the rest is
+// Put money on a line bet ("pass" or "dont"). If your cash is short, the rest is
 // moved from your other bets (Field first, then Odds, then Lay Odds).
 // Returns the list of moves made, e.g. [{ from: "field", amount: 5 }],
 // or null if you can't cover it at all.
 function fundPassLine(state, amount, line = "pass") {
   const b = state.bets;
-  if (state.kitty + b.field + b.odds + b.lay < amount) return null;
+  if (state.cash + b.field + b.odds + b.lay < amount) return null;
   const moves = [];
-  const fromKitty = Math.min(state.kitty, amount);
-  state.kitty -= fromKitty;
-  let short = amount - fromKitty;
+  const fromCash = Math.min(state.cash, amount);
+  state.cash -= fromCash;
+  let short = amount - fromCash;
   for (const bet of ["field", "odds", "lay"]) {
     const take = Math.min(b[bet], short);
     if (take > 0) {
@@ -170,11 +170,11 @@ function fundPassLine(state, amount, line = "pass") {
   return moves;
 }
 
-// Interest: a share of everything you've paid, into your kitty (rounded down).
+// Interest: a share of everything you've paid, into your cash (rounded down).
 function payInterest(state) {
   const rate = state.interestRate * (rule(state, "skimmedInterest") ? CONFIG.skimmedInterestX : 1);
   state.lastInterest = Math.floor(state.deposited * rate);
-  state.kitty += state.lastInterest;
+  state.cash += state.lastInterest;
   state.stats.interest += state.lastInterest;
   return state.lastInterest;
 }
@@ -221,7 +221,7 @@ function cuttableCrew(state) {
 function cutChain(state, name) {
   if (!cuttableCrew(state).includes(name)) return "not-allowed";
   if (!canSpend(state, cutChainPrice(state))) return "money";
-  state.kitty -= cutChainPrice(state);
+  state.cash -= cutChainPrice(state);
   state.stats.spent += cutChainPrice(state);
   removeCrew(state, name);
   return "ok";
@@ -249,7 +249,7 @@ function nextShift(old) {
   state.cashAdded = scale.cash;
   state.carriedOver = Math.floor(totalMoney(old) * CONFIG.carryOverShare); // bets left on the table come back too
   state.dealerCut = totalMoney(old) - state.carriedOver;
-  state.kitty = state.carriedOver + scale.cash;
+  state.cash = state.carriedOver + scale.cash;
   state.cards = old.cards.slice();
   state.roster = old.roster.slice();
   state.interestRate = old.interestRate;
@@ -310,7 +310,7 @@ function hire(state, name) {
   if (!state.hireOffers.includes(name)) return "gone";
   if (state.roster.length >= CONFIG.maxSeats) return "full";
   if (!canSpend(state, hirePrice(state))) return "money";
-  state.kitty -= hirePrice(state);
+  state.cash -= hirePrice(state);
   state.stats.spent += hirePrice(state);
   state.roster.push(name);
   state.hireOffers = state.hireOffers.filter((n) => n !== name);
@@ -332,7 +332,7 @@ function afterRoll(state, sevenOut) {
     state.shooterIndex += 1;
     payInterest(state);
     // Broke with no way to pay off the debt: fall right away, no break.
-    if (isBroke(state) && state.kitty < amountOwed(state)) {
+    if (isBroke(state) && state.cash < amountOwed(state)) {
       fall(state, "fell-broke");
       return;
     }

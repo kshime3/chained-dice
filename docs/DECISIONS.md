@@ -39,19 +39,19 @@ Dated log of every decision and why. Newest at the bottom.
 
 ## 2026-10-23 (Milestone 3 adjustments by owner)
 
-- **Broke = can't place the minimum Pass Line bet,** counting kitty plus money on the table. If the kitty is short, money is **moved automatically** from other bets (Field first, then Odds) to the Pass Line. Owner's choice.
-- **Pay the dealer instead of "reach $2,000":** deposit from your kitty at Dealer breaks between shooters (like Clover Pit). Owner's design.
+- **Broke = can't place the minimum Pass Line bet,** counting cash plus money on the table. If the cash is short, money is **moved automatically** from other bets (Field first, then Odds) to the Pass Line. Owner's choice.
+- **Pay the dealer instead of "reach $2,000":** deposit from your cash at Dealer breaks between shooters (like Clover Pit). Owner's design.
 - **Deposits can't be taken back.** Owner's choice. Why: makes "bank it or let it ride" a real decision.
-- **Paying the full debt wins the shift immediately;** leftover kitty carries over. Owner's choice.
+- **Paying the full debt wins the shift immediately;** leftover cash carries over. Owner's choice.
 - **One final Dealer break after the last seven-out,** before judgment. Owner's choice.
 - **One Dealer break screen for both paying the debt and (later) the shop; tips don't count toward the debt.** Owner's choice.
 - **Deposits are capped at what you still owe.** Why: overpaying would just waste money.
-- **"Bankroll" renamed "Kitty"** on screen and in code, to match the owner's wording.
+- **"Bankroll" renamed "Cash"** on screen and in code, to match the owner's wording.
 - **The first Dealer break appears before shooter 1.** Why: introduces the dealer and the rule right away.
 
 ## 2026-10-23 (end of session tweaks)
 
-- **Payments always leave the minimum Pass Line bet ($5) in the kitty,** for both "Pay" and "Pay all I can", unless the payment clears the whole debt. Owner's rule: never let the player reach $0 on purpose.
+- **Payments always leave the minimum Pass Line bet ($5) in the cash,** for both "Pay" and "Pay all I can", unless the payment clears the whole debt. Owner's rule: never let the player reach $0 on purpose.
 - **Hovering over a seat shows that character's dice and style.** Quirks are marked "Coming in Milestone 4" until they're real. Owner wants to revisit and adjust the quirks in Milestone 4. Crew text lives in `js/crew.js` (it's words, not tunable numbers).
 - **Keep the flat shapes layout until the game is complete,** then grow it into a 3D Clover Pit-style world. Owner's direction.
 
@@ -68,12 +68,12 @@ Dated log of every decision and why. Newest at the bottom.
 
 ## 2026-10-23 (Session 2: Milestone 4b)
 
-- **Hot Rod's first seven-out costs double:** your losing Pass Line and Odds are charged again from the kitty, never taking it below the $5 minimum. Field losses don't count. Owner approved.
+- **Hot Rod's first seven-out costs double:** your losing Pass Line and Odds are charged again from the cash, never taking it below the $5 minimum. Field losses don't count. Owner approved.
 - **Coach (free reroll after Dee) removed.** A reroll may come back as a shop perk. Owner's choice.
 - **Mult applies to winnings only, rounded down,** and resets to 1x for each new shooter (plus Mentor/Cold Table effects).
 - **A "winning roll" means any of your bets won that roll.**
 - **Mentor = half of Hot Rod's bonus above 1x. Cold Table = -0.5x, lifted by the first winning roll.** All numbers are in config.js.
-- **"Pay all I can" removed; replaced by "Pay off debt"** (shows the amount owed), greyed out unless your kitty covers the whole debt. Typed "Pay" stays for partial payments. Owner's choice. Why: one accidental click could ruin a run, since payments can't be undone.
+- **"Pay all I can" removed; replaced by "Pay off debt"** (shows the amount owed), greyed out unless your cash covers the whole debt. Typed "Pay" stays for partial payments. Owner's choice. Why: one accidental click could ruin a run, since payments can't be undone.
 
 ## 2026-10-23 (Session 2: shop planning, owner's spreadsheet)
 
@@ -91,7 +91,7 @@ Dated log of every decision and why. Newest at the bottom.
 
 ## 2026-10-23 (Session 2: final shop answers)
 
-- **Shift 2+ starting cash adds to your leftover kitty.** Owner's choice.
+- **Shift 2+ starting cash adds to your leftover cash.** Owner's choice.
 - **Cards carry over between shifts** (like Balatro jokers).
 - **Phone perks and dice cards affect everyone's dice.**
 - **Flat bonuses are a share of the debt:** Snake Eyes 10%, Lucky Seven 5%.
@@ -100,7 +100,7 @@ Dated log of every decision and why. Newest at the bottom.
 - **Rarities:** Double Up, Muggsy, Reroll and Red Dice are Uncommon.
 - **Milestone 5a cards:** Hot Hand, Snake Eyes, Lucky Seven, Rattlesnake, Red Dice, Odds Addict, Pit Boss's Pity, Muggsy. 5b: Loaded Die, Reroll, Double Up, Doubles Charm, Green Dice, Cut a chain, Extra chain link.
 - **Shift 1 now uses the new scale ($100 cash, $200 debt)** so shop prices (a share of the debt) make sense.
-- **Buying a card can't take the kitty below $5,** same as paying the dealer.
+- **Buying a card can't take the cash below $5,** same as paying the dealer.
 
 ## 2026-10-23 (Milestone 5a feedback from owner)
 
@@ -121,7 +121,7 @@ Dated log of every decision and why. Newest at the bottom.
 
 ## 2026-10-23 (interest, bets, layout)
 
-- **Interest is earned on paid money, not the kitty:** at every Dealer Break after a seven-out, 5% of everything paid so far (rounded down) goes into your kitty. Owner approved Claude's suggestion. Why: rewards paying early, and makes "bank it or ride it" sharper. Green Dice becomes "each 12 adds +0.5% to your interest rate".
+- **Interest is earned on paid money, not the cash:** at every Dealer Break after a seven-out, 5% of everything paid so far (rounded down) goes into your cash. Owner approved Claude's suggestion. Why: rewards paying early, and makes "bank it or ride it" sharper. Green Dice becomes "each 12 adds +0.5% to your interest rate".
 - **Finish the base game first; add more bets later** (Place, Hard Ways, Come with Odds), some as phone unlocks. Owner's choice.
 - **Tapping the dice rolls them.** Owner's request.
 - **Everything should fit on one screen without scrolling, on desktop and mobile.** Owner's request.
@@ -153,7 +153,7 @@ Dated log of every decision and why. Newest at the bottom.
 
 - **Milestone 6 split:** 6a multiple shifts, 6b the Pit Boss phone.
 - **From shift 2, the shop is open on the opening Dealer Break.** Shift 1 keeps it closed until after the first shooter.
-- **Carry over between shifts:** kitty (plus the new shift's cash), cards, cut crew, interest boosts, perks. **Reset each shift:** payments, Pit Boss's Pity, Loaded Die, Hot Rod's double cost.
+- **Carry over between shifts:** cash (plus the new shift's cash), cards, cut crew, interest boosts, perks. **Reset each shift:** payments, Pit Boss's Pity, Loaded Die, Hot Rod's double cost.
 - **Scale:** the table in DESIGN.md for shifts 1-5; after that the debt grows 1.5x per shift (rounded to $50) and the cash added grows $50 per shift.
 - **Score = shifts survived,** shown when you fall.
 - **Fire Bet and Different Doubles wait for the "More bets" milestone.** The phone launches with the other perks.
@@ -231,3 +231,9 @@ Dated log of every decision and why. Newest at the bottom.
 - **Boss rule on the last chain shift (shift 8):** one of No Free Lunch (owner: each shooter's first point pays nothing), Cold Dice (mult capped at 1x), Seven Heaven (come-out 7s don't pay the Pass Line). Endless shifts get a random rule from either list.
 - **Pit boss challenges only on your own turn,** from shift 2; random rewards scaled to the debt (cash, free comp, debt cut, free Shuffle); no penalty for failing.
 - Renamed to avoid clashes: "High Roller" rule -> **High Stakes**; "Dealer's Cut" rule -> **Skimmed Interest**.
+
+## 2026-10-29 (after Milestone 11)
+
+- **"Kitty" renamed to "cash" everywhere** (owner: "kitty" is gambling talk; keep words simple for the average person). Top bar "Cash $150", Break "Your cash:", messages "Not enough cash for a $10 bet." The code variable is now `state.cash`.
+- **Difficulty goal restated (owner):** players should *not* beat the game on the first run. Winning should come from unlocking cards and more over many runs, so each run feels fresh. A very low first-run escape rate is fine; unlocks (Milestone 12) are what should make escaping possible.
+- **Starting with 3 shooters (you + 2 crew): tested in the simulator only, not built yet.** Results in BALANCE.md; waiting on the owner's choice.
