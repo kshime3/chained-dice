@@ -45,7 +45,20 @@ const CONFIG = {
     "Jinx":       { left: [1, 2, 3, 3, 4, 4], right: [1, 2, 3, 3, 4, 4] },    // leans to 3s and 4s
     "Ghost":      { left: [1, 2, 3, 4, 5, 6], right: "ghost" },                // see ghostFaces
     "You":        { left: [1, 2, 3, 4, 5, 6], right: [1, 2, 3, 4, 5, 6] },
+    // Crew you can hire (Milestone 10)
+    "Snake":      { left: [1, 1, 2, 3, 5, 6], right: [1, 1, 2, 3, 5, 6] },    // lots of 2s, 3s and 12s
+    "Big Mo":     { left: [1, 4, 5, 5, 6, 6], right: [1, 4, 5, 5, 6, 6] },    // lots of 10s, 11s and 12s
+    "The Professor": { left: [1, 2, 3, 4, 5, 6], right: [1, 2, 3, 4, 5, 6] },
+    "Lucky Lou":  { left: [1, 2, 3, 4, 5, 6], right: [1, 2, 3, 4, 5, 6] },
   },
+
+  // Hiring new crew at a Dealer Break (only into an empty seat).
+  recruits: ["Snake", "Big Mo", "The Professor", "Lucky Lou"],
+  maxSeats: 6,        // most people at the table, including you
+  hireOffers: 2,      // candidates offered at each Break
+  hirePricePct: 0.2,  // hiring costs this share of the debt
+  professorOddsX: 2,  // The Professor: Odds and Lay Odds limits are this many times bigger on his turn
+  luckyLouMult: 1,    // Lucky Lou: + this much mult every time he hits a point
   // Ghost's right die is evens-only or odds-only, picked at the start of each turn.
   ghostFaces: { evens: [2, 4, 6], odds: [1, 3, 5] },
 
@@ -86,6 +99,15 @@ const CONFIG = {
     wrongWay: "uncommon",
     coldRead: "common",
     bargain: "rare",
+    leftysGlove: "uncommon",
+    deesLedger: "uncommon",
+    rodsLighter: "uncommon",
+    jinxShadow: "uncommon",
+    ghostStory: "common",
+    encore: "rare",
+    highRoller: "uncommon",
+    frontOfLine: "common",
+    sleightOfHand: "uncommon",
   },
 
   // Card numbers
@@ -101,6 +123,10 @@ const CONFIG = {
   greenDiceInterestStep: 0.005, // Green Dice: each 12 adds this to the interest rate (0.005 = 0.5%)
   wrongWayExtra: 0.5,         // Wrong Way: Don't Pass winnings +50%
   coldReadMult: 1,            // Cold Read: the next shooter starts with this much extra mult
+  deesLedgerExtra: 0.5,       // Dee's Ledger: Odds and Lay Odds pay +50% on Dee's turn
+  rodsLighterMultPerWin: 1.5, // Rod's Lighter: Hot Rod's mult per winning roll (instead of 1)
+  jinxShadowX: 2,             // Jinx's Shadow: Don't Pass winnings x2 when Jinx shoots
+  highRollerX: 2,             // High Roller: your winnings x2 on your own turn
 
   // The Pit Boss phone: after each won shift, pick 1 of these many different perks.
   phoneChoices: 3,

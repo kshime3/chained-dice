@@ -217,3 +217,10 @@ Dated log of every decision and why. Newest at the bottom.
 - **Workshop animation:** you pick the face on your die and watch it flip and reforge into the new face (owner's request).
 - **Workshop previews show which totals an edit changes** (not just 7s), since editing one die alone never changes the chance of a 7. Claude's call after testing.
 - **Copycat and Chisel show up less often in the shop** (`compWeights`: 0.6x and 0.35x).
+
+## 2026-10-29 (Milestone 10 plan)
+
+- **Milestone 10 built all at once:** crew-specific cards (only offered while that crew member is at the table), "You" cards, and hiring new crew. **Crew levels skipped** for now (owner).
+- **Hiring** at the Dealer Break, only into an empty seat; **max 6 seats** (`maxSeats`). Owner's idea for later: start with fewer crew (e.g. 3) and recruit up to 6, to help the game grow and scale (`startingCrew` setting, logged in IDEAS.md).
+- **Encore:** your extra turn comes after the last shooter, before the final Dealer Break.
+- New crew to hire: Snake, Big Mo, The Professor, Lucky Lou. (Big Mo's dice adjusted so he can still roll a 7: faces 1, 4, 5, 5, 6, 6.)

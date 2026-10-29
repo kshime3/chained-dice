@@ -34,7 +34,7 @@ function editFace(state, die, index, value) {
   if (sevenWays(next) < CONFIG.minSevenWays - 1e-9) return "seven-floor";
   state.myDice = next;
   // If you're the next shooter, your new dice apply straight away.
-  if (state.crew[state.shooterIndex] === "You") state.dice = diceForShooter("You", state.myDice);
+  if (state.crew[state.shooterIndex] === "You") state.dice = diceForShooter("You", state);
   return "ok";
 }
 

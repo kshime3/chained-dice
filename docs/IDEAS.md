@@ -90,3 +90,6 @@ Parked ideas and later features. Not in v1 unless moved into the design.
 
 ## "You" cards (owner, 2026-10-28)
 - Now that only your dice can be crafted, add cards that make **your turn** special: **take an extra turn** (shoot twice per shift), "your winnings x2 on your own turn", "your seat moves to first", "your crafted faces also apply to the next shooter". These make dice crafting pay off. Candidate for Milestone 10 (crew growth).
+
+## Starting crew size (owner, 2026-10-29)
+- If 6 shooters feels like too many, start with 3 crew and let recruiting grow the table to a maximum of 6. Helps the game grow and scale over a run. Would need a `startingCrew` setting and more recruits.

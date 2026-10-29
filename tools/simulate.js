@@ -38,14 +38,14 @@ function simRoll(state) {
   state.point = before.pity ? pointBefore : nextPoint(pointBefore, total);
   const sevenOut = !before.pity && pointBefore !== null && total === CONFIG.sevenOut;
   applyCardsAfterRoll(state, results, total, pointBefore, sevenOut);
-  applyCrewEffects(state, results, sevenOut);
+  applyCrewEffects(state, results, sevenOut, pointBefore !== null && total === pointBefore);
   afterRoll(state, sevenOut);
 }
 
 const round5 = (n) => Math.max(5, Math.floor(n / 5) * 5);
 
 // Cards the bot likes best, first to last.
-const CARD_PREFERENCE = ["muggsy", "oddsAddict", "doubleUp", "pity", "redDice", "hotHand", "doublesCharm", "greenDice", "luckySeven", "snakeEyes", "rattlesnake"];
+const CARD_PREFERENCE = ["muggsy", "oddsAddict", "doubleUp", "pity", "redDice", "hotHand", "doublesCharm", "greenDice", "luckySeven", "snakeEyes", "rattlesnake", "encore", "highRoller", "rodsLighter", "deesLedger", "leftysGlove", "frontOfLine", "sleightOfHand"];
 
 function atBreak(state, s) {
   if (state.kitty >= amountOwed(state)) { deposit(state, amountOwed(state)); return; }
@@ -130,7 +130,7 @@ function placeBets(state, s) {
   const onLine = state.bets.pass > 0 ? "pass" : state.bets.dont > 0 ? "dont" : null;
   if (!safe && onLine && state.point !== null && s.odds > 0) {
     const back = onLine === "pass" ? "odds" : "lay";
-    const limit = back === "odds" ? maxOdds(state.bets.pass, state.point) : maxLay(state.bets.dont, state.point);
+    const limit = backingLimit(state, back);
     const want = Math.min(limit, back === "odds" ? state.bets.pass * s.odds : limit * s.odds / 5);
     const add = Math.min(want - state.bets[back], state.kitty);
     if (add > 0) { state.kitty -= add; state.bets[back] += add; }
@@ -151,6 +151,12 @@ function playShift(s, carry) {
     if (state.onBreak) {
       atBreak(state, s);
       buyComps(state, s);
+      // Hire into an empty seat: Lucky Lou or The Professor first.
+      if (s.shop && isShopOpen(state)) {
+        for (const name of ["Lucky Lou", "The Professor", "Big Mo", "Snake"]) {
+          if (state.hireOffers.includes(name) && state.kitty - hirePrice(state) >= s.shopReserve) hire(state, name);
+        }
+      }
       if (s.comps) useEdits(state);
       if (state.status !== "playing") break;
       endBreak(state);

@@ -2,14 +2,17 @@
 
 // The dice a shooter uses for their turn.
 // Ghost picks evens or odds for his right die at the start of each turn.
-// myDice: your own (craftable) dice, used when name is "You".
-function diceForShooter(name, myDice) {
-  if (name === "You" && myDice) return { left: myDice.left.slice(), right: myDice.right.slice(), bannedPairs: [], note: "" };
+// state (optional): your crafted dice, and cards like Lefty's Glove and Ghost Story.
+function diceForShooter(name, state) {
+  if (name === "You" && state) return { left: state.myDice.left.slice(), right: state.myDice.right.slice(), bannedPairs: [], note: "" };
   const set = CONFIG.crewDice[name] || NORMAL_DICE;
+  if (name === "Lefty" && state && hasCard(state, "leftysGlove")) {
+    return { left: set.left, right: [1, 2, 3, 4, 5, 6], bannedPairs: [], note: "Lefty's Glove: his right die has its 6 back." };
+  }
   if (set.right !== "ghost") {
     return { left: set.left, right: set.right, bannedPairs: set.bannedPairs || [], note: "" };
   }
-  const side = Math.random() < 0.5 ? "evens" : "odds";
+  const side = state && hasCard(state, "ghostStory") ? state.ghostPick : Math.random() < 0.5 ? "evens" : "odds";
   return {
     left: set.left,
     right: CONFIG.ghostFaces[side],
@@ -22,7 +25,12 @@ function diceForShooter(name, myDice) {
 // prevName / prevMult: the shooter who just sevened out, and their final mult.
 function setupTurn(state, prevName, prevMult) {
   const name = state.crew[state.shooterIndex];
-  state.dice = diceForShooter(name, state.myDice);
+  state.dice = diceForShooter(name, state);
+  // Sleight of Hand: the shooter after you rolls your dice.
+  if (prevName === "You" && name !== "You" && hasCard(state, "sleightOfHand")) {
+    state.dice = diceForShooter("You", state);
+    state.dice.note = "Sleight of Hand: " + name + " is rolling your dice.";
+  }
   state.mult = CONFIG.startingMult;
   state.multNotes = [];
   state.coldTable = false;
@@ -31,6 +39,7 @@ function setupTurn(state, prevName, prevMult) {
   state.rattleGain = 0;
   state.turnRolls = 0;
   state.rerollUsed = false; // Reroll works once per shooter
+  state.louGain = 0;
 
   // Muggsy: after a point-7, this shooter's winnings are multiplied.
   if (state.muggsyPending) {
@@ -94,8 +103,30 @@ function applyCrewBeforePayout(state, results, total, pointBefore) {
   return notes;
 }
 
+// Rebuild the next shooter's dice (after a card changes them at a Break).
+function refreshNextShooter(state) {
+  if (state.crew[state.shooterIndex]) setupTurnDiceOnly(state);
+}
+
+function setupTurnDiceOnly(state) {
+  const name = state.crew[state.shooterIndex];
+  const prev = state.crew[state.shooterIndex - 1];
+  state.dice = diceForShooter(name, state);
+  if (prev === "You" && name !== "You" && hasCard(state, "sleightOfHand")) {
+    state.dice = diceForShooter("You", state);
+    state.dice.note = "Sleight of Hand: " + name + " is rolling your dice.";
+  }
+}
+
+// Odds / Lay Odds limit, with The Professor doubling it on his turn.
+function backingLimit(state, back) {
+  const base = back === "odds" ? maxOdds(state.bets.pass, state.point) : maxLay(state.bets.dont, state.point);
+  return state.crew[state.shooterIndex] === "The Professor" ? base * CONFIG.professorOddsX : base;
+}
+
 // Crew effects after a roll has been paid out. Returns sentences for the message.
-function applyCrewEffects(state, results, sevenOut) {
+// pointHit: the shooter just hit their point.
+function applyCrewEffects(state, results, sevenOut, pointHit) {
   const notes = [];
   const name = state.crew[state.shooterIndex];
   const won = results.some((r) => r.outcome === "win");
@@ -107,15 +138,24 @@ function applyCrewEffects(state, results, sevenOut) {
     notes.push("The table warms up: Cold Table is lifted.");
   }
   if (won && name === "Hot Rod") {
-    state.mult += CONFIG.hotRodMultPerWin;
-    state.hotRodGain += CONFIG.hotRodMultPerWin;
+    const gain = hasCard(state, "rodsLighter") ? CONFIG.rodsLighterMultPerWin : CONFIG.hotRodMultPerWin;
+    state.mult += gain;
+    state.hotRodGain += gain;
     setMultNote(state, "Hot Rod", "Hot Rod streak: +" + state.hotRodGain + "x");
     notes.push("Hot Rod heats up: mult is now " + state.mult + "x.");
   }
 
   // Hot Rod's first seven-out costs extra, taken from your kitty.
   // It never takes you below the minimum Pass Line bet.
-  if (sevenOut && name === "Hot Rod" && !state.hotRodPenaltyUsed) {
+  // Lucky Lou: + mult every time he hits a point.
+  if (pointHit && name === "Lucky Lou") {
+    state.mult += CONFIG.luckyLouMult;
+    state.louGain = (state.louGain || 0) + CONFIG.luckyLouMult;
+    setMultNote(state, "Lucky Lou", "Lucky Lou: +" + state.louGain + "x");
+    notes.push("Lucky Lou hits it again: +" + CONFIG.luckyLouMult + "x mult.");
+  }
+
+  if (sevenOut && name === "Hot Rod" && !state.hotRodPenaltyUsed && !hasCard(state, "rodsLighter")) {
     state.hotRodPenaltyUsed = true;
     const extra = chargeExtra(state, results, CONFIG.hotRodSevenOutCost);
     if (extra > 0) {
@@ -146,6 +186,22 @@ const CREW_INFO = {
   "Ghost": {
     dice: "Right die is evens-only or odds-only, picked each turn.",
     style: "Streaky: some totals vanish for his whole turn.",
+  },
+  "Snake": {
+    dice: "Faces 1, 1, 2, 3, 5, 6. Lots of 2s, 3s and 12s.",
+    style: "Craps machine: great for Don't Pass, rough on the Pass Line come-out.",
+  },
+  "Big Mo": {
+    dice: "Faces 1, 4, 5, 5, 6, 6. Lots of 10s, 11s and 12s.",
+    style: "Rolls big: great for the Field and come-out 11s.",
+  },
+  "The Professor": {
+    dice: "Normal dice.",
+    style: "Reads the table: Odds and Lay Odds limits are doubled on his turn.",
+  },
+  "Lucky Lou": {
+    dice: "Normal dice.",
+    style: "+1x mult every time he hits a point (for the rest of his turn).",
   },
   "You": {
     dice: "Your own dice. Edit their faces with Nudge, Copycat and Chisel comps from the shop.",

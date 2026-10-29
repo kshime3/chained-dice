@@ -64,7 +64,9 @@ function percent(p) {
 // Chance of a 7 for a crew member, for hover cards and the break screen.
 // Ghost's 7 chance is the same whichever side he picks, so evens is used.
 function sevenChance(name, state) {
-  const set = name === "You" && state ? state.myDice : CONFIG.crewDice[name];
+  const set = name === "You" && state ? state.myDice
+    : name === "Lefty" && state && hasCard(state, "leftysGlove") ? { left: CONFIG.crewDice.Lefty.left, right: [1, 2, 3, 4, 5, 6] }
+    : CONFIG.crewDice[name];
   const dice = set.right === "ghost" ? { left: set.left, right: CONFIG.ghostFaces.evens } : set;
   const now = state ? currentDice(state) : { extraWays: [], totalWays: [] };
   return diceOdds(Object.assign({}, dice, { extraWays: now.extraWays, totalWays: now.totalWays }))[7];
@@ -115,10 +117,10 @@ function renderState(state) {
   }
 
   // Odds and Lay Odds open while a point is on, behind the matching line bet
-  for (const [id, bet, line, limit] of [["odds", "odds", "pass", maxOdds], ["lay", "lay", "dont", maxLay]]) {
+  for (const [id, bet, line] of [["odds", "odds", "pass"], ["lay", "lay", "dont"]]) {
     const open = pointOn && b[line] > 0;
     document.getElementById(id).classList.toggle("disabled", !open);
-    document.getElementById(bet + "-amount").textContent = open ? money(b[bet]) + " / max " + money(limit(b[line], state.point)) : "";
+    document.getElementById(bet + "-amount").textContent = open ? money(b[bet]) + " / max " + money(backingLimit(state, bet)) : "";
   }
 
   if (state.lastRoll) {
@@ -136,7 +138,8 @@ function renderCrew(state) {
     const seat = document.createElement("div");
     seat.className = "seat" + (i === state.shooterIndex ? " shooting" : "") + (i < state.shooterIndex ? " done" : "");
     const crafted = name === "You" && isEdited(state);
-    seat.innerHTML = "⛓<br>" + name + (crafted ? " 🔨" : "");
+    const encore = name === "You" && i > 0 && state.crew.indexOf("You") < i;
+    seat.innerHTML = "⛓<br>" + name + (crafted ? " 🔨" : "") + (encore ? " (Encore)" : "");
     const info = CREW_INFO[name];
     if (info) {
       const tip = document.createElement("div");
@@ -290,6 +293,34 @@ function renderShop(state, handlers) {
     cutRow.appendChild(button);
   }
   if (!cutRow.children.length) cutRow.innerHTML = '<p class="hint">Nobody left to drop this shift.</p>';
+
+  // Hire: new crew for an empty seat (Break screen)
+  const seatsFree = CONFIG.maxSeats - state.roster.length;
+  document.getElementById("hire-hint").textContent = seatsFree > 0
+    ? seatsFree + (seatsFree === 1 ? " empty seat" : " empty seats") + ". New crew shoot last this shift, then keep their seat for the run."
+    : "Every seat is taken (" + CONFIG.maxSeats + "). Open a Trapdoor to make room.";
+  const hireRow = document.getElementById("hire-row");
+  hireRow.innerHTML = "";
+  for (const name of state.hireOffers) {
+    const info = CREW_INFO[name];
+    const box = document.createElement("div");
+    box.className = "card hire-card";
+    box.innerHTML = '<div class="card-name">⛓ ' + name + '</div><div class="card-rarity">crew</div><div class="card-text">' +
+      info.dice + " " + info.style + "<br>Chance of a 7: " + percent(sevenChance(name, state)) + "</div>";
+    const button = document.createElement("button");
+    button.textContent = "Hire " + money(hirePrice(state));
+    button.disabled = seatsFree <= 0 || !canSpend(state, hirePrice(state));
+    button.onclick = () => handlers.hire(name);
+    box.appendChild(button);
+    hireRow.appendChild(box);
+  }
+  if (!state.hireOffers.length) hireRow.innerHTML = '<p class="hint">Nobody looking for a seat right now.</p>';
+
+  // Ghost Story: pick Ghost's die when he's up next
+  const ghostNext = state.onBreak && state.crew[state.shooterIndex] === "Ghost" && hasCard(state, "ghostStory");
+  document.getElementById("ghost-pick").classList.toggle("hidden", !ghostNext);
+  document.getElementById("ghost-evens").classList.toggle("selected-option", state.ghostPick === "evens");
+  document.getElementById("ghost-odds").classList.toggle("selected-option", state.ghostPick === "odds");
 
   // Your cards as small badges with hover text (main screen)
   const badges = document.getElementById("my-cards");
@@ -891,7 +922,7 @@ function showPhone(state, offer, onPick) {
       // Pick who goes.
       document.getElementById("phone-text").textContent = "\"Who drops?\" Pick a crew member. The trapdoor takes them for the rest of the run.";
       choices.innerHTML = "";
-      for (const name of state.crew.filter((n) => n !== "You")) {
+      for (const name of state.roster.filter((n) => n !== "You")) {
         const who = document.createElement("button");
         who.className = "big-button";
         who.textContent = name;

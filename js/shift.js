@@ -47,7 +47,8 @@ function newShiftState() {
     onBreak: true, // a Dealer Break happens before each shooter and once at the end
     status: "playing", // "playing", "won", "fell-broke", or "fell-short"
     lastRoll: null,
-    crew: CONFIG.crew.slice(), // seats still at the table (a Trapdoor removes one)
+    roster: CONFIG.crew.slice(), // who's at the table (carries over; Trapdoor removes, Hire adds)
+    crew: CONFIG.crew.slice(), // the shooting order this shift (built from the roster and your cards)
     dice: diceForShooter(CONFIG.crew[0]), // current shooter's dice
     mult: CONFIG.startingMult, // multiplies winnings this turn
     multNotes: [], // why the mult is what it is (synergies)
@@ -67,6 +68,8 @@ function newShiftState() {
     compStock: [], // comps for sale at this Dealer Break
     armed: {}, // comps armed for the next roll, e.g. { noSevens: true, loadedShot: 4 }
     myDice: { left: [1, 2, 3, 4, 5, 6], right: [1, 2, 3, 4, 5, 6] }, // your dice (dice crafting edits these)
+    hireOffers: [], // crew you can hire at this Dealer Break
+    ghostPick: "evens", // Ghost Story: the side you choose for Ghost's die
     walkedAway: false, // true if you escaped and chose "Walk away"
     stats: newStats(), // run stats for the end screen (carry over between shifts)
     perks: [], // Pit Boss phone perks (carry over between shifts)
@@ -85,6 +88,7 @@ function newShiftState() {
   };
   state.stock = newStock(state);
   state.compStock = newCompStock();
+  state.hireOffers = newHireOffers(state);
   return state;
 }
 
@@ -201,7 +205,7 @@ function cutChainPrice(state) {
 
 // Only crew who haven't shot yet this shift, never You.
 function cuttableCrew(state) {
-  return state.crew.filter((name, i) => i >= state.shooterIndex && name !== "You");
+  return [...new Set(state.crew.filter((name, i) => i >= state.shooterIndex && name !== "You"))];
 }
 
 function cutChain(state, name) {
@@ -216,6 +220,7 @@ function cutChain(state, name) {
 // Take a crew member off the table for the rest of the run (Trapdoor, phone perk).
 function removeCrew(state, name) {
   const wasNext = state.crew[state.shooterIndex] === name;
+  state.roster = state.roster.filter((n) => n !== name);
   state.crew = state.crew.filter((n) => n !== name);
   // If the next shooter was removed, the seat after them steps up (synergies included).
   if (wasNext && !isFinalBreak(state)) {
@@ -236,7 +241,7 @@ function nextShift(old) {
   state.dealerCut = totalMoney(old) - state.carriedOver;
   state.kitty = state.carriedOver + scale.cash;
   state.cards = old.cards.slice();
-  state.crew = old.crew.slice();
+  state.roster = old.roster.slice();
   state.interestRate = old.interestRate;
   state.stats = old.stats;
   state.perks = old.perks.slice();
@@ -246,9 +251,58 @@ function nextShift(old) {
   state.myDice = { left: old.myDice.left.slice(), right: old.myDice.right.slice() };
   state.freeBuys = old.freeBuys;
   state.stats.shiftStarts.push(state.stats.history.length);
+  state.crew = turnOrder(state);
   setupTurn(state, null, CONFIG.startingMult);
   state.stock = newStock(state);
+  state.compStock = newCompStock();
+  state.hireOffers = newHireOffers(state);
   return state;
+}
+
+// This shift's shooting order: the roster, with Front of the Line (You first)
+// and Encore (You again at the end).
+function turnOrder(state) {
+  let order = state.roster.slice();
+  const here = order.includes("You");
+  if (here && hasCard(state, "frontOfLine")) order = ["You"].concat(order.filter((n) => n !== "You"));
+  if (here && hasCard(state, "encore")) order.push("You");
+  return order;
+}
+
+// Encore bought mid-shift: add your extra turn at the end (once).
+function addEncoreTurn(state) {
+  if (!state.roster.includes("You") || state.crew.filter((n) => n === "You").length > 1) return;
+  state.crew.push("You");
+  if (state.onBreak && state.shooterIndex === state.crew.length - 1) setupTurn(state, state.crew[state.shooterIndex - 1] || null, state.prevShooterMult);
+}
+
+// Hiring: new crew can join while a seat is empty (fewer than maxSeats at the table).
+function hirePrice(state) {
+  return roundTo5(CONFIG.hirePricePct * state.debt);
+}
+
+function newHireOffers(state) {
+  const pool = CONFIG.recruits.filter((n) => !state.roster.includes(n));
+  const offers = [];
+  while (offers.length < CONFIG.hireOffers && pool.length) offers.push(pool.splice(Math.floor(Math.random() * pool.length), 1)[0]);
+  return offers;
+}
+
+// Returns "ok", "full" (no empty seat), "money" or "gone".
+function hire(state, name) {
+  if (!state.hireOffers.includes(name)) return "gone";
+  if (state.roster.length >= CONFIG.maxSeats) return "full";
+  if (!canSpend(state, hirePrice(state))) return "money";
+  state.kitty -= hirePrice(state);
+  state.stats.spent += hirePrice(state);
+  state.roster.push(name);
+  state.hireOffers = state.hireOffers.filter((n) => n !== name);
+  // They shoot this shift, last (but before an Encore turn).
+  const encoreAtEnd = state.crew.length > 1 && state.crew[state.crew.length - 1] === "You" && state.crew.filter((n) => n === "You").length > 1;
+  const at = encoreAtEnd ? state.crew.length - 1 : state.crew.length;
+  state.crew.splice(Math.max(at, state.shooterIndex), 0, name);
+  if (state.onBreak && state.crew[state.shooterIndex] === name) setupTurn(state, state.crew[state.shooterIndex - 1] || null, state.prevShooterMult);
+  return "ok";
 }
 
 // After a roll: a seven-out passes the dice and starts a Dealer Break.
@@ -269,6 +323,7 @@ function afterRoll(state, sevenOut) {
     if (!isFinalBreak(state)) setupTurn(state, prevName, state.mult);
     state.stock = newStock(state); // fresh cards at every Dealer Break
     state.compStock = newCompStock();
+    state.hireOffers = newHireOffers(state);
   } else if (isBroke(state)) {
     fall(state, "fell-broke");
   }

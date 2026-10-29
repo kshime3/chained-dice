@@ -79,7 +79,7 @@ function compBlocked(state, id) {
   if (when === "roll" && state.armed[id]) return "Already armed for the next roll.";
   if (id === "seatSwap" && state.shooterIndex + 1 >= state.crew.length) return "There aren't two shooters left to swap.";
   if (id === "cashAdvance" && !canPay(state)) return "The dealer won't lend until the first shooter has rolled.";
-  if (COMPS[id].edit && !state.crew.includes("You")) return "You're not at the table.";
+  if (COMPS[id].edit && !state.roster.includes("You")) return "You're not at the table.";
   return "";
 }
 

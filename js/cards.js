@@ -18,6 +18,17 @@ const CARDS = {
   wrongWay:    { name: "Wrong Way",       text: "Bet against the shooter and get paid for it: Don't Pass winnings +50%." },
   coldRead:    { name: "Cold Read",       text: "When your Don't Pass wins on a seven-out, the next shooter starts at +1x mult." },
   bargain:     { name: "Dealer's Bargain", instant: true, text: "One use, works right away, takes no slot. The dealer adds a link to your chain (one more shift to walk free). In return, everyone's dice get -1 way to roll 7 for the rest of the run." },
+  // Crew cards: only offered while that crew member is at the table.
+  leftysGlove: { name: "Lefty's Glove",  crew: "Lefty", text: "Lefty gets his 6 back on his right die." },
+  deesLedger:  { name: "Dee's Ledger",   crew: "Dealer Dee", text: "On Dealer Dee's turn, Odds and Lay Odds pay 50% extra." },
+  rodsLighter: { name: "Rod's Lighter",  crew: "Hot Rod", text: "Hot Rod's streak grows +1.5x per winning roll, and his seven-out no longer costs double." },
+  jinxShadow:  { name: "Jinx's Shadow",  crew: "Jinx", text: "When Jinx shoots, Don't Pass winnings are doubled." },
+  ghostStory:  { name: "Ghost Story",    crew: "Ghost", text: "You choose whether Ghost's right die is evens-only or odds-only (at the Break before his turn)." },
+  // "You" cards: only offered while you're at the table.
+  encore:      { name: "Encore",         crew: "You", text: "Every shift, after the last shooter, you take an extra turn before the final Dealer Break." },
+  highRoller:  { name: "High Roller",    crew: "You", text: "Your winnings are doubled on your own turn." },
+  frontOfLine: { name: "Front of the Line", crew: "You", text: "You shoot first every shift (from the next shift)." },
+  sleightOfHand: { name: "Sleight of Hand", crew: "You", text: "The shooter right after you rolls YOUR dice, crafted faces and all." },
   chainLink:   { name: "Spare Link",      text: "When the floor opens, this link catches you: the shift counts as survived, a link breaks as normal, and the rest of the debt is forgiven. Used up." },
 };
 
@@ -30,10 +41,12 @@ function roundTo5(n) {
   return Math.max(5, Math.round(n / 5) * 5);
 }
 
-// The mult actually used for payouts: shooter mult + Hot Hand, times Muggsy's x2.
+// The mult actually used for payouts: shooter mult + Hot Hand, times Muggsy's x2
+// (and High Roller's x2 on your own turn).
 function effectiveMult(state) {
   const hotHand = hasCard(state, "hotHand") ? state.hotStreak * CONFIG.hotHandPerWin : 0;
-  return (state.mult + hotHand) * state.payoutX;
+  const highRoller = hasCard(state, "highRoller") && state.crew[state.shooterIndex] === "You" ? CONFIG.highRollerX : 1;
+  return (state.mult + hotHand) * state.payoutX * highRoller;
 }
 
 // One-use cards that work the moment you buy them.
@@ -81,6 +94,7 @@ function rerollOptions(state) {
 // Why the mult is what it is, e.g. ["Mentor: +1x from Hot Rod's streak", "Hot Hand: +1x"].
 function multReasons(state) {
   const reasons = state.multNotes.slice();
+  if (hasCard(state, "highRoller") && state.crew[state.shooterIndex] === "You") reasons.push("High Roller: x" + CONFIG.highRollerX);
   if (hasCard(state, "hotHand") && state.hotStreak > 0) {
     reasons.push("Hot Hand: +" + state.hotStreak * CONFIG.hotHandPerWin + "x");
   }
@@ -123,6 +137,16 @@ function applyCardsBeforePayout(state, results, total, pointBefore) {
       if (r.bet === "pass" || r.bet === "odds") r.outcome = "none";
     }
     notes.push("Pit Boss's Pity: that seven-out is ignored! Your bets stay and the shooter keeps rolling.");
+  }
+
+  // Crew cards that change payouts on a crew member's turn.
+  const shooter = state.crew[state.shooterIndex];
+  for (const r of results) {
+    if (r.outcome !== "win") continue;
+    if (shooter === "Dealer Dee" && hasCard(state, "deesLedger") && (r.bet === "odds" || r.bet === "lay")) {
+      r.winnings = Math.floor(r.winnings * (1 + CONFIG.deesLedgerExtra));
+    }
+    if (shooter === "Jinx" && hasCard(state, "jinxShadow") && r.bet === "dont") r.winnings *= CONFIG.jinxShadowX;
   }
 
   // Wrong Way: Don't Pass winnings +50%.

@@ -492,3 +492,8 @@ body.falling .seat, body.falling .side > *, body.falling .table, body.falling .c
 }
 #workshop-options .big-button { font-size: 1rem; padding: 8px 14px; }
 #workshop-options .hint { font-size: 0.75rem; }
+
+/* Hiring */
+.card.hire-card { background: #f3efe6; border-color: #8e6b3a; }
+.card.hire-card .card-rarity { background: #8e6b3a; }
+.selected-option { outline: 3px solid #ffd84d; }

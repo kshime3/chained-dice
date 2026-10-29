@@ -38,8 +38,8 @@ css/style.css      colors and layout
 js/config.js       ALL tunable numbers
 js/dice.js         logic: rolling dice
 js/bets.js         logic: settling bets
-js/shift.js        logic: shift turns, dealer breaks and deposits, win/fall checks
-js/crew.js         logic: each shooter's dice, mult, crew synergies, hover text
+js/shift.js        logic: shift turns, roster vs shooting order, hiring, dealer breaks and deposits, win/fall checks
+js/crew.js         logic: each shooter's dice, mult, crew synergies, hover text (incl. hireable crew)
 js/cards.js        logic: what each shop card does
 js/shop.js         logic: shop stock, rarity, prices, buy/sell/shuffle
 js/stats.js        logic: run stats for the end-of-run screen

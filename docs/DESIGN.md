@@ -184,6 +184,40 @@ One-use items ("comps", casino slang for the house's freebies). Hold up to **2**
 - **Free comps:** hitting a point at 3x mult or more gives a free comp (if a slot is free); phone perk **"2 free comps"** (Uncommon).
 - Tutorial the first time comps are on sale (also via the ? next to "Comps").
 
+## Crew Growth  [Built, Milestone 10]
+
+**Crew cards** (only offered while that person is at the table):
+
+| Card | Effect | Rarity |
+| --- | --- | --- |
+| Lefty's Glove | Lefty's right die gets its 6 back | Uncommon |
+| Dee's Ledger | On Dee's turn, Odds and Lay Odds pay +50% | Uncommon |
+| Rod's Lighter | Hot Rod +1.5x per winning roll; his seven-out no longer costs double | Uncommon |
+| Jinx's Shadow | Don't Pass winnings x2 when Jinx shoots | Uncommon |
+| Ghost Story | You choose Ghost's evens/odds die at the Break before his turn | Common |
+
+**"You" cards** (only while you're at the table):
+
+| Card | Effect | Rarity |
+| --- | --- | --- |
+| Encore | Every shift, an extra turn for you after the last shooter, before the final Break | Rare |
+| High Roller | Your winnings x2 on your own turn | Uncommon |
+| Front of the Line | You shoot first every shift (from the next shift) | Common |
+| Sleight of Hand | The shooter right after you rolls your (crafted) dice | Uncommon |
+
+**Hiring:** a Dealer Break section (once the shop is open) offers 2 candidates for 20% of the debt each, only while a seat is empty (max **6** at the table, you included). New crew shoot last on the shift they're hired (before an Encore turn) and keep their seat for the run.
+
+| Recruit | Dice | Style | Chance of a 7 |
+| --- | --- | --- | --- |
+| Snake | 1, 1, 2, 3, 5, 6 | Craps machine (2/3/12 = 25%) | 16.7% |
+| Big Mo | 1, 4, 5, 5, 6, 6 | Rolls big (10-12) | 11.1% |
+| The Professor | Normal | Odds and Lay Odds limits x2 on his turn | 16.7% |
+| Lucky Lou | Normal | +1x mult each time he hits a point | 16.7% |
+
+The game now keeps a **roster** (who's at the table, carries over) separate from the **shooting order** for the shift (roster plus Front of the Line / Encore).
+
+**Crew levels:** skipped for now (owner). **Idea:** start with fewer crew (e.g. 3) and recruit up to 6, as a scaling lever (IDEAS.md).
+
 ## Dice Crafting  [Built, Milestone 9]
 
 Edit the faces of **your own dice** (only yours: "You" is the shooter you build up). Edits last the whole run.

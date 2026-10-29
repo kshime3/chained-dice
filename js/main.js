@@ -62,7 +62,7 @@ function placeBet(betName) {
       showMessage(BET_NAMES[betName] + " sit behind a " + BET_NAMES[line] + " bet, and you don't have one this time.");
       return;
     }
-    const limit = betName === "odds" ? maxOdds(state.bets.pass, state.point) : maxLay(state.bets.dont, state.point);
+    const limit = backingLimit(state, betName);
     const room = limit - state.bets[betName];
     if (room <= 0) {
       showMessage("Your " + BET_NAMES[betName] + " are at the max for this point.");
@@ -183,7 +183,7 @@ function finishRoll(rolled) {
   state.point = before.pity ? pointBefore : nextPoint(pointBefore, total);
   const sevenOut = !before.pity && pointBefore !== null && total === CONFIG.sevenOut;
   const cardNotes = applyCardsAfterRoll(state, results, total, pointBefore, sevenOut);
-  const crewNotes = applyCrewEffects(state, results, sevenOut);
+  const crewNotes = applyCrewEffects(state, results, sevenOut, pointBefore !== null && total === pointBefore);
   const pointHit = pointBefore !== null && total === pointBefore;
   recordRoll(state.stats, state, rolled, totalMoney(state) - moneyBefore, sevenOut, pointHit, odds, multUsed, shooter, state.turnRolls);
   afterRoll(state, sevenOut);
@@ -314,6 +314,26 @@ function useCompSlot(index) {
   finish();
 }
 
+function hireCrew(name) {
+  const outcome = hire(state, name);
+  if (outcome === "ok") playSound("buy");
+  showBreakMessage({
+    ok: name + " takes a seat. They'll shoot this shift" + (state.crew[state.shooterIndex] === name ? ", starting now." : ", last in line."),
+    full: "Every seat is taken. Open a Trapdoor to make room.",
+    money: "Not enough. Hiring can't take your kitty below " + money(tableMin(state)) + ".",
+    gone: name + " already found a seat.",
+  }[outcome]);
+  renderAll();
+}
+
+function pickGhost(side) {
+  state.ghostPick = side;
+  refreshNextShooter(state);
+  playSound("chip");
+  showBreakMessage("Ghost Story: Ghost's right die is " + side + "-only this turn.");
+  renderAll();
+}
+
 function cut(name) {
   if (!confirm("Pay " + money(cutChainPrice(state)) + " to open the trapdoor under " + name + "'s seat? They're gone for the rest of the run.")) return;
   const outcome = cutChain(state, name);
@@ -386,7 +406,7 @@ let fallPlayed = false; // the fall animation plays once per run
 function renderAll() {
   showChips();
   renderState(state);
-  renderShop(state, { buy: buy, sell: sell, cut: cut });
+  renderShop(state, { buy: buy, sell: sell, cut: cut, hire: hireCrew });
   renderComps(state, { buyComp: buyCompSlot, sellComp: sellCompSlot, useComp: useCompSlot });
   renderBreak(state);
 
@@ -421,6 +441,8 @@ document.getElementById("pay-typed").onclick = payTyped;
 document.getElementById("pay-off").onclick = () => payDealer(amountOwed(state));
 document.getElementById("leave-break").onclick = leaveBreak;
 document.getElementById("shuffle").onclick = shuffle;
+document.getElementById("ghost-evens").onclick = () => pickGhost("evens");
+document.getElementById("ghost-odds").onclick = () => pickGhost("odds");
 // End screen buttons: the next shift, the escape choice, or a new run.
 function endHandlers() {
   if (state.status !== "won" || state.walkedAway) return { primary: playAgain, secondary: null };

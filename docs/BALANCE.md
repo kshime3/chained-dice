@@ -133,3 +133,16 @@ Bot now buys Nudge / Copycat / Chisel and uses each to leave its own dice the fe
 | Smart + comps + dice edits | 70% | 71% | 69% | 65% | 59% | 55% | 57% | 56% | 2.3% |
 
 Dice edits only help on **your** turn (1 shooter in 6), so a bot that spends money on them does slightly worse. Curve still rises; **no rescale needed**. Edits will matter more once "You" cards exist (extra turns, betting bigger on your own turn); retest then.
+
+## 2026-10-29: Milestone 10 retest (crew cards, "You" cards, hiring)
+
+Bot learned the 9 new cards and hiring (Lucky Lou / The Professor first). 8,000 runs, keep-half carry-over, smart bot (flat bets):
+
+| Bot shopping list | S1 | S2 | S3 | S4 | S5 | S6 | S7 | S8 | Walk out free |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| New cards first | 67% | 67% | 61% | 55% | 50% | 47% | 43% | 60% | 0.9% |
+| New cards after the old favourites | 68% | 67% | 64% | 59% | 54% | 52% | 54% | 58% | 1.5% |
+| Ignores the new cards | 69% | 71% | 65% | 65% | 61% | 57% | 60% | 59% | 2.6% |
+
+- The game itself isn't much harder (ignoring the new cards: 2.6% vs 3.3% before; a bigger card pool makes favourites a little rarer).
+- A flat-betting bot gets little from the new cards: they're situational build pieces (an extra turn, x2 on your own turn), not raw power. **No rescale.** Watch in playtesting whether Encore (Rare) and High Roller feel worth their price.

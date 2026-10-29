@@ -2,6 +2,19 @@
 
 Dated session log. Newest at the top.
 
+## 2026-10-29: Session 7 (Milestone 10: crew growth)
+
+**Done**
+- Owner chose: all at once; hire into empty seats (max 6); crew levels skipped; Encore before the final Break; crew cards only while that person is seated. Idea logged: start with 3 crew, recruit up to 6.
+- **Built Milestone 10:** roster (who's seated, carries over) split from the shooting order. 5 crew cards (Lefty's Glove, Dee's Ledger, Rod's Lighter, Jinx's Shadow, Ghost Story with a Break picker), 4 "You" cards (Encore extra turn, High Roller, Front of the Line, Sleight of Hand), Hire section with 4 recruits (Snake, Big Mo, The Professor, Lucky Lou), Hire tutorial page. tests.html: 310 checks, all passing. Fits one screen on phones.
+- **Balance retest:** game difficulty about the same when the new cards are ignored; a flat-betting bot gets little from the new cards. No rescale (BALANCE.md).
+
+**Waiting on the owner**
+- Testing Milestone 10.
+
+**Exact next step**
+- Milestone 11: house rules + pit boss challenges.
+
 ## 2026-10-28: Session 6, continued (Milestone 9: dice crafting)
 
 **Done**

@@ -36,7 +36,8 @@ function newStock(state) {
   const stock = [];
   for (let slot = 0; slot < CONFIG.shopSlots; slot++) {
     const pool = Object.keys(CARDS).filter((id) => !state.cards.includes(id) && !stock.includes(id) &&
-      !(id === "bargain" && state.endless)); // no chain to add a link to in endless mode
+      !(id === "bargain" && state.endless) && // no chain to add a link to in endless mode
+      (!CARDS[id].crew || state.roster.includes(CARDS[id].crew))); // crew cards need that person at the table
     if (pool.length === 0) {
       stock.push(null);
       continue;
@@ -75,6 +76,8 @@ function buyCard(state, slot) {
   state.stats.spent += price;
   if (CARDS[id].instant) useInstantCard(state, id); // used right away, takes no slot
   else state.cards.push(id);
+  if (id === "encore") addEncoreTurn(state); // your extra turn starts this shift
+  if (id === "leftysGlove" || id === "ghostStory") refreshNextShooter(state);
   state.stock[slot] = null; // sold out
   return "ok";
 }

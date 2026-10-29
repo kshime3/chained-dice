@@ -37,7 +37,7 @@ function perkWeight(state, id) {
     if (countPerk(state, "minusSeven") >= 6 - CONFIG.minSevenWays) return 0;
     return CONFIG.perkWeights.minusSeven * Math.pow(CONFIG.minusSevenRarer, countPerk(state, "minusSeven"));
   }
-  if (id === "removeCharacter") return state.crew.some((n) => n !== "You") ? CONFIG.perkWeights.removeCharacter : 0;
+  if (id === "removeCharacter") return state.roster.some((n) => n !== "You") ? CONFIG.perkWeights.removeCharacter : 0;
   return CONFIG.perkWeights[id];
 }
 
