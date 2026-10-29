@@ -96,6 +96,8 @@ Tested with the simulator (`docs/BALANCE.md`).
 
 ## The Crew  [Built]
 
+**Starting table [Built, 2026-10-29]:** a run starts with only **3 seats: you, Jinx (always), and one random starter** (`startingCrew`, `alwaysStarts` in config). The other starters join the hire pool; hire up to 6 seats. Jinx is the reason to use the Trapdoor, but dropping him costs 25% of the debt and a shooter. Anyone dropped is gone for the run and can't be hired back.
+
 Seat order: **Lefty, Dealer Dee, Hot Rod, Jinx, Ghost, You.** Dice are lists of faces in `config.js`; each listed face is equally likely.
 
 | Character | Dice | Chance of a 7 | Style |

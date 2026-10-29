@@ -512,3 +512,4 @@ body.falling .seat, body.falling .side > *, body.falling .table, body.falling .c
   .house-rule, .challenge { flex: 0 0 auto; white-space: nowrap; font-size: 0.72rem; margin: 1px 0 0; padding: 1px 6px; }
   .shooter, .mult { display: inline-block; margin-right: 8px; }
 }
+.house-rule.hidden, .challenge.hidden { display: none; }

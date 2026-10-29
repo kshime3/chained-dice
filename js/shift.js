@@ -31,8 +31,21 @@ function canPay(state) {
   return !CONFIG.payAfterFirstShooter || state.shooterIndex > 0;
 }
 
+// Who's seated at the start of a run: you, the crew in alwaysStarts (Jinx),
+// and random starters up to CONFIG.startingCrew. Seats keep the CONFIG.crew order.
+function startingRoster() {
+  const forced = CONFIG.alwaysStarts;
+  const others = CONFIG.crew.filter((n) => n !== "You" && !forced.includes(n));
+  const picked = [];
+  while (picked.length < CONFIG.startingCrew - 1 - forced.length && others.length) {
+    picked.push(others.splice(Math.floor(Math.random() * others.length), 1)[0]);
+  }
+  return CONFIG.crew.filter((n) => n === "You" || forced.includes(n) || picked.includes(n));
+}
+
 // A fresh run: wake up at the table for shift 1.
 function newShiftState() {
+  const roster = startingRoster();
   const state = {
     shift: 1, // which shift of the run this is
     debt: shiftScale(1).debt, // what the dealer wants this shift
@@ -47,9 +60,10 @@ function newShiftState() {
     onBreak: true, // a Dealer Break happens before each shooter and once at the end
     status: "playing", // "playing", "won", "fell-broke", or "fell-short"
     lastRoll: null,
-    roster: CONFIG.crew.slice(), // who's at the table (carries over; Trapdoor removes, Hire adds)
-    crew: CONFIG.crew.slice(), // the shooting order this shift (built from the roster and your cards)
-    dice: diceForShooter(CONFIG.crew[0]), // current shooter's dice
+    roster: roster, // who's at the table (carries over; Trapdoor removes, Hire adds)
+    crew: roster.slice(), // the shooting order this shift (built from the roster and your cards)
+    dropped: [], // crew who fell through a Trapdoor: gone for the run, never hireable again
+    dice: diceForShooter(roster[0]), // current shooter's dice
     mult: CONFIG.startingMult, // multiplies winnings this turn
     multNotes: [], // why the mult is what it is (synergies)
     coldTable: false, // true until this shooter's first win, after Jinx
@@ -232,6 +246,7 @@ function removeCrew(state, name) {
   const wasNext = state.crew[state.shooterIndex] === name;
   state.roster = state.roster.filter((n) => n !== name);
   state.crew = state.crew.filter((n) => n !== name);
+  if (!state.dropped.includes(name)) state.dropped.push(name);
   // If the next shooter was removed, the seat after them steps up (synergies included).
   if (wasNext && !isFinalBreak(state)) {
     setupTurn(state, state.crew[state.shooterIndex - 1] || null, state.prevShooterMult);
@@ -252,6 +267,7 @@ function nextShift(old) {
   state.cash = state.carriedOver + scale.cash;
   state.cards = old.cards.slice();
   state.roster = old.roster.slice();
+  state.dropped = old.dropped.slice();
   state.interestRate = old.interestRate;
   state.stats = old.stats;
   state.perks = old.perks.slice();
@@ -299,7 +315,8 @@ function priceX(state) {
 }
 
 function newHireOffers(state) {
-  const pool = CONFIG.recruits.filter((n) => !state.roster.includes(n));
+  // New recruits, plus starting crew who weren't seated this run (never anyone dropped).
+  const pool = CONFIG.recruits.concat(CONFIG.crew).filter((n) => n !== "You" && !state.roster.includes(n) && !state.dropped.includes(n));
   const offers = [];
   while (offers.length < CONFIG.hireOffers && pool.length) offers.push(pool.splice(Math.floor(Math.random() * pool.length), 1)[0]);
   return offers;

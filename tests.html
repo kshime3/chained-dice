@@ -29,6 +29,7 @@
   <script>
     // Tests use fixed numbers, so tuning config.js doesn't break them.
     CONFIG.shifts[0] = { cash: 200, debt: 2000, minBet: 5 };
+    CONFIG.startingCrew = 6; // older checks expect the full table; the 3-seat start is checked below
     CONFIG.payAfterFirstShooter = false; // most checks pay at any Break; the rule has its own checks below
     CONFIG.carryOverShare = 1; // keep all leftover money in most checks; the dealer's cut has its own checks below
     const debtState = (debt) => { const st = newShiftState(); st.debt = debt; return st; };
@@ -777,6 +778,33 @@
     check("Long haul: a seven-out roll doesn't count", lh.challenge.progress, 5);
     trackChallenge(lh, [], info({}));
     check("...the 6th safe roll pays a free comp", lh.comps.length, 1);
+    }
+
+    // Starting with 3 seats: you, Jinx and one random crew member
+    {
+    CONFIG.startingCrew = 3;
+    let alwaysOk = true, starters = new Set();
+    for (let i = 0; i < 200; i++) {
+      const st = newShiftState();
+      if (st.roster.length !== 3 || !st.roster.includes("You") || !st.roster.includes("Jinx")) alwaysOk = false;
+      st.roster.filter((n) => n !== "You" && n !== "Jinx").forEach((n) => starters.add(n));
+    }
+    check("3 seats at the start: always you and Jinx, plus one more", alwaysOk, true);
+    check("...the third seat varies (all 4 other starters seen)", starters.size, 4);
+    const st3 = newShiftState();
+    check("Shooting order matches the seats, and the dice belong to the first shooter", [st3.crew, JSON.stringify(st3.dice) === JSON.stringify(diceForShooter(st3.crew[0], st3))], [st3.roster, true]);
+    let pool = new Set();
+    for (let i = 0; i < 100; i++) { const st = newShiftState(); st.hireOffers = []; newHireOffers(st).forEach((n) => pool.add(n)); }
+    check("Hire offers include unseated starters, never Jinx or you", [pool.has("Lefty") || pool.has("Ghost"), pool.has("Jinx"), pool.has("You")], [true, false, false]);
+    const tj = newShiftState(); tj.cash = 5000; tj.shift = 2;
+    removeCrew(tj, "Jinx");
+    let back = false;
+    for (let i = 0; i < 100; i++) if (newHireOffers(tj).includes("Jinx")) back = true;
+    check("After a Trapdoor, Jinx never comes back", [tj.roster.includes("Jinx"), back], [false, false]);
+    tj.status = "won";
+    const tj2 = nextShift(tj);
+    check("...even in later shifts", [tj2.dropped.includes("Jinx"), newHireOffers(tj2).includes("Jinx")], [true, false]);
+    CONFIG.startingCrew = 6;
     }
 
     // Dice: 10,000 rolls stay in range, and 7 is the most common total

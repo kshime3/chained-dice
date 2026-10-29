@@ -153,14 +153,6 @@ function playShift(s, carry) {
     takePerk(state, pick, state.crew.find((n) => n === "Jinx") || state.crew[0]);
   }
   if (s.startCards && !carry) { state.cards = s.startCards.slice(); state.stock = newStock(state); }
-  // START_CREW=3: you plus random crew fill the first seats; the rest can be hired later.
-  if (START_CREW && !carry) {
-    const others = CONFIG.crew.filter((n) => n !== "You").sort(() => Math.random() - 0.5).slice(0, START_CREW - 1);
-    state.roster = CONFIG.crew.filter((n) => n === "You" || others.includes(n));
-    state.crew = state.roster.slice();
-    state.hireOffers = newHireOffers(state);
-    setupTurn(state);
-  }
   let rolls = 0;
   while (state.status === "playing" && rolls < 3000) {
     if (state.onBreak) {
@@ -168,6 +160,8 @@ function playShift(s, carry) {
       buyComps(state, s);
       // Hire into an empty seat: Lucky Lou or The Professor first.
       if (s.shop && isShopOpen(state)) {
+        // CUT_JINX=1: drop Jinx through the Trapdoor as soon as it's affordable.
+        if (process.env.CUT_JINX && cuttableCrew(state).includes("Jinx") && state.cash - cutChainPrice(state) >= s.shopReserve) cutChain(state, "Jinx");
         for (const name of HIRE_PREFERENCE) {
           if (state.hireOffers.includes(name) && state.cash - hirePrice(state) >= s.shopReserve) hire(state, name);
         }
@@ -221,9 +215,8 @@ globalThis.ORIGINAL_SHIFTS = CONFIG.shifts.slice();
 if (process.env.CARRY) CONFIG.carryOverShare = Number(process.env.CARRY); // e.g. CARRY=0.5 node tools/simulate.js
 // NORULES=1 switches off house rules and challenges (to measure what they change).
 if (process.env.NORULES) { globalThis.pickHouseRule = () => null; globalThis.newChallenge = () => null; }
-// START_CREW=3 starts with you plus 2 crew; the other starters join the hire pool.
-globalThis.START_CREW = Number(process.env.START_CREW) || 0;
-if (START_CREW) CONFIG.recruits = CONFIG.recruits.concat(CONFIG.crew.filter((n) => n !== "You"));
+// START_CREW=6 tries a different number of starting seats (the game uses CONFIG.startingCrew).
+if (process.env.START_CREW) CONFIG.startingCrew = Number(process.env.START_CREW);
 const N = Number(process.argv[2]) || 20000;
 const scaleArg = process.argv[3]; // e.g. "100:200,200:500"
 const scale = (scaleArg || CONFIG.shifts.map((x) => x.cash + ":" + x.debt + ":" + x.minBet).join(",")).split(",").map((p) => p.split(":").map(Number));

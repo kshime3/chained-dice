@@ -2,6 +2,18 @@
 
 Dated session log. Newest at the top.
 
+## 2026-10-29: Session 7, continued (3-seat start with Jinx)
+
+**Done**
+- Built: runs start with 3 seats (you, Jinx always, 1 random starter), same debts. Unseated starters can be hired; dropped crew never come back. "How to play" updated. Fixed an empty house-rule box showing on shifts with no rule. tests.html: 345 checks, all passing. Fits one screen on phones.
+- Balance: 23-26% of bot runs survive shifts 1-2 (was 46%); walk out free 0.2-0.3%. Dropping Jinx right away doesn't help the bot.
+
+**Waiting on the owner**
+- Playtesting the harder start (and Milestone 11).
+
+**Exact next step**
+- Milestone 12: card unlocks with hidden requirements, plus more bets as unlocks.
+
 ## 2026-10-29: Session 7, continued (3-shooter test, "kitty" -> "cash")
 
 **Done**

@@ -14,7 +14,8 @@ function introPages() {
     },
     {
       title: "The shooters",
-      body: "Six people take turns rolling the dice: " + CONFIG.crew.join(", ") + ". You bet on <strong>every roll</strong>, no matter who is shooting.<br><br>" +
+      body: "You and " + (CONFIG.startingCrew - 1) + " of your crew take turns rolling the dice. One of them is always <strong>Jinx</strong>, and Jinx is bad luck. You bet on <strong>every roll</strong>, no matter who is shooting.<br><br>" +
+        "Empty seats can be filled by <strong>hiring</strong> crew at a Dealer Break (up to " + CONFIG.maxSeats + " seats), and a <strong>Trapdoor</strong> drops someone for good.<br><br>" +
         "Each shooter keeps rolling until they <strong>seven out</strong>, then the dice pass to the next seat.<br><br>" +
         "Everyone's dice are different. The bar chart shows the current shooter's chances, and you can hover over a seat to learn about them. Some shooters change the <strong>Mult</strong>, which multiplies your winnings.",
     },

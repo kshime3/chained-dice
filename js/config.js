@@ -55,6 +55,8 @@ const CONFIG = {
   // Hiring new crew at a Dealer Break (only into an empty seat).
   recruits: ["Snake", "Big Mo", "The Professor", "Lucky Lou"],
   maxSeats: 6,        // most people at the table, including you
+  startingCrew: 3,    // seats filled at the start of a run, including you (the rest are hired)
+  alwaysStarts: ["Jinx"], // crew who are always at the table when a run starts
   hireOffers: 2,      // candidates offered at each Break
   hirePricePct: 0.2,  // hiring costs this share of the debt
   professorOddsX: 2,  // The Professor: Odds and Lay Odds limits are this many times bigger on his turn

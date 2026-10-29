@@ -178,3 +178,17 @@ Simulator only (`START_CREW=3`): the 3 starters left out join the hire pool, and
 - Fewer shooters means fewer chances to win money each shift, so **shifts 1-2 get much harder** on the current scale. Lowering the first two debts brings shift 1 back to normal. Shift 3 ($550) is then the wall while the table is still growing.
 - From shift 4 on the table is full and it plays like today.
 - Tools: `START_CREW=3 node tools/simulate.js 8000`, and `SEATS=1` prints the seats filled after each shift.
+
+## 2026-10-29: Built: 3 seats (you, Jinx, 1 random), same debts
+
+8,000 runs, rules on, keep-half carry-over, per-shift survival:
+
+| Bot | S1 | S2 | S3 | S4 | S5 | S6 | S7 | S8 | Walk out free |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Smart | 58% | 39% | 52% | 53% | 48% | 43% | 46% | 33% | 0.2% |
+| Smart + comps | 60% | 44% | 49% | 49% | 48% | 47% | 50% | 43% | 0.3% |
+| Smart, drops Jinx as soon as it can afford to | 58% | 33% | 42% | 53% | 50% | 43% | 44% | 50% | 0.2% |
+
+- Only **23-26%** of bot runs get through the first 2 shifts (was 46%). Seats fill to about 5 by the end of shift 2 and 6 by shift 4.
+- Dropping Jinx immediately is **worse** for the bot: it costs 25% of the debt early and one shooter's rolls. Cutting him is a real decision, not a free win.
+- Fine for the owner's goal (first runs should fail); Milestone 12 unlocks are what should make escaping possible over many runs. Tools: `START_CREW=6` to compare with a full table, `CUT_JINX=1`, `SEATS=1`.
