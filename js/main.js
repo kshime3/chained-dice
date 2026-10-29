@@ -257,7 +257,7 @@ function buy(slot) {
   const outcome = buyCard(state, slot);
   const texts = {
     ok: id && CARDS[id].instant ? CARDS[id].name + ": done. " + (id === "bargain" ? "Your chain now has " + totalLinks(state) + " links, and 7s are a little rarer." : "") : "Bought " + (id && CARDS[id].name) + ".",
-    full: "Your card slots are full (" + CONFIG.maxCards + "). Sell a card first.",
+    full: "Your card slots are full (" + maxCards(state) + "). Sell a card first.",
     money: "Not enough. Buying can't take your cash below " + money(tableMin(state)) + ".",
     empty: "That one's sold out.",
   };
@@ -280,7 +280,7 @@ function buyCompSlot(slot) {
   if (outcome === "ok") playSound("buy");
   showBreakMessage({
     ok: "Bought " + (id && COMPS[id].name) + ".",
-    full: "Your comp slots are full (" + CONFIG.compSlots + "). Use or sell one first.",
+    full: "Your comp slots are full (" + compSlots(state) + "). Use or sell one first.",
     money: "Not enough. Buying can't take your cash below " + money(tableMin(state)) + ".",
     empty: "That one's sold out.",
   }[outcome]);
@@ -386,7 +386,7 @@ function leaveBreak() {
 function giveTestCards(st) {
   const wanted = new URLSearchParams(location.search).get("cards");
   if (!wanted) return;
-  st.cards = wanted.split(",").filter((id) => CARDS[id]).slice(0, CONFIG.maxCards);
+  st.cards = wanted.split(",").filter((id) => CARDS[id]).slice(0, maxCards(st));
   st.stock = newStock(st);
 }
 
@@ -464,7 +464,7 @@ function renderAll() {
 function announceUnlocks() {
   if (busy() || tutorialOpen() || profile().fresh.length === 0) return;
   playSound("pointHit");
-  showSplash(unlockSplash(takeFreshUnlocks()), "good", CONFIG.unlockSplashMs, renderAll);
+  showSplash(unlockSplash(takeFreshUnlocks(), takeFreshPerks()), "good", CONFIG.unlockSplashMs, renderAll);
 }
 
 document.getElementById("pass-line").onclick = () => placeBet("pass");

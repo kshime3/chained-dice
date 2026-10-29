@@ -302,7 +302,7 @@ function cardBox(id, buttonText, onClick, disabled) {
 function renderShop(state, handlers) {
   const stockBox = document.getElementById("stock");
   stockBox.innerHTML = "";
-  const full = state.cards.length >= CONFIG.maxCards;
+  const full = state.cards.length >= maxCards(state);
   state.stock.forEach((id, slot) => {
     if (!id) {
       const empty = document.createElement("div");
@@ -321,7 +321,7 @@ function renderShop(state, handlers) {
   document.getElementById("shuffle").disabled = !canSpend(state, shuffleCost(state));
 
   // Your cards, with Sell buttons (break screen)
-  document.getElementById("slots").textContent = state.cards.length + " / " + CONFIG.maxCards;
+  document.getElementById("slots").textContent = state.cards.length + " / " + maxCards(state);
   const owned = document.getElementById("owned");
   owned.innerHTML = state.cards.length ? "" : '<p class="hint">No cards yet.</p>';
   for (const id of state.cards) {
@@ -408,7 +408,7 @@ function renderShop(state, handlers) {
 // Comps: the shop row and your comps on the Break screen, plus Use buttons on the table.
 // handlers: { buyComp(slot), sellComp(index), useComp(index) }
 function renderComps(state, handlers) {
-  document.getElementById("comp-slots").textContent = CONFIG.compSlots;
+  document.getElementById("comp-slots").textContent = compSlots(state);
   const stock = document.getElementById("comp-stock");
   stock.innerHTML = "";
   state.compStock.forEach((id, slot) => {
@@ -420,7 +420,7 @@ function renderComps(state, handlers) {
       return;
     }
     stock.appendChild(compBox(id, "Buy " + money(compPrice(state, id)), () => handlers.buyComp(slot),
-      state.comps.length >= CONFIG.compSlots || !canSpend(state, compPrice(state, id))));
+      state.comps.length >= compSlots(state) || !canSpend(state, compPrice(state, id))));
   });
 
   const owned = document.getElementById("comp-owned");
@@ -1067,12 +1067,26 @@ function tutorialOpen() {
   return !document.getElementById("tutorial").classList.contains("hidden");
 }
 
-function unlockSplash(ids) {
+function unlockSplash(ids, perks) {
   const kind = { card: "card", comp: "comp", crew: "crew member you can hire" };
+  const perkText = (id) => CONFIG.reputation.find((r) => r.id === id).text;
   return '<div class="splash-title">🔓 UNLOCKED!</div>' +
     ids.map((id) => '<p class="splash-big">' + unlockName(id) + '</p><p class="hint">New ' + kind[UNLOCKS[id].kind] + "</p>").join("") +
     "<p>It can show up from your <strong>next run</strong>. See it in the 📖 Collection.</p>" +
+    perks.map((id) => '<p class="boost">⭐ Reputation up! From your next run: <strong>' + perkText(id) + "</strong></p>").join("") +
     '<p class="hint">Tap to continue</p>';
+}
+
+// The Reputation ladder: earned bonuses ticked, the rest shown with how many unlocks they need.
+function reputationHtml() {
+  const found = profile().unlocked.length;
+  const earned = earnedReputation();
+  return "<h3>⭐ Reputation</h3><p class=\"hint\">Every " + CONFIG.reputationEvery + " unlocks, the house remembers you: a lasting bonus from your next run on.</p>" +
+    '<div class="rep-ladder">' + CONFIG.reputation.map((r, i) => {
+      const need = (i + 1) * CONFIG.reputationEvery;
+      const got = earned.includes(r.id);
+      return '<div class="rep-step' + (got ? " earned" : "") + '">' + (got ? "✓ " : need + " unlocks: ") + r.text + "</div>";
+    }).join("") + "</div>" + '<p class="hint">You have ' + found + " unlock" + (found === 1 ? "" : "s") + ".</p>";
 }
 
 // The Collection: everything unlocked, and locked things as mysteries (no hints).
@@ -1089,7 +1103,7 @@ function renderCollection() {
   html += "<h3>Crew</h3><div class=\"collection-grid\">" + crew.map((n) => tile(n, n, CREW_INFO[n].style)).join("") + "</div>";
   const all = cards.concat(Object.keys(COMPS), crew);
   document.getElementById("collection-count").textContent = all.filter(isUnlocked).length + " of " + all.length + " found. Locked things unlock by playing. How? That's for you to discover.";
-  document.getElementById("collection-body").innerHTML = html;
+  document.getElementById("collection-body").innerHTML = reputationHtml() + html;
 }
 
 function showCollection() {

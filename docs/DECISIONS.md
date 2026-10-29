@@ -246,3 +246,5 @@ Dated log of every decision and why. Newest at the bottom.
 - **Locked from the start:** 19 cards, 3 comps (Loaded Shot, Copycat, Chisel) and 2 recruits (Lucky Lou, The Professor). Unlock list as drafted (owner approved).
 - **Unlocks show up from the next run** (owner), not mid-run.
 - Progress saved in the browser (`localStorage`); tests.html never touches it. "Reset all progress" on the Collection screen.
+- **Unlocks must add power** (owner chose 1 + 2 + 4): locked cards made stronger and starters trimmed (measured with the simulator); a fixed **Reputation** ladder (every 3 unlocks, a lasting bonus); slower unlock goals (about half by run 20). Target: the bot's first escape around run 30-60.
+- Reputation counts real unlocks only, so `?unlockAll` and tests.html get no bonuses. Interest bonus and free-Shuffle bonus were tried and replaced by "-1 way to roll 7" (they did little for most play styles).

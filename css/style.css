@@ -522,3 +522,6 @@ body.falling .seat, body.falling .side > *, body.falling .table, body.falling .c
 .collection-tile.rare { border-left-color: #2980b9; }
 .collection-tile.legendary { border-left-color: #f39c12; }
 .collection-tile.locked { background: #333; color: #888; border-left-color: #555; text-align: center; }
+.rep-ladder { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 4px; text-align: left; }
+.rep-step { background: #2a2a2a; color: #aaa; border-radius: 6px; padding: 4px 8px; font-size: 0.8rem; }
+.rep-step.earned { background: #3b2a10; color: #f5d76e; border: 1px solid #c9a227; }

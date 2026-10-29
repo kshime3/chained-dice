@@ -1,36 +1,36 @@
 // Unlocks: some cards, comps and crew start locked. Hidden goals unlock them
 // across runs. Progress is saved in the browser. No screen code here.
 
-// Each locked item and its hidden goal (c = the lifetime counters below).
-// Anything not listed here is unlocked from the start.
+// Each locked item and its hidden goal (c = the lifetime counters below,
+// g = CONFIG.unlockGoals). Anything not listed here is unlocked from the start.
 const UNLOCKS = {
   // Cards
-  loadedDie:     { kind: "card", done: (c) => c.bestShift >= 2 },      // survive shift 2
-  reroll:        { kind: "card", done: (c) => c.bestShift >= 3 },      // survive shift 3
-  chainLink:     { kind: "card", done: (c) => c.bestShift >= 4 },      // survive shift 4 (Spare Link)
-  oddsAddict:    { kind: "card", done: (c) => c.oddsWon >= 500 },      // win $500 on Odds, all runs
-  muggsy:        { kind: "card", done: (c) => c.pointSevens >= 5 },    // 5 sevens right after the point is set
-  pity:          { kind: "card", done: (c) => c.falls >= 5 },          // the floor opens 5 times
-  doublesCharm:  { kind: "card", done: (c) => c.turnDoubles >= 3 },    // 3 doubles in one turn
-  greenDice:     { kind: "card", done: (c) => c.runInterest >= 50 },   // $50 interest in one run
-  wrongWay:      { kind: "card", done: (c) => c.dontWins >= 10 },      // win 10 Don't Pass bets
-  jinxShadow:    { kind: "card", done: (c) => c.jinxDropped >= 1 },    // drop Jinx through the Trapdoor
-  leftysGlove:   { kind: "card", done: (c) => (c.crewWins["Lefty"] || 0) >= 3 },      // survive 3 shifts with Lefty seated
-  deesLedger:    { kind: "card", done: (c) => (c.crewWins["Dealer Dee"] || 0) >= 3 },
-  rodsLighter:   { kind: "card", done: (c) => (c.crewWins["Hot Rod"] || 0) >= 3 },
-  ghostStory:    { kind: "card", done: (c) => (c.crewWins["Ghost"] || 0) >= 3 },
-  encore:        { kind: "card", done: (c) => c.ownTurnRolls >= 10 },  // your own turn lasts 10+ rolls
-  highRoller:    { kind: "card", done: (c) => c.ownTurnWon >= 500 },   // win $500 on one turn of yours
-  frontOfLine:   { kind: "card", done: (c) => c.runHires >= 3 },       // hire 3 crew in one run
-  sleightOfHand: { kind: "card", done: (c) => c.edits >= 3 },          // use 3 dice edits
-  bargain:       { kind: "card", done: (c) => c.bestShift >= 5 },      // reach shift 6 (Dealer's Bargain)
+  loadedDie:     { kind: "card", done: (c, g) => c.bestShift >= g.loadedDie },
+  reroll:        { kind: "card", done: (c, g) => c.bestShift >= g.reroll },
+  chainLink:     { kind: "card", done: (c, g) => c.bestShift >= g.chainLink },
+  oddsAddict:    { kind: "card", done: (c, g) => c.oddsWon >= g.oddsAddict },
+  muggsy:        { kind: "card", done: (c, g) => c.pointSevens >= g.muggsy },
+  pity:          { kind: "card", done: (c, g) => c.falls >= g.pity },
+  doublesCharm:  { kind: "card", done: (c, g) => c.turnDoubles >= g.doublesCharm },
+  greenDice:     { kind: "card", done: (c, g) => c.runInterest >= g.greenDice },
+  wrongWay:      { kind: "card", done: (c, g) => c.dontWins >= g.wrongWay },
+  jinxShadow:    { kind: "card", done: (c, g) => c.jinxDropped >= g.jinxShadow },
+  leftysGlove:   { kind: "card", done: (c, g) => (c.crewWins["Lefty"] || 0) >= g.crewCard },
+  deesLedger:    { kind: "card", done: (c, g) => (c.crewWins["Dealer Dee"] || 0) >= g.crewCard },
+  rodsLighter:   { kind: "card", done: (c, g) => (c.crewWins["Hot Rod"] || 0) >= g.crewCard },
+  ghostStory:    { kind: "card", done: (c, g) => (c.crewWins["Ghost"] || 0) >= g.crewCard },
+  encore:        { kind: "card", done: (c, g) => c.ownTurnRolls >= g.encore },
+  highRoller:    { kind: "card", done: (c, g) => c.ownTurnWon >= g.highRoller },
+  frontOfLine:   { kind: "card", done: (c, g) => c.runHires >= g.frontOfLine },
+  sleightOfHand: { kind: "card", done: (c, g) => c.edits >= g.sleightOfHand },
+  bargain:       { kind: "card", done: (c, g) => c.bestShift >= g.bargain },
   // Comps
-  loadedShot:    { kind: "comp", done: (c) => c.pointsHit >= 10 },     // hit 10 points, all runs
-  copycat:       { kind: "comp", done: (c) => c.nudges >= 2 },         // use 2 Nudges
-  chisel:        { kind: "comp", done: (c) => c.copycats >= 1 },       // use a Copycat
+  loadedShot:    { kind: "comp", done: (c, g) => c.pointsHit >= g.loadedShot },
+  copycat:       { kind: "comp", done: (c, g) => c.nudges >= g.copycat },
+  chisel:        { kind: "comp", done: (c, g) => c.copycats >= g.chisel },
   // Crew you can hire
-  "Lucky Lou":     { kind: "crew", done: (c) => c.bigMultPoints >= 1 }, // hit a point at 3x mult or more
-  "The Professor": { kind: "crew", done: (c) => c.hires >= 2 },         // hire 2 crew, all runs
+  "Lucky Lou":     { kind: "crew", done: (c, g) => c.bigMultPoints >= g.luckyLou },
+  "The Professor": { kind: "crew", done: (c, g) => c.hires >= g.professor },
 };
 
 const SAVE_KEY = "chainedDice.profile";
@@ -44,6 +44,7 @@ function newProfile() {
       edits: 0, nudges: 0, copycats: 0, pointsHit: 0, bigMultPoints: 0, hires: 0,
     },
     fresh: [], // just unlocked, waiting to be announced (not saved)
+    freshPerks: [], // Reputation bonuses just earned, announced with them
   };
 }
 
@@ -98,12 +99,14 @@ function available(state, id) {
 // Check every goal; newly met ones are unlocked and queued for an announcement.
 function checkUnlocks() {
   const p = profile();
+  const perksBefore = earnedReputation().length;
   for (const id of Object.keys(UNLOCKS)) {
-    if (!p.unlocked.includes(id) && UNLOCKS[id].done(p.counts)) {
+    if (!p.unlocked.includes(id) && UNLOCKS[id].done(p.counts, CONFIG.unlockGoals)) {
       p.unlocked.push(id);
       p.fresh.push(id);
     }
   }
+  p.freshPerks = p.freshPerks.concat(earnedReputation().slice(perksBefore));
   saveProfile();
 }
 
@@ -179,6 +182,48 @@ function takeFreshUnlocks() {
   const fresh = p.fresh.slice();
   p.fresh = [];
   return fresh;
+}
+
+function takeFreshPerks() {
+  const p = profile();
+  const fresh = p.freshPerks.slice();
+  p.freshPerks = [];
+  return fresh;
+}
+
+// ---------- Reputation: lasting bonuses ----------
+
+// Bonuses earned so far (ids from CONFIG.reputation). Counts real unlocks only,
+// so ?unlockAll and tests.html get no bonuses.
+function earnedReputation() {
+  const levels = Math.floor(profile().unlocked.length / CONFIG.reputationEvery);
+  return CONFIG.reputation.slice(0, levels).map((r) => r.id);
+}
+
+function hasLegacy(state, id) {
+  return !!state.legacy && state.legacy.includes(id);
+}
+
+function maxCards(state) {
+  return CONFIG.maxCards + (hasLegacy(state, "cardSlot") ? 1 : 0);
+}
+
+function compSlots(state) {
+  return CONFIG.compSlots + (hasLegacy(state, "compSlot") ? 1 : 0);
+}
+
+// A brand-new run gets its Reputation bonuses (called from newShiftState).
+function applyLegacy(state) {
+  state.legacy = earnedReputation();
+  if (hasLegacy(state, "cash")) state.cash += CONFIG.reputationCash;
+  if (hasLegacy(state, "cash2")) state.cash += CONFIG.reputationCash2;
+  if (hasLegacy(state, "minusSeven")) state.perks.push("minusSeven"); // same as the phone perk
+  if (hasLegacy(state, "minusSeven2")) state.perks.push("minusSeven");
+  if (hasLegacy(state, "startCard")) {
+    const pool = Object.keys(CARDS).filter((id) => CONFIG.cardRarity[id] === CONFIG.reputationCardRarity && !CARDS[id].crew && available(state, id));
+    if (pool.length) state.cards.push(pool[Math.floor(Math.random() * pool.length)]);
+  }
+  if (hasLegacy(state, "spareLink")) state.cards.push("chainLink");
 }
 
 // A friendly name for any unlockable id.

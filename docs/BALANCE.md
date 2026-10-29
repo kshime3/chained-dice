@@ -212,3 +212,26 @@ Careers (200 each, up to 1,000 runs):
 - **Finding: unlocks don't make the bot stronger.** A new player escapes about as often as a fully unlocked one, so the ~200-run median is just a 0.4% chance repeated, not progress. A flat-betting bot gets little from cards in general (seen since Milestone 10). For unlocks to *feel* like getting closer to winning, they need to add real power. Owner to decide how (see PROGRESS.md).
 - Unlocks come quickly: about half in the first 5 runs. Never unlocked by the bot: Green Dice (it pays the debt all at once, so earns little interest) and Jinx's Shadow (it never drops Jinx). Humans will.
 - Shift-by-shift difficulty unchanged: no rescale.
+
+## 2026-10-29: Making unlocks matter (stronger locked cards, Reputation, slower unlocks)
+
+Card power measured first (smart bot, no shop, owning one card; % that reach shift 3; no card = 14%): starters Hot Hand 24, Rattlesnake 21, Snake Eyes 20, Red Dice 19, Double Up 19, Lucky Seven 18, Cold Read 16; locked Doubles Charm 27, Pity 26, Odds Addict 25, Rod's Lighter 20, Muggsy 20, Dee's Ledger 19, the rest about 14-16. So starters were trimmed and locked cards strengthened (DESIGN.md). Tool: `node tools/simulate.js 6000 "" cards`.
+
+New player vs veteran (8,000 runs each; `LOCKED=1` = every run is a first run, `VETERAN=1` = everything unlocked plus all Reputation bonuses):
+
+| Smart bot | S1 | S2 | S3 | S4 | S5 | S6 | S7 | S8 | Walk out free |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Brand-new player | 57% | 40% | 52% | 49% | 44% | 42% | 27% | 33% | 0.1% |
+| Veteran | 100% | 100% | 76% | 74% | 70% | 61% | 52% | 50% | 6.2% |
+
+Careers (200 each, unlocks and Reputation kept between runs):
+
+| Bot | Median runs to first escape | Unlocks after 5 / 10 / 25 / 50 runs (of 24) |
+| --- | --- | --- |
+| Smart | 84 | 4 / 8 / 14 / 16 |
+| Smart + comps | 69 | 5 / 10 / 17 / 19 |
+
+- Path tried: weak ladder (cash, slots, free Shuffle, interest) gave a median of ~150 runs; a stronger ladder ~90-105; a second "-1 way to roll 7" ~60-85.
+- New players: only ~1 in 4 bot runs survive shifts 1-2, and escapes are about 1 in 1,000. Veterans escape about 1 run in 15.
+- These bots are simple (flat bets, no rerolls, never drop Jinx), so a thoughtful player should land inside 30-60 runs. If playtests say it's still too long, the next levers are `reputationEvery` (3 -> 2) or the unlock goals.
+- Bot never unlocks Green Dice, Jinx's Shadow or Front of the Line (it pays at the end, never drops Jinx, hires slowly); humans will.

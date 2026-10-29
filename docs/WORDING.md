@@ -105,3 +105,5 @@ Unchanged for shifts 1-5. Shifts 6-8 follow the existing x1.5 growth: $1,800, $2
 - Unlock screen: "🔓 UNLOCKED! Odds Addict. New card. It can show up from your next run. See it in the 📖 Collection."
 - Collection: "22 of 46 found. Locked things unlock by playing. How? That's for you to discover." Locked tile: "??? 🔒 Locked".
 - How to play, last page "Many runs": "You probably won't walk out free on your first try. That's the point. Many cards, comps and crew start locked. Each unlocks when you do something special during a run. What? That's for you to discover."
+- Collection "⭐ Reputation": "Every 3 unlocks, the house remembers you: a lasting bonus from your next run on." Earned steps show "✓ +$25 starting cash"; later ones "9 unlocks: -1 way to roll 7 on everyone's dice".
+- Unlock screen extra line: "⭐ Reputation up! From your next run: +1 comp slot".

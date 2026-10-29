@@ -187,6 +187,7 @@ function run(label, s, n, scale) {
   const seats = [];
   CONFIG.shifts = scale.map(([cash, debt, minBet], k) => ({ cash: cash, debt: debt, minBet: minBet || (ORIGINAL_SHIFTS[k] || { minBet: 5 }).minBet }));
   for (let i = 0; i < n; i++) {
+    if (process.env.LOCKED) resetProfile(); // every run is a brand-new player's first
     let carry = null;
     for (let k = 0; k < scale.length; k++) {
       const r = playShift(s, carry);
@@ -216,7 +217,9 @@ globalThis.ORIGINAL_SHIFTS = CONFIG.shifts.slice();
 // Unlocks: the bots normally play with everything unlocked (comparable with older results).
 // LOCKED=1 plays as a brand-new player. Nothing is ever saved.
 CONFIG.saveProgress = false;
-CONFIG.unlockEverything = !process.env.LOCKED;
+CONFIG.unlockEverything = !process.env.LOCKED && !process.env.VETERAN;
+// VETERAN=1 plays as a player who has unlocked everything (all Reputation bonuses too).
+if (process.env.VETERAN) profile().unlocked = Object.keys(UNLOCKS);
 if (process.env.CARRY) CONFIG.carryOverShare = Number(process.env.CARRY); // e.g. CARRY=0.5 node tools/simulate.js
 // NORULES=1 switches off house rules and challenges (to measure what they change).
 if (process.env.NORULES) { globalThis.pickHouseRule = () => null; globalThis.newChallenge = () => null; }
@@ -258,12 +261,12 @@ const pick = process.argv[4] && process.argv[4] !== "cards" ? process.argv[4].sp
 console.log("Shifts: " + scale.map((s, i) => "shift " + (i + 1) + " $" + s[0] + " -> $" + s[1]).join(", ") + ". " + N + " runs each.\n");
 // "node tools/simulate.js 20000 100:200 cards" measures each card on its own.
 if (process.argv[4] === "cards") {
-  const base = { pass: 10, odds: 5, payReserve: null, shop: false, shopReserve: 0 };
+  // The smart bot (no shop, so only this card counts), owning the card from the start.
+  const base = Object.assign({}, strategies[12][1]);
   console.log("   " + run("(no cards) $10 Pass + max Odds", base, N, scale));
   for (const id of Object.keys(CARDS)) {
     console.log("   " + run("+ " + CARDS[id].name, Object.assign({}, base, { startCards: [id] }), N, scale));
   }
-  console.log("  share of careers that unlocked each one: " + Object.keys(UNLOCKS).map((id) => unlockName(id) + " " + Math.round(100 * (perId[id] || 0) / careers) + "%").join(", "));
   process.exit(0);
 }
 

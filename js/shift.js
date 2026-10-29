@@ -73,7 +73,7 @@ function newShiftState() {
     hotRodGain: 0, // mult Hot Rod has built up this turn
     rattleGain: 0, // mult Rattlesnake has added this turn
     turnRolls: 0, // rolls in the current shooter's turn (Doubles Charm)
-    loadedDieUsed: false, // Loaded Die works once a shift
+    loadedDieUsed: false, // Loaded Die works once per shooter
     rerollUsed: false, // Reroll works once per shooter
     prevShooterMult: 1, // the last shooter's final mult (for Mentor if a seat is cut)
     savedByLink: false, // true if the Spare Link saved this shift
@@ -105,6 +105,7 @@ function newShiftState() {
     interestRate: CONFIG.interestRate, // cards can raise this later
     lastInterest: 0, // interest paid at the latest Dealer Break
   };
+  applyLegacy(state); // Reputation bonuses (starting cash, cards, slots...)
   state.stock = newStock(state);
   state.compStock = newCompStock(state);
   state.hireOffers = newHireOffers(state);
@@ -286,6 +287,7 @@ function nextShift(old) {
   state.myDice = { left: old.myDice.left.slice(), right: old.myDice.right.slice() };
   state.freeBuys = old.freeBuys;
   state.stats.shiftStarts.push(state.stats.history.length);
+  state.legacy = (old.legacy || []).slice(); // the bonuses this run started with
   state.freeShuffles = old.freeShuffles;
   state.houseRule = pickHouseRule(state);
   state.crew = turnOrder(state);

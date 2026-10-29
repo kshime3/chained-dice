@@ -38,7 +38,7 @@ function newCompStock(state) {
 
 // Add a comp to your slots. Returns false if they're full.
 function gainComp(state, id) {
-  if (state.comps.length >= CONFIG.compSlots) return false;
+  if (state.comps.length >= compSlots(state)) return false;
   state.comps.push(id);
   return true;
 }
@@ -52,7 +52,7 @@ function randomComp(state) {
 function buyComp(state, slot) {
   const id = state.compStock[slot];
   if (!id) return "empty";
-  if (state.comps.length >= CONFIG.compSlots) return "full";
+  if (state.comps.length >= compSlots(state)) return "full";
   const price = compPrice(state, id);
   if (!canSpend(state, price)) return "money";
   state.cash -= price;

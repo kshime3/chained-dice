@@ -61,7 +61,8 @@ function introPages() {
       title: "Many runs",
       body: "You probably won't walk out free on your first try. That's the point.<br><br>" +
         "Many cards, comps and crew start <strong>locked</strong>. Each unlocks when you do something special during a run. What? That's for you to discover.<br><br>" +
-        "New unlocks show up from your <strong>next run</strong>. See what you've found in the 📖 <strong>Collection</strong>.<br><br>Good luck.",
+        "New unlocks show up from your <strong>next run</strong>. Every " + CONFIG.reputationEvery + " unlocks also raise your ⭐ <strong>Reputation</strong>: a lasting bonus like more starting cash or an extra slot.<br><br>" +
+        "See it all in the 📖 <strong>Collection</strong>.<br><br>Good luck.",
     },
   ];
 }

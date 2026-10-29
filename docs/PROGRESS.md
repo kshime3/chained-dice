@@ -2,6 +2,19 @@
 
 Dated session log. Newest at the top.
 
+## 2026-10-29: Session 7, continued (Milestone 12a: making unlocks matter)
+
+**Done**
+- Owner chose: stronger locked cards + trimmed starters, a fixed Reputation ladder, slower unlocks (half by ~20 runs), first escape around run 30-60.
+- Measured every card; trimmed 4 starters, strengthened 9 locked cards. Goals moved to `CONFIG.unlockGoals` and slowed. Reputation: 8 lasting bonuses, one per 3 unlocks, shown in the Collection and on the unlock screen. tests.html: 366 checks, all passing.
+- Simulator: `VETERAN=1`, `LOCKED=1` (fresh every run), career mode. Bot median first escape now 69-84 runs (was ~200 and not driven by progress); new player 0.1% per run, veteran ~6-7%.
+
+**Waiting on the owner**
+- Playtesting; whether 70-85 bot runs (a human should be faster) feels right.
+
+**Exact next step**
+- 12b: new bets (Hard Ways, Place, Come, Fire Bet) as unlocks.
+
 ## 2026-10-29: Session 7, continued (Milestone 12a: unlocks)
 
 **Done**

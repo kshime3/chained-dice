@@ -58,6 +58,45 @@ const CONFIG = {
   // Unlocks (js/unlocks.js): progress is saved in the browser.
   saveProgress: true,      // tests.html turns this off so checks never touch your progress
   unlockEverything: false, // testing: ?unlockAll in the address turns this on
+  // Hidden unlock goals (what each locked thing needs). Tuned so about half unlock by run 20.
+  unlockGoals: {
+    loadedDie: 3,       // survive shift 3
+    reroll: 4,          // survive shift 4
+    chainLink: 5,       // survive shift 5 (Spare Link)
+    bargain: 6,         // survive shift 6 (Dealer's Bargain)
+    oddsAddict: 2000,   // win this much on Odds, all runs
+    muggsy: 15,         // sevens right after the point is set, all runs
+    pity: 15,           // times the floor opens
+    doublesCharm: 4,    // doubles in one turn
+    greenDice: 100,     // interest earned in one run
+    wrongWay: 25,       // Don't Pass bets won, all runs
+    jinxShadow: 1,      // times Jinx dropped through the Trapdoor
+    crewCard: 8,        // shifts survived with that crew member seated (Lefty, Dee, Hot Rod, Ghost cards)
+    encore: 15,         // rolls in one turn of yours
+    highRoller: 1500,   // won on one turn of yours
+    frontOfLine: 4,     // crew hired in one run
+    sleightOfHand: 6,   // dice edits used, all runs
+    loadedShot: 40,     // points hit, all runs
+    copycat: 4,         // Nudges used
+    chisel: 2,          // Copycats used
+    luckyLou: 3,        // points hit at 3x mult or more, all runs
+    professor: 8,       // crew hired, all runs
+  },
+  // Reputation: every few unlocks earns the next lasting bonus (from the next run on).
+  reputationEvery: 3,
+  reputation: [
+    { id: "cash", text: "+$25 starting cash" },
+    { id: "compSlot", text: "+1 comp slot" },
+    { id: "minusSeven", text: "-1 way to roll 7 on everyone's dice" },
+    { id: "startCard", text: "Start each run with a random uncommon card" },
+    { id: "cardSlot", text: "+1 card slot" },
+    { id: "minusSeven2", text: "-1 more way to roll 7 on everyone's dice" },
+    { id: "cash2", text: "+$50 more starting cash" },
+    { id: "spareLink", text: "Start each run with a Spare Link" },
+  ],
+  reputationCash: 25,       // the first starting-cash bonus
+  reputationCash2: 50,      // the second one
+  reputationCardRarity: "uncommon", // the starting card's rarity
   startingCrew: 3,    // seats filled at the start of a run, including you (the rest are hired)
   alwaysStarts: ["Jinx"], // crew who are always at the table when a run starts
   hireOffers: 2,      // candidates offered at each Break
@@ -116,22 +155,26 @@ const CONFIG = {
   },
 
   // Card numbers
-  hotHandPerWin: 0.5,         // Hot Hand: +mult per winning roll in a row
-  rattlesnakeMult: 1,         // Rattlesnake: +mult when snake eyes (1+1) is rolled
-  snakeEyesBonusPct: 0.10,    // Snake Eyes: rolling a 2 pays this share of the debt
-  luckySevenBonusPct: 0.05,   // Lucky Seven: a come-out 7 pays this share of the debt
+  // Starter cards were trimmed and locked cards strengthened (2026-10-29), so unlocks add power.
+  hotHandPerWin: 0.25,        // Hot Hand: +mult per winning roll in a row
+  rattlesnakeMult: 0.5,       // Rattlesnake: +mult when snake eyes (1+1) is rolled
+  snakeEyesBonusPct: 0.06,    // Snake Eyes: rolling a 2 pays this share of the debt
+  luckySevenBonusPct: 0.03,   // Lucky Seven: a come-out 7 pays this share of the debt
   oddsAddictExtra: 0.5,       // Odds Addict: Odds winnings +50%
   muggsyCost: 2,              // Muggsy: a point-7 costs this many times your losing bets
-  muggsyNextShooterX: 2,      // Muggsy: the next shooter's winnings are multiplied by this
+  muggsyNextShooterX: 3,      // Muggsy: the next shooter's winnings are multiplied by this
   doubleUpWays: 1,            // Double Up: + this many ways (out of 36) for each double
   doublesCharmEvery: 3,       // Doubles Charm: every Nth roll of a shooter's turn is a pair
-  greenDiceInterestStep: 0.005, // Green Dice: each 12 adds this to the interest rate (0.005 = 0.5%)
-  wrongWayExtra: 0.5,         // Wrong Way: Don't Pass winnings +50%
+  greenDiceInterestStep: 0.01, // Green Dice: each 12 adds this to the interest rate (0.01 = 1%)
+  wrongWayExtra: 1,           // Wrong Way: Don't Pass winnings +100%
   coldReadMult: 1,            // Cold Read: the next shooter starts with this much extra mult
-  deesLedgerExtra: 0.5,       // Dee's Ledger: Odds and Lay Odds pay +50% on Dee's turn
+  deesLedgerExtra: 1,         // Dee's Ledger: Odds and Lay Odds pay +100% on Dee's turn
   rodsLighterMultPerWin: 1.5, // Rod's Lighter: Hot Rod's mult per winning roll (instead of 1)
-  jinxShadowX: 2,             // Jinx's Shadow: Don't Pass winnings x2 when Jinx shoots
-  highRollerX: 2,             // High Roller: your winnings x2 on your own turn
+  jinxShadowX: 3,             // Jinx's Shadow: Don't Pass winnings x3 when Jinx shoots
+  highRollerX: 3,             // High Roller: your winnings x3 on your own turn
+  leftysGloveMult: 1,         // Lefty's Glove: +mult on Lefty's turn
+  ghostStoryMult: 1,          // Ghost Story: +mult on Ghost's turn
+  frontOfLineMult: 1,         // Front of the Line: +mult on your own turn
 
   // The Pit Boss phone: after each won shift, pick 1 of these many different perks.
   phoneChoices: 3,

@@ -69,7 +69,7 @@ function canSpend(state, amount) {
 function buyCard(state, slot) {
   const id = state.stock[slot];
   if (!id) return "empty";
-  if (state.cards.length >= CONFIG.maxCards && !CARDS[id].instant) return "full";
+  if (state.cards.length >= maxCards(state) && !CARDS[id].instant) return "full";
   const price = buyPrice(state, id);
   if (!canSpend(state, price)) return "money";
   if (state.freeBuys > 0) state.freeBuys -= 1;

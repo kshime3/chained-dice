@@ -41,6 +41,7 @@ function setupTurn(state, prevName, prevMult) {
   state.turnDoubles = 0; // for unlocks
   state.turnWon = 0;
   state.rerollUsed = false; // Reroll works once per shooter
+  state.loadedDieUsed = false; // and so does Loaded Die
   state.louGain = 0;
   state.challenge = name === "You" ? newChallenge(state) : null; // pit boss challenge on your turn
 
@@ -63,6 +64,13 @@ function setupTurn(state, prevName, prevMult) {
     const carried = (prevMult - CONFIG.startingMult) * CONFIG.mentorShare;
     state.mult += carried;
     state.multNotes.push("Mentor: +" + carried + "x from Hot Rod's streak");
+  }
+  // Cards that warm up one seat's turn.
+  for (const [card, who, extra] of [["leftysGlove", "Lefty", CONFIG.leftysGloveMult], ["ghostStory", "Ghost", CONFIG.ghostStoryMult], ["frontOfLine", "You", CONFIG.frontOfLineMult]]) {
+    if (name === who && hasCard(state, card)) {
+      state.mult += extra;
+      state.multNotes.push(CARDS[card].name + ": +" + extra + "x");
+    }
   }
   // Cold Table: Jinx leaves the table cold for the next shooter.
   if (prevName === "Jinx") {
