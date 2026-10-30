@@ -116,3 +116,4 @@ Unchanged for shifts 1-5. Shifts 6-8 follow the existing x1.5 growth: $1,800, $2
 ## Added 2026-10-30: polish pass
 - Buttons: "💾 Save bets", "↻ Same bets". Messages: "Saved: Pass Line $5, Odds $15. Press ↻ Same bets to put them back." / "Placed Pass Line $5. Odds wait for a point: press again once it's set." / "Not enough cash for Odds." / "No saved bets yet. Put chips down, then press 💾 Save bets."
 - Settings: "Sound", "Quick dice (no tumbling animation)", "Tutorials: Show them again", "Unlocks and Reputation: Reset all progress".
+- Unlock reason (unlock screen and Collection tile): "Unlocked by surviving shift 3." / "Unlocked by winning $2,000 on Odds bets (all runs)." / "Unlocked by seeing 100 seven-outs (all runs)." Starters show no line.

@@ -265,3 +265,4 @@ Dated log of every decision and why. Newest at the bottom.
 - Pop-ups leave 60px at the top so the header buttons never cover a box.
 - **Tidier win screen** (owner). **Recruits priced by strength** (owner chose "price all by strength"): simulator measured each as the third seat; Hot Rod turned out strongest (mult streaks), then Big Mo.
 - **Six new cards** (owner picked from 8 suggestions): Comeback Kid, Point Collector, Loan Shark, Hardway Hustler, Steady Hand, Dice Collector. All locked with hidden goals; Reputation ladder extended by 3 steps. Not picked (parked in IDEAS.md): Crew Captain, Jinx Jar.
+- **Show why something unlocked** (owner, 2026-10-30): goals stay hidden while locked; once unlocked, the unlock screen and the Collection tile say "Unlocked by surviving shift 3." (text built from `CONFIG.unlockGoals`, so it always matches).

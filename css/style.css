@@ -559,3 +559,4 @@ body.falling .seat, body.falling .side > *, body.falling .table, body.falling .c
 .end-lines div { display: flex; justify-content: space-between; padding: 3px 0; border-bottom: 1px solid #333; }
 .end-lines .total { border-bottom: none; font-size: 1.1rem; color: #7dff9b; }
 .end-next { margin: 12px 0 4px; color: #ccc; }
+.unlock-reason { margin-top: 4px; font-size: 0.7rem; color: #6b5a2e; font-style: italic; }

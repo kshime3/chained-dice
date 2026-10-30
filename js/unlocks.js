@@ -2,47 +2,48 @@
 // across runs. Progress is saved in the browser. No screen code here.
 
 // Each locked item and its hidden goal (c = the lifetime counters below,
-// g = CONFIG.unlockGoals). Anything not listed here is unlocked from the start.
+// g = CONFIG.unlockGoals). "how" is shown only after it unlocks.
+// Anything not listed here is unlocked from the start.
 const UNLOCKS = {
   // Cards
-  loadedDie:     { kind: "card", done: (c, g) => c.bestShift >= g.loadedDie },
-  reroll:        { kind: "card", done: (c, g) => c.bestShift >= g.reroll },
-  chainLink:     { kind: "card", done: (c, g) => c.bestShift >= g.chainLink },
-  oddsAddict:    { kind: "card", done: (c, g) => c.oddsWon >= g.oddsAddict },
-  muggsy:        { kind: "card", done: (c, g) => c.pointSevens >= g.muggsy },
-  pity:          { kind: "card", done: (c, g) => c.falls >= g.pity },
-  doublesCharm:  { kind: "card", done: (c, g) => c.turnDoubles >= g.doublesCharm },
-  greenDice:     { kind: "card", done: (c, g) => c.runInterest >= g.greenDice },
-  wrongWay:      { kind: "card", done: (c, g) => c.dontWins >= g.wrongWay },
-  jinxShadow:    { kind: "card", done: (c, g) => c.jinxDropped >= g.jinxShadow },
-  leftysGlove:   { kind: "card", done: (c, g) => (c.crewWins["Lefty"] || 0) >= g.crewCard },
-  deesLedger:    { kind: "card", done: (c, g) => (c.crewWins["Dealer Dee"] || 0) >= g.crewCard },
-  rodsLighter:   { kind: "card", done: (c, g) => (c.crewWins["Hot Rod"] || 0) >= g.crewCard },
-  ghostStory:    { kind: "card", done: (c, g) => (c.crewWins["Ghost"] || 0) >= g.crewCard },
-  encore:        { kind: "card", done: (c, g) => c.ownTurnRolls >= g.encore },
-  highRoller:    { kind: "card", done: (c, g) => c.ownTurnWon >= g.highRoller },
-  frontOfLine:   { kind: "card", done: (c, g) => c.runHires >= g.frontOfLine },
-  sleightOfHand: { kind: "card", done: (c, g) => c.edits >= g.sleightOfHand },
-  bargain:       { kind: "card", done: (c, g) => c.bestShift >= g.bargain },
+  loadedDie:     { kind: "card", how: (g) => "surviving shift " + g.loadedDie, done: (c, g) => c.bestShift >= g.loadedDie },
+  reroll:        { kind: "card", how: (g) => "surviving shift " + g.reroll, done: (c, g) => c.bestShift >= g.reroll },
+  chainLink:     { kind: "card", how: (g) => "surviving shift " + g.chainLink, done: (c, g) => c.bestShift >= g.chainLink },
+  oddsAddict:    { kind: "card", how: (g) => "winning $" + g.oddsAddict.toLocaleString("en-US") + " on Odds bets (all runs)", done: (c, g) => c.oddsWon >= g.oddsAddict },
+  muggsy:        { kind: "card", how: (g) => "seeing " + g.muggsy + " sevens right after the point was set (all runs)", done: (c, g) => c.pointSevens >= g.muggsy },
+  pity:          { kind: "card", how: (g) => "the floor opening " + g.pity + " times", done: (c, g) => c.falls >= g.pity },
+  doublesCharm:  { kind: "card", how: (g) => "rolling " + g.doublesCharm + " doubles in one turn", done: (c, g) => c.turnDoubles >= g.doublesCharm },
+  greenDice:     { kind: "card", how: (g) => "earning $" + g.greenDice + " interest in one run", done: (c, g) => c.runInterest >= g.greenDice },
+  wrongWay:      { kind: "card", how: (g) => "winning " + g.wrongWay + " Don't Pass bets (all runs)", done: (c, g) => c.dontWins >= g.wrongWay },
+  jinxShadow:    { kind: "card", how: (g) => "dropping Jinx through the Trapdoor", done: (c, g) => c.jinxDropped >= g.jinxShadow },
+  leftysGlove:   { kind: "card", how: (g) => "surviving " + g.crewCard + " shifts with Lefty at the table", done: (c, g) => (c.crewWins["Lefty"] || 0) >= g.crewCard },
+  deesLedger:    { kind: "card", how: (g) => "surviving " + g.crewCard + " shifts with Dealer Dee at the table", done: (c, g) => (c.crewWins["Dealer Dee"] || 0) >= g.crewCard },
+  rodsLighter:   { kind: "card", how: (g) => "surviving " + g.crewCard + " shifts with Hot Rod at the table", done: (c, g) => (c.crewWins["Hot Rod"] || 0) >= g.crewCard },
+  ghostStory:    { kind: "card", how: (g) => "surviving " + g.crewCard + " shifts with Ghost at the table", done: (c, g) => (c.crewWins["Ghost"] || 0) >= g.crewCard },
+  encore:        { kind: "card", how: (g) => "rolling " + g.encore + " times in one turn of your own", done: (c, g) => c.ownTurnRolls >= g.encore },
+  highRoller:    { kind: "card", how: (g) => "winning $" + g.highRoller.toLocaleString("en-US") + " in one turn of your own", done: (c, g) => c.ownTurnWon >= g.highRoller },
+  frontOfLine:   { kind: "card", how: (g) => "hiring " + g.frontOfLine + " crew in one run", done: (c, g) => c.runHires >= g.frontOfLine },
+  sleightOfHand: { kind: "card", how: (g) => "using " + g.sleightOfHand + " dice edits (all runs)", done: (c, g) => c.edits >= g.sleightOfHand },
+  bargain:       { kind: "card", how: (g) => "surviving shift " + g.bargain, done: (c, g) => c.bestShift >= g.bargain },
   // Comps
-  loadedShot:    { kind: "comp", done: (c, g) => c.pointsHit >= g.loadedShot },
-  copycat:       { kind: "comp", done: (c, g) => c.nudges >= g.copycat },
-  chisel:        { kind: "comp", done: (c, g) => c.copycats >= g.chisel },
+  loadedShot:    { kind: "comp", how: (g) => "hitting " + g.loadedShot + " points (all runs)", done: (c, g) => c.pointsHit >= g.loadedShot },
+  copycat:       { kind: "comp", how: (g) => "using " + g.copycat + " Nudges (all runs)", done: (c, g) => c.nudges >= g.copycat },
+  chisel:        { kind: "comp", how: (g) => "using " + g.chisel + " Copycats (all runs)", done: (c, g) => c.copycats >= g.chisel },
   // Crew you can hire
-  "Lucky Lou":     { kind: "crew", done: (c, g) => c.bigMultPoints >= g.luckyLou },
-  "The Professor": { kind: "crew", done: (c, g) => c.hires >= g.professor },
+  "Lucky Lou":     { kind: "crew", how: (g) => "hitting " + g.luckyLou + " points at 3x mult or more (all runs)", done: (c, g) => c.bigMultPoints >= g.luckyLou },
+  "The Professor": { kind: "crew", how: (g) => "hiring " + g.professor + " crew (all runs)", done: (c, g) => c.hires >= g.professor },
   // Bets (Milestone 12b)
-  hardWays:      { kind: "bet", done: (c, g) => c.hardPairs >= g.hardWays },
-  placeBets:     { kind: "bet", done: (c, g) => c.pointsHit >= g.placeBets },
-  fireBet:       { kind: "bet", done: (c, g) => c.turnPoints >= g.fireBet },
-  comeBets:      { kind: "bet", done: (c, g) => c.runPoints >= g.comeBets },
+  hardWays:      { kind: "bet", how: (g) => "rolling " + g.hardWays + " pairs that make 4, 6, 8 or 10 (all runs)", done: (c, g) => c.hardPairs >= g.hardWays },
+  placeBets:     { kind: "bet", how: (g) => "hitting " + g.placeBets + " points (all runs)", done: (c, g) => c.pointsHit >= g.placeBets },
+  fireBet:       { kind: "bet", how: (g) => "one shooter making " + g.fireBet + " different points in one turn", done: (c, g) => c.turnPoints >= g.fireBet },
+  comeBets:      { kind: "bet", how: (g) => "hitting " + g.comeBets + " points in one run", done: (c, g) => c.runPoints >= g.comeBets },
   // Cards added 2026-10-30
-  comebackKid:    { kind: "card", done: (c, g) => c.sevenOuts >= g.comebackKid },
-  pointCollector: { kind: "card", done: (c, g) => c.turnPoints >= g.pointCollector },
-  loanShark:      { kind: "card", done: (c, g) => c.bestLeftover >= g.loanShark },
-  hardwayHustler: { kind: "card", done: (c, g) => c.hardWins >= g.hardwayHustler },
-  steadyHand:     { kind: "card", done: (c, g) => c.placeWins >= g.steadyHand },
-  diceCollector:  { kind: "card", done: (c, g) => c.editedFaces >= g.diceCollector },
+  comebackKid:    { kind: "card", how: (g) => "seeing " + g.comebackKid + " seven-outs (all runs)", done: (c, g) => c.sevenOuts >= g.comebackKid },
+  pointCollector: { kind: "card", how: (g) => "one shooter making " + g.pointCollector + " different points in one turn", done: (c, g) => c.turnPoints >= g.pointCollector },
+  loanShark:      { kind: "card", how: (g) => "finishing a shift with $" + g.loanShark.toLocaleString("en-US") + " left over", done: (c, g) => c.bestLeftover >= g.loanShark },
+  hardwayHustler: { kind: "card", how: (g) => "winning " + g.hardwayHustler + " Hard Ways bets (all runs)", done: (c, g) => c.hardWins >= g.hardwayHustler },
+  steadyHand:     { kind: "card", how: (g) => "winning " + g.steadyHand + " Place bets (all runs)", done: (c, g) => c.placeWins >= g.steadyHand },
+  diceCollector:  { kind: "card", how: (g) => "having " + g.diceCollector + " edited faces on your dice at once", done: (c, g) => c.editedFaces >= g.diceCollector },
 };
 
 const SAVE_KEY = "chainedDice.profile";
@@ -272,6 +273,12 @@ function betGroup(bet) {
   if (bet === "come" || bet === "dontCome") return "comeBets";
   if (bet === "fire") return "fireBet";
   return null;
+}
+
+// Why something unlocked, shown once it has ("Unlocked by surviving shift 3.").
+function unlockReason(id) {
+  if (!UNLOCKS[id]) return "Available from the start.";
+  return "Unlocked by " + UNLOCKS[id].how(CONFIG.unlockGoals) + ".";
 }
 
 // A friendly name for any unlockable id.

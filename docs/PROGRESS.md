@@ -7,6 +7,7 @@ Dated session log. Newest at the top.
 **Done**
 - Tidier win screen. Recruits priced by strength (Hot Rod 40% ... Snake 10%). Six new locked cards (Comeback Kid, Point Collector, Loan Shark, Hardway Hustler, Steady Hand, Dice Collector) with hidden goals; 3 more Reputation steps. Simulator: recruit test, profile reset fix. tests.html: 407 checks, all passing. Fits one screen on phones; 25 auto-played runs with no errors.
 - Balance: career median first escape 26-32 runs (target 30-60).
+- Unlocks now say why once earned ("Unlocked by surviving shift 3."), on the unlock screen and in the Collection. tests.html: 409 checks.
 
 **Waiting on the owner**
 - Playtesting; whether the pace feels right.

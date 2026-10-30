@@ -1085,7 +1085,7 @@ function unlockSplash(ids, perks) {
   const kind = { card: "card", comp: "comp", crew: "crew member you can hire", bet: "bet (find it under ➕ More bets)" };
   const perkText = (id) => CONFIG.reputation.find((r) => r.id === id).text;
   return '<div class="splash-title">🔓 UNLOCKED!</div>' +
-    ids.map((id) => '<p class="splash-big">' + unlockName(id) + '</p><p class="hint">New ' + kind[UNLOCKS[id].kind] + "</p>").join("") +
+    ids.map((id) => '<p class="splash-big">' + unlockName(id) + '</p><p class="hint">New ' + kind[UNLOCKS[id].kind] + "</p><p>" + unlockReason(id) + "</p>").join("") +
     "<p>It can show up from your <strong>next run</strong>. See it in the 📖 Collection.</p>" +
     perks.map((id) => '<p class="boost">⭐ Reputation up! From your next run: <strong>' + perkText(id) + "</strong></p>").join("") +
     '<p class="hint">Tap to continue</p>';
@@ -1106,7 +1106,7 @@ function reputationHtml() {
 // The Collection: everything unlocked, and locked things as mysteries (no hints).
 function renderCollection() {
   const tile = (id, title, text, rarity) => isUnlocked(id)
-    ? '<div class="collection-tile ' + (rarity || "") + '"><strong>' + title + "</strong><br>" + text + "</div>"
+    ? '<div class="collection-tile ' + (rarity || "") + '"><strong>' + title + "</strong><br>" + text + (UNLOCKS[id] ? '<div class="unlock-reason">' + unlockReason(id) + "</div>" : "") + "</div>"
     : '<div class="collection-tile locked"><strong>???</strong><br>🔒 Locked</div>';
   // Found things first (common first), then the mysteries, so a mystery's place gives nothing away.
   const order = (ids) => ids.filter(isUnlocked).concat(ids.filter((id) => !isUnlocked(id)));
