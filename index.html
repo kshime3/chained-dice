@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Chained Dice</title>
-  <link rel="stylesheet" href="css/style.css?v=20261030c">
+  <link rel="stylesheet" href="css/style.css?v=20261030e">
 </head>
 <body>
   <header class="top">
@@ -110,10 +110,10 @@
       <p>Still owed: <strong id="break-owed"></strong> · Your cash: <strong id="break-cash"></strong></p>
       <p id="break-interest" class="break-interest"></p>
 
-      <h3>Pay the dealer</h3>
+      <h3>Pay the dealer: the drop box</h3>
+      <div id="drop-box" class="drop-box" title="Each plaque pays 10% of the debt"></div>
       <div>
-        $<input id="deposit-amount" type="number" min="5" step="5" value="5">
-        <button id="pay-typed">Pay</button>
+        <button id="drop-plaque" class="plaque-button"></button>
         <button id="pay-off">Pay off debt</button>
       </div>
       <p id="pay-closed" class="hint"></p>
@@ -241,22 +241,22 @@
   </div>
 
   <!-- Load order matters: config first, then logic, then display, then main. -->
-  <script src="js/config.js?v=20261030c"></script>
-  <script src="js/dice.js?v=20261030c"></script>
-  <script src="js/bets.js?v=20261030c"></script>
-  <script src="js/crew.js?v=20261030c"></script>
-  <script src="js/cards.js?v=20261030c"></script>
-  <script src="js/shop.js?v=20261030c"></script>
-  <script src="js/stats.js?v=20261030c"></script>
-  <script src="js/perks.js?v=20261030c"></script>
-  <script src="js/crafting.js?v=20261030c"></script>
-  <script src="js/comps.js?v=20261030c"></script>
-  <script src="js/unlocks.js?v=20261030c"></script>
-  <script src="js/rules.js?v=20261030c"></script>
-  <script src="js/shift.js?v=20261030c"></script>
-  <script src="js/sound.js?v=20261030c"></script>
-  <script src="js/ui.js?v=20261030c"></script>
-  <script src="js/tutorials.js?v=20261030c"></script>
-  <script src="js/main.js?v=20261030c"></script>
+  <script src="js/config.js?v=20261030e"></script>
+  <script src="js/dice.js?v=20261030e"></script>
+  <script src="js/bets.js?v=20261030e"></script>
+  <script src="js/crew.js?v=20261030e"></script>
+  <script src="js/cards.js?v=20261030e"></script>
+  <script src="js/shop.js?v=20261030e"></script>
+  <script src="js/stats.js?v=20261030e"></script>
+  <script src="js/perks.js?v=20261030e"></script>
+  <script src="js/crafting.js?v=20261030e"></script>
+  <script src="js/comps.js?v=20261030e"></script>
+  <script src="js/unlocks.js?v=20261030e"></script>
+  <script src="js/rules.js?v=20261030e"></script>
+  <script src="js/shift.js?v=20261030e"></script>
+  <script src="js/sound.js?v=20261030e"></script>
+  <script src="js/ui.js?v=20261030e"></script>
+  <script src="js/tutorials.js?v=20261030e"></script>
+  <script src="js/main.js?v=20261030e"></script>
 </body>
 </html>

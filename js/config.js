@@ -248,6 +248,8 @@ const CONFIG = {
   fallMs: 3200,     // how long the floor-opening animation lasts when you fall
   diceRollMs: 1000, // how long the dice-rolling animation lasts (0 = no animation)
   sevenOutSplashMs: 5000, // how long the SEVEN OUT screen shows before the Dealer Break (tap skips)
+  plaquePct: 0.10,        // paying the dealer: each plaque dropped in the drop box is this share of the debt
+  winSoundTiers: [0.03, 0.10, 0.30], // a roll's winnings as a share of the debt: above each, a bigger win sound
   betPopMs: 1400,         // how long a "+$25" win popup floats
   unlockSplashMs: 6000,   // how long the "Unlocked" screen shows (tap skips)
   winSplashMs: 5000,      // how long the "Point hit" winnings screen shows (tap skips)

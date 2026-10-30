@@ -233,10 +233,13 @@ function finishRoll(rolled) {
   const notes = crewBefore.concat(before.notes, cardNotes, crewNotes, compNotes);
   showMessage(describeRoll(total, results, pointBefore, state.point) + " " + notes.join(" "), sevenOut);
 
-  if (sevenOut && results.some((r) => r.bet === "dont" && r.outcome === "win")) playSound("pointHit");
+  // Bigger wins, bigger sounds (tiers are shares of the debt; a point hit is at least tier 2).
+  const won = results.filter((r) => r.outcome === "win").reduce((sum, r) => sum + r.winnings, 0);
+  const tier = 1 + CONFIG.winSoundTiers.filter((share) => won >= share * state.debt).length;
+  const winSound = "win" + Math.max(tier, pointHit || challengeNote || (sevenOut && won > 0) ? 2 : 1);
+  if (sevenOut && won > 0) playSound(winSound);
   else if (sevenOut) playSound("sevenOut");
-  else if (pointHit || challengeNote) playSound("pointHit");
-  else if (results.some((r) => r.outcome === "win")) playSound("win");
+  else if (won > 0 || pointHit || challengeNote) playSound(winSound);
   else if (results.some((r) => r.outcome === "lose")) playSound("lose");
   else playSound("land");
 
@@ -258,7 +261,8 @@ function finishRoll(rolled) {
 // Dealer Break buttons
 function payDealer(amount) {
   const paid = deposit(state, amount);
-  if (paid > 0 && state.status !== "won") playSound("pay");
+  if (paid > 0 && state.status !== "won") playSound("plaque");
+  if (paid > 0) plaqueJustDropped = true;
   let text = paid > 0 ? "Paid " + money(paid) + ". That money is safe now, and out of play." : "Nothing more you can pay.";
   if (state.status === "playing" && state.cash <= tableMin(state)) {
     text += " You keep " + money(tableMin(state)) + " for your Pass Line bet.";
@@ -267,14 +271,22 @@ function payDealer(amount) {
   renderAll();
 }
 
-function payTyped() {
-  const typed = Math.floor(Number(document.getElementById("deposit-amount").value));
-  if (!(typed > 0)) {
-    showBreakMessage("Type an amount to pay, like 25.");
+// Drop one plaque in the drop box.
+function payPlaque() {
+  const r = dropPlaque(state);
+  const why = {
+    closed: "The dealer won't take payment until the first shooter has rolled.",
+    money: "Not enough cash: a plaque can't take your cash below " + money(tableMin(state)) + ".",
+    done: "The debt is paid.",
+  };
+  if (r.reason !== "ok") {
+    showBreakMessage(why[r.reason]);
     return;
   }
-  payDealer(typed);
-  document.getElementById("deposit-amount").value = Math.max(5, tableMin(state));
+  plaqueJustDropped = true;
+  if (state.status !== "won") playSound("plaque");
+  showBreakMessage("Dropped a " + money(r.paid) + " plaque in the box. " + (state.status === "won" ? "" : money(amountOwed(state)) + " to go."));
+  renderAll();
 }
 
 // Shop buttons
@@ -458,6 +470,7 @@ function playAgain() {
 }
 
 let fallPlayed = false; // the fall animation plays once per run
+let plaqueJustDropped = false; // the drop box animates the newest plaque
 
 function renderAll() {
   showChips();
@@ -489,7 +502,7 @@ function renderAll() {
 // New unlocks: announce them once nothing else is on screen.
 function announceUnlocks() {
   if (busy() || tutorialOpen() || profile().fresh.length === 0) return;
-  playSound("pointHit");
+  playSound("win2");
   showSplash(unlockSplash(takeFreshUnlocks(), takeFreshPerks()), "good", CONFIG.unlockSplashMs, renderAll);
 }
 
@@ -535,7 +548,7 @@ document.getElementById("board-toggle").onclick = () => {
 document.getElementById("house-rule").onclick = () => showMessage(HOUSE_RULES[state.houseRule.id].name + ": " + houseRuleText(state));
 document.getElementById("dice").onclick = roll; // tapping the dice rolls too
 document.getElementById("clear-button").onclick = clearBets;
-document.getElementById("pay-typed").onclick = payTyped;
+document.getElementById("drop-plaque").onclick = payPlaque;
 document.getElementById("pay-off").onclick = () => payDealer(amountOwed(state));
 document.getElementById("leave-break").onclick = leaveBreak;
 document.getElementById("shuffle").onclick = shuffle;

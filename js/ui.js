@@ -300,8 +300,12 @@ function renderBreak(state) {
 
   // Paying opens after the first shooter. Pay off debt needs the whole amount.
   const payOpen = canPay(state);
-  document.getElementById("pay-typed").disabled = !payOpen;
-  document.getElementById("deposit-amount").disabled = !payOpen;
+  renderDropBox(state);
+  const plaque = Math.min(plaqueValue(state), amountOwed(state));
+  const dropButton = document.getElementById("drop-plaque");
+  dropButton.textContent = "Drop a plaque (" + money(plaque) + ")";
+  dropButton.disabled = !payOpen || maxDeposit(state) < plaque;
+  dropButton.title = dropButton.disabled && payOpen ? "Not enough cash: you keep " + money(tableMin(state)) + " for your line bet." : "";
   document.getElementById("pay-closed").textContent = payOpen ? "" :
     "The dealer won't take payment until the first shooter has rolled. Shop first, then pay at the next Break.";
   const payOff = document.getElementById("pay-off");
@@ -322,17 +326,38 @@ function showBreakMessage(text) {
   document.getElementById("break-message").textContent = text;
 }
 
-// The current mult, and why (synergies).
+// The drop box: 10 slots, one per plaque, filled as you pay.
+function renderDropBox(state) {
+  const box = document.getElementById("drop-box");
+  const per = plaqueValue(state);
+  const slots = Math.ceil(state.debt / per);
+  const full = Math.min(slots, state.deposited / per);
+  let html = "";
+  for (let i = 0; i < slots; i++) {
+    const fill = Math.max(0, Math.min(1, full - i));
+    const newest = plaqueJustDropped && fill > 0 && i === Math.ceil(full) - 1;
+    html += '<div class="slot"><div class="plaque' + (newest ? " dropping" : "") + '" style="width:' + Math.round(fill * 100) + '%"></div></div>';
+  }
+  box.innerHTML = html + '<div class="drop-label">' + money(state.deposited) + " of " + money(state.debt) + "</div>";
+  plaqueJustDropped = false;
+}
+
+// The current mult, and why (synergies). When it goes up, it pops with a ding.
+let multShown = null;
 function renderMult(state) {
   const box = document.getElementById("mult");
   if (!state.crew[state.shooterIndex]) {
     box.textContent = "";
+    multShown = null;
     return;
   }
   const mult = effectiveMult(state);
+  const gain = multShown !== null && mult > multShown + 1e-9 ? mult - multShown : 0;
+  multShown = mult;
   const notes = multReasons(state);
-  box.innerHTML = "Mult: <strong>" + mult + "x</strong>" + (notes.length ? " · " + notes.join(" · ") : "");
+  box.innerHTML = "Mult: <strong>" + Math.round(mult * 100) / 100 + "x</strong>" + (notes.length ? " · " + notes.join(" · ") : "");
   box.className = "mult" + (mult > 1 ? " hot" : mult < 1 ? " cold" : "");
+  if (gain) popMult(box, gain);
 }
 
 // One card as a box: name, rarity, what it does, plus an optional button.
@@ -1243,4 +1268,18 @@ function showBetPopups(results) {
     document.body.appendChild(pop);
     setTimeout(() => pop.remove(), CONFIG.betPopMs);
   }
+}
+
+// "+0.5x" pops up from the mult and fades, with a ding.
+function popMult(box, gain) {
+  const pop = document.createElement("div");
+  pop.className = "mult-pop";
+  pop.textContent = "+" + Math.round(gain * 100) / 100 + "x mult";
+  const r = box.getBoundingClientRect();
+  pop.style.left = r.left + r.width / 2 + "px";
+  pop.style.top = r.top + "px";
+  document.body.appendChild(pop);
+  setTimeout(() => pop.remove(), CONFIG.betPopMs);
+  box.classList.add("bump");
+  playSound("ding");
 }

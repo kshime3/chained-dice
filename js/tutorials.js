@@ -44,7 +44,7 @@ function introPages() {
     },
     {
       title: "Paying the dealer",
-      body: "Between shooters there's a <strong>Dealer Break</strong>. That's your chance to pay toward the debt.<br><br>" +
+      body: "Between shooters there's a <strong>Dealer Break</strong>. That's your chance to pay toward the debt: drop <strong>plaques</strong> into the dealer's <strong>drop box</strong>. Each plaque is " + Math.round(CONFIG.plaquePct * 100) + "% of the debt (the last one pays exactly what's left), or pay it all at once.<br><br>" +
         "Paid money is <strong>safe</strong> from bad rolls, but you can't bet it, and you can't take it back. You win the moment the debt is fully paid.<br><br>" +
         "Money left over when you win a shift carries into the next one, but the dealer takes <strong>" + Math.round((1 - CONFIG.carryOverShare) * 100) + "%</strong> of it as his cut.<br><br>" +
         "<strong>The floor opens if:</strong> you can't afford the " + min + " line bet, or the last shooter sevens out and you still owe money.",

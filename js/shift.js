@@ -247,6 +247,22 @@ function deposit(state, amount) {
   return paid;
 }
 
+// Plaques: you pay the dealer by dropping plaques in the drop box, each worth
+// CONFIG.plaquePct of the debt. The last one pays exactly what's left.
+function plaqueValue(state) {
+  return Math.max(1, Math.round(state.debt * CONFIG.plaquePct));
+}
+
+// Drop one plaque. Returns { paid, reason }: reason is "ok", "closed" (not after the
+// first shooter yet), "money" (not enough cash, keeping the table minimum) or "done".
+function dropPlaque(state) {
+  if (amountOwed(state) <= 0) return { paid: 0, reason: "done" };
+  if (!canPay(state)) return { paid: 0, reason: "closed" };
+  const amount = Math.min(plaqueValue(state), amountOwed(state));
+  if (maxDeposit(state) < amount) return { paid: 0, reason: "money" };
+  return { paid: deposit(state, amount), reason: "ok" };
+}
+
 // Put money on a line bet ("pass" or "dont"). If your cash is short, the rest is
 // moved from your other bets (Field first, then Odds, then Lay Odds).
 // Returns the list of moves made, e.g. [{ from: "field", amount: 5 }],

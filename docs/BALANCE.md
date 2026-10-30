@@ -275,3 +275,6 @@ New cards (smart bot, card owned from the start, % reaching shift 3; no card 18.
 
 ## 2026-10-30: 3D dice retest
 Display only, no rule changes. New player per-shift survival 58 / 42 / 48 / 50 / 43 / 36 / 33 / 33%: same as before.
+
+## 2026-10-30: Drop box retest
+Plaques change only how a person pays (10% steps); the bots already pay the whole debt at once, so results are unchanged. No rescale.

@@ -69,8 +69,20 @@ const SOUNDS = {
   chip: () => { tone("triangle", 1800, 1200, 0, 0.06, 0.5); tone("triangle", 2400, 1600, 0.03, 0.05, 0.3); },
   rattle: () => { for (let i = 0; i < 7; i++) noise(i * 0.075 + Math.random() * 0.02, 0.03, 0.5, 3000); },
   land: () => { noise(0, 0.05, 0.6, 1500); tone("sine", 180, 120, 0, 0.08, 0.4); },
-  win: () => { tone("sine", 660, 660, 0, 0.12, 0.4); tone("sine", 880, 880, 0.08, 0.18, 0.4); },
-  pointHit: () => { [523, 659, 784, 1047].forEach((f, i) => tone("triangle", f, f, i * 0.09, 0.25, 0.45)); },
+  win1: () => { tone("sine", 660, 660, 0, 0.12, 0.4); tone("sine", 880, 880, 0.08, 0.18, 0.4); },
+  win2: () => { [523, 659, 784, 1047].forEach((f, i) => tone("triangle", f, f, i * 0.09, 0.25, 0.45)); },
+  win3: () => {
+    [523, 659, 784, 1047, 1319].forEach((f, i) => tone("triangle", f, f, i * 0.08, 0.3, 0.45));
+    [523, 659, 784].forEach((f) => tone("sine", f * 2, f * 2, 0.42, 0.6, 0.18)); // a held chord on top
+  },
+  win4: () => { // jackpot: fanfare, bass and a shower of sparkles
+    [392, 523, 659, 784, 1047, 1319, 1568].forEach((f, i) => tone("square", f, f, i * 0.07, 0.22, 0.18));
+    tone("sine", 131, 131, 0, 0.9, 0.5);
+    [1047, 1319, 1568].forEach((f) => tone("triangle", f, f, 0.5, 0.9, 0.3));
+    for (let i = 0; i < 10; i++) tone("sine", 2500 + Math.random() * 2000, 3500, 0.5 + i * 0.07, 0.08, 0.12);
+  },
+  ding: () => { tone("sine", 1568, 1568, 0, 0.35, 0.35); tone("sine", 3136, 3136, 0, 0.2, 0.12); },
+  plaque: () => { noise(0, 0.06, 0.7, 2500); tone("sine", 220, 140, 0, 0.18, 0.5); tone("triangle", 900, 700, 0.02, 0.08, 0.2); },
   lose: () => { tone("sine", 300, 200, 0, 0.15, 0.3); },
   sevenOut: () => { tone("sawtooth", 220, 55, 0, 0.7, 0.35); tone("sine", 90, 40, 0, 0.8, 0.6); noise(0, 0.4, 0.4, 400); },
   pay: () => { tone("square", 1300, 1300, 0, 0.05, 0.15); tone("square", 1750, 1750, 0.06, 0.12, 0.15); },
