@@ -144,7 +144,9 @@ function renderState(state) {
   document.getElementById("shift-number").textContent = state.shift;
   document.getElementById("cash").textContent = money(state.cash);
   document.getElementById("interest").textContent = Math.round(state.interestRate * 1000) / 10 + "%";
-  document.getElementById("paid").textContent = money(state.deposited) + " / " + money(state.debt);
+  document.getElementById("owed").textContent = money(amountOwed(state));
+  document.getElementById("debt-of").textContent = "of " + money(state.debt);
+  document.querySelector(".owed-box").classList.toggle("paid-off", amountOwed(state) <= 0);
   const progress = Math.min(100, (state.deposited / state.debt) * 100);
   document.getElementById("progress-fill").style.width = progress + "%";
   renderChainBar(state);
@@ -1271,4 +1273,61 @@ function popMult(box, gain) {
   setTimeout(() => pop.remove(), CONFIG.betPopMs);
   box.classList.add("bump");
   playSound("ding");
+}
+
+// ---------- Your hand (left column on bigger screens) ----------
+
+// Cards, comps and phone perks as readable tiles. Phones use the compact row instead.
+// handlers: { useComp(index) }
+function renderHand(state, handlers) {
+  const hand = document.getElementById("hand");
+  hand.innerHTML = "";
+  const section = (title) => {
+    const h = document.createElement("h3");
+    h.textContent = title;
+    hand.appendChild(h);
+    const row = document.createElement("div");
+    row.className = "hand-row";
+    hand.appendChild(row);
+    return row;
+  };
+  const cards = section("Your cards (" + state.cards.length + " / " + maxCards(state) + ")");
+  if (!state.cards.length) cards.innerHTML = '<p class="hint">No cards yet. Tip the dealer at a Dealer Break to buy some.</p>';
+  for (const id of state.cards) {
+    const off = rule(state, "pitWatch") && state.houseRule.disabled === id;
+    const tile = document.createElement("div");
+    tile.className = "hand-card " + CONFIG.cardRarity[id] + (off ? " switched-off" : "");
+    tile.title = CARDS[id].text;
+    tile.innerHTML = "<strong>" + (off ? "👁 " : "") + CARDS[id].name + '</strong><span class="rarity">' + CONFIG.cardRarity[id] + '</span><div class="hand-text">' +
+      (off ? "<em>Switched off this shift (Pit Watch).</em> " : "") + CARDS[id].text + "</div>";
+    cards.appendChild(tile);
+  }
+  const comps = section("Comps (" + state.comps.length + " / " + compSlots(state) + ")");
+  for (const id of Object.keys(state.armed)) {
+    const tile = document.createElement("div");
+    tile.className = "hand-comp armed";
+    tile.innerHTML = "<strong>⚡ " + COMPS[id].name + " armed</strong><br>" + COMPS[id].text;
+    comps.appendChild(tile);
+  }
+  if (!state.comps.length && !Object.keys(state.armed).length) comps.innerHTML = '<p class="hint">No comps. The dealer sells them at a Dealer Break.</p>';
+  state.comps.forEach((id, i) => {
+    const blocked = compBlocked(state, id);
+    const tile = document.createElement("div");
+    tile.className = "hand-comp";
+    tile.title = COMPS[id].text;
+    tile.innerHTML = "<strong>🎟 " + COMPS[id].name + '</strong><div class="hand-text">' + COMPS[id].text + "</div>";
+    const use = document.createElement("button");
+    use.textContent = blocked ? "Not now" : "Use";
+    use.title = blocked || "Use it now";
+    use.disabled = !!blocked;
+    use.onclick = () => handlers.useComp(i);
+    tile.appendChild(use);
+    comps.appendChild(tile);
+  });
+  // Phone perks and other badges: the same badges as the phone row.
+  const perks = [...document.querySelectorAll("#my-cards .card-badge.perk")];
+  if (perks.length) {
+    const row = section("Pit Boss perks");
+    for (const badge of perks) row.appendChild(badge.cloneNode(true));
+  }
 }

@@ -24,6 +24,36 @@ h1 { letter-spacing: 2px; font-size: 1.6rem; margin: 0; }
   margin: 4px 0;
 }
 .money strong { margin-left: 4px; }
+.money { align-items: center; }
+.money .minor { color: #bbb; font-size: 0.9rem; }
+/* The two numbers that matter: what you have, and what you still owe */
+.money-main { border-radius: 10px; padding: 2px 14px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; line-height: 1.1; }
+.money-main strong { display: block; margin: 0; font-size: 1.45rem; letter-spacing: 0; }
+.money-main .of { display: block; font-size: 0.7rem; text-transform: none; opacity: 0.8; }
+.cash-box { background: #10351f; border: 2px solid #2ecc71; color: #9be7b4; }
+.cash-box strong { color: #7dff9b; }
+.owed-box { background: #3a2410; border: 2px solid #ff9f43; color: #ffcf9b; }
+.owed-box strong { color: #ffb86b; }
+.owed-box.paid-off { background: #10351f; border-color: #2ecc71; }
+.owed-box.paid-off strong { color: #7dff9b; }
+
+/* Your hand: cards and comps in the left column (bigger screens only) */
+.hand { text-align: left; margin-top: 6px; }
+.hand h3 { font-size: 0.95rem; margin: 10px 0 4px; color: #ddd; }
+.hand-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 6px; }
+.hand-card, .hand-comp { background: #fdf6e3; color: #222; border-radius: 8px; border-left: 6px solid #7f8c8d; padding: 6px 8px; font-size: 0.8rem; }
+.hand-card.uncommon { border-left-color: #27ae60; }
+.hand-card.rare { border-left-color: #2980b9; }
+.hand-card.legendary { border-left-color: #f39c12; }
+.hand-card .rarity { float: right; font-size: 0.65rem; text-transform: uppercase; color: #777; }
+.hand-text { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.hand-card.switched-off { opacity: 0.45; }
+.hand-comp { background: #e8f4fb; border-left-color: #3498db; }
+.hand-comp.armed { background: #fff6cc; border-left-color: #ffd84d; }
+.hand-comp button { display: block; margin-top: 4px; padding: 3px 12px; font-size: 0.8rem; }
+.hand .card-badge { display: inline-block; margin: 2px; }
+@media (min-width: 761px) { .layout .my-cards { display: none; } }
+@media (max-width: 760px) { .hand { display: none; } }
 
 .progress {
   height: 8px;
@@ -226,7 +256,12 @@ button {
   body { padding: 6px 8px; }
   h1 { font-size: 1.2rem; }
   .how-to-play { font-size: 0.85rem; padding: 6px 10px; }
-  .money { gap: 10px; font-size: 0.85rem; }
+  .money { gap: 8px; font-size: 0.85rem; }
+  .money .minor { font-size: 0.75rem; }
+  .money { margin: 2px 0; }
+  .money-main { padding: 1px 7px; font-size: 0.6rem; border-width: 1px; line-height: 1; }
+  .money-main strong { font-size: 1.05rem; }
+  .money-main .of { display: none; }
   .layout { grid-template-columns: minmax(0, 1fr); gap: 6px; } /* minmax(0) lets wide rows scroll inside instead of widening the page */
   .seat { font-size: 0.68rem; min-width: 0; padding: 3px 5px; flex: 1; }
   .crew { gap: 3px; flex-wrap: nowrap; }

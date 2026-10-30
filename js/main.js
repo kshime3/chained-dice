@@ -476,6 +476,7 @@ function renderAll() {
   renderState(state);
   renderShop(state, { buy: buy, sell: sell, cut: cut, hire: hireCrew });
   renderComps(state, { buyComp: buyCompSlot, sellComp: sellCompSlot, useComp: useCompSlot });
+  renderHand(state, { useComp: useCompSlot });
   renderBreak(state);
 
   // Falling: the floor opens first, then the stats screen.

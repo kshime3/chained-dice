@@ -297,6 +297,8 @@ Like Clover Pit's phone. After **every won shift**, it rings before the next shi
 - "+$25" popups float up from winning bets, losses drop away in red.
 - ⚙ Settings: sound, quick dice, replay tutorials, reset progress.
 - Controls on two rows (chips + Roll; small buttons below).
+- **Top bar:** big green Cash and orange Still owed boxes; Shift, On table and Interest smaller.
+- **Your hand** (bigger screens, left column): cards, comps with Use buttons, perks.
 - **Whole table:** all bets always on the table; locked ones greyed with 🔒. Bets a chip can go on right now glow gold; the rest are greyed (Place, Hard Ways and Come wait for a point; the Fire Bet only before a shooter's first roll). The roll % chart is behind a "📊 Odds" button.
 - **Drop box:** pay in plaques of 10% of the debt (10 slots fill up), or "Pay off debt" at once.
 - **Mult pop + ding** whenever the mult rises; **four win sounds** by win size (share of the debt).

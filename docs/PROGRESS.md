@@ -10,12 +10,13 @@ Dated session log. Newest at the top.
 
 - Whole table on screen (locked bets greyed with 🔒), roll % chart behind a "📊 Odds" button. Still fits one screen on phones.
 - Bets you can play right now glow gold; others are greyed. Place bets and Hard Ways now wait for a point. tests.html: 418 checks.
+- Cash and Still owed are big coloured boxes in the top bar; the left column on bigger screens shows your cards, comps (with Use buttons) and perks.
 
 **Waiting on the owner**
 - Playtesting.
 
 **Exact next step**
-- Owner's choice (idea: use the empty left column on laptops for something useful).
+- Owner's choice.
 
 ## 2026-10-30: Session 8, continued (3D dice options)
 

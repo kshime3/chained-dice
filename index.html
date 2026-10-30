@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Chained Dice</title>
-  <link rel="stylesheet" href="css/style.css?v=20261030g">
+  <link rel="stylesheet" href="css/style.css?v=20261030i">
 </head>
 <body>
   <header class="top">
@@ -17,11 +17,11 @@
       </div>
     </div>
     <div class="money">
-      <div>Shift <strong id="shift-number"></strong></div>
-      <div>Cash <strong id="cash"></strong></div>
-      <div>On table <strong id="on-table"></strong></div>
-      <div>Paid <strong id="paid"></strong></div>
-      <div>Interest <strong id="interest"></strong></div>
+      <div class="minor">Shift <strong id="shift-number"></strong></div>
+      <div class="money-main cash-box" title="Money in your hand: what you can bet and pay with">Cash <strong id="cash"></strong></div>
+      <div class="money-main owed-box" title="What you still have to pay the dealer this shift">Still owed <strong id="owed"></strong><span class="of" id="debt-of"></span></div>
+      <div class="minor">On table <strong id="on-table"></strong></div>
+      <div class="minor">Interest <strong id="interest"></strong></div>
     </div>
     <div class="progress"><div id="progress-fill" class="progress-fill"></div></div>
     <div id="chain-bar" class="chain-bar"></div>
@@ -37,6 +37,7 @@
         <div id="challenge" class="challenge hidden"></div>
       </div>
       <div id="my-cards" class="my-cards"></div>
+      <div id="hand" class="hand"></div>
     </section>
 
     <section class="play">
@@ -248,22 +249,22 @@
   </div>
 
   <!-- Load order matters: config first, then logic, then display, then main. -->
-  <script src="js/config.js?v=20261030g"></script>
-  <script src="js/dice.js?v=20261030g"></script>
-  <script src="js/bets.js?v=20261030g"></script>
-  <script src="js/crew.js?v=20261030g"></script>
-  <script src="js/cards.js?v=20261030g"></script>
-  <script src="js/shop.js?v=20261030g"></script>
-  <script src="js/stats.js?v=20261030g"></script>
-  <script src="js/perks.js?v=20261030g"></script>
-  <script src="js/crafting.js?v=20261030g"></script>
-  <script src="js/comps.js?v=20261030g"></script>
-  <script src="js/unlocks.js?v=20261030g"></script>
-  <script src="js/rules.js?v=20261030g"></script>
-  <script src="js/shift.js?v=20261030g"></script>
-  <script src="js/sound.js?v=20261030g"></script>
-  <script src="js/ui.js?v=20261030g"></script>
-  <script src="js/tutorials.js?v=20261030g"></script>
-  <script src="js/main.js?v=20261030g"></script>
+  <script src="js/config.js?v=20261030i"></script>
+  <script src="js/dice.js?v=20261030i"></script>
+  <script src="js/bets.js?v=20261030i"></script>
+  <script src="js/crew.js?v=20261030i"></script>
+  <script src="js/cards.js?v=20261030i"></script>
+  <script src="js/shop.js?v=20261030i"></script>
+  <script src="js/stats.js?v=20261030i"></script>
+  <script src="js/perks.js?v=20261030i"></script>
+  <script src="js/crafting.js?v=20261030i"></script>
+  <script src="js/comps.js?v=20261030i"></script>
+  <script src="js/unlocks.js?v=20261030i"></script>
+  <script src="js/rules.js?v=20261030i"></script>
+  <script src="js/shift.js?v=20261030i"></script>
+  <script src="js/sound.js?v=20261030i"></script>
+  <script src="js/ui.js?v=20261030i"></script>
+  <script src="js/tutorials.js?v=20261030i"></script>
+  <script src="js/main.js?v=20261030i"></script>
 </body>
 </html>
