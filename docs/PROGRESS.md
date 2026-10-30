@@ -10,8 +10,10 @@ Dated session log. Newest at the top.
 
 - Step 3 built (friends playtesting meanwhile): comps, dice crafting and challenges arrive after the first run; house rules the run after first reaching shift 3; each announced (guaranteed unlock moment after run 1). tests.html: 427 checks.
 
+- Logo: `demos/logo-options.html` with four directions (Locked Die, Chained Die, Break the Chain, Linked Pair).
+
 **Waiting on the owner**
-- Friends playtest feedback; testing the first-run flow.
+- Pick a logo; friends playtest feedback; testing the first-run flow.
 
 **Exact next step**
 - Step 4: phone layout with tabs (Table / Hand / Crew) and the code cleanup.

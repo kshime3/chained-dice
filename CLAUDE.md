@@ -55,6 +55,7 @@ js/ui.js           display: drawing the screen
 js/tutorials.js    display: tutorial pages (intro, shop, comps, phone) and "seen" memory
 js/main.js         wires buttons to logic and display
 demos/dice-3d.html  preview: three 3D dice styles to choose from (not part of the game)
+demos/logo-options.html  preview: four logo directions to choose from (not part of the game)
 tools/simulate.js  balance simulator (Node.js, not part of the game): node tools/simulate.js 20000
 ```
 Testing shortcuts: add `?target=300` to the page address to set shift 1's debt; add `?fast` to skip the dice animation, splash screens and fall animation; add `?cards=doubleUp,greenDice` to start with those cards (ids are in js/cards.js). `?rule=houseDie` forces that house rule every shift (ids are in js/rules.js). `?unlockAll` makes everything available without touching saved progress. Combine with `&`, e.g. `?target=300&fast&cards=doublesCharm`.

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Logo Options</title>
+  <style>
+    :root { --bg: #1b1b1b; --card: #242424; --text: #f0f0f0; --muted: #bbb; }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 16px; background: var(--bg); color: var(--text); font-family: system-ui, sans-serif; }
+    h1 { margin: 0 0 4px; font-size: 1.5rem; }
+    .intro { color: var(--muted); margin: 0 0 16px; max-width: 900px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+    .option { background: var(--card); border-radius: 14px; padding: 14px; }
+    .option h2 { margin: 0 0 2px; font-size: 1.15rem; }
+    .option p { color: var(--muted); font-size: 0.9rem; margin: 0 0 10px; }
+    .big { display: flex; justify-content: center; padding: 8px 0; }
+    .big svg { width: 200px; height: 200px; }
+    .sizes { display: flex; align-items: flex-end; gap: 14px; justify-content: center; margin: 6px 0 12px; color: var(--muted); font-size: 0.75rem; }
+    .sizes div { text-align: center; }
+    .sizes svg { display: block; margin: 0 auto 3px; }
+    .on-light { background: #f3f3f3; border-radius: 8px; padding: 6px; }
+    .tab { display: flex; align-items: center; gap: 8px; background: #dee1e6; color: #222; border-radius: 8px 8px 0 0; padding: 6px 10px; width: 220px; font-size: 0.8rem; margin: 0 auto; }
+    .tab svg { width: 16px; height: 16px; flex: none; }
+    .header { display: flex; align-items: center; gap: 10px; justify-content: center; margin-top: 12px; padding: 10px; background: #151515; border-radius: 10px; }
+    .header svg { width: 44px; height: 44px; }
+    .header span { font-size: 1.5rem; font-weight: 800; letter-spacing: 2px; }
+  </style>
+</head>
+<body>
+  <h1>⛓🎲 Logo: pick a direction</h1>
+  <p class="intro">Four ideas for the Chained Dice logo. Each is shown big, as an app icon, at browser-tab sizes (where details disappear), and next to the title. Pick one, or mix parts ("A's shape with C's colors"), and I'll polish it and add it to the game.</p>
+  <div class="grid" id="grid"></div>
+
+  <script>
+    // Colors from the game: felt green, gold, ivory dice, red single pip, steel chain.
+    const C = { felt: "#0b6b3a", feltDark: "#063d21", gold: "#ffd84d", ivory: "#fdfdf8", edge: "#cfcfc4", pip: "#1b1b1b", red: "#c0392b", steel: "#c4cad3", steelDark: "#5d6570" };
+
+    // Rounded-square background, like an app icon.
+    const tile = (id) => `<defs><radialGradient id="felt-${id}" cx="50%" cy="40%" r="70%"><stop offset="0" stop-color="${C.felt}"/><stop offset="1" stop-color="${C.feltDark}"/></radialGradient></defs>
+      <rect x="4" y="4" width="248" height="248" rx="52" fill="url(#felt-${id})" stroke="${C.gold}" stroke-width="6"/>`;
+    const pip = (x, y, r = 13, fill = C.pip) => `<circle cx="${x}" cy="${y}" r="${r}" fill="${fill}"/>`;
+
+    // A chain link seen flat (an outlined oval) or edge-on (a thick bar), centred at x, y.
+    const flatLink = (x, y, angle) => `<g transform="translate(${x} ${y}) rotate(${angle})">
+      <rect x="-26" y="-15" width="52" height="30" rx="15" fill="none" stroke="${C.steelDark}" stroke-width="13"/>
+      <rect x="-26" y="-15" width="52" height="30" rx="15" fill="none" stroke="${C.steel}" stroke-width="8"/></g>`;
+    const edgeLink = (x, y, angle) => `<g transform="translate(${x} ${y}) rotate(${angle})">
+      <rect x="-26" y="-7" width="52" height="14" rx="7" fill="${C.steel}" stroke="${C.steelDark}" stroke-width="3"/></g>`;
+
+    const LOGOS = {
+      A: {
+        name: "A. Locked Die",
+        text: "A die that is a padlock: the shackle on top, the keyhole as its middle pip (red, like the game's single pip). Bold and simple, so it reads even at 16 pixels.",
+        svg: (id) => `${tile(id)}
+          <path d="M84 122 V88 a44 44 0 0 1 88 0 V122" fill="none" stroke="${C.steelDark}" stroke-width="26"/>
+          <path d="M84 122 V88 a44 44 0 0 1 88 0 V122" fill="none" stroke="${C.steel}" stroke-width="16"/>
+          <rect x="50" y="108" width="156" height="122" rx="26" fill="${C.ivory}" stroke="${C.edge}" stroke-width="4"/>
+          ${pip(86, 140)}${pip(170, 200)}
+          <circle cx="128" cy="160" r="15" fill="${C.red}"/><path d="M120 166 L136 166 L141 196 L115 196 Z" fill="${C.red}"/>`,
+      },
+      B: {
+        name: "B. Chained Die",
+        text: "A die with a steel chain wrapped across it. The most literal: you can see 'chained' and 'dice' at once. Chain detail softens at small sizes.",
+        svg: (id) => {
+          let chain = "";
+          const pts = [[18, 70], [52, 92], [86, 114], [120, 136], [154, 158], [188, 180], [222, 202]];
+          pts.forEach(([x, y], i) => (chain += i % 2 ? edgeLink(x, y, 33) : flatLink(x, y, 33)));
+          return `${tile(id)}
+            <g transform="rotate(-8 128 132)">
+              <rect x="54" y="58" width="148" height="148" rx="28" fill="${C.ivory}" stroke="${C.edge}" stroke-width="4"/>
+              ${pip(90, 94)}${pip(166, 94)}${pip(128, 132, 15, C.red)}${pip(90, 170)}${pip(166, 170)}
+            </g>${chain}`;
+        },
+      },
+      C: {
+        name: "C. Break the Chain",
+        text: "A die bursting through a snapped chain link, with gold sparks. Ties to the goal of the game: break all 8 links and walk out free.",
+        svg: (id) => `${tile(id)}
+          <path d="M64 96 A40 40 0 0 0 64 176" fill="none" stroke="${C.steelDark}" stroke-width="24" stroke-linecap="round" transform="rotate(-14 64 136)"/>
+          <path d="M64 96 A40 40 0 0 0 64 176" fill="none" stroke="${C.steel}" stroke-width="15" stroke-linecap="round" transform="rotate(-14 64 136)"/>
+          <path d="M192 80 A40 40 0 0 1 192 160" fill="none" stroke="${C.steelDark}" stroke-width="24" stroke-linecap="round" transform="rotate(-14 192 120)"/>
+          <path d="M192 80 A40 40 0 0 1 192 160" fill="none" stroke="${C.steel}" stroke-width="15" stroke-linecap="round" transform="rotate(-14 192 120)"/>
+          <g stroke="${C.gold}" stroke-width="7" stroke-linecap="round">
+            <path d="M96 64 L84 44"/><path d="M118 56 L118 32"/><path d="M140 62 L152 42"/>
+            <path d="M104 210 L92 228"/><path d="M152 206 L166 224"/>
+          </g>
+          <g transform="rotate(12 128 136)">
+            <rect x="80" y="88" width="96" height="96" rx="20" fill="${C.ivory}" stroke="${C.edge}" stroke-width="4"/>
+            ${pip(106, 114, 10)}${pip(128, 136, 11, C.red)}${pip(150, 158, 10)}
+          </g>`,
+      },
+      D: {
+        name: "D. Linked Pair",
+        text: "Two dice chained to each other, like crewmates at the table. Reads clearly as a dice game; the chain ties them together.",
+        svg: (id) => `${tile(id)}
+          <g transform="rotate(-12 74 92)">
+            <rect x="30" y="48" width="88" height="88" rx="18" fill="${C.ivory}" stroke="${C.edge}" stroke-width="4"/>
+            ${pip(52, 70, 9)}${pip(74, 92, 10, C.red)}${pip(96, 114, 9)}
+          </g>
+          <g transform="rotate(10 182 166)">
+            <rect x="138" y="122" width="88" height="88" rx="18" fill="${C.ivory}" stroke="${C.edge}" stroke-width="4"/>
+            ${pip(160, 144, 9)}${pip(204, 144, 9)}${pip(160, 188, 9)}${pip(204, 188, 9)}
+          </g>
+          ${flatLink(112, 126, 40)}${edgeLink(132, 142, 40)}${flatLink(152, 158, 40)}`,
+      },
+    };
+
+    const svg = (key, size, id) => `<svg viewBox="0 0 256 256" width="${size}" height="${size}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${LOGOS[key].name}">${LOGOS[key].svg(id)}</svg>`;
+    let n = 0;
+    const grid = document.getElementById("grid");
+    for (const key of Object.keys(LOGOS)) {
+      const L = LOGOS[key];
+      const box = document.createElement("section");
+      box.className = "option";
+      box.innerHTML = `<h2>${L.name}</h2><p>${L.text}</p>
+        <div class="big">${svg(key, 200, "big" + key)}</div>
+        <div class="sizes">
+          <div>${svg(key, 64, "a" + n++)}app icon</div>
+          <div>${svg(key, 32, "b" + n++)}32 px</div>
+          <div>${svg(key, 16, "c" + n++)}16 px</div>
+          <div class="on-light">${svg(key, 32, "d" + n++)}on light</div>
+        </div>
+        <div class="tab">${svg(key, 16, "e" + n++)} Chained Dice</div>
+        <div class="header">${svg(key, 44, "f" + n++)}<span>CHAINED DICE</span></div>`;
+      grid.appendChild(box);
+    }
+  </script>
+</body>
+</html>
