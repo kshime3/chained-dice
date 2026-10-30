@@ -169,22 +169,24 @@ function renderState(state) {
   const pointOn = state.point !== null;
   for (const [id, lockId, bet] of [["pass-line", "pass-lock", "pass"], ["dont-pass", "dont-lock", "dont"]]) {
     document.getElementById(id).classList.toggle("locked", pointOn && b[bet] > 0);
-    document.getElementById(id).classList.toggle("disabled", pointOn && b[bet] === 0);
     document.getElementById(lockId).textContent = pointOn && b[bet] > 0 ? "🔒 Locked" : "";
     document.getElementById(lockId).title = "Locked until the point is hit or a 7 rolls.";
   }
 
   // Dark Side Only: the Pass Line is closed all shift
-  if (!passAllowed(state)) {
-    document.getElementById("pass-line").classList.add("disabled");
-    document.getElementById("pass-lock").textContent = "Closed: Dark Side Only";
-  }
+  if (!passAllowed(state)) document.getElementById("pass-lock").textContent = "Closed: Dark Side Only";
 
   // Odds and Lay Odds open while a point is on, behind the matching line bet
-  for (const [id, bet, line] of [["odds", "odds", "pass"], ["lay", "lay", "dont"]]) {
-    const open = pointOn && b[line] > 0;
-    document.getElementById(id).classList.toggle("disabled", !open);
-    document.getElementById(bet + "-amount").textContent = open ? money(b[bet]) + " / max " + money(backingLimit(state, bet)) : "";
+  for (const [bet, line] of [["odds", "pass"], ["lay", "dont"]]) {
+    const on = pointOn && b[line] > 0;
+    document.getElementById(bet + "-amount").textContent = on ? money(b[bet]) + " / max " + money(backingLimit(state, bet)) : "";
+  }
+
+  // Highlight the bets a chip can go on right now; grey out the empty ones that can't take one.
+  for (const [id, bet] of [["pass-line", "pass"], ["dont-pass", "dont"], ["odds", "odds"], ["lay", "lay"], ["field", "field"]]) {
+    const open = betOpen(state, bet);
+    document.getElementById(id).classList.toggle("open", open);
+    document.getElementById(id).classList.toggle("disabled", !open && b[bet] === 0);
   }
 
   if (state.lastRoll) {
@@ -1207,22 +1209,23 @@ function showCollection() {
 function renderExtraBoard(state) {
   const board = document.getElementById("extra-board");
   const b = state.bets;
-  const pointOn = state.point !== null;
-  const tile = (bet, title, sub, off) => {
+  const tile = (bet, title, sub) => {
     const group = betGroup(bet);
     if (!available(state, group)) {
       return '<div class="bet-area extra-tile locked-bet" data-bet="' + bet + '" title="Locked: keep playing to unlock ' + BET_GROUPS[group].name + '"><div class="bet-title">' + title + " 🔒</div></div>";
     }
-    return '<div class="bet-area extra-tile' + (off ? " off" : "") + '" data-bet="' + bet + '" title="' + BET_GROUPS[group].text + '"><div class="bet-title">' + title +
+    const open = betOpen(state, bet);
+    const chips = b[bet] > 0 || (sub && sub.moved);
+    return '<div class="bet-area extra-tile' + (open ? " open" : chips ? "" : " disabled") + '" data-bet="' + bet + '" title="' + BET_GROUPS[group].text + '"><div class="bet-title">' + title +
       ' <span class="bet-amount">' + (b[bet] ? money(b[bet]) : "") + '</span></div><div class="bet-hint' + (sub.moved ? " show-hint" : "") + '">' + (sub.text || sub) + "</div></div>";
   };
   const moved = (prefix) => [4, 5, 6, 8, 9, 10].filter((n) => b[prefix + n] > 0).map((n) => "on " + n + ": " + money(b[prefix + n])).join(" · ");
-  let html = '<div class="extra-row">' + [4, 5, 6, 8, 9, 10].map((n) => tile("place" + n, "PLACE " + n, CONFIG.placePayouts[n].join(":"), !pointOn)).join("") + "</div>";
-  html += '<div class="extra-row">' + [4, 6, 8, 10].map((n) => tile("hard" + n, "HARD " + n, n / 2 + "+" + n / 2 + " · " + CONFIG.hardWaysPayouts[n] + ":1", !pointOn)).join("");
+  let html = '<div class="extra-row">' + [4, 5, 6, 8, 9, 10].map((n) => tile("place" + n, "PLACE " + n, CONFIG.placePayouts[n].join(":"))).join("") + "</div>";
+  html += '<div class="extra-row">' + [4, 6, 8, 10].map((n) => tile("hard" + n, "HARD " + n, n / 2 + "+" + n / 2 + " · " + CONFIG.hardWaysPayouts[n] + ":1")).join("");
   const comeOn = moved("come"), dcomeOn = moved("dcome");
-  html += tile("come", "COME", comeOn ? { text: comeOn, moved: true } : "7/11 win", !pointOn);
-  html += tile("dontCome", "DON'T COME", dcomeOn ? { text: dcomeOn, moved: true } : "2/3 win", !pointOn);
-  html += tile("fire", "🔥 FIRE", state.firePoints.length + " points · max " + money(fireMax(state)), state.turnRolls > 0 && !b.fire) + "</div>";
+  html += tile("come", "COME", comeOn ? { text: comeOn, moved: true } : "7/11 win");
+  html += tile("dontCome", "DON'T COME", dcomeOn ? { text: dcomeOn, moved: true } : "2/3 win");
+  html += tile("fire", "🔥 FIRE", state.firePoints.length + " points · max " + money(fireMax(state))) + "</div>";
   board.innerHTML = html;
   for (const el of board.querySelectorAll("[data-bet]")) el.onclick = () => placeBet(el.dataset.bet);
 }

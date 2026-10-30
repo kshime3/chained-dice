@@ -278,3 +278,6 @@ Display only, no rule changes. New player per-shift survival 58 / 42 / 48 / 50 /
 
 ## 2026-10-30: Drop box retest
 Plaques change only how a person pays (10% steps); the bots already pay the whole debt at once, so results are unchanged. No rescale.
+
+## 2026-10-30: Bet highlighting retest
+Place bets and Hard Ways can no longer be placed on a come-out, but they were "off" then anyway and the bots only place them with a point on. No change.

@@ -177,7 +177,11 @@ h1 { letter-spacing: 2px; font-size: 1.6rem; margin: 0; }
 .bet-row { display: flex; gap: 8px; }
 .bet-row .bet-area { flex: 1; }
 .bet-area.locked { border-style: dashed; }
-.bet-area.disabled { opacity: 0.4; }
+.bet-area.disabled { opacity: 0.3; cursor: not-allowed; }
+.bet-area.disabled:hover { background: none; }
+/* Bets a chip can go on right now */
+.bet-area.open { border-color: #ffd84d; box-shadow: 0 0 0 1px #ffd84d, 0 0 12px rgba(255, 216, 77, 0.45); }
+.bet-area.open:hover { background: rgba(255, 216, 77, 0.15); }
 
 .controls { margin: 8px 0 4px; display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 4px; }
 .chips { display: flex; }
@@ -560,7 +564,6 @@ body.falling .seat, body.falling .side > *, body.falling .table, body.falling .c
 .extra-tile { flex: 1 1 0; min-width: 0; margin-top: 0; padding: 4px; text-align: center; }
 .extra-tile .bet-title { font-size: 0.8rem; }
 .extra-tile .bet-hint { font-size: 0.65rem; }
-.extra-tile.off { opacity: 0.6; }
 .extra-note { margin: 4px 0 0; font-size: 0.7rem; }
 @media (max-width: 760px) {
   .extra-row { gap: 3px; margin-top: 3px; }

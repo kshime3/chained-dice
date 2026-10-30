@@ -134,10 +134,23 @@ function isFinalBreak(state) {
 // "locked", "noPoint" (Come bets need a point), "fireLate" (the shooter already rolled), "fireMax".
 function extraBetCheck(state, bet) {
   if (!available(state, betGroup(bet))) return "locked";
-  if ((bet === "come" || bet === "dontCome") && state.point === null) return "noPoint";
+  if (["comeBets", "placeBets", "hardWays"].includes(betGroup(bet)) && state.point === null) return "noPoint"; // these wait for a point
   if (bet === "fire" && state.turnRolls > 0) return "fireLate";
   if (bet === "fire" && state.bets.fire >= fireMax(state)) return "fireMax";
   return "ok";
+}
+
+// Can a chip go on this bet right now? (The table highlights these and greys out the rest.)
+function betOpen(state, bet) {
+  if (state.status !== "playing" || state.onBreak) return false;
+  const b = state.bets;
+  const pointOn = state.point !== null;
+  if (bet === "pass") return !pointOn && passAllowed(state) && b.dont === 0;
+  if (bet === "dont") return !pointOn && b.pass === 0;
+  if (bet === "odds") return pointOn && b.pass > 0 && b.odds < backingLimit(state, "odds");
+  if (bet === "lay") return pointOn && b.dont > 0 && b.lay < backingLimit(state, "lay");
+  if (bet === "field") return true;
+  return extraBetCheck(state, bet) === "ok";
 }
 
 // The Fire Bet is small: at most CONFIG.fireBetMaxX table minimums.

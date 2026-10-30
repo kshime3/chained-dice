@@ -9,6 +9,7 @@ Dated session log. Newest at the top.
 - Balance: unchanged (bots pay with the same logic; plaques only change how a person pays).
 
 - Whole table on screen (locked bets greyed with 🔒), roll % chart behind a "📊 Odds" button. Still fits one screen on phones.
+- Bets you can play right now glow gold; others are greyed. Place bets and Hard Ways now wait for a point. tests.html: 418 checks.
 
 **Waiting on the owner**
 - Playtesting.

@@ -37,7 +37,7 @@ function placeBet(betName) {
     const check = extraBetCheck(state, betName);
     const why = {
       locked: BET_GROUPS[betGroup(betName)].name + " are locked. Keep playing to unlock them.",
-      noPoint: BET_NAMES[betName] + " bets open once a point is set.",
+      noPoint: BET_NAMES[betName] + " opens once a point is set.",
       fireLate: "The Fire Bet goes down before a shooter's first roll.",
       fireMax: "The Fire Bet is at its max (" + money(fireMax(state)) + ").",
     };
@@ -53,8 +53,7 @@ function placeBet(betName) {
     state.cash -= amount;
     state.bets[betName] += amount;
     playSound("chip");
-    showMessage(BET_NAMES[betName] + (betName === "fire" ? "" : " bet") + " is now " + money(state.bets[betName]) + "." +
-      ((betGroup(betName) === "hardWays" || betGroup(betName) === "placeBets") && state.point === null ? " (Off until a point is set.)" : ""));
+    showMessage(BET_NAMES[betName] + (betName === "fire" ? "" : " bet") + " is now " + money(state.bets[betName]) + ".");
     renderState(state);
     return;
   }
