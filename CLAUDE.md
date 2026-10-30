@@ -15,6 +15,7 @@ The owner is a beginner coder working about an hour a day.
 - Every tunable number (buy-in, target, payouts, prices, rarity) lives in `js/config.js`.
 - Explain things in plain language. Ask before big decisions.
 - **Every milestone ends with a balance retest:** run `tools/simulate.js` (teach the bots any new mechanic first), compare per-shift survival with the last entry in `docs/BALANCE.md`, retune `CONFIG.shifts` if the curve drifts, and record the results there. The game should take many playthroughs to beat.
+- **Cache-busting:** index.html loads every CSS/JS file with `?v=YYYYMMDDx`. When committing a change to css/ or js/, bump that tag everywhere in index.html (one sed), so players' browsers fetch the new files together instead of mixing old and new.
 - **Never publish the game anywhere (itch.io or any other site) without the owner's explicit permission.** The owner shares the GitHub Pages link with friends themselves.
 
 ## Session routine
