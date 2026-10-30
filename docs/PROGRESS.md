@@ -2,6 +2,17 @@
 
 Dated session log. Newest at the top.
 
+## 2026-10-31: Session 9 (teaching craps)
+
+**Done**
+- Friends' feedback: they'd never played craps and found it confusing. Built: guided first shooter (coach), live "Wins / Loses" hints on every bet and the point marker, plain-English roll headlines, a 2-page first-visit intro. tests.html: 432 checks, all passing. Fits one screen on phones.
+
+**Waiting on the owner**
+- A friend who has never played trying the new start (fresh browser or private window).
+
+**Exact next step**
+- Phone layout with tabs (Table / Hand / Crew) and the code cleanup.
+
 ## 2026-10-30: Session 8, continued (check-in, run saving)
 
 **Done**

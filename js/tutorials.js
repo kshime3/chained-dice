@@ -2,6 +2,19 @@
 // Each tutorial is shown once per browser; "How to play" and the shop's "?" show them again.
 // Numbers come from config.js so the text stays correct when we tune.
 
+// First visit: just the story, then the coach teaches by doing. The full rules stay under "How to play".
+function introStartPages() {
+  return [
+    introPages()[0],
+    {
+      title: "Never played craps?",
+      body: "No problem. Craps is simpler than it looks: <strong>bet that the shooter wins</strong>, then watch the dice.<br><br>" +
+        "We'll walk you through your <strong>first shooter</strong> step by step. Every bet on the table also shows what wins and loses on the next roll.<br><br>" +
+        "The full rules are always under <strong>How to play</strong>.",
+    },
+  ];
+}
+
 function introPages() {
   const min = money(CONFIG.shifts[0].minBet);
   return [

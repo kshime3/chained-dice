@@ -164,7 +164,10 @@ function renderState(state) {
 
   // Point marker
   const puck = document.getElementById("puck");
-  puck.textContent = state.point === null ? "OFF · Come-out roll" : "ON · Point is " + state.point;
+  // Long wording on bigger screens, short on phones.
+  puck.innerHTML = state.point === null
+    ? '<strong>FIRST ROLL</strong> · <span class="hide-mobile">7 or 11 wins · 2, 3, 12 lose</span><span class="show-mobile">7/11 win, 2/3/12 lose</span>'
+    : "<strong>POINT " + state.point + '</strong> · <span class="hide-mobile">roll it again before a 7</span><span class="show-mobile">' + state.point + " before 7 wins</span>";
   puck.className = "puck " + (state.point === null ? "off" : "on");
 
   // Line bets lock while a point is on (the one you're not on is just closed)
@@ -184,6 +187,11 @@ function renderState(state) {
     document.getElementById(bet + "-amount").textContent = on ? money(b[bet]) + " / max " + money(backingLimit(state, bet)) : "";
   }
 
+  // What the next roll does for each bet, in plain words.
+  for (const [id, bet] of [["field-hint", "field"], ["pass-hint", "pass"], ["odds-hint", "odds"], ["dont-hint", "dont"], ["lay-hint", "lay"]]) {
+    document.getElementById(id).innerHTML = outcomeHint(state, bet);
+  }
+
   // Highlight the bets a chip can go on right now; grey out the empty ones that can't take one.
   for (const [id, bet] of [["pass-line", "pass"], ["dont-pass", "dont"], ["odds", "odds"], ["lay", "lay"], ["field", "field"]]) {
     const open = betOpen(state, bet);
@@ -196,6 +204,7 @@ function renderState(state) {
     drawDie("die2", state.lastRoll.dice[1]);
     document.getElementById("total").textContent = "Total: " + state.lastRoll.total;
   }
+  updateCoach(state); // the guided first shooter follows what is on screen
 }
 
 // The seats around the table. Finished shooters are dimmed.
@@ -932,32 +941,6 @@ function runStatsHtml(state) {
 }
 
 // Turn one roll into plain-language sentences.
-function describeRoll(total, results, pointBefore, pointAfter) {
-  const lines = ["Rolled " + total + "."];
-
-  for (const r of results) {
-    const name = BET_NAMES[r.bet];
-    if (r.outcome === "win") {
-      const shown = r.mult !== undefined && r.mult !== 1
-        ? " (" + money(r.baseWinnings) + " x " + r.mult + ")"
-        : "";
-      lines.push(name + " wins " + money(r.winnings) + shown + ".");
-    }
-    if (r.outcome === "lose") lines.push(name + " loses " + money(r.amount) + ".");
-    if (r.outcome === "move") lines.push(name + " moves to the " + r.to.replace(/\D/g, "") + ".");
-  }
-
-  if (pointBefore === null && pointAfter !== null) {
-    lines.push("The point is " + pointAfter + ". Roll another " + pointAfter + " before a 7 to win the Pass Line.");
-  } else if (pointBefore !== null && pointAfter === null) {
-    lines.push(total === pointBefore
-      ? "Point hit! Next roll is a new come-out."
-      : "Seven out! New shooter. Next roll is a new come-out.");
-  } else if (pointAfter !== null) {
-    lines.push("Still rolling for a " + pointAfter + ". A 7 ends it.");
-  }
-  return lines.join(" ");
-}
 
 // A full-screen splash (seven-out, point hit). Tap to skip; onDone runs after.
 let splashOpen = false;
@@ -1355,4 +1338,81 @@ function playOpening(ms) {
   };
   box.onclick = () => close(250);
   setTimeout(() => close(700), ms - 700);
+}
+
+// "Wins: 8 · Loses: 7" for a bet on the next roll, with what it pays when that helps.
+function outcomeHint(state, bet) {
+  const o = nextRollOutcomes(bet, state.point);
+  if (!o) {
+    if (bet === "odds" || bet === "lay" || /^(place|hard)/.test(bet)) return "Opens once a point is set";
+    return "";
+  }
+  const list = (t) => t.join(" ");
+  let pays = "";
+  if (bet === "field") pays = " · 2 pays x" + CONFIG.fieldPayouts[2] + ", 12 x" + CONFIG.fieldPayouts[12];
+  if (bet === "odds") pays = " · pays " + CONFIG.oddsPayouts[state.point].join(":");
+  if (bet === "lay") pays = " · pays " + CONFIG.layPayouts[state.point].join(":");
+  return '<span class="hint-win">Wins: ' + list(o.wins) + '</span> · <span class="hint-lose">Loses: ' + list(o.loses) + "</span>" + (o.note ? " · " + o.note : "") + pays;
+}
+
+// ---------- Plain-English roll results ----------
+
+// The big line after a roll, from your side of the table. Returns { text, kind } (kind: good, bad, neutral).
+function rollHeadline(total, pointBefore, pointAfter, line, sevenOut) {
+  const dont = line === "dont";
+  if (pointBefore === null) {
+    if (CONFIG.comeOutWinners.includes(total)) {
+      return dont ? { text: "❌ " + total + " on the first roll: your Don't Pass loses.", kind: "bad" }
+        : { text: "✅ " + total + " on the first roll: your Pass Line wins!", kind: "good" };
+    }
+    if (CONFIG.comeOutLosers.includes(total)) {
+      if (!dont) return { text: "❌ Craps! " + total + " on the first roll loses the Pass Line.", kind: "bad" };
+      return CONFIG.dontComeOutWinners.includes(total) ? { text: "✅ Craps " + total + ": your Don't Pass wins!", kind: "good" }
+        : { text: "➖ " + total + ": a tie for Don't Pass. Your bet stays.", kind: "neutral" };
+    }
+    return dont ? { text: "🎯 " + total + " is the point. A 7 before another " + total + " wins your Don't Pass.", kind: "neutral" }
+      : { text: "🎯 " + total + " is the point. Roll " + total + " again before a 7 to win.", kind: "neutral" };
+  }
+  if (total === pointBefore) {
+    return dont ? { text: "❌ The point (" + pointBefore + ") came again: your Don't Pass loses.", kind: "bad" }
+      : { text: "🎉 Point hit! " + pointBefore + " came again: your Pass Line wins!", kind: "good" };
+  }
+  if (sevenOut) {
+    return dont ? { text: "✅ Seven out: your Don't Pass wins!", kind: "good" }
+      : { text: "💀 A 7 came before the " + pointBefore + ": seven out. Your Pass Line loses and the dice move on.", kind: "bad" };
+  }
+  if (total === CONFIG.sevenOut && pointAfter !== null) return { text: "😮 A 7, but it's ignored this time. Still rolling for " + pointAfter + ".", kind: "neutral" };
+  return { text: "Rolled " + total + ": no decision for your line bet. Still rolling for " + pointBefore + " (a 7 ends it).", kind: "neutral" };
+}
+
+// The money line under it: "Pass Line +$10 · Odds +$12 · Field -$5".
+function rollDetails(results) {
+  const parts = [];
+  for (const r of results) {
+    if (r.outcome === "win") parts.push(BET_NAMES[r.bet] + " +" + money(r.winnings) + (r.mult !== undefined && r.mult !== 1 ? " (x" + r.mult + ")" : ""));
+    if (r.outcome === "lose") parts.push(BET_NAMES[r.bet] + " -" + money(r.amount));
+    if (r.outcome === "move") parts.push(BET_NAMES[r.bet] + " moves to the " + r.to.replace(/\D/g, ""));
+  }
+  return parts.join(" · ");
+}
+
+function showRollResult(headline, details, sevenOut) {
+  const box = document.getElementById("message");
+  box.innerHTML = "";
+  if (sevenOut) {
+    const big = document.createElement("div");
+    big.className = "seven-out-text";
+    big.textContent = "SEVEN OUT!";
+    box.appendChild(big);
+  }
+  const head = document.createElement("div");
+  head.className = "roll-headline " + headline.kind;
+  head.textContent = headline.text;
+  box.appendChild(head);
+  if (details) {
+    const rest = document.createElement("div");
+    rest.className = "roll-details";
+    rest.textContent = details;
+    box.appendChild(rest);
+  }
 }

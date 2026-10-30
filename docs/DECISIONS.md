@@ -282,3 +282,11 @@ Dated log of every decision and why. Newest at the bottom.
 - **Systems arrive over the first runs** (built): first run has no comps/dice crafting and no pit boss challenges; both arrive after the first run ends (falls + escapes >= 1). House rules (and the boss rule) arrive the run after you first reach shift 3. Each arrival is announced on the unlock screen ("New from your next run"), which also guarantees an unlock moment after run 1. Existing saves keep everything without announcements. Challenges were added to the list by Claude (owner can revert).
 - **Logo: C3 "Blood Pip"** (owner picked C, asked for darker since "if we fall, we die"): a bone die tears out of a snapped, rusted link over the glowing pit; the red pip bleeds. Used as the tab icon, home-screen icon (manifest) and next to the title.
 - **Opening animation** (owner): each time the game opens, the die rolls in leaving a blood trail (with drips), the chain snaps with embers, "CHAINED DICE" appears, then it fades (about 4 seconds, tap to skip, `?fast` skips). Silent, because browsers block sound until the first click.
+
+## 2026-10-31 (teaching craps)
+
+- **Friends' main feedback: "never played craps, it's confusing."** Owner chose three fixes plus a short intro:
+  - **Guided first shooter** (`js/coach.js`): brand-new players get a coach bubble with a pulsing highlight through their first turn (Dealer Break, Pass Line, roll, what the point is, optional Odds, keep rolling, point hit or seven out), explaining each real roll. "Skip tutorial" any time; replays via Settings "Show them again". Players who had already played skip it.
+  - **Live "what wins" hints:** every main bet shows "Wins: ... · Loses: ..." for the next roll (`nextRollOutcomes` in bets.js); the puck says "FIRST ROLL · 7 or 11 wins · 2, 3, 12 lose" or "POINT 8 · roll it again before a 7" (shorter on phones).
+  - **Plain-English roll results:** a coloured headline from your side of the table ("🎯 8 is the point...", "🎉 Point hit!", "💀 ... seven out") with the money per bet underneath.
+  - **Short intro:** first visit shows 2 pages (the story, "Never played craps?"); the full pages stay under How to play.

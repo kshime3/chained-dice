@@ -689,3 +689,29 @@ h1 { display: flex; align-items: center; }
   text-shadow: 0 0 18px rgba(158, 27, 20, 0.9); opacity: 0; animation: od-title 0.8s ease-out 1.9s forwards; }
 @keyframes od-title { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 .opening-skip { position: absolute; bottom: 18px; color: #8a7f6c; font-size: 0.8rem; }
+
+/* Plain-English bet hints */
+.hint-win { color: #9be7b4; font-weight: bold; }
+.hint-lose { color: #ffb3a7; font-weight: bold; }
+.puck strong { letter-spacing: 1px; }
+
+/* Plain-English roll results */
+.roll-headline { font-weight: bold; font-size: 1.05rem; }
+.roll-headline.good { color: #7dff9b; }
+.roll-headline.bad { color: #ff8f7f; }
+.roll-headline.neutral { color: #ffe08a; }
+.roll-details { font-size: 0.85rem; color: #ccc; }
+@media (max-width: 760px) { .roll-headline { font-size: 0.85rem; } .roll-details { font-size: 0.72rem; } }
+.show-mobile { display: none; }
+@media (max-width: 760px) { .show-mobile { display: inline; } .puck { white-space: nowrap; font-size: 0.78rem; } }
+
+/* The coach (guided first shooter) */
+.coach { position: fixed; z-index: 16; width: min(320px, calc(100vw - 16px)); background: #fff8dc; color: #1b1b1b; border: 3px solid #ffd84d;
+  border-radius: 12px; padding: 10px 12px; font-size: 0.9rem; line-height: 1.35; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6); }
+.coach.hidden { display: none; }
+.coach-buttons { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 8px; }
+.coach-buttons .big-button { font-size: 0.9rem; padding: 6px 14px; }
+.coach .link-button { color: #6b5a2e; margin-left: auto; }
+.coach-target { position: relative; z-index: 15; animation: coach-pulse 1.2s ease-in-out infinite; }
+@keyframes coach-pulse { 0%, 100% { box-shadow: 0 0 0 3px #ffd84d, 0 0 12px rgba(255, 216, 77, 0.6); } 50% { box-shadow: 0 0 0 6px #ffd84d, 0 0 24px rgba(255, 216, 77, 0.9); } }
+@media (max-width: 760px) { .coach { font-size: 0.8rem; padding: 8px 10px; } }

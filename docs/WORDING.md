@@ -121,3 +121,10 @@ Unchanged for shifts 1-5. Shifts 6-8 follow the existing x1.5 growth: $1,800, $2
 - Mult pop: "+0.5x mult".
 - Locked bet tile: "PLACE 6 🔒"; tapping it: "Place Bets are locked. Keep playing to unlock them." Odds pop-up: "📊 The odds right now". New-bet tutorial title: "New bet: Hard Ways".
 - Opening: "CHAINED DICE", "tap to skip".
+
+## Added 2026-10-31: teaching craps
+- Puck: "FIRST ROLL · 7 or 11 wins · 2, 3, 12 lose" (phone: "7/11 win, 2/3/12 lose"); "POINT 8 · roll it again before a 7" (phone: "8 before 7 wins").
+- Bet hints: "Wins: 7 11 · Loses: 2 3 12"; Odds/Lay/Place/Hard before a point: "Opens once a point is set".
+- Roll headlines: "✅ 7 on the first roll: your Pass Line wins!", "❌ Craps! 3 on the first roll loses the Pass Line.", "🎯 8 is the point. Roll 8 again before a 7 to win.", "🎉 Point hit! 8 came again: your Pass Line wins!", "💀 A 7 came before the 8: seven out. Your Pass Line loses and the dice move on.", "Rolled 6: no decision for your line bet. Still rolling for 8 (a 7 ends it)." (Don't Pass versions reversed.)
+- Intro page 2 "Never played craps?": "Craps is simpler than it looks: bet that the shooter wins, then watch the dice. We'll walk you through your first shooter step by step..."
+- Coach bubbles: see js/coach.js (Dealer Break, Pass Line, roll, point, Odds, keep rolling, point hit, seven out).

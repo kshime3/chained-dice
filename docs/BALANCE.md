@@ -293,3 +293,6 @@ No rule changes; no retest needed beyond the rule checks (421 passing).
 | Career median runs to first escape | 31 (smart), 27 (smart + comps): unchanged |
 
 No rescale.
+
+## 2026-10-31: Teaching craps
+Display and tutorials only; no rule changes. No retest needed (432 rule checks passing).

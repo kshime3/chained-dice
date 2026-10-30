@@ -213,3 +213,29 @@ function settleResults(state, results) {
     }
   }
 }
+
+// What the NEXT roll does for a bet, for the table's plain-English hints.
+// Returns { wins: [totals], loses: [totals], note } or null when the bet isn't working right now.
+function nextRollOutcomes(bet, point) {
+  const fieldWins = Object.keys(CONFIG.fieldPayouts).map(Number);
+  const all = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+  if (bet === "field") return { wins: fieldWins, loses: all.filter((t) => !fieldWins.includes(t)) };
+  if (bet === "pass" || bet === "come") {
+    if (bet === "pass" && point !== null) return { wins: [point], loses: [CONFIG.sevenOut] };
+    return { wins: CONFIG.comeOutWinners.slice(), loses: CONFIG.comeOutLosers.slice() };
+  }
+  if (bet === "dont" || bet === "dontCome") {
+    if (bet === "dont" && point !== null) return { wins: [CONFIG.sevenOut], loses: [point] };
+    return { wins: CONFIG.dontComeOutWinners.slice(), loses: CONFIG.comeOutWinners.slice(), note: "12 ties" };
+  }
+  if (bet === "odds") return point === null ? null : { wins: [point], loses: [CONFIG.sevenOut] };
+  if (bet === "lay") return point === null ? null : { wins: [CONFIG.sevenOut], loses: [point] };
+  const place = bet.match(/^place(\d+)$/);
+  if (place) return point === null ? null : { wins: [Number(place[1])], loses: [CONFIG.sevenOut] };
+  const hard = bet.match(/^hard(\d+)$/);
+  if (hard) {
+    const n = Number(hard[1]);
+    return point === null ? null : { wins: [n], loses: [CONFIG.sevenOut, n], note: n / 2 + "+" + n / 2 + " only" };
+  }
+  return null;
+}

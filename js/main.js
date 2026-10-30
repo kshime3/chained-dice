@@ -201,6 +201,7 @@ function finishRoll(rolled) {
   state.turnRolls += 1;
   const total = state.lastRoll.total;
   const pointBefore = state.point;
+  const lineBet = state.bets.pass > 0 ? "pass" : state.bets.dont > 0 ? "dont" : null; // whose side you're on, for the headline
   const results = resolveRoll(state.bets, total, pointBefore, { dice: rolled.dice, firePoints: state.firePoints });
   for (const r of results) r.plain = r.winnings; // before cards and mult, for the win screen
   const boosts = [];
@@ -238,7 +239,9 @@ function finishRoll(rolled) {
     compNotes.push("The dealer is impressed: a free " + COMPS[state.comps[state.comps.length - 1]].name + " comp!");
   }
   const notes = crewBefore.concat(before.notes, cardNotes, crewNotes, compNotes);
-  showMessage(describeRoll(total, results, pointBefore, state.point) + " " + notes.join(" "), sevenOut);
+  const headline = rollHeadline(total, pointBefore, state.point, lineBet, sevenOut);
+  showRollResult(headline, rollDetails(results) + (notes.length ? " " + notes.join(" ") : ""), sevenOut);
+  coachAfterRoll(state, total, pointBefore, sevenOut);
   saveRun(state); // settled: a refresh from here on won't settle this roll again
 
   // Bigger wins, bigger sounds (tiers are shares of the debt; a point hit is at least tier 2).
@@ -262,7 +265,10 @@ function finishRoll(rolled) {
   renderAll();
   if (pointHit && results.some((r) => r.bet === "pass" && r.outcome === "win")) {
     const wins = results.filter((r) => r.outcome === "win");
-    showSplash(pointWinSplash(pointBefore, wins, boosts), "good", CONFIG.winSplashMs, announceUnlocks);
+    showSplash(pointWinSplash(pointBefore, wins, boosts), "good", CONFIG.winSplashMs, () => {
+      announceUnlocks();
+      updateCoach(state);
+    });
   }
 }
 
@@ -654,11 +660,16 @@ renderAll();
 // The opening animation plays on top of whatever comes next.
 playOpening(CONFIG.openingMs);
 
-// First visit: the full introduction.
+// First visit: a short introduction, then the coach guides the first shooter.
+// (Players who have played before skip the coach.)
 if (!tutorialSeen("intro")) {
   markTutorialSeen("intro");
-  showTutorial(introPages());
+  startCoach();
+  showTutorial(introStartPages(), renderAll);
+} else if (!tutorialSeen("guided")) {
+  markTutorialSeen("guided");
 }
+window.addEventListener("resize", () => updateCoach(state));
 
 // A run in progress was saved: continue it, or start fresh.
 if (savedRun) {
