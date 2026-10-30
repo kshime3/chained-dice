@@ -2,6 +2,17 @@
 
 Dated session log. Newest at the top.
 
+## 2026-10-30: Session 8, continued (3D dice options)
+
+**Done**
+- `demos/dice-3d.html`: three working 3D dice styles to compare: A spin in place (CSS), B thrown across the felt (CSS), C lit 3D with shadows (Three.js library). All land on the rolled number.
+
+**Waiting on the owner**
+- Pick a dice style (C needs approval for a library).
+
+**Exact next step**
+- Build the chosen style into the game.
+
 ## 2026-10-30: Session 8, continued (win screen, recruit prices, new cards)
 
 **Done**
