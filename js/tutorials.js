@@ -87,7 +87,7 @@ function shopPages() {
     },
     {
       title: "Hire",
-      body: "Empty seat at the table? At a Dealer Break you can <strong>hire</strong> new crew (" + Math.round(CONFIG.hirePricePct * 100) + "% of the debt). Each has their own dice and style: hover over their seat to see them.<br><br>" +
+      body: "Empty seat at the table? At a Dealer Break you can <strong>hire</strong> new crew (10% to 40% of the debt: the better the shooter, the higher the price). Each has their own dice and style: hover over their seat to see them.<br><br>" +
         "New crew shoot last on the shift you hire them, then keep their seat for the rest of the run. The table holds " + CONFIG.maxSeats + ", you included.",
     },
     {

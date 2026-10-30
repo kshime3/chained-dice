@@ -47,7 +47,7 @@ const round5 = (n) => Math.max(5, Math.floor(n / 5) * 5);
 const HIRE_PREFERENCE = ["Lucky Lou", "The Professor", "Big Mo", "Snake", "Lefty", "Hot Rod", "Dealer Dee", "Ghost"];
 
 // Cards the bot likes best, first to last.
-const CARD_PREFERENCE = ["muggsy", "oddsAddict", "doubleUp", "pity", "redDice", "hotHand", "doublesCharm", "greenDice", "luckySeven", "snakeEyes", "rattlesnake", "encore", "highRoller", "rodsLighter", "deesLedger", "leftysGlove", "frontOfLine", "sleightOfHand"];
+const CARD_PREFERENCE = ["muggsy", "oddsAddict", "doubleUp", "pity", "loanShark", "redDice", "hotHand", "doublesCharm", "steadyHand", "comebackKid", "pointCollector", "greenDice", "luckySeven", "snakeEyes", "rattlesnake", "encore", "highRoller", "rodsLighter", "deesLedger", "leftysGlove", "frontOfLine", "sleightOfHand"];
 
 function atBreak(state, s) {
   if (state.cash >= amountOwed(state)) { deposit(state, amountOwed(state)); return; }
@@ -166,6 +166,12 @@ function playShift(s, carry) {
     takePerk(state, pick, state.crew.find((n) => n === "Jinx") || state.crew[0]);
   }
   if (s.startCards && !carry) { state.cards = s.startCards.slice(); state.stock = newStock(state); }
+  // Recruit test: seat this crew member from the start (a starter is swapped in if needed).
+  if (s.extraSeat && !carry) {
+    state.roster = ["Jinx", s.extraSeat, "You"];
+    state.crew = state.roster.slice();
+    setupTurn(state);
+  }
   let rolls = 0;
   while (state.status === "playing" && rolls < 3000) {
     if (state.onBreak) {
@@ -176,7 +182,7 @@ function playShift(s, carry) {
         // CUT_JINX=1: drop Jinx through the Trapdoor as soon as it's affordable.
         if (process.env.CUT_JINX && cuttableCrew(state).includes("Jinx") && state.cash - cutChainPrice(state) >= s.shopReserve) cutChain(state, "Jinx");
         for (const name of HIRE_PREFERENCE) {
-          if (state.hireOffers.includes(name) && state.cash - hirePrice(state) >= s.shopReserve) hire(state, name);
+          if (state.hireOffers.includes(name) && state.cash - hirePrice(state, name) >= s.shopReserve) hire(state, name);
         }
       }
       if (s.comps) useEdits(state);
@@ -199,7 +205,9 @@ function run(label, s, n, scale) {
   const seats = [];
   CONFIG.shifts = scale.map(([cash, debt, minBet], k) => ({ cash: cash, debt: debt, minBet: minBet || (ORIGINAL_SHIFTS[k] || { minBet: 5 }).minBet }));
   for (let i = 0; i < n; i++) {
-    if (process.env.LOCKED) resetProfile(); // every run is a brand-new player's first
+    // Every run starts from a clean profile (no Reputation bonuses), except VETERAN runs.
+    resetProfile();
+    if (process.env.VETERAN) profile().unlocked = Object.keys(UNLOCKS);
     let carry = null;
     for (let k = 0; k < scale.length; k++) {
       const r = playShift(s, carry);
@@ -271,6 +279,15 @@ const strategies = [
 const pick = process.argv[4] && process.argv[4] !== "cards" ? process.argv[4].split(",").map(Number) : null;
 
 console.log("Shifts: " + scale.map((s, i) => "shift " + (i + 1) + " $" + s[0] + " -> $" + s[1]).join(", ") + ". " + N + " runs each.\n");
+// "node tools/simulate.js 8000 "" recruits" measures each hireable crew member as a 4th seat.
+if (process.argv[4] === "recruits") {
+  const base = Object.assign({}, strategies[12][1]); // smart bot, no shop: the table stays as set
+  for (const name of [null].concat(CONFIG.recruits, CONFIG.crew.filter((n) => n !== "You" && n !== "Jinx"))) {
+    const s = Object.assign({}, base, { extraSeat: name });
+    console.log("   " + run(name ? "+ " + name : "(3 seats, no hire)", s, N, scale));
+  }
+  process.exit(0);
+}
 // "node tools/simulate.js 20000 100:200 cards" measures each card on its own.
 if (process.argv[4] === "cards") {
   // The smart bot (no shop, so only this card counts), owning the card from the start.

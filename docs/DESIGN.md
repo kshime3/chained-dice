@@ -279,6 +279,18 @@ Like Clover Pit's phone. After **every won shift**, it rings before the next shi
   - 📖 Collection button: found items first, then locked "???" tiles; "Reset all progress" link. Testing: `?unlockAll`.
 - **Tutorials [Built]:** a 2-page phone tutorial the first time it rings; a 7-page "How to play" intro on first visit (also via the How to play button), a 3-page shop tutorial (including Cut a chain) the first time the shop opens (also via the shop's ? button). [Planned] A phone tutorial. Each shows once per browser.
 
+## New cards and recruit prices  [Built, 2026-10-30]
+- **Six new cards** (all locked, hidden goals in `CONFIG.unlockGoals`):
+  - **Comeback Kid** (Uncommon): after any seven-out, the next shooter's first point pays x2. Goal: 100 seven-outs, all runs.
+  - **Point Collector** (Uncommon): +0.5x mult per different point the shooter has made this turn. Goal: one shooter makes 5 different points.
+  - **Loan Shark** (Rare): keep 75% of leftover money (instead of 50%). Goal: finish a shift with $2,500 left.
+  - **Hardway Hustler** (Uncommon, only once Hard Ways are unlocked): Hard Ways pay x2; any hard pair adds +0.5x mult for the turn. Goal: win 10 Hard Ways bets.
+  - **Steady Hand** (Uncommon, only once Place bets are unlocked): Place 6 and 8 pay +50%. Goal: win 30 Place bets.
+  - **Dice Collector** (Uncommon, "You" card): +0.25x mult on your turn per edited face. Goal: 4 edited faces at once.
+- **Reputation** continues: 27 unlocks +$100 starting cash, 30 +1 more comp slot, 33 start with a random rare card.
+- **Hire prices by strength** (`CONFIG.hirePrices`, measured in the simulator): Hot Rod 40% of the debt, Big Mo 30%, Lucky Lou 25%, Dealer Dee / Lefty / The Professor 20%, Ghost 15%, Snake 10%.
+- **Win screen** tidied: lead line, big "7 links to go", then Money left / Dealer's cut / You carry over, then next shift's cash, debt and table minimum.
+
 ## Polish  [Built, 2026-10-30]
 - **Save bets / Same bets** (rules in DECISIONS.md, logic `saveBets` / `rebet` in shift.js).
 - First chip on a line bet covers the table minimum; unaffordable chips switch to one you can afford.

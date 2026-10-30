@@ -361,8 +361,8 @@ function renderShop(state, handlers) {
     box.innerHTML = '<div class="card-name">⛓ ' + name + '</div><div class="card-rarity">crew</div><div class="card-text">' +
       info.dice + " " + info.style + "<br>Chance of a 7: " + percent(sevenChance(name, state)) + "</div>";
     const button = document.createElement("button");
-    button.textContent = "Hire " + money(hirePrice(state));
-    button.disabled = seatsFree <= 0 || !canSpend(state, hirePrice(state));
+    button.textContent = "Hire " + money(hirePrice(state, name));
+    button.disabled = seatsFree <= 0 || !canSpend(state, hirePrice(state, name));
     button.onclick = () => handlers.hire(name);
     box.appendChild(button);
     hireRow.appendChild(box);
@@ -669,7 +669,6 @@ function renderEndScreen(state, handlers) {
   }
   const kept = money(totalMoney(state));
   const next = shiftScale(state.shift + 1);
-  const nextLine = " Next: shift " + (state.shift + 1) + ". You'll get " + money(next.cash) + " more and owe " + money(next.debt) + ".";
   const linksLeft = totalLinks(state) - linksBroken(state);
   let title, body, primary, secondary = null, showStats = false, mood = "won";
 
@@ -686,11 +685,18 @@ function renderEndScreen(state, handlers) {
     showStats = true;
   } else if (state.status === "won") {
     title = state.savedByLink ? "THE SPARE LINK CATCHES YOU." : "THE FLOOR HOLDS.";
-    body = (state.savedByLink
+    const left = totalMoney(state);
+    const carry = Math.floor(left * carryShare(state));
+    body = '<p class="end-lead">' + (state.savedByLink
       ? "The floor opens, but your spare link snags on the edge and holds. The dealer sighs and forgives the rest of the debt."
-      : "The dealer reaches over and unlocks a link. Clank.") +
-      (state.endless ? " Endless shift " + state.shift + " survived." : " " + linksLeft + (linksLeft === 1 ? " link" : " links") + " to go.") +
-      " You have " + kept + " left. The dealer takes his cut, so you carry " + money(Math.floor(totalMoney(state) * CONFIG.carryOverShare)) + " into the next shift." + nextLine;
+      : "The dealer reaches over and unlocks a link. <em>Clank.</em>") + "</p>" +
+      '<div class="end-big">' + (state.endless ? "Endless shift " + state.shift + " survived" : linksLeft + (linksLeft === 1 ? " link" : " links") + " to go") + "</div>" +
+      '<div class="end-lines">' +
+      "<div><span>Money left</span><strong>" + money(left) + "</strong></div>" +
+      "<div><span>Dealer's cut (" + Math.round((1 - carryShare(state)) * 100) + "%)</span><strong>-" + money(left - carry) + "</strong></div>" +
+      '<div class="total"><span>You carry over</span><strong>' + money(carry) + "</strong></div>" +
+      "</div>" +
+      '<p class="end-next">Shift ' + (state.shift + 1) + ": +" + money(next.cash) + " cash · you'll owe <strong>" + money(next.debt) + "</strong> · table min " + money(next.minBet) + "</p>";
     primary = "Answer the phone";
   } else {
     mood = "fell";
@@ -706,7 +712,7 @@ function renderEndScreen(state, handlers) {
   }
 
   document.getElementById("end-title").textContent = title;
-  document.getElementById("end-body").textContent = body;
+  document.getElementById("end-body").innerHTML = body;
   document.getElementById("run-stats").innerHTML = showStats ? runStatsHtml(state) : "";
   const first = document.getElementById("play-again");
   first.textContent = primary;

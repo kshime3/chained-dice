@@ -51,6 +51,11 @@ function editChanges(state, dice, count) {
   return changes.slice(0, count);
 }
 
+// How many faces of your dice differ from a normal die (Dice Collector).
+function editedFaces(state) {
+  return ["left", "right"].reduce((sum, die) => sum + state.myDice[die].filter((v, i) => v !== i + 1).length, 0);
+}
+
 function isEdited(state) {
   return state.myDice.left.join() !== "1,2,3,4,5,6" || state.myDice.right.join() !== "1,2,3,4,5,6";
 }

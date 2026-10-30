@@ -2,6 +2,18 @@
 
 Dated session log. Newest at the top.
 
+## 2026-10-30: Session 8, continued (win screen, recruit prices, new cards)
+
+**Done**
+- Tidier win screen. Recruits priced by strength (Hot Rod 40% ... Snake 10%). Six new locked cards (Comeback Kid, Point Collector, Loan Shark, Hardway Hustler, Steady Hand, Dice Collector) with hidden goals; 3 more Reputation steps. Simulator: recruit test, profile reset fix. tests.html: 407 checks, all passing. Fits one screen on phones; 25 auto-played runs with no errors.
+- Balance: career median first escape 26-32 runs (target 30-60).
+
+**Waiting on the owner**
+- Playtesting; whether the pace feels right.
+
+**Exact next step**
+- Owner's choice: more cards (Crew Captain, Jinx Jar parked), press-and-hold help, 3D dice, or playtest fixes.
+
 ## 2026-10-30: Session 8 (polish pass)
 
 **Done**

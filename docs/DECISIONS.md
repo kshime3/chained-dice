@@ -263,3 +263,5 @@ Dated log of every decision and why. Newest at the bottom.
 - **Smarter betting:** the first chip on a line bet covers at least the table minimum; a chip you can't afford switches to the biggest one you can.
 - **Settings (⚙, replaces the sound button):** sound, quick dice, show tutorials again, reset progress.
 - Pop-ups leave 60px at the top so the header buttons never cover a box.
+- **Tidier win screen** (owner). **Recruits priced by strength** (owner chose "price all by strength"): simulator measured each as the third seat; Hot Rod turned out strongest (mult streaks), then Big Mo.
+- **Six new cards** (owner picked from 8 suggestions): Comeback Kid, Point Collector, Loan Shark, Hardway Hustler, Steady Hand, Dice Collector. All locked with hidden goals; Reputation ladder extended by 3 steps. Not picked (parked in IDEAS.md): Crew Captain, Jinx Jar.

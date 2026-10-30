@@ -44,6 +44,7 @@ function setupTurn(state, prevName, prevMult) {
   state.rerollUsed = false; // Reroll works once per shooter
   state.loadedDieUsed = false; // and so does Loaded Die
   state.louGain = 0;
+  state.hustleGain = 0;
   state.challenge = name === "You" ? newChallenge(state) : null; // pit boss challenge on your turn
 
   // Muggsy: after a point-7, this shooter's winnings are multiplied.

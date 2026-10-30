@@ -36,6 +36,13 @@ const UNLOCKS = {
   placeBets:     { kind: "bet", done: (c, g) => c.pointsHit >= g.placeBets },
   fireBet:       { kind: "bet", done: (c, g) => c.turnPoints >= g.fireBet },
   comeBets:      { kind: "bet", done: (c, g) => c.runPoints >= g.comeBets },
+  // Cards added 2026-10-30
+  comebackKid:    { kind: "card", done: (c, g) => c.sevenOuts >= g.comebackKid },
+  pointCollector: { kind: "card", done: (c, g) => c.turnPoints >= g.pointCollector },
+  loanShark:      { kind: "card", done: (c, g) => c.bestLeftover >= g.loanShark },
+  hardwayHustler: { kind: "card", done: (c, g) => c.hardWins >= g.hardwayHustler },
+  steadyHand:     { kind: "card", done: (c, g) => c.placeWins >= g.steadyHand },
+  diceCollector:  { kind: "card", done: (c, g) => c.editedFaces >= g.diceCollector },
 };
 
 const SAVE_KEY = "chainedDice.profile";
@@ -48,6 +55,7 @@ function newProfile() {
       dontWins: 0, jinxDropped: 0, crewWins: {}, ownTurnRolls: 0, ownTurnWon: 0, runHires: 0,
       edits: 0, nudges: 0, copycats: 0, pointsHit: 0, bigMultPoints: 0, hires: 0,
       hardPairs: 0, turnPoints: 0, runPoints: 0,
+      sevenOuts: 0, bestLeftover: 0, hardWins: 0, placeWins: 0, editedFaces: 0,
     },
     fresh: [], // just unlocked, waiting to be announced (not saved)
     freshPerks: [], // Reputation bonuses just earned, announced with them
@@ -131,6 +139,9 @@ function trackRollUnlocks(state, info) {
   c.oddsWon += wins.filter((r) => r.bet === "odds").reduce((sum, r) => sum + r.winnings, 0);
   c.dontWins += wins.filter((r) => r.bet === "dont").length;
   if (info.sevenOut && state.rollsSincePoint === 1) c.pointSevens += 1;
+  if (info.sevenOut) c.sevenOuts += 1;
+  c.hardWins += wins.filter((r) => /^hard\d+$/.test(r.bet)).length;
+  c.placeWins += wins.filter((r) => /^place\d+$/.test(r.bet)).length;
   if (info.pointHit) {
     c.pointsHit += 1;
     state.stats.runPoints = (state.stats.runPoints || 0) + 1;
@@ -154,6 +165,7 @@ function trackRollUnlocks(state, info) {
 function trackShiftWon(state) {
   const c = profile().counts;
   best("bestShift", state.shift);
+  best("bestLeftover", totalMoney(state));
   for (const name of state.roster) {
     if (name !== "You") c.crewWins[name] = (c.crewWins[name] || 0) + 1;
   }
@@ -181,11 +193,12 @@ function trackHire(state) {
   checkUnlocks();
 }
 
-function trackEdit(id) {
+function trackEdit(id, state) {
   const c = profile().counts;
   c.edits += 1;
   if (id === "nudge") c.nudges += 1;
   if (id === "copycat") c.copycats += 1;
+  if (state) best("editedFaces", editedFaces(state));
   checkUnlocks();
 }
 
@@ -222,7 +235,7 @@ function maxCards(state) {
 }
 
 function compSlots(state) {
-  return CONFIG.compSlots + (hasLegacy(state, "compSlot") ? 1 : 0);
+  return CONFIG.compSlots + (hasLegacy(state, "compSlot") ? 1 : 0) + (hasLegacy(state, "compSlot2") ? 1 : 0);
 }
 
 // A brand-new run gets its Reputation bonuses (called from newShiftState).
@@ -230,6 +243,7 @@ function applyLegacy(state) {
   state.legacy = earnedReputation();
   if (hasLegacy(state, "cash")) state.cash += CONFIG.reputationCash;
   if (hasLegacy(state, "cash2")) state.cash += CONFIG.reputationCash2;
+  if (hasLegacy(state, "cash3")) state.cash += CONFIG.reputationCash3;
   if (hasLegacy(state, "minusSeven")) state.perks.push("minusSeven"); // same as the phone perk
   if (hasLegacy(state, "minusSeven2")) state.perks.push("minusSeven");
   if (hasLegacy(state, "startCard")) {
@@ -237,6 +251,10 @@ function applyLegacy(state) {
     if (pool.length) state.cards.push(pool[Math.floor(Math.random() * pool.length)]);
   }
   if (hasLegacy(state, "spareLink")) state.cards.push("chainLink");
+  if (hasLegacy(state, "rareCard")) {
+    const rares = Object.keys(CARDS).filter((id) => CONFIG.cardRarity[id] === "rare" && !CARDS[id].crew && !CARDS[id].instant && !CARDS[id].needs && available(state, id) && !state.cards.includes(id));
+    if (rares.length) state.cards.push(rares[Math.floor(Math.random() * rares.length)]);
+  }
 }
 
 // The new bets, as unlockable groups.

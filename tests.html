@@ -34,6 +34,7 @@
     Object.assign(CONFIG, { hotHandPerWin: 0.5, rattlesnakeMult: 1, snakeEyesBonusPct: 0.1, luckySevenBonusPct: 0.05, muggsyNextShooterX: 2,
       greenDiceInterestStep: 0.005, wrongWayExtra: 0.5, deesLedgerExtra: 0.5, jinxShadowX: 2, highRollerX: 2,
       leftysGloveMult: 0, ghostStoryMult: 0, frontOfLineMult: 0 });
+    CONFIG.hirePrices = {}; // these checks expect everyone at 20%
     CONFIG.saveProgress = false; // never touch the player's saved unlocks
     CONFIG.unlockEverything = true; // older checks expect every card, comp and crew member
     CONFIG.startingCrew = 6; // older checks expect the full table; the 3-seat start is checked below
@@ -947,6 +948,47 @@
     check("A saved line bet is raised to a higher table minimum", mn.bets.pass, 15);
     const kept = newShiftState(); kept.savedBets = { pass: 5 }; kept.status = "won";
     check("Saved bets carry into the next shift", nextShift(kept).savedBets, { pass: 5 });
+    }
+
+    {
+    const savedPrices = CONFIG.hirePrices;
+    CONFIG.hirePrices = { "Big Mo": 0.3, "Snake": 0.1 };
+    const hp = newShiftState(); hp.debt = 1000;
+    check("Hire prices by strength: Big Mo 30%, Snake 10%, others 20%", [hirePrice(hp, "Big Mo"), hirePrice(hp, "Snake"), hirePrice(hp, "Lefty")], [300, 100, 200]);
+    CONFIG.hirePrices = savedPrices;
+    }
+
+    // New cards (2026-10-30)
+    {
+    const ck = newShiftState(); ck.cards = ["comebackKid"]; ck.point = 6;
+    applyCardsAfterRoll(ck, [], 7, 6, true);
+    const ckRes = [{ bet: "pass", amount: 10, outcome: "win", winnings: 10 }];
+    applyCardsBeforePayout(ck, ckRes, 8, 8);
+    check("Comeback Kid: the first point after a seven-out pays x2", ckRes[0].winnings, 20);
+    const ckRes2 = [{ bet: "pass", amount: 10, outcome: "win", winnings: 10 }];
+    applyCardsBeforePayout(ck, ckRes2, 8, 8);
+    check("...only that first point", ckRes2[0].winnings, 10);
+    const pc = newShiftState(); pc.cards = ["pointCollector"]; pc.firePoints = [4, 9];
+    check("Point Collector: 2 different points = +1x mult", effectiveMult(pc), 2);
+    const ls = newShiftState(); ls.cards = ["loanShark"]; ls.cash = 400; ls.status = "won";
+    check("Loan Shark: keep 75% of leftover money ($400 -> $300 carried)", nextShift(ls).carriedOver, 300);
+    const hh = newShiftState(); hh.cards = ["hardwayHustler"]; hh.lastRoll = { dice: [4, 4], total: 8 };
+    const hhRes = [{ bet: "hard8", amount: 10, outcome: "win", winnings: 90 }];
+    applyCardsBeforePayout(hh, hhRes, 8, 6);
+    applyCardsAfterRoll(hh, hhRes, 8, 6, false);
+    check("Hardway Hustler: Hard 8 pays x2 ($180) and +0.5x mult", [hhRes[0].winnings, hh.mult], [180, 1.5]);
+    const sh2 = newShiftState(); sh2.cards = ["steadyHand"];
+    const shRes = [{ bet: "place6", amount: 12, outcome: "win", winnings: 14 }, { bet: "place5", amount: 10, outcome: "win", winnings: 14 }];
+    applyCardsBeforePayout(sh2, shRes, 6, 8);
+    check("Steady Hand: Place 6 +50%, Place 5 unchanged", [shRes[0].winnings, shRes[1].winnings], [21, 14]);
+    const dc2 = newShiftState(); dc2.cards = ["diceCollector"]; dc2.myDice = { left: [1, 2, 3, 4, 5, 5], right: [6, 2, 3, 4, 5, 6] };
+    dc2.shooterIndex = dc2.crew.indexOf("You");
+    check("Dice Collector: 2 edited faces = +0.5x on your turn", [editedFaces(dc2), effectiveMult(dc2)], [2, 1.5]);
+    CONFIG.unlockEverything = false; resetProfile();
+    let leak = false;
+    for (let i = 0; i < 300; i++) { const st = newShiftState(); st.locked = st.locked.filter((id) => id !== "hardwayHustler" && id !== "steadyHand"); if (newStock(st).some((id) => id === "hardwayHustler" || id === "steadyHand")) leak = true; }
+    check("Hardway Hustler and Steady Hand only show up once their bet is unlocked", leak, false);
+    CONFIG.unlockEverything = true;
     }
 
     // Dice: 10,000 rolls stay in range, and 7 is the most common total

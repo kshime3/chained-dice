@@ -94,7 +94,7 @@ function useComp(state, index, face) {
     const before = state.myDice[face.die][face.index];
     if (editFace(state, face.die, face.index, face.value) !== "ok") return null;
     state.comps.splice(index, 1);
-    trackEdit(id);
+    trackEdit(id, state);
     return c.name + ": your " + face.die + " die's " + before + " is now a " + face.value + ".";
   }
   state.comps.splice(index, 1);

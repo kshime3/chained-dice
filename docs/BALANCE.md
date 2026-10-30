@@ -256,3 +256,19 @@ Careers (200 each): median runs to first escape **38** (smart) and **32** (smart
 ## 2026-10-30: Polish pass retest
 
 No rule changes. New player per-shift survival 57 / 41 / 52 / 51 / 47 / 41 / 33 / 25%, career median 36 runs: same as the 12b entry. No rescale.
+
+## 2026-10-30: New cards, recruit prices
+
+**Simulator fix:** normal runs now start each run from a clean profile (before, unlocks earned during a batch gave later runs Reputation bonuses, inflating results; recorded tables used LOCKED/VETERAN/CAREER modes and were not affected).
+
+Recruits as the third seat (Jinx + recruit + You, smart bot, no shop), % surviving shift 2: Hot Rod 36.7, Big Mo 27.5, Lucky Lou 26.2, Dealer Dee 23.8, Lefty 23.7, The Professor 22.7, Ghost 21.9, Snake 19.8 (random starter: 25.4). Prices set from this (DESIGN.md).
+
+New cards (smart bot, card owned from the start, % reaching shift 3; no card 18.9%, Hot Hand 32.2%): Hardway Hustler 33.1, Comeback Kid 30.1, Point Collector 26.2, Steady Hand 23.8, Loan Shark 22.5, Dice Collector 20.1 (bot rarely edits dice).
+
+| | Result |
+| --- | --- |
+| Brand-new player (smart bot) | survive shift 1 58%, shift 2 43%; walk out free ~0.1-0.2% |
+| Career median runs to first escape | 32 (smart), 26 (smart + comps); was 36-38 |
+| Unlocks found after 10 / 25 / 50 runs (of 34) | 10-13 / 20-25 / 24-27 |
+
+- Slightly faster than before (more card power), at the low end of the 30-60 target. Slowing the Comeback Kid and Loan Shark goals didn't move it. If playtests feel too quick, levers: `reputationEvery` 3 -> 4, or harder goals for Place bets / Hot Rod's price.

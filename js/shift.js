@@ -57,6 +57,7 @@ function newShiftState() {
     bets: emptyBets(),
     firePoints: [], // different points the current shooter has made (Fire Bet)
     savedBets: null, // bets remembered by "Save bets" (carry over between shifts)
+    comebackPending: false, // Comeback Kid: the next point after a seven-out pays extra
     point: null, // null means the next roll is a come-out roll
     shooterIndex: 0, // seat number of the current shooter (0 = first seat)
     onBreak: true, // a Dealer Break happens before each shooter and once at the end
@@ -199,6 +200,11 @@ function rebet(state) {
     }
   }
   return out;
+}
+
+// How much of your leftover money you keep into the next shift (the rest is the dealer's cut).
+function carryShare(state) {
+  return hasCard(state, "loanShark") ? CONFIG.loanSharkCarry : CONFIG.carryOverShare;
 }
 
 function passAllowed(state) {
@@ -347,7 +353,7 @@ function nextShift(old) {
   state.debt = scale.debt;
   state.minBet = scale.minBet;
   state.cashAdded = scale.cash;
-  state.carriedOver = Math.floor(totalMoney(old) * CONFIG.carryOverShare); // bets left on the table come back too
+  state.carriedOver = Math.floor(totalMoney(old) * carryShare(old)); // bets left on the table come back too
   state.dealerCut = totalMoney(old) - state.carriedOver;
   state.cash = state.carriedOver + scale.cash;
   state.cards = old.cards.slice();
@@ -393,8 +399,9 @@ function addEncoreTurn(state) {
 }
 
 // Hiring: new crew can join while a seat is empty (fewer than maxSeats at the table).
-function hirePrice(state) {
-  return roundTo5(CONFIG.hirePricePct * state.debt * priceX(state));
+function hirePrice(state, name) {
+  const pct = CONFIG.hirePrices[name] !== undefined ? CONFIG.hirePrices[name] : CONFIG.hirePricePct;
+  return roundTo5(pct * state.debt * priceX(state));
 }
 
 // Markup (a house rule) raises shop prices.
@@ -414,9 +421,9 @@ function newHireOffers(state) {
 function hire(state, name) {
   if (!state.hireOffers.includes(name)) return "gone";
   if (state.roster.length >= CONFIG.maxSeats) return "full";
-  if (!canSpend(state, hirePrice(state))) return "money";
-  state.cash -= hirePrice(state);
-  state.stats.spent += hirePrice(state);
+  if (!canSpend(state, hirePrice(state, name))) return "money";
+  state.cash -= hirePrice(state, name);
+  state.stats.spent += hirePrice(state, name);
   state.roster.push(name);
   state.hireOffers = state.hireOffers.filter((n) => n !== name);
   state.stats.hires += 1;

@@ -29,6 +29,13 @@ const CARDS = {
   highRoller:  { name: "High Roller",    crew: "You", text: "Your winnings are x" + CONFIG.highRollerX + " on your own turn." },
   frontOfLine: { name: "Front of the Line", crew: "You", text: "You shoot first every shift (from the next shift), and +" + CONFIG.frontOfLineMult + "x mult on your turn." },
   sleightOfHand: { name: "Sleight of Hand", crew: "You", text: "The shooter right after you rolls YOUR dice, crafted faces and all." },
+  // Added 2026-10-30
+  comebackKid: { name: "Comeback Kid", text: "After any seven-out, the next shooter's first point pays x" + CONFIG.comebackKidX + "." },
+  pointCollector: { name: "Point Collector", text: "+" + CONFIG.pointCollectorMult + "x mult for each different point the shooter has made this turn." },
+  loanShark:   { name: "Loan Shark", text: "The dealer's cut drops: you keep " + Math.round(CONFIG.loanSharkCarry * 100) + "% of your leftover money into the next shift." },
+  hardwayHustler: { name: "Hardway Hustler", needs: "hardWays", text: "Hard Ways pay x" + CONFIG.hardwayHustlerX + ", and any hard pair (2+2, 3+3, 4+4, 5+5) adds +" + CONFIG.hardwayHustlerMult + "x mult for the turn." },
+  steadyHand:  { name: "Steady Hand", needs: "placeBets", text: "Place bets on 6 and 8 pay " + Math.round(CONFIG.steadyHandExtra * 100) + "% extra." },
+  diceCollector: { name: "Dice Collector", crew: "You", text: "+" + CONFIG.diceCollectorMult + "x mult on your turn for every face you've edited on your dice." },
   chainLink:   { name: "Spare Link",      text: "When the floor opens, this link catches you: the shift counts as survived, a link breaks as normal, and the rest of the debt is forgiven. Used up." },
 };
 
@@ -47,7 +54,9 @@ function roundTo5(n) {
 function effectiveMult(state) {
   const hotHand = hasCard(state, "hotHand") ? state.hotStreak * CONFIG.hotHandPerWin : 0;
   const highRoller = hasCard(state, "highRoller") && state.crew[state.shooterIndex] === "You" ? CONFIG.highRollerX : 1;
-  const mult = (state.mult + hotHand) * state.payoutX * highRoller;
+  const collector = hasCard(state, "pointCollector") ? (state.firePoints || []).length * CONFIG.pointCollectorMult : 0;
+  const crafted = hasCard(state, "diceCollector") && state.crew[state.shooterIndex] === "You" ? editedFaces(state) * CONFIG.diceCollectorMult : 0;
+  const mult = (state.mult + hotHand + collector + crafted) * state.payoutX * highRoller;
   return rule(state, "coldDice") ? Math.min(1, mult) : mult; // boss rule: mult capped at 1x
 }
 
@@ -99,6 +108,12 @@ function multReasons(state) {
   if (hasCard(state, "highRoller") && state.crew[state.shooterIndex] === "You") reasons.push("High Roller: x" + CONFIG.highRollerX);
   if (hasCard(state, "hotHand") && state.hotStreak > 0) {
     reasons.push("Hot Hand: +" + state.hotStreak * CONFIG.hotHandPerWin + "x");
+  }
+  if (hasCard(state, "pointCollector") && (state.firePoints || []).length > 0) {
+    reasons.push("Point Collector: +" + state.firePoints.length * CONFIG.pointCollectorMult + "x");
+  }
+  if (hasCard(state, "diceCollector") && state.crew[state.shooterIndex] === "You" && editedFaces(state) > 0) {
+    reasons.push("Dice Collector: +" + editedFaces(state) * CONFIG.diceCollectorMult + "x");
   }
   return reasons;
 }
@@ -168,6 +183,27 @@ function applyCardsBeforePayout(state, results, total, pointBefore) {
     }
   }
 
+  // Comeback Kid: the first point after a seven-out pays extra.
+  if (state.comebackPending && pointBefore !== null && total === pointBefore) {
+    state.comebackPending = false;
+    if (hasCard(state, "comebackKid")) {
+      for (const r of results) if (r.outcome === "win") r.winnings *= CONFIG.comebackKidX;
+      notes.push("Comeback Kid: this point pays x" + CONFIG.comebackKidX + "!");
+    }
+  }
+
+  // Hardway Hustler: Hard Ways pay more.
+  if (hasCard(state, "hardwayHustler")) {
+    for (const r of results) if (/^hard\d+$/.test(r.bet) && r.outcome === "win") r.winnings *= CONFIG.hardwayHustlerX;
+  }
+
+  // Steady Hand: Place 6 and 8 pay more.
+  if (hasCard(state, "steadyHand")) {
+    for (const r of results) {
+      if ((r.bet === "place6" || r.bet === "place8") && r.outcome === "win") r.winnings = Math.floor(r.winnings * (1 + CONFIG.steadyHandExtra));
+    }
+  }
+
   // Bets that no longer have a decision drop out of the results.
   const kept = results.filter((r) => r.outcome !== "none");
   results.length = 0;
@@ -226,6 +262,18 @@ function applyCardsAfterRoll(state, results, total, pointBefore, sevenOut) {
       "The next shooter's winnings are x" + CONFIG.muggsyNextShooterX + ".");
   }
   if (pointBefore === null && state.point !== null) state.rollsSincePoint = 0;
+
+  // Comeback Kid waits for the next shooter's first point.
+  if (sevenOut) state.comebackPending = true;
+
+  // Hardway Hustler: a hard pair warms up the rest of the turn.
+  const dice = state.lastRoll ? state.lastRoll.dice : null;
+  if (hasCard(state, "hardwayHustler") && dice && dice[0] === dice[1] && [2, 3, 4, 5].includes(dice[0])) {
+    state.mult += CONFIG.hardwayHustlerMult;
+    state.hustleGain = (state.hustleGain || 0) + CONFIG.hardwayHustlerMult;
+    setMultNote(state, "Hardway Hustler", "Hardway Hustler: +" + state.hustleGain + "x");
+    notes.push("Hardway Hustler: hard " + total + "! +" + CONFIG.hardwayHustlerMult + "x mult.");
+  }
 
   return notes;
 }

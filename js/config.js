@@ -85,6 +85,12 @@ const CONFIG = {
     placeBets: 150,     // points hit, all runs
     fireBet: 4,         // different points made by one shooter in one turn
     comeBets: 15,       // points hit in one run
+    comebackKid: 100,   // seven-outs, all runs
+    pointCollector: 5,  // different points made by one shooter in one turn
+    loanShark: 2500,    // money left over when you win a shift
+    hardwayHustler: 10, // Hard Ways bets won, all runs
+    steadyHand: 30,     // Place bets won, all runs
+    diceCollector: 4,   // faces edited on your dice at once
   },
   // Reputation: every few unlocks earns the next lasting bonus (from the next run on).
   reputationEvery: 3,
@@ -97,14 +103,20 @@ const CONFIG = {
     { id: "minusSeven2", text: "-1 more way to roll 7 on everyone's dice" },
     { id: "cash2", text: "+$50 more starting cash" },
     { id: "spareLink", text: "Start each run with a Spare Link" },
+    { id: "cash3", text: "+$100 more starting cash" },
+    { id: "compSlot2", text: "+1 more comp slot" },
+    { id: "rareCard", text: "Start each run with a random rare card" },
   ],
   reputationCash: 25,       // the first starting-cash bonus
   reputationCash2: 50,      // the second one
+  reputationCash3: 100,     // the third one
   reputationCardRarity: "uncommon", // the starting card's rarity
   startingCrew: 3,    // seats filled at the start of a run, including you (the rest are hired)
   alwaysStarts: ["Jinx"], // crew who are always at the table when a run starts
   hireOffers: 2,      // candidates offered at each Break
-  hirePricePct: 0.2,  // hiring costs this share of the debt
+  hirePricePct: 0.2,  // hiring costs this share of the debt...
+  // ...except these, priced by how much they help (simulator, 2026-10-30).
+  hirePrices: { "Hot Rod": 0.4, "Big Mo": 0.3, "Lucky Lou": 0.25, "Ghost": 0.15, "Snake": 0.1 },
   professorOddsX: 2,  // The Professor: Odds and Lay Odds limits are this many times bigger on his turn
   luckyLouMult: 1,    // Lucky Lou: + this much mult every time he hits a point
   // Ghost's right die is evens-only or odds-only, picked at the start of each turn.
@@ -156,6 +168,12 @@ const CONFIG = {
     highRoller: "uncommon",
     frontOfLine: "common",
     sleightOfHand: "uncommon",
+    comebackKid: "uncommon",
+    pointCollector: "uncommon",
+    loanShark: "rare",
+    hardwayHustler: "uncommon",
+    steadyHand: "uncommon",
+    diceCollector: "uncommon",
   },
 
   // Card numbers
@@ -179,6 +197,13 @@ const CONFIG = {
   leftysGloveMult: 1,         // Lefty's Glove: +mult on Lefty's turn
   ghostStoryMult: 1,          // Ghost Story: +mult on Ghost's turn
   frontOfLineMult: 1,         // Front of the Line: +mult on your own turn
+  comebackKidX: 2,            // Comeback Kid: after a seven-out, the next shooter's first point pays x this
+  pointCollectorMult: 0.5,    // Point Collector: +mult per different point this shooter has made
+  loanSharkCarry: 0.75,       // Loan Shark: share of leftover money you keep (instead of carryOverShare)
+  hardwayHustlerX: 2,         // Hardway Hustler: Hard Ways winnings x this
+  hardwayHustlerMult: 0.5,    // Hardway Hustler: +mult for the turn on any hard pair (2+2, 3+3, 4+4, 5+5)
+  steadyHandExtra: 0.5,       // Steady Hand: Place 6 and 8 winnings +50%
+  diceCollectorMult: 0.25,    // Dice Collector: +mult on your turn per edited face
 
   // The Pit Boss phone: after each won shift, pick 1 of these many different perks.
   phoneChoices: 3,
