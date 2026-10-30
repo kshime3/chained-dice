@@ -26,6 +26,7 @@
   <script src="js/comps.js"></script>
   <script src="js/unlocks.js"></script>
   <script src="js/rules.js"></script>
+  <script src="js/save.js"></script>
   <script src="js/shift.js"></script>
   <script>
     // Tests use fixed numbers, so tuning config.js doesn't break them.
@@ -1019,6 +1020,22 @@
     check("Place bets can't go down on a come-out", extraBetCheck(newShiftState(), "place6"), "noPoint");
     const br = newShiftState();
     check("Nothing is open during a Dealer Break", open(br), []);
+    }
+
+    // Saving the run in progress (uses a test-only copy of the storage)
+    {
+    const realStorage = localStorage.getItem("chainedDice.run");
+    CONFIG.saveProgress = true;
+    const sv = newShiftState(); sv.stats.rolls = 3; sv.cash = 123; sv.bets.pass = 5;
+    saveRun(sv);
+    const back = loadRun();
+    check("A saved run comes back exactly", [back.cash, back.bets.pass, back.stats.rolls], [123, 5, 3]);
+    const fresh = newShiftState(); saveRun(fresh);
+    check("A brand-new run with no rolls isn't offered", loadRun(), null);
+    sv.status = "fell-short"; saveRun(sv);
+    check("When the floor opens, the save is cleared", localStorage.getItem("chainedDice.run"), null);
+    CONFIG.saveProgress = false;
+    if (realStorage) localStorage.setItem("chainedDice.run", realStorage);
     }
 
     // Dice: 10,000 rolls stay in range, and 7 is the most common total

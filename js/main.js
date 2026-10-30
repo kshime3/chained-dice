@@ -2,6 +2,9 @@
 
 // Testing shortcut: ?unlockAll makes every card, comp and crew member available (nothing is saved).
 if (new URLSearchParams(location.search).has("unlockAll")) CONFIG.unlockEverything = true;
+// A saved run in progress is offered when the page opens (see the end of this file).
+const savedRun = loadRun();
+let awaitingResume = !!savedRun; // don't save over it until the player chooses
 let state = newShiftState();
 giveTestCards(state);
 giveTestRule(state);
@@ -145,6 +148,8 @@ function roll() {
 
   // The result is decided now; the animation just shows it.
   const rolled = rollDice(currentDice(state), nextRollPairs(state));
+  state.pendingRoll = rolled; // saved now, so a refresh mid-roll can't undo it
+  saveRun(state);
   rolling = true;
   playSound("rattle");
   animateDice(rolled.dice, CONFIG.diceRollMs, () => {
@@ -174,6 +179,8 @@ function offerRerollOrFinish(rolled) {
       state.loadedDieUsed = true;
       next = rerollOneDie(currentDice(state), rolled, choice === "left" ? 0 : 1);
     }
+    state.pendingRoll = next;
+    saveRun(state);
     rolling = true;
     playSound("rattle");
     const keep = choice === "both" ? undefined : choice === "left" ? 1 : 0; // Loaded Die: the other die stays put
@@ -186,6 +193,7 @@ function offerRerollOrFinish(rolled) {
 
 // Settle every bet once the dice land.
 function finishRoll(rolled) {
+  delete state.pendingRoll;
   const moneyBefore = totalMoney(state);
   const shooter = state.crew[state.shooterIndex];
   const odds = diceOdds(currentDice(state), nextRollPairs(state));
@@ -231,6 +239,7 @@ function finishRoll(rolled) {
   }
   const notes = crewBefore.concat(before.notes, cardNotes, crewNotes, compNotes);
   showMessage(describeRoll(total, results, pointBefore, state.point) + " " + notes.join(" "), sevenOut);
+  saveRun(state); // settled: a refresh from here on won't settle this roll again
 
   // Bigger wins, bigger sounds (tiers are shares of the debt; a point hit is at least tier 2).
   const won = results.filter((r) => r.outcome === "win").reduce((sum, r) => sum + r.winnings, 0);
@@ -440,12 +449,8 @@ function startNextShift() {
   showBreakMessage("");
   showMessage("Shift " + state.shift + " begins.");
   renderAll();
-  playSound("ring");
-  showPhone(state, phoneOffer(state), (id, target) => {
-    takePerk(state, id, target);
-    showBreakMessage("New perk: " + perkInfo(id).name + (target ? " (" + target + "'s seat dropped away)" : "") + ".");
-    renderAll();
-  });
+  state.phoneOffer = phoneOffer(state); // saved, so a refresh shows the same offer
+  answerPhone();
   let pages = [];
   if (!tutorialSeen("phone")) {
     markTutorialSeen("phone");
@@ -456,6 +461,18 @@ function startNextShift() {
     pages = pages.concat(houseRulePages());
   }
   if (pages.length) showTutorial(pages);
+}
+
+// The Pit Boss phone: pick one of the offered perks.
+function answerPhone() {
+  playSound("ring");
+  renderAll();
+  showPhone(state, state.phoneOffer, (id, target) => {
+    delete state.phoneOffer;
+    takePerk(state, id, target);
+    showBreakMessage("New perk: " + perkInfo(id).name + (target ? " (" + target + "'s seat dropped away)" : "") + ".");
+    renderAll();
+  });
 }
 
 function playAgain() {
@@ -498,6 +515,7 @@ function renderAll() {
   }
   announceUnlocks();
   explainNewBets();
+  if (!awaitingResume) saveRun(state);
 }
 
 // The first time an unlocked bet is on the table in a run, explain it.
@@ -634,4 +652,39 @@ renderAll();
 if (!tutorialSeen("intro")) {
   markTutorialSeen("intro");
   showTutorial(introPages());
+}
+
+// A run in progress was saved: continue it, or start fresh.
+if (savedRun) {
+  const where = savedRun.endless ? "endless shift " + savedRun.shift : "shift " + savedRun.shift;
+  showChoice("Welcome back", "You have a run in progress: " + where + ", " + money(savedRun.cash) + " cash, " +
+    money(savedRun.debt - savedRun.deposited) + " still owed.",
+    [{ label: "Continue run", value: "continue" }, { label: "Start a new run", value: "new" }], (choice) => {
+      awaitingResume = false;
+      if (choice === "new") {
+        clearRun();
+        renderAll(); // saves the fresh run
+        return;
+      }
+      resumeRun(savedRun);
+    }, { cancel: false });
+}
+
+// Put a saved run back on the table, finishing a roll or phone call that was cut off.
+function resumeRun(saved) {
+  state = saved;
+  showBreakMessage("");
+  showMessage("Welcome back. Your run continues.");
+  if (state.lastRoll) {
+    drawDie("die1", state.lastRoll.dice[0]);
+    drawDie("die2", state.lastRoll.dice[1]);
+  }
+  renderAll();
+  if (state.pendingRoll) {
+    drawDie("die1", state.pendingRoll.dice[0]);
+    drawDie("die2", state.pendingRoll.dice[1]);
+    offerRerollOrFinish(state.pendingRoll);
+  } else if (state.phoneOffer) {
+    answerPhone();
+  }
 }

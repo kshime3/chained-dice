@@ -101,3 +101,10 @@ Parked ideas and later features. Not in v1 unless moved into the design.
 ## Card ideas not picked yet (2026-10-30)
 - **Crew Captain** (Uncommon): +0.5x mult for every seat filled beyond 3.
 - **Jinx Jar** (Common): whenever Jinx sevens out, you get 5% of the debt.
+
+## Planned next (owner agreed, 2026-10-30)
+1. Friends playtest round (owner shares the link; collect where people quit and what confuses them).
+2. Systems that arrive over the first runs + a guaranteed early unlock.
+3. Phone layout with tabs (Table / Hand / Crew) and a code cleanup (split ui.js, an automatic play-through in tests.html).
+4. Builds: themed cards that reward a strategy (dark side, hard ways, crew), shop leaning toward your theme.
+5. Art (crew portraits, dungeon-casino look, chain motif) and a quiet background music loop.

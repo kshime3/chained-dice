@@ -281,3 +281,6 @@ Plaques change only how a person pays (10% steps); the bots already pay the whol
 
 ## 2026-10-30: Bet highlighting retest
 Place bets and Hard Ways can no longer be placed on a come-out, but they were "off" then anyway and the bots only place them with a point on. No change.
+
+## 2026-10-30: Run saving
+No rule changes; no retest needed beyond the rule checks (421 passing).

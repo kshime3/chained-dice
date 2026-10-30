@@ -649,7 +649,8 @@ function showWorkshop(state, edit, onApply, onCancel) {
 }
 
 // A small pick-one screen. options: [{ label, value }]. onChoose(value) or onChoose(null) for Cancel.
-function showChoice(title, text, options, onChoose) {
+// opts.cancel: false hides the Cancel button (the player must pick).
+function showChoice(title, text, options, onChoose, opts = {}) {
   const box = document.getElementById("choice");
   document.getElementById("choice-title").textContent = title;
   document.getElementById("choice-text").textContent = text;
@@ -666,10 +667,12 @@ function showChoice(title, text, options, onChoose) {
     b.onclick = () => done(o.value);
     buttons.appendChild(b);
   }
-  const cancel = document.createElement("button");
-  cancel.textContent = "Cancel";
-  cancel.onclick = () => done(null);
-  buttons.appendChild(cancel);
+  if (opts.cancel !== false) {
+    const cancel = document.createElement("button");
+    cancel.textContent = "Cancel";
+    cancel.onclick = () => done(null);
+    buttons.appendChild(cancel);
+  }
   box.classList.remove("hidden");
 }
 

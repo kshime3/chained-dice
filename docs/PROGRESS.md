@@ -2,6 +2,18 @@
 
 Dated session log. Newest at the top.
 
+## 2026-10-30: Session 8, continued (check-in, run saving)
+
+**Done**
+- Check-in: owner agreed the plan (DECISIONS.md).
+- Built run saving: continue a run after a refresh or a closed tab; a roll or phone call cut off mid-way is finished the same way (no undo). tests.html: 421 checks, all passing.
+
+**Waiting on the owner**
+- Testing run saving; then the friends playtest round.
+
+**Exact next step**
+- Bring systems in over the first runs (comps and dice crafting after the first run, house rules after first reaching shift 3), plus a guaranteed early unlock.
+
 ## 2026-10-30: Session 8, continued (drop box, mult pop, win sounds)
 
 **Done**
