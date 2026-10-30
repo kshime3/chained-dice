@@ -246,7 +246,7 @@ const CONFIG = {
   // Presentation
   soundVolume: 0.5, // 0 = silent, 1 = full volume (the mute button turns sound off)
   fallMs: 3200,     // how long the floor-opening animation lasts when you fall
-  diceRollMs: 600, // how long the dice-rolling animation lasts (0 = no animation)
+  diceRollMs: 1000, // how long the dice-rolling animation lasts (0 = no animation)
   sevenOutSplashMs: 5000, // how long the SEVEN OUT screen shows before the Dealer Break (tap skips)
   betPopMs: 1400,         // how long a "+$25" win popup floats
   unlockSplashMs: 6000,   // how long the "Unlocked" screen shows (tap skips)

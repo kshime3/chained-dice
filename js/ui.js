@@ -10,9 +10,10 @@ const PIP_SPOTS = {
   6: [0, 2, 3, 5, 6, 8],
 };
 
-// The two table dice are 3D cubes (CSS). Each face shows one value; the cube turns
-// so the rolled value faces you. Opposite faces add up to 7.
-const FACE_TURN = { 1: [0, 0], 6: [0, 180], 3: [0, -90], 4: [0, 90], 5: [-90, 0], 2: [90, 0] }; // [x, y] degrees
+// The two table dice are 3D cubes (CSS), seen from above like a real table:
+// the rolled value ends up on TOP. Opposite faces add up to 7.
+// TOP_TURN: the [x, y] turn (degrees) that puts each value's face on top.
+const TOP_TURN = { 1: [90, 0], 6: [90, 180], 3: [90, -90], 4: [90, 90], 5: [0, 0], 2: [180, 0] };
 
 function buildCube(die) {
   if (die.cube) return die.cube;
@@ -25,33 +26,47 @@ function buildCube(die) {
     cube.appendChild(face);
   }
   die.cube = cube;
-  die.turn = [0, 0];
+  die.turn = { x: 0, y: 0, z: 0 };
   return cube;
 }
 
-// Show a value right away (no tumble).
+function setTurn(die) {
+  die.cube.style.transform = "rotateZ(" + die.turn.z + "deg) rotateX(" + die.turn.x + "deg) rotateY(" + die.turn.y + "deg)";
+}
+
+// Show a value right away (no animation).
 function drawDie(id, value) {
   const die = document.getElementById(id);
   const cube = buildCube(die);
-  die.turn = FACE_TURN[value].slice();
+  die.turn = { x: TOP_TURN[value][0], y: TOP_TURN[value][1], z: 0 };
   cube.style.transition = "none";
-  cube.style.transform = "rotateX(" + die.turn[0] + "deg) rotateY(" + die.turn[1] + "deg)";
+  setTurn(die);
   void cube.offsetWidth; // apply now, before the transition comes back
   cube.style.transition = "";
 }
 
-// Tumble a die a few whole turns and land on a value, with a hop.
-function tumbleDie(id, value, ms, extraTurns) {
+// The nearest angle to "from" that looks the same as "to" (keeps extra spinning down).
+function nearestTurn(from, to) {
+  const d = ((((to - from) % 360) + 540) % 360) - 180;
+  return from + d;
+}
+
+// Toss a die up and back, then let it land and roll forward onto its value.
+// Most of the turning is one forward roll (about the axis the die rolls over).
+function tumbleDie(id, value, ms) {
   const die = document.getElementById(id);
   const cube = buildCube(die);
-  const [tx, ty] = FACE_TURN[value];
-  die.turn = [Math.ceil(die.turn[0] / 360) * 360 + 720 + tx, Math.ceil(die.turn[1] / 360) * 360 + 360 * extraTurns + ty];
+  die.turn = {
+    x: nearestTurn(die.turn.x, TOP_TURN[value][0]),
+    y: nearestTurn(die.turn.y, TOP_TURN[value][1]),
+    z: die.turn.z + 360, // one full forward roll
+  };
   cube.style.transitionDuration = ms + "ms";
-  cube.style.transform = "rotateX(" + die.turn[0] + "deg) rotateY(" + die.turn[1] + "deg)";
+  setTurn(die);
   for (const part of [die.querySelector(".die-hop"), die.querySelector(".die-shadow")]) {
     part.style.animationDuration = ms + "ms";
     part.classList.remove("go");
-    void part.offsetWidth; // restart the hop
+    void part.offsetWidth; // restart the toss
     part.classList.add("go");
   }
 }
@@ -65,7 +80,7 @@ function animateDice(finalDice, ms, onDone, keep) {
     return;
   }
   ["die1", "die2"].forEach((id, i) => {
-    if (i !== keep) tumbleDie(id, finalDice[i], ms, 1 + i);
+    if (i !== keep) tumbleDie(id, finalDice[i], ms);
   });
   setTimeout(onDone, ms);
 }
@@ -80,28 +95,6 @@ function drawDieEl(die, value) {
   }
 }
 
-// Tumble the dice through random faces, then land on the real result.
-function animateDice(finalDice, ms, onDone) {
-  const box = document.getElementById("dice");
-  if (ms <= 0) {
-    drawDie("die1", finalDice[0]);
-    drawDie("die2", finalDice[1]);
-    setTimeout(onDone, 0);
-    return;
-  }
-  box.classList.add("rolling");
-  const spin = setInterval(() => {
-    drawDie("die1", 1 + Math.floor(Math.random() * 6));
-    drawDie("die2", 1 + Math.floor(Math.random() * 6));
-  }, 70);
-  setTimeout(() => {
-    clearInterval(spin);
-    box.classList.remove("rolling");
-    drawDie("die1", finalDice[0]);
-    drawDie("die2", finalDice[1]);
-    onDone();
-  }, ms);
-}
 const BET_NAMES = { pass: "Pass Line", odds: "Odds", dont: "Don't Pass", lay: "Lay Odds", field: "Field", come: "Come", dontCome: "Don't Come", fire: "Fire Bet" };
 for (const n of [4, 5, 6, 8, 9, 10]) {
   BET_NAMES["hard" + n] = "Hard " + n;
