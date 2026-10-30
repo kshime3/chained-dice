@@ -36,7 +36,7 @@ function placeBet(betName) {
   if (betGroup(betName)) {
     const check = extraBetCheck(state, betName);
     const why = {
-      locked: "That bet is still locked.",
+      locked: BET_GROUPS[betGroup(betName)].name + " are locked. Keep playing to unlock them.",
       noPoint: BET_NAMES[betName] + " bets open once a point is set.",
       fireLate: "The Fire Bet goes down before a shooter's first roll.",
       fireMax: "The Fire Bet is at its max (" + money(fireMax(state)) + ").",
@@ -497,6 +497,16 @@ function renderAll() {
     showTutorial(compPages());
   }
   announceUnlocks();
+  explainNewBets();
+}
+
+// The first time an unlocked bet is on the table in a run, explain it.
+function explainNewBets() {
+  if (busy() || tutorialOpen() || state.status !== "playing" || state.onBreak) return;
+  const fresh = Object.keys(BET_GROUPS).filter((g) => available(state, g) && !tutorialSeen("bet." + g));
+  if (!fresh.length) return;
+  fresh.forEach((g) => markTutorialSeen("bet." + g));
+  showTutorial(fresh.map((g) => ({ title: "New bet: " + BET_GROUPS[g].name, body: BET_GROUPS[g].text })));
 }
 
 // New unlocks: announce them once nothing else is on screen.
@@ -535,16 +545,11 @@ document.getElementById("same-bets").onclick = () => {
   showMessage(parts.join(" "));
   renderAll();
 };
-document.getElementById("board-toggle").onclick = () => {
-  showingExtraBoard = !showingExtraBoard;
-  renderState(state);
-  // The first time each new bet shows up, explain it.
-  const fresh = Object.keys(BET_GROUPS).filter((g) => showingExtraBoard && available(state, g) && !tutorialSeen("bet." + g));
-  if (fresh.length) {
-    fresh.forEach((g) => markTutorialSeen("bet." + g));
-    showTutorial(fresh.map((g) => ({ title: BET_GROUPS[g].name, body: BET_GROUPS[g].text })));
-  }
+document.getElementById("odds-button").onclick = () => {
+  renderOddsPanel(state);
+  document.getElementById("odds-popup").classList.remove("hidden");
 };
+document.getElementById("odds-close").onclick = () => document.getElementById("odds-popup").classList.add("hidden");
 document.getElementById("house-rule").onclick = () => showMessage(HOUSE_RULES[state.houseRule.id].name + ": " + houseRuleText(state));
 document.getElementById("dice").onclick = roll; // tapping the dice rolls too
 document.getElementById("clear-button").onclick = clearBets;

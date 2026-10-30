@@ -297,6 +297,7 @@ Like Clover Pit's phone. After **every won shift**, it rings before the next shi
 - "+$25" popups float up from winning bets, losses drop away in red.
 - ⚙ Settings: sound, quick dice, replay tutorials, reset progress.
 - Controls on two rows (chips + Roll; small buttons below).
+- **Whole table:** all bets always on the table; locked ones greyed with 🔒. The roll % chart is behind a "📊 Odds" button.
 - **Drop box:** pay in plaques of 10% of the debt (10 slots fill up), or "Pay off debt" at once.
 - **Mult pop + ding** whenever the mult rises; **four win sounds** by win size (share of the debt).
 - **3D dice** (option A): CSS 3D cubes seen from above; the rolled number is on top. Each roll (1 second) tosses the dice up and back, they land, bounce and roll forward to rest. Opposite faces add to 7, red single pip.

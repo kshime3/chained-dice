@@ -555,12 +555,21 @@ body.falling .seat, body.falling .side > *, body.falling .table, body.falling .c
 
 /* More bets board */
 .extra-row { display: flex; gap: 4px; margin-top: 4px; }
+.extra-tile.locked-bet { opacity: 0.35; filter: grayscale(1); cursor: not-allowed; border-style: dashed; }
+.odds-box { max-width: 560px; width: 100%; }
 .extra-tile { flex: 1 1 0; min-width: 0; margin-top: 0; padding: 4px; text-align: center; }
 .extra-tile .bet-title { font-size: 0.8rem; }
 .extra-tile .bet-hint { font-size: 0.65rem; }
 .extra-tile.off { opacity: 0.6; }
 .extra-note { margin: 4px 0 0; font-size: 0.7rem; }
-@media (max-width: 760px) { .extra-tile .bet-title { font-size: 0.7rem; } .extra-tile .bet-hint { font-size: 0.58rem; } }
+@media (max-width: 760px) {
+  .extra-row { gap: 3px; margin-top: 3px; }
+  .extra-tile { padding: 3px 1px; }
+  .extra-tile .bet-title { font-size: 0.6rem; }
+  .extra-tile .bet-amount { display: block; }
+  .extra-tile .bet-hint { display: none; }
+  .extra-tile .bet-hint.show-hint { display: block; font-size: 0.55rem; }
+}
 
 /* Second row of small buttons under the chips */
 .small-controls { margin-top: 0; }
@@ -604,3 +613,5 @@ body.falling .seat, body.falling .side > *, body.falling .table, body.falling .c
   text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8); animation: pop-up 1.4s ease-out forwards; }
 .mult.bump strong { display: inline-block; animation: mult-bump 0.5s ease-out; }
 @keyframes mult-bump { 0% { transform: scale(1); } 30% { transform: scale(1.8); color: #ffd84d; } 100% { transform: scale(1); } }
+.odds-box .bars { --bar-max: 110px; }
+.odds-box .bar { font-size: 0.75rem; }

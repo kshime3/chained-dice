@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Chained Dice</title>
-  <link rel="stylesheet" href="css/style.css?v=20261030e">
+  <link rel="stylesheet" href="css/style.css?v=20261030f">
 </head>
 <body>
   <header class="top">
@@ -37,7 +37,6 @@
         <div id="challenge" class="challenge hidden"></div>
       </div>
       <div id="my-cards" class="my-cards"></div>
-      <div id="odds-panel" class="odds-panel"></div>
     </section>
 
     <section class="play">
@@ -84,7 +83,7 @@
           </div>
         </div>
         </div>
-        <div id="extra-board" class="extra-board hidden"></div>
+        <div id="extra-board" class="extra-board"></div>
       </div>
 
       <div class="controls">
@@ -95,7 +94,7 @@
         <button id="clear-button">Clear bets</button>
         <button id="save-bets" title="Remember the bets on the table now">💾 Save bets</button>
         <button id="same-bets" title="Put your saved bets back down">↻ Same bets</button>
-        <button id="board-toggle" class="hidden">➕ More bets</button>
+        <button id="odds-button" title="The chance of each total for this shooter">📊 Odds</button>
       </div>
 
       <div id="message" class="message">You wake up chained to the table. Pick a chip, put it on the Pass Line, then roll.</div>
@@ -196,6 +195,14 @@
     <div id="splash-content" class="splash-content"></div>
   </div>
 
+  <div id="odds-popup" class="overlay hidden">
+    <div class="end-box odds-box">
+      <h2>📊 The odds right now</h2>
+      <div id="odds-panel" class="odds-panel"></div>
+      <button id="odds-close" class="big-button">Close</button>
+    </div>
+  </div>
+
   <div id="settings" class="overlay hidden">
     <div class="end-box settings-box">
       <h2>⚙ Settings</h2>
@@ -241,22 +248,22 @@
   </div>
 
   <!-- Load order matters: config first, then logic, then display, then main. -->
-  <script src="js/config.js?v=20261030e"></script>
-  <script src="js/dice.js?v=20261030e"></script>
-  <script src="js/bets.js?v=20261030e"></script>
-  <script src="js/crew.js?v=20261030e"></script>
-  <script src="js/cards.js?v=20261030e"></script>
-  <script src="js/shop.js?v=20261030e"></script>
-  <script src="js/stats.js?v=20261030e"></script>
-  <script src="js/perks.js?v=20261030e"></script>
-  <script src="js/crafting.js?v=20261030e"></script>
-  <script src="js/comps.js?v=20261030e"></script>
-  <script src="js/unlocks.js?v=20261030e"></script>
-  <script src="js/rules.js?v=20261030e"></script>
-  <script src="js/shift.js?v=20261030e"></script>
-  <script src="js/sound.js?v=20261030e"></script>
-  <script src="js/ui.js?v=20261030e"></script>
-  <script src="js/tutorials.js?v=20261030e"></script>
-  <script src="js/main.js?v=20261030e"></script>
+  <script src="js/config.js?v=20261030f"></script>
+  <script src="js/dice.js?v=20261030f"></script>
+  <script src="js/bets.js?v=20261030f"></script>
+  <script src="js/crew.js?v=20261030f"></script>
+  <script src="js/cards.js?v=20261030f"></script>
+  <script src="js/shop.js?v=20261030f"></script>
+  <script src="js/stats.js?v=20261030f"></script>
+  <script src="js/perks.js?v=20261030f"></script>
+  <script src="js/crafting.js?v=20261030f"></script>
+  <script src="js/comps.js?v=20261030f"></script>
+  <script src="js/unlocks.js?v=20261030f"></script>
+  <script src="js/rules.js?v=20261030f"></script>
+  <script src="js/shift.js?v=20261030f"></script>
+  <script src="js/sound.js?v=20261030f"></script>
+  <script src="js/ui.js?v=20261030f"></script>
+  <script src="js/tutorials.js?v=20261030f"></script>
+  <script src="js/main.js?v=20261030f"></script>
 </body>
 </html>

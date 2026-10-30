@@ -8,11 +8,13 @@ Dated session log. Newest at the top.
 - Paying the dealer is now plaques in a drop box (10% of the debt each, last one pays the rest), "Pay off debt" kept. Mult pops with a ding when it rises. Four win sounds by win size. Pop-up screens always cover the floating popups. tests.html: 414 checks, all passing. Fits one screen on phones.
 - Balance: unchanged (bots pay with the same logic; plaques only change how a person pays).
 
+- Whole table on screen (locked bets greyed with 🔒), roll % chart behind a "📊 Odds" button. Still fits one screen on phones.
+
 **Waiting on the owner**
 - Playtesting.
 
 **Exact next step**
-- Owner's choice.
+- Owner's choice (idea: use the empty left column on laptops for something useful).
 
 ## 2026-10-30: Session 8, continued (3D dice options)
 

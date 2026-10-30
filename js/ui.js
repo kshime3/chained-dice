@@ -1202,41 +1202,27 @@ function showCollection() {
 
 // ---------- More bets (Milestone 12b) ----------
 
-let showingExtraBoard = false; // which bet board is on the table
-
-// The second bet board: only the bet groups this run has unlocked.
+// The rest of the table under the main bets: Place bets, Hard Ways, Come / Don't Come
+// and the Fire Bet. Bets not unlocked yet are greyed out with a lock.
 function renderExtraBoard(state) {
-  const groups = Object.keys(BET_GROUPS).filter((g) => available(state, g));
-  const toggle = document.getElementById("board-toggle");
-  toggle.classList.toggle("hidden", groups.length === 0);
-  if (groups.length === 0) showingExtraBoard = false;
-  toggle.textContent = showingExtraBoard ? "⬅ Main bets" : "➕ More bets";
-  document.getElementById("main-board").classList.toggle("hidden", showingExtraBoard);
   const board = document.getElementById("extra-board");
-  board.classList.toggle("hidden", !showingExtraBoard);
-  if (!showingExtraBoard) return;
   const b = state.bets;
   const pointOn = state.point !== null;
-  const tile = (bet, title, sub, off) => '<div class="bet-area extra-tile' + (off ? " off" : "") + '" data-bet="' + bet + '"><div class="bet-title">' + title +
-    ' <span class="bet-amount">' + (b[bet] ? money(b[bet]) : "") + '</span></div><div class="bet-hint">' + sub + "</div></div>";
+  const tile = (bet, title, sub, off) => {
+    const group = betGroup(bet);
+    if (!available(state, group)) {
+      return '<div class="bet-area extra-tile locked-bet" data-bet="' + bet + '" title="Locked: keep playing to unlock ' + BET_GROUPS[group].name + '"><div class="bet-title">' + title + " 🔒</div></div>";
+    }
+    return '<div class="bet-area extra-tile' + (off ? " off" : "") + '" data-bet="' + bet + '" title="' + BET_GROUPS[group].text + '"><div class="bet-title">' + title +
+      ' <span class="bet-amount">' + (b[bet] ? money(b[bet]) : "") + '</span></div><div class="bet-hint' + (sub.moved ? " show-hint" : "") + '">' + (sub.text || sub) + "</div></div>";
+  };
   const moved = (prefix) => [4, 5, 6, 8, 9, 10].filter((n) => b[prefix + n] > 0).map((n) => "on " + n + ": " + money(b[prefix + n])).join(" · ");
-  let html = "";
-  if (groups.includes("hardWays")) {
-    html += '<div class="extra-row">' + [4, 6, 8, 10].map((n) => tile("hard" + n, "HARD " + n, n / 2 + "+" + n / 2 + " · " + CONFIG.hardWaysPayouts[n] + ":1", !pointOn)).join("") + "</div>";
-  }
-  if (groups.includes("placeBets")) {
-    html += '<div class="extra-row">' + [4, 5, 6, 8, 9, 10].map((n) => tile("place" + n, "PLACE " + n, CONFIG.placePayouts[n].join(":"), !pointOn)).join("") + "</div>";
-  }
-  const last = [];
-  if (groups.includes("comeBets")) {
-    last.push(tile("come", "COME", moved("come") || "7/11 win · needs a point", !pointOn));
-    last.push(tile("dontCome", "DON'T COME", moved("dcome") || "2/3 win · needs a point", !pointOn));
-  }
-  if (groups.includes("fireBet")) {
-    last.push(tile("fire", "🔥 FIRE", state.firePoints.length + " different points · max " + money(fireMax(state)), state.turnRolls > 0 && !b.fire));
-  }
-  if (last.length) html += '<div class="extra-row">' + last.join("") + "</div>";
-  html += '<p class="hint extra-note">Hard Ways and Place bets are off on come-out rolls. Tap a bet to add your chip.</p>';
+  let html = '<div class="extra-row">' + [4, 5, 6, 8, 9, 10].map((n) => tile("place" + n, "PLACE " + n, CONFIG.placePayouts[n].join(":"), !pointOn)).join("") + "</div>";
+  html += '<div class="extra-row">' + [4, 6, 8, 10].map((n) => tile("hard" + n, "HARD " + n, n / 2 + "+" + n / 2 + " · " + CONFIG.hardWaysPayouts[n] + ":1", !pointOn)).join("");
+  const comeOn = moved("come"), dcomeOn = moved("dcome");
+  html += tile("come", "COME", comeOn ? { text: comeOn, moved: true } : "7/11 win", !pointOn);
+  html += tile("dontCome", "DON'T COME", dcomeOn ? { text: dcomeOn, moved: true } : "2/3 win", !pointOn);
+  html += tile("fire", "🔥 FIRE", state.firePoints.length + " points · max " + money(fireMax(state)), state.turnRolls > 0 && !b.fire) + "</div>";
   board.innerHTML = html;
   for (const el of board.querySelectorAll("[data-bet]")) el.onclick = () => placeBet(el.dataset.bet);
 }

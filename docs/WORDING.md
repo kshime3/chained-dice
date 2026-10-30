@@ -119,3 +119,4 @@ Unchanged for shifts 1-5. Shifts 6-8 follow the existing x1.5 growth: $1,800, $2
 - Unlock reason (unlock screen and Collection tile): "Unlocked by surviving shift 3." / "Unlocked by winning $2,000 on Odds bets (all runs)." / "Unlocked by seeing 100 seven-outs (all runs)." Starters show no line.
 - Paying: "Pay the dealer: the drop box", button "Drop a plaque ($20)", message "Dropped a $20 plaque in the box. $140 to go." / "Not enough cash: a plaque can't take your cash below $5." How to play: "drop plaques into the dealer's drop box. Each plaque is 10% of the debt (the last one pays exactly what's left), or pay it all at once."
 - Mult pop: "+0.5x mult".
+- Locked bet tile: "PLACE 6 🔒"; tapping it: "Place Bets are locked. Keep playing to unlock them." Odds pop-up: "📊 The odds right now". New-bet tutorial title: "New bet: Hard Ways".
