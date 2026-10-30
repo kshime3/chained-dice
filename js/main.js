@@ -651,6 +651,9 @@ drawDie("die1", 1);
 drawDie("die2", 1);
 renderAll();
 
+// The opening animation plays on top of whatever comes next.
+playOpening(CONFIG.openingMs);
+
 // First visit: the full introduction.
 if (!tutorialSeen("intro")) {
   markTutorialSeen("intro");

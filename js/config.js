@@ -250,6 +250,7 @@ const CONFIG = {
   sevenOutSplashMs: 5000, // how long the SEVEN OUT screen shows before the Dealer Break (tap skips)
   plaquePct: 0.10,        // paying the dealer: each plaque dropped in the drop box is this share of the debt
   winSoundTiers: [0.03, 0.10, 0.30], // a roll's winnings as a share of the debt: above each, a bigger win sound
+  openingMs: 4200,        // the opening animation (die rolls in, blood trail, chain snaps); tap skips
   betPopMs: 1400,         // how long a "+$25" win popup floats
   unlockSplashMs: 6000,   // how long the "Unlocked" screen shows (tap skips)
   winSplashMs: 5000,      // how long the "Point hit" winnings screen shows (tap skips)
@@ -313,6 +314,7 @@ if (testTarget > 0) CONFIG.shifts[0].debt = testTarget;
 // Testing shortcut: add ?fast to the page address to skip the dice animation.
 if (new URLSearchParams(location.search).has("fast")) {
   CONFIG.diceRollMs = 0;
+  CONFIG.openingMs = 0;
   CONFIG.sevenOutSplashMs = 0;
   CONFIG.winSplashMs = 0;
   CONFIG.cutSplashMs = 0;

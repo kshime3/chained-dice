@@ -36,6 +36,8 @@ docs/WORDING.md    approved game wording (Break the Chain theme)
 index.html         the game page (open this to play)
 tests.html         rule checks: open to see green/red results
 css/style.css      colors and layout
+img/logo.svg       the logo (C3 "Blood Pip"); img/icon-*.png are renders of it for tabs and home screens
+manifest.webmanifest  name and icons for "add to home screen"
 js/config.js       ALL tunable numbers
 js/dice.js         logic: rolling dice
 js/bets.js         logic: settling bets

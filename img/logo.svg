@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Chained Dice">
+  <!-- Chained Dice logo (C3, Blood Pip): a bone die tears out of a snapped, rusted link over the glowing pit. -->
+  <defs>
+    <radialGradient id="pit" cx="50%" cy="100%" r="80%">
+      <stop offset="0" stop-color="#ff4b2b" stop-opacity="0.75"/>
+      <stop offset="0.45" stop-color="#3a0a06" stop-opacity="0.7"/>
+      <stop offset="1" stop-color="#0d2a1a" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="rust" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#6f6a66"/>
+      <stop offset="0.6" stop-color="#8a4a2a"/>
+      <stop offset="1" stop-color="#2b2724"/>
+    </linearGradient>
+  </defs>
+  <rect x="4" y="4" width="248" height="248" rx="52" fill="#0d2a1a"/>
+  <rect x="4" y="4" width="248" height="248" rx="52" fill="url(#pit)"/>
+  <rect x="4" y="4" width="248" height="248" rx="52" fill="none" stroke="#5a1410" stroke-width="6"/>
+  <g transform="rotate(-14 64 136)">
+    <path d="M64 96 A40 40 0 0 0 64 176" fill="none" stroke="#2b2724" stroke-width="26" stroke-linecap="round"/>
+    <path d="M64 96 A40 40 0 0 0 64 176" fill="none" stroke="url(#rust)" stroke-width="15" stroke-linecap="round"/>
+  </g>
+  <g transform="rotate(-14 192 120)">
+    <path d="M192 80 A40 40 0 0 1 192 160" fill="none" stroke="#2b2724" stroke-width="26" stroke-linecap="round"/>
+    <path d="M192 80 A40 40 0 0 1 192 160" fill="none" stroke="url(#rust)" stroke-width="15" stroke-linecap="round"/>
+  </g>
+  <g stroke-linecap="round">
+    <path d="M96 64 L84 44" stroke="#ff4b2b" stroke-width="7"/>
+    <path d="M118 56 L118 32" stroke="#ffb347" stroke-width="7"/>
+    <path d="M140 62 L152 42" stroke="#ff4b2b" stroke-width="7"/>
+    <path d="M104 210 L92 228" stroke="#ff4b2b" stroke-width="6"/>
+    <path d="M152 206 L166 224" stroke="#ffb347" stroke-width="6"/>
+  </g>
+  <circle cx="74" cy="58" r="3.5" fill="#ffb347"/>
+  <circle cx="176" cy="216" r="3" fill="#ff4b2b"/>
+  <g transform="rotate(12 128 136)">
+    <rect x="80" y="88" width="96" height="96" rx="20" fill="#e9e1cf" stroke="#a99e86" stroke-width="4"/>
+    <circle cx="106" cy="114" r="10" fill="#120d0b"/>
+    <circle cx="150" cy="158" r="10" fill="#120d0b"/>
+    <path d="M128 124 a12 12 0 1 1 -0.1 0 Z" fill="#9e1b14"/>
+    <path d="M124 146 C124 158 120 164 121 174 a5 5 0 0 0 10 0 C132 164 130 156 131 146 Z" fill="#9e1b14"/>
+    <path d="M117 140 c-2 6 -4 10 -3 16 a3.5 3.5 0 0 0 7 0 c0 -5 -1 -9 -1 -14 Z" fill="#9e1b14"/>
+  </g>
+</svg>

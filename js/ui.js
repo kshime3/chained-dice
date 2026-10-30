@@ -1336,3 +1336,23 @@ function renderHand(state, handlers) {
     for (const badge of perks) row.appendChild(badge.cloneNode(true));
   }
 }
+
+// ---------- Opening animation ----------
+
+// The die rolls in leaving a blood trail, the chain snaps, the title appears, then it fades.
+// Tap to skip. ms = 0 skips it entirely.
+function playOpening(ms) {
+  const box = document.getElementById("opening");
+  if (ms <= 0) return;
+  box.classList.remove("hidden");
+  let closed = false;
+  const close = (fadeMs) => {
+    if (closed) return;
+    closed = true;
+    box.style.transition = "opacity " + fadeMs + "ms ease";
+    box.style.opacity = "0";
+    setTimeout(() => box.classList.add("hidden"), fadeMs);
+  };
+  box.onclick = () => close(250);
+  setTimeout(() => close(700), ms - 700);
+}
