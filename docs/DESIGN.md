@@ -297,6 +297,7 @@ Like Clover Pit's phone. After **every won shift**, it rings before the next shi
 - "+$25" popups float up from winning bets, losses drop away in red.
 - ⚙ Settings: sound, quick dice, replay tutorials, reset progress.
 - Controls on two rows (chips + Roll; small buttons below).
+- **3D dice** (option A, spin in place): CSS 3D cubes, opposite faces add to 7, red single pip, hop + shadow while tumbling.
 
 ## Glossary
 

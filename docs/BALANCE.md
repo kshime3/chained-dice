@@ -272,3 +272,6 @@ New cards (smart bot, card owned from the start, % reaching shift 3; no card 18.
 | Unlocks found after 10 / 25 / 50 runs (of 34) | 10-13 / 20-25 / 24-27 |
 
 - Slightly faster than before (more card power), at the low end of the 30-60 target. Slowing the Comeback Kid and Loan Shark goals didn't move it. If playtests feel too quick, levers: `reputationEvery` 3 -> 4, or harder goals for Place bets / Hot Rod's price.
+
+## 2026-10-30: 3D dice retest
+Display only, no rule changes. New player per-shift survival 58 / 42 / 48 / 50 / 43 / 36 / 33 / 33%: same as before.

@@ -10,8 +10,64 @@ const PIP_SPOTS = {
   6: [0, 2, 3, 5, 6, 8],
 };
 
+// The two table dice are 3D cubes (CSS). Each face shows one value; the cube turns
+// so the rolled value faces you. Opposite faces add up to 7.
+const FACE_TURN = { 1: [0, 0], 6: [0, 180], 3: [0, -90], 4: [0, 90], 5: [-90, 0], 2: [90, 0] }; // [x, y] degrees
+
+function buildCube(die) {
+  if (die.cube) return die.cube;
+  die.innerHTML = '<div class="die-shadow"></div><div class="die-hop"><div class="die-view"><div class="die-cube"></div></div></div>';
+  const cube = die.querySelector(".die-cube");
+  for (let v = 1; v <= 6; v++) {
+    const face = document.createElement("div");
+    face.className = "die-face f" + v;
+    drawDieEl(face, v);
+    cube.appendChild(face);
+  }
+  die.cube = cube;
+  die.turn = [0, 0];
+  return cube;
+}
+
+// Show a value right away (no tumble).
 function drawDie(id, value) {
-  drawDieEl(document.getElementById(id), value);
+  const die = document.getElementById(id);
+  const cube = buildCube(die);
+  die.turn = FACE_TURN[value].slice();
+  cube.style.transition = "none";
+  cube.style.transform = "rotateX(" + die.turn[0] + "deg) rotateY(" + die.turn[1] + "deg)";
+  void cube.offsetWidth; // apply now, before the transition comes back
+  cube.style.transition = "";
+}
+
+// Tumble a die a few whole turns and land on a value, with a hop.
+function tumbleDie(id, value, ms, extraTurns) {
+  const die = document.getElementById(id);
+  const cube = buildCube(die);
+  const [tx, ty] = FACE_TURN[value];
+  die.turn = [Math.ceil(die.turn[0] / 360) * 360 + 720 + tx, Math.ceil(die.turn[1] / 360) * 360 + 360 * extraTurns + ty];
+  cube.style.transitionDuration = ms + "ms";
+  cube.style.transform = "rotateX(" + die.turn[0] + "deg) rotateY(" + die.turn[1] + "deg)";
+  for (const part of [die.querySelector(".die-hop"), die.querySelector(".die-shadow")]) {
+    part.style.animationDuration = ms + "ms";
+    part.classList.remove("go");
+    void part.offsetWidth; // restart the hop
+    part.classList.add("go");
+  }
+}
+
+// Roll both dice in 3D and land on the real result. keep: index of a die that stays put (Loaded Die).
+function animateDice(finalDice, ms, onDone, keep) {
+  if (ms <= 0) {
+    drawDie("die1", finalDice[0]);
+    drawDie("die2", finalDice[1]);
+    setTimeout(onDone, 0);
+    return;
+  }
+  ["die1", "die2"].forEach((id, i) => {
+    if (i !== keep) tumbleDie(id, finalDice[i], ms, 1 + i);
+  });
+  setTimeout(onDone, ms);
 }
 
 // Draw pips for a value into any die element.

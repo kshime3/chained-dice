@@ -7,11 +7,13 @@ Dated session log. Newest at the top.
 **Done**
 - `demos/dice-3d.html`: three working 3D dice styles to compare: A spin in place (CSS), B thrown across the felt (CSS), C lit 3D with shadows (Three.js library). All land on the rolled number.
 
+- Owner picked **A**: built into the game. The table dice are now CSS 3D cubes that hop and tumble, landing on the rolled number (Loaded Die only spins the rerolled die). Fits one screen on phones; tests.html 409 checks passing.
+
 **Waiting on the owner**
-- Pick a dice style (C needs approval for a library).
+- Playtesting the 3D dice.
 
 **Exact next step**
-- Build the chosen style into the game.
+- Owner's choice: more cards (Crew Captain, Jinx Jar parked), press-and-hold help on phones, or playtest fixes.
 
 ## 2026-10-30: Session 8, continued (win screen, recruit prices, new cards)
 

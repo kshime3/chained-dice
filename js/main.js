@@ -177,10 +177,11 @@ function offerRerollOrFinish(rolled) {
     }
     rolling = true;
     playSound("rattle");
+    const keep = choice === "both" ? undefined : choice === "left" ? 1 : 0; // Loaded Die: the other die stays put
     animateDice(next.dice, CONFIG.diceRollMs, () => {
       rolling = false;
       offerRerollOrFinish(next); // the other card may still be available
-    });
+    }, keep);
   });
 }
 
