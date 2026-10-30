@@ -28,6 +28,7 @@ function pickHouseRule(state, forcedId) {
   const normal = Object.keys(HOUSE_RULES).filter((id) => !HOUSE_RULES[id].boss && (id !== "pitWatch" || state.cards.length > 0));
   const boss = Object.keys(HOUSE_RULES).filter((id) => HOUSE_RULES[id].boss);
   let id = null;
+  if (!systemOn(state, "houseRules") && !forcedId) return null; // not yet: arrives after you first reach shift 3
   if (state.endless) id = pickFrom(normal.concat(boss));
   else if (state.shift === totalLinks(state)) id = pickFrom(boss);
   else if (state.shift >= CONFIG.houseRulesFromShift) id = pickFrom(normal);
@@ -65,7 +66,7 @@ const REWARDS = ["cash", "comp", "debtCut", "shuffle"];
 
 // A new challenge for your turn (from CONFIG.challengesFromShift).
 function newChallenge(state) {
-  if (state.shift < CONFIG.challengesFromShift) return null;
+  if (state.shift < CONFIG.challengesFromShift || !systemOn(state, "challenges")) return null;
   return { id: pickFrom(Object.keys(CHALLENGES)), progress: 0, done: false, reward: pickFrom(REWARDS) };
 }
 

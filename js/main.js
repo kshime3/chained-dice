@@ -500,7 +500,10 @@ function renderAll() {
   if (state.status.startsWith("fell") && !fallPlayed) {
     fallPlayed = true;
     playSound("fall");
-    playFall(CONFIG.fallMs, () => renderEndScreen(state, endHandlers()));
+    playFall(CONFIG.fallMs, () => {
+      renderEndScreen(state, endHandlers());
+      announceUnlocks(); // things this run unlocked, shown before the next run starts
+    });
   } else if (!fallingNow) {
     renderEndScreen(state, endHandlers());
   }
@@ -509,7 +512,7 @@ function renderAll() {
   if (state.onBreak && state.status === "playing" && isShopOpen(state) && !tutorialSeen("shop")) {
     markTutorialSeen("shop");
     showTutorial(shopPages());
-  } else if (state.onBreak && state.status === "playing" && isShopOpen(state) && !tutorialSeen("comps")) {
+  } else if (state.onBreak && state.status === "playing" && isShopOpen(state) && systemOn(state, "comps") && !tutorialSeen("comps")) {
     markTutorialSeen("comps");
     showTutorial(compPages());
   }
@@ -529,9 +532,9 @@ function explainNewBets() {
 
 // New unlocks: announce them once nothing else is on screen.
 function announceUnlocks() {
-  if (busy() || tutorialOpen() || profile().fresh.length === 0) return;
+  if (busy() || tutorialOpen() || (profile().fresh.length === 0 && profile().freshSystems.length === 0)) return;
   playSound("win2");
-  showSplash(unlockSplash(takeFreshUnlocks(), takeFreshPerks()), "good", CONFIG.unlockSplashMs, renderAll);
+  showSplash(unlockSplash(takeFreshUnlocks(), takeFreshPerks(), takeFreshSystems()), "good", CONFIG.unlockSplashMs, renderAll);
 }
 
 document.getElementById("pass-line").onclick = () => placeBet("pass");

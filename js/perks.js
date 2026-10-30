@@ -38,6 +38,7 @@ function perkWeight(state, id) {
     return CONFIG.perkWeights.minusSeven * Math.pow(CONFIG.minusSevenRarer, countPerk(state, "minusSeven"));
   }
   if (id === "removeCharacter") return state.roster.some((n) => n !== "You") ? CONFIG.perkWeights.removeCharacter : 0;
+  if (id === "freeComps" && !systemOn(state, "comps")) return 0;
   return CONFIG.perkWeights[id];
 }
 

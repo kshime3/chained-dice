@@ -284,3 +284,12 @@ Place bets and Hard Ways can no longer be placed on a come-out, but they were "o
 
 ## 2026-10-30: Run saving
 No rule changes; no retest needed beyond the rule checks (421 passing).
+
+## 2026-10-30: Systems over the first runs
+
+| | Result |
+| --- | --- |
+| First run (no comps, challenges or house rules) | survive shift 1 58%, shift 2 42-43%; walk out free 0.4% (house rules no longer apply in a first run) |
+| Career median runs to first escape | 31 (smart), 27 (smart + comps): unchanged |
+
+No rescale.

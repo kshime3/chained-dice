@@ -8,11 +8,13 @@ Dated session log. Newest at the top.
 - Check-in: owner agreed the plan (DECISIONS.md).
 - Built run saving: continue a run after a refresh or a closed tab; a roll or phone call cut off mid-way is finished the same way (no undo). tests.html: 421 checks, all passing.
 
+- Step 3 built (friends playtesting meanwhile): comps, dice crafting and challenges arrive after the first run; house rules the run after first reaching shift 3; each announced (guaranteed unlock moment after run 1). tests.html: 427 checks.
+
 **Waiting on the owner**
-- Testing run saving; then the friends playtest round.
+- Friends playtest feedback; testing the first-run flow.
 
 **Exact next step**
-- Bring systems in over the first runs (comps and dice crafting after the first run, house rules after first reaching shift 3), plus a guaranteed early unlock.
+- Step 4: phone layout with tabs (Table / Hand / Crew) and the code cleanup.
 
 ## 2026-10-30: Session 8, continued (drop box, mult pop, win sounds)
 

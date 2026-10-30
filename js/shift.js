@@ -67,6 +67,7 @@ function newShiftState() {
     crew: roster.slice(), // the shooting order this shift (built from the roster and your cards)
     dropped: [], // crew who fell through a Trapdoor: gone for the run, never hireable again
     locked: lockedNow(), // cards, comps and crew still locked when this run started
+    systems: openSystems(), // comps, challenges, house rules: arrive over your first runs
     dice: diceForShooter(roster[0]), // current shooter's dice
     mult: CONFIG.startingMult, // multiplies winnings this turn
     multNotes: [], // why the mult is what it is (synergies)
@@ -389,6 +390,7 @@ function nextShift(old) {
   state.roster = old.roster.slice();
   state.dropped = old.dropped.slice();
   state.locked = old.locked.slice();
+  state.systems = old.systems ? Object.assign({}, old.systems) : undefined;
   state.savedBets = old.savedBets ? Object.assign({}, old.savedBets) : null;
   state.interestRate = old.interestRate;
   state.stats = old.stats;

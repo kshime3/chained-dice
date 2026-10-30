@@ -26,6 +26,7 @@ function compSellPrice(state, id) {
 // Fresh comps for sale: different ones at random (dice edits Copycat and Chisel are rarer).
 function newCompStock(state) {
   const stock = [];
+  if (!systemOn(state, "comps")) return stock; // comps arrive after your first run
   while (stock.length < CONFIG.compShopSlots) {
     const left = Object.keys(COMPS).filter((id) => !stock.includes(id) && available(state, id));
     if (left.length === 0) break;
@@ -38,7 +39,7 @@ function newCompStock(state) {
 
 // Add a comp to your slots. Returns false if they're full.
 function gainComp(state, id) {
-  if (state.comps.length >= compSlots(state)) return false;
+  if (!systemOn(state, "comps") || state.comps.length >= compSlots(state)) return false;
   state.comps.push(id);
   return true;
 }

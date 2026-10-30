@@ -493,6 +493,7 @@ function renderShop(state, handlers) {
 // Comps: the shop row and your comps on the Break screen, plus Use buttons on the table.
 // handlers: { buyComp(slot), sellComp(index), useComp(index) }
 function renderComps(state, handlers) {
+  document.getElementById("comps-section").classList.toggle("hidden", !systemOn(state, "comps"));
   document.getElementById("comp-slots").textContent = compSlots(state);
   const stock = document.getElementById("comp-stock");
   stock.innerHTML = "";
@@ -1162,13 +1163,14 @@ function tutorialOpen() {
   return !document.getElementById("tutorial").classList.contains("hidden");
 }
 
-function unlockSplash(ids, perks) {
+function unlockSplash(ids, perks, systems = []) {
   const kind = { card: "card", comp: "comp", crew: "crew member you can hire", bet: "bet (find it under ➕ More bets)" };
   const perkText = (id) => CONFIG.reputation.find((r) => r.id === id).text;
   return '<div class="splash-title">🔓 UNLOCKED!</div>' +
     ids.map((id) => '<p class="splash-big">' + unlockName(id) + '</p><p class="hint">New ' + kind[UNLOCKS[id].kind] + "</p><p>" + unlockReason(id) + "</p>").join("") +
-    "<p>It can show up from your <strong>next run</strong>. See it in the 📖 Collection.</p>" +
+    (ids.length ? "<p>It can show up from your <strong>next run</strong>. See it in the 📖 Collection.</p>" : "") +
     perks.map((id) => '<p class="boost">⭐ Reputation up! From your next run: <strong>' + perkText(id) + "</strong></p>").join("") +
+    systems.map((id) => '<p class="boost">🆕 New from your next run: <strong>' + SYSTEMS[id].name + "</strong>. " + SYSTEMS[id].text + "</p>").join("") +
     '<p class="hint">Tap to continue</p>';
 }
 
@@ -1305,7 +1307,7 @@ function renderHand(state, handlers) {
       (off ? "<em>Switched off this shift (Pit Watch).</em> " : "") + CARDS[id].text + "</div>";
     cards.appendChild(tile);
   }
-  const comps = section("Comps (" + state.comps.length + " / " + compSlots(state) + ")");
+  const comps = systemOn(state, "comps") ? section("Comps (" + state.comps.length + " / " + compSlots(state) + ")") : document.createElement("div");
   for (const id of Object.keys(state.armed)) {
     const tile = document.createElement("div");
     tile.className = "hand-comp armed";

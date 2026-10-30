@@ -46,6 +46,14 @@ const UNLOCKS = {
   diceCollector:  { kind: "card", how: (g) => "having " + g.diceCollector + " edited faces on your dice at once", done: (c, g) => c.editedFaces >= g.diceCollector },
 };
 
+// Systems that arrive over your first runs, so a new player isn't flooded.
+// c = the lifetime counters. Shown with the unlock screen when they open.
+const SYSTEMS = {
+  comps:      { name: "Comps & dice crafting", open: (c) => c.falls + c.escapes >= 1, text: "One-use items from the dealer's shop, including edits for your own dice." },
+  challenges: { name: "Pit boss challenges", open: (c) => c.falls + c.escapes >= 1, text: "On your turn, the pit boss sets you a goal with a reward." },
+  houseRules: { name: "House rules", open: (c) => c.bestShift >= 2, text: "From shift 3, the house sets one rule each shift. The last link brings a boss rule." },
+};
+
 const SAVE_KEY = "chainedDice.profile";
 
 function newProfile() {
@@ -55,10 +63,12 @@ function newProfile() {
       bestShift: 0, oddsWon: 0, pointSevens: 0, falls: 0, turnDoubles: 0, runInterest: 0,
       dontWins: 0, jinxDropped: 0, crewWins: {}, ownTurnRolls: 0, ownTurnWon: 0, runHires: 0,
       edits: 0, nudges: 0, copycats: 0, pointsHit: 0, bigMultPoints: 0, hires: 0,
-      hardPairs: 0, turnPoints: 0, runPoints: 0,
+      hardPairs: 0, turnPoints: 0, runPoints: 0, escapes: 0,
       sevenOuts: 0, bestLeftover: 0, hardWins: 0, placeWins: 0, editedFaces: 0,
     },
     fresh: [], // just unlocked, waiting to be announced (not saved)
+    systemsSeen: [], // systems already announced
+    freshSystems: [], // systems just opened, waiting to be announced (not saved)
     freshPerks: [], // Reputation bonuses just earned, announced with them
   };
 }
@@ -74,6 +84,8 @@ function profile() {
     if (saved) {
       PROFILE.unlocked = saved.unlocked || [];
       Object.assign(PROFILE.counts, saved.counts || {});
+      // Saves from before systems existed: whatever is already open counts as announced.
+      PROFILE.systemsSeen = saved.systemsSeen || Object.keys(SYSTEMS).filter((id) => SYSTEMS[id].open(PROFILE.counts));
     }
   } catch (e) {
     // Nothing saved, or no storage: start fresh.
@@ -84,7 +96,7 @@ function profile() {
 function saveProfile() {
   if (!CONFIG.saveProgress) return;
   try {
-    localStorage.setItem(SAVE_KEY, JSON.stringify({ unlocked: PROFILE.unlocked, counts: PROFILE.counts }));
+    localStorage.setItem(SAVE_KEY, JSON.stringify({ unlocked: PROFILE.unlocked, counts: PROFILE.counts, systemsSeen: PROFILE.systemsSeen }));
   } catch (e) {
     // Not saved; progress lasts until the page closes.
   }
@@ -122,6 +134,12 @@ function checkUnlocks() {
     }
   }
   p.freshPerks = p.freshPerks.concat(earnedReputation().slice(perksBefore));
+  for (const id of Object.keys(SYSTEMS)) {
+    if (!p.systemsSeen.includes(id) && SYSTEMS[id].open(p.counts)) {
+      p.systemsSeen.push(id);
+      p.freshSystems.push(id);
+    }
+  }
   saveProfile();
 }
 
@@ -166,6 +184,7 @@ function trackRollUnlocks(state, info) {
 function trackShiftWon(state) {
   const c = profile().counts;
   best("bestShift", state.shift);
+  if (!state.endless && state.shift === totalLinks(state)) c.escapes += 1; // walked out free
   best("bestLeftover", totalMoney(state));
   for (const name of state.roster) {
     if (name !== "You") c.crewWins[name] = (c.crewWins[name] || 0) + 1;
@@ -209,6 +228,25 @@ function takeFreshUnlocks() {
   const fresh = p.fresh.slice();
   p.fresh = [];
   return fresh;
+}
+
+function takeFreshSystems() {
+  const p = profile();
+  const fresh = p.freshSystems.slice();
+  p.freshSystems = [];
+  return fresh;
+}
+
+// Which systems this run has (decided when the run starts, like locked items).
+function openSystems() {
+  const out = {};
+  for (const id of Object.keys(SYSTEMS)) out[id] = CONFIG.unlockEverything || SYSTEMS[id].open(profile().counts);
+  return out;
+}
+
+// Is a system on in this run? (Runs saved before systems existed have everything.)
+function systemOn(state, id) {
+  return !state.systems || !!state.systems[id];
 }
 
 function takeFreshPerks() {
