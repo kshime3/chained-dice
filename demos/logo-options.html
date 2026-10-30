@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Logo Options</title>
   <style>
-    :root { --bg: #1b1b1b; --card: #242424; --text: #f0f0f0; --muted: #bbb; }
+    :root { --bg: #111; --card: #1d1d1d; --text: #f0f0f0; --muted: #aaa; }
     * { box-sizing: border-box; }
     body { margin: 0; padding: 16px; background: var(--bg); color: var(--text); font-family: system-ui, sans-serif; }
     h1 { margin: 0 0 4px; font-size: 1.5rem; }
@@ -22,87 +22,71 @@
     .on-light { background: #f3f3f3; border-radius: 8px; padding: 6px; }
     .tab { display: flex; align-items: center; gap: 8px; background: #dee1e6; color: #222; border-radius: 8px 8px 0 0; padding: 6px 10px; width: 220px; font-size: 0.8rem; margin: 0 auto; }
     .tab svg { width: 16px; height: 16px; flex: none; }
-    .header { display: flex; align-items: center; gap: 10px; justify-content: center; margin-top: 12px; padding: 10px; background: #151515; border-radius: 10px; }
+    .header { display: flex; align-items: center; gap: 10px; justify-content: center; margin-top: 12px; padding: 10px; background: #0c0c0c; border-radius: 10px; }
     .header svg { width: 44px; height: 44px; }
     .header span { font-size: 1.5rem; font-weight: 800; letter-spacing: 2px; }
   </style>
 </head>
 <body>
-  <h1>⛓🎲 Logo: pick a direction</h1>
-  <p class="intro">Four ideas for the Chained Dice logo. Each is shown big, as an app icon, at browser-tab sizes (where details disappear), and next to the title. Pick one, or mix parts ("A's shape with C's colors"), and I'll polish it and add it to the game.</p>
+  <h1>⛓💀 Logo: C, but darker</h1>
+  <p class="intro">Three darker takes on "Break the Chain": a die tearing out of a snapped link, over the pit where you fall. Each is shown big, as an app icon, at browser-tab sizes and next to the title. Pick one, or mix parts.</p>
   <div class="grid" id="grid"></div>
 
   <script>
-    // Colors from the game: felt green, gold, ivory dice, red single pip, steel chain.
-    const C = { felt: "#0b6b3a", feltDark: "#063d21", gold: "#ffd84d", ivory: "#fdfdf8", edge: "#cfcfc4", pip: "#1b1b1b", red: "#c0392b", steel: "#c4cad3", steelDark: "#5d6570" };
+    // Dark palette: pit black, ember red, bone dice, rusted iron.
+    const C = { black: "#0a0807", pit: "#3a0a06", ember: "#ff4b2b", emberHot: "#ffb347", bone: "#e9e1cf", boneEdge: "#a99e86",
+      socket: "#120d0b", blood: "#9e1b14", iron: "#6f6a66", ironDark: "#2b2724", rust: "#8a4a2a", felt: "#0d2a1a" };
 
-    // Rounded-square background, like an app icon.
-    const tile = (id) => `<defs><radialGradient id="felt-${id}" cx="50%" cy="40%" r="70%"><stop offset="0" stop-color="${C.felt}"/><stop offset="1" stop-color="${C.feltDark}"/></radialGradient></defs>
-      <rect x="4" y="4" width="248" height="248" rx="52" fill="url(#felt-${id})" stroke="${C.gold}" stroke-width="6"/>`;
-    const pip = (x, y, r = 13, fill = C.pip) => `<circle cx="${x}" cy="${y}" r="${r}" fill="${fill}"/>`;
+    // Background tile: black, with the pit glowing red from below.
+    const tile = (id, base = C.black) => `<defs>
+        <radialGradient id="pit-${id}" cx="50%" cy="100%" r="80%"><stop offset="0" stop-color="${C.ember}" stop-opacity="0.75"/><stop offset="0.45" stop-color="${C.pit}" stop-opacity="0.7"/><stop offset="1" stop-color="${base}" stop-opacity="0"/></radialGradient>
+        <linearGradient id="rust-${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${C.iron}"/><stop offset="0.6" stop-color="${C.rust}"/><stop offset="1" stop-color="${C.ironDark}"/></linearGradient>
+      </defs>
+      <rect x="4" y="4" width="248" height="248" rx="52" fill="${base}"/>
+      <rect x="4" y="4" width="248" height="248" rx="52" fill="url(#pit-${id})"/>
+      <rect x="4" y="4" width="248" height="248" rx="52" fill="none" stroke="#5a1410" stroke-width="6"/>`;
 
-    // A chain link seen flat (an outlined oval) or edge-on (a thick bar), centred at x, y.
-    const flatLink = (x, y, angle) => `<g transform="translate(${x} ${y}) rotate(${angle})">
-      <rect x="-26" y="-15" width="52" height="30" rx="15" fill="none" stroke="${C.steelDark}" stroke-width="13"/>
-      <rect x="-26" y="-15" width="52" height="30" rx="15" fill="none" stroke="${C.steel}" stroke-width="8"/></g>`;
-    const edgeLink = (x, y, angle) => `<g transform="translate(${x} ${y}) rotate(${angle})">
-      <rect x="-26" y="-7" width="52" height="14" rx="7" fill="${C.steel}" stroke="${C.steelDark}" stroke-width="3"/></g>`;
+    // The snapped link: two rusted half-rings flying apart.
+    const brokenLink = (id) => `
+      <g transform="rotate(-14 64 136)"><path d="M64 96 A40 40 0 0 0 64 176" fill="none" stroke="${C.ironDark}" stroke-width="26" stroke-linecap="round"/>
+        <path d="M64 96 A40 40 0 0 0 64 176" fill="none" stroke="url(#rust-${id})" stroke-width="15" stroke-linecap="round"/></g>
+      <g transform="rotate(-14 192 120)"><path d="M192 80 A40 40 0 0 1 192 160" fill="none" stroke="${C.ironDark}" stroke-width="26" stroke-linecap="round"/>
+        <path d="M192 80 A40 40 0 0 1 192 160" fill="none" stroke="url(#rust-${id})" stroke-width="15" stroke-linecap="round"/></g>`;
+
+    // Embers instead of gold sparks.
+    const embers = `<g stroke-linecap="round">
+        <path d="M96 64 L84 44" stroke="${C.ember}" stroke-width="7"/><path d="M118 56 L118 32" stroke="${C.emberHot}" stroke-width="7"/>
+        <path d="M140 62 L152 42" stroke="${C.ember}" stroke-width="7"/><path d="M104 210 L92 228" stroke="${C.ember}" stroke-width="6"/>
+        <path d="M152 206 L166 224" stroke="${C.emberHot}" stroke-width="6"/></g>
+      <circle cx="74" cy="58" r="3.5" fill="${C.emberHot}"/><circle cx="176" cy="216" r="3" fill="${C.ember}"/>`;
+
+    const die = (inner) => `<g transform="rotate(12 128 136)">
+        <rect x="80" y="88" width="96" height="96" rx="20" fill="${C.bone}" stroke="${C.boneEdge}" stroke-width="4"/>${inner}</g>`;
 
     const LOGOS = {
-      A: {
-        name: "A. Locked Die",
-        text: "A die that is a padlock: the shackle on top, the keyhole as its middle pip (red, like the game's single pip). Bold and simple, so it reads even at 16 pixels.",
-        svg: (id) => `${tile(id)}
-          <path d="M84 122 V88 a44 44 0 0 1 88 0 V122" fill="none" stroke="${C.steelDark}" stroke-width="26"/>
-          <path d="M84 122 V88 a44 44 0 0 1 88 0 V122" fill="none" stroke="${C.steel}" stroke-width="16"/>
-          <rect x="50" y="108" width="156" height="122" rx="26" fill="${C.ivory}" stroke="${C.edge}" stroke-width="4"/>
-          ${pip(86, 140)}${pip(170, 200)}
-          <circle cx="128" cy="160" r="15" fill="${C.red}"/><path d="M120 166 L136 166 L141 196 L115 196 Z" fill="${C.red}"/>`,
+      C1: {
+        name: "C1. Pit Glow",
+        text: "Black, with the pit glowing red from below. A bone-coloured die tears out of a rusted, snapped link; embers fly instead of gold sparks.",
+        svg: (id) => `${tile(id)}${brokenLink(id)}${embers}
+          ${die(`<circle cx="106" cy="114" r="10" fill="${C.socket}"/><circle cx="128" cy="136" r="11" fill="${C.blood}"/><circle cx="150" cy="158" r="10" fill="${C.socket}"/>`)}`,
       },
-      B: {
-        name: "B. Chained Die",
-        text: "A die with a steel chain wrapped across it. The most literal: you can see 'chained' and 'dice' at once. Chain detail softens at small sizes.",
-        svg: (id) => {
-          let chain = "";
-          const pts = [[18, 70], [52, 92], [86, 114], [120, 136], [154, 158], [188, 180], [222, 202]];
-          pts.forEach(([x, y], i) => (chain += i % 2 ? edgeLink(x, y, 33) : flatLink(x, y, 33)));
-          return `${tile(id)}
-            <g transform="rotate(-8 128 132)">
-              <rect x="54" y="58" width="148" height="148" rx="28" fill="${C.ivory}" stroke="${C.edge}" stroke-width="4"/>
-              ${pip(90, 94)}${pip(166, 94)}${pip(128, 132, 15, C.red)}${pip(90, 170)}${pip(166, 170)}
-            </g>${chain}`;
-        },
+      C2: {
+        name: "C2. Skull Die",
+        text: "Same pit, but the die shows snake eyes as two hollow eye sockets, with a crack down its face. A die and a skull at once.",
+        svg: (id) => `${tile(id)}${brokenLink(id)}${embers}
+          ${die(`<ellipse cx="108" cy="122" rx="13" ry="15" fill="${C.socket}"/><ellipse cx="148" cy="122" rx="13" ry="15" fill="${C.socket}"/>
+            <circle cx="108" cy="124" r="3.5" fill="${C.ember}"/><circle cx="148" cy="124" r="3.5" fill="${C.ember}"/>
+            <path d="M128 140 L122 150 L132 158 L124 172 L130 184" fill="none" stroke="${C.socket}" stroke-width="4" stroke-linejoin="round"/>
+            <path d="M108 166 h8 M120 166 h8 M136 166 h8" stroke="${C.socket}" stroke-width="4" stroke-linecap="round"/>`)}`,
       },
-      C: {
-        name: "C. Break the Chain",
-        text: "A die bursting through a snapped chain link, with gold sparks. Ties to the goal of the game: break all 8 links and walk out free.",
-        svg: (id) => `${tile(id)}
-          <path d="M64 96 A40 40 0 0 0 64 176" fill="none" stroke="${C.steelDark}" stroke-width="24" stroke-linecap="round" transform="rotate(-14 64 136)"/>
-          <path d="M64 96 A40 40 0 0 0 64 176" fill="none" stroke="${C.steel}" stroke-width="15" stroke-linecap="round" transform="rotate(-14 64 136)"/>
-          <path d="M192 80 A40 40 0 0 1 192 160" fill="none" stroke="${C.steelDark}" stroke-width="24" stroke-linecap="round" transform="rotate(-14 192 120)"/>
-          <path d="M192 80 A40 40 0 0 1 192 160" fill="none" stroke="${C.steel}" stroke-width="15" stroke-linecap="round" transform="rotate(-14 192 120)"/>
-          <g stroke="${C.gold}" stroke-width="7" stroke-linecap="round">
-            <path d="M96 64 L84 44"/><path d="M118 56 L118 32"/><path d="M140 62 L152 42"/>
-            <path d="M104 210 L92 228"/><path d="M152 206 L166 224"/>
-          </g>
-          <g transform="rotate(12 128 136)">
-            <rect x="80" y="88" width="96" height="96" rx="20" fill="${C.ivory}" stroke="${C.edge}" stroke-width="4"/>
-            ${pip(106, 114, 10)}${pip(128, 136, 11, C.red)}${pip(150, 158, 10)}
-          </g>`,
-      },
-      D: {
-        name: "D. Linked Pair",
-        text: "Two dice chained to each other, like crewmates at the table. Reads clearly as a dice game; the chain ties them together.",
-        svg: (id) => `${tile(id)}
-          <g transform="rotate(-12 74 92)">
-            <rect x="30" y="48" width="88" height="88" rx="18" fill="${C.ivory}" stroke="${C.edge}" stroke-width="4"/>
-            ${pip(52, 70, 9)}${pip(74, 92, 10, C.red)}${pip(96, 114, 9)}
-          </g>
-          <g transform="rotate(10 182 166)">
-            <rect x="138" y="122" width="88" height="88" rx="18" fill="${C.ivory}" stroke="${C.edge}" stroke-width="4"/>
-            ${pip(160, 144, 9)}${pip(204, 144, 9)}${pip(160, 188, 9)}${pip(204, 188, 9)}
-          </g>
-          ${flatLink(112, 126, 40)}${edgeLink(132, 142, 40)}${flatLink(152, 158, 40)}`,
+      C3: {
+        name: "C3. Blood Pip",
+        text: "The felt goes almost black; the red pip bleeds down the die. Closest to the original C, just grimmer.",
+        svg: (id) => `${tile(id, C.felt)}${brokenLink(id)}${embers}
+          ${die(`<circle cx="106" cy="114" r="10" fill="${C.socket}"/><circle cx="150" cy="158" r="10" fill="${C.socket}"/>
+            <path d="M128 124 a12 12 0 1 1 -0.1 0 Z" fill="${C.blood}"/>
+            <path d="M124 146 C124 158 120 164 121 174 a5 5 0 0 0 10 0 C132 164 130 156 131 146 Z" fill="${C.blood}"/>
+            <path d="M117 140 c-2 6 -4 10 -3 16 a3.5 3.5 0 0 0 7 0 c0 -5 -1 -9 -1 -14 Z" fill="${C.blood}"/>`)}`,
       },
     };
 

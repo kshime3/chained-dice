@@ -10,7 +10,7 @@ Dated session log. Newest at the top.
 
 - Step 3 built (friends playtesting meanwhile): comps, dice crafting and challenges arrive after the first run; house rules the run after first reaching shift 3; each announced (guaranteed unlock moment after run 1). tests.html: 427 checks.
 
-- Logo: `demos/logo-options.html` with four directions (Locked Die, Chained Die, Break the Chain, Linked Pair).
+- Logo: owner picked C (Break the Chain) but darker ("if we fall, we die"); `demos/logo-options.html` now shows C1 Pit Glow, C2 Skull Die, C3 Blood Pip.
 
 **Waiting on the owner**
 - Pick a logo; friends playtest feedback; testing the first-run flow.
