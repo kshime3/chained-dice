@@ -279,6 +279,13 @@ Like Clover Pit's phone. After **every won shift**, it rings before the next shi
   - 📖 Collection button: found items first, then locked "???" tiles; "Reset all progress" link. Testing: `?unlockAll`.
 - **Tutorials [Built]:** a 2-page phone tutorial the first time it rings; a 7-page "How to play" intro on first visit (also via the How to play button), a 3-page shop tutorial (including Cut a chain) the first time the shop opens (also via the shop's ? button). [Planned] A phone tutorial. Each shows once per browser.
 
+## Polish  [Built, 2026-10-30]
+- **Save bets / Same bets** (rules in DECISIONS.md, logic `saveBets` / `rebet` in shift.js).
+- First chip on a line bet covers the table minimum; unaffordable chips switch to one you can afford.
+- "+$25" popups float up from winning bets, losses drop away in red.
+- ⚙ Settings: sound, quick dice, replay tutorials, reset progress.
+- Controls on two rows (chips + Roll; small buttons below).
+
 ## Glossary
 
 - **Shift** (also "session"): one round. Pay the debt by the end or fall.

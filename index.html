@@ -11,7 +11,7 @@
     <div class="title-row">
       <h1>Chained Dice</h1>
       <div class="title-buttons">
-        <button id="mute" class="mute-button"></button>
+        <button id="settings-button" class="mute-button" title="Settings">⚙</button>
         <button id="collection-button" class="how-to-play" title="Collection: everything you've unlocked">📖<span class="hide-mobile"> Collection</span></button>
         <button id="how-to-play" class="how-to-play">How to play</button>
       </div>
@@ -90,7 +90,11 @@
       <div class="controls">
         <div id="chips" class="chips"></div>
         <button id="roll-button" class="big-button">Roll</button>
+      </div>
+      <div class="controls small-controls">
         <button id="clear-button">Clear bets</button>
+        <button id="save-bets" title="Remember the bets on the table now">💾 Save bets</button>
+        <button id="same-bets" title="Put your saved bets back down">↻ Same bets</button>
         <button id="board-toggle" class="hidden">➕ More bets</button>
       </div>
 
@@ -190,6 +194,18 @@
 
   <div id="splash" class="overlay splash hidden">
     <div id="splash-content" class="splash-content"></div>
+  </div>
+
+  <div id="settings" class="overlay hidden">
+    <div class="end-box settings-box">
+      <h2>⚙ Settings</h2>
+      <div class="setting-row"><span>Sound</span><button id="mute"></button></div>
+      <div class="setting-row"><span>Quick dice <span class="hint">(no tumbling animation)</span></span><button id="quick-dice"></button></div>
+      <div class="setting-row"><span>Tutorials</span><button id="replay-tutorials">Show them again</button></div>
+      <div class="setting-row"><span>Unlocks and Reputation</span><button id="settings-reset">Reset all progress</button></div>
+      <p id="settings-message" class="hint"></p>
+      <button id="settings-close" class="big-button">Close</button>
+    </div>
   </div>
 
   <div id="collection" class="overlay hidden">

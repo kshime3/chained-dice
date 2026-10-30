@@ -161,6 +161,15 @@ function tutorialSeen(name) {
   }
 }
 
+// Settings: forget every "seen" tutorial so they all show again.
+function forgetTutorials() {
+  try {
+    Object.keys(localStorage).filter((k) => k.startsWith("chainedDice.seen.")).forEach((k) => localStorage.removeItem(k));
+  } catch (e) {
+    // Nothing saved anyway.
+  }
+}
+
 function markTutorialSeen(name) {
   try {
     localStorage.setItem("chainedDice.seen." + name, "yes");

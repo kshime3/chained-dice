@@ -112,3 +112,7 @@ Unchanged for shifts 1-5. Shifts 6-8 follow the existing x1.5 growth: $1,800, $2
 - Button: "➕ More bets" / "⬅ Main bets". Board note: "Hard Ways and Place bets are off on come-out rolls. Tap a bet to add your chip."
 - Messages: "Come bets open once a point is set." "The Fire Bet goes down before a shooter's first roll." "Place 6 bet is now $12. (Off until a point is set.)" Roll text: "Come moves to the 5." "Come bet on 5 wins $10."
 - Unlock screen: "New bet (find it under ➕ More bets)". Tutorial pages per bet use the Collection text.
+
+## Added 2026-10-30: polish pass
+- Buttons: "💾 Save bets", "↻ Same bets". Messages: "Saved: Pass Line $5, Odds $15. Press ↻ Same bets to put them back." / "Placed Pass Line $5. Odds wait for a point: press again once it's set." / "Not enough cash for Odds." / "No saved bets yet. Put chips down, then press 💾 Save bets."
+- Settings: "Sound", "Quick dice (no tumbling animation)", "Tutorials: Show them again", "Unlocks and Reputation: Reset all progress".

@@ -255,3 +255,11 @@ Dated log of every decision and why. Newest at the bottom.
 - **The mult applies to them** (owner). Fire Bet payouts trimmed to 24/99/299 and capped at one table minimum because of it.
 - Kept simple: Hard Ways and Place bets are off on come-outs; no odds behind Come bets; a second "More bets" board instead of squeezing the main board.
 - Place bets turned out to be strong (with mult cards), so their goal was raised to 150 points rather than cutting their payouts (lower payouts barely changed the result).
+
+## 2026-10-30 (polish pass)
+
+- Owner picked: smarter betting, pop-up layering, a **Save bets / Same bets** button (owner's idea), win popups, a settings menu.
+- **Same bets** puts back what the rules allow right now (cash only, each bet in full or not at all): line bets on a come-out (raised to the table minimum if it went up), Odds/Lay once a point is set (capped at today's limit). Press again after the point is set to add the Odds. Saved bets carry across shooters and shifts.
+- **Smarter betting:** the first chip on a line bet covers at least the table minimum; a chip you can't afford switches to the biggest one you can.
+- **Settings (⚙, replaces the sound button):** sound, quick dice, show tutorials again, reset progress.
+- Pop-ups leave 60px at the top so the header buttons never cover a box.

@@ -93,3 +93,8 @@ Parked ideas and later features. Not in v1 unless moved into the design.
 
 ## Starting crew size (owner, 2026-10-29)
 - If 6 shooters feels like too many, start with 3 crew and let recruiting grow the table to a maximum of 6. Helps the game grow and scale over a run. Would need a `startingCrew` setting and more recruits. **Built 2026-10-29** with the same debts (owner wants it harder) and Jinx always seated.
+
+## Polish ideas not picked yet (2026-10-30)
+- Tidier win screen (short lines instead of one paragraph).
+- Press-and-hold help on phones for bets, seats and cards.
+- Keyboard shortcuts (Space to roll, 1-3 for chips, B for More bets).

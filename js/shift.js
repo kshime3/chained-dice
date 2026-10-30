@@ -56,6 +56,7 @@ function newShiftState() {
     deposited: 0, // paid to the dealer: safe, but out of play
     bets: emptyBets(),
     firePoints: [], // different points the current shooter has made (Fire Bet)
+    savedBets: null, // bets remembered by "Save bets" (carry over between shifts)
     point: null, // null means the next roll is a come-out roll
     shooterIndex: 0, // seat number of the current shooter (0 = first seat)
     onBreak: true, // a Dealer Break happens before each shooter and once at the end
@@ -141,6 +142,63 @@ function extraBetCheck(state, bet) {
 // The Fire Bet is small: at most CONFIG.fireBetMaxX table minimums.
 function fireMax(state) {
   return tableMin(state) * CONFIG.fireBetMaxX;
+}
+
+// "Save bets": remember what's on the table now. Come bets that already moved
+// to a number aren't saved (you can't put a chip there directly).
+function saveBets(state) {
+  const saved = {};
+  for (const [bet, amount] of Object.entries(state.bets)) {
+    if (amount > 0 && !/^d?come\d+$/.test(bet)) saved[bet] = amount;
+  }
+  state.savedBets = Object.keys(saved).length ? saved : null;
+  return state.savedBets;
+}
+
+// "Same bets": top each saved bet back up to its saved amount, using cash only,
+// where the rules allow it right now. A line bet is raised to the table minimum if needed;
+// Odds and Lay Odds are capped at today's limit. Each bet goes down in full or not at all.
+// Returns { placed: [{ bet, amount }], waiting: [bet] (not allowed yet), short: [bet] (not enough cash) }.
+function rebet(state) {
+  const out = { placed: [], waiting: [], short: [] };
+  const saved = state.savedBets || {};
+  const put = (bet, want) => {
+    const need = want - state.bets[bet];
+    if (need <= 0) return;
+    if (need > state.cash) {
+      out.short.push(bet);
+      return;
+    }
+    state.cash -= need;
+    state.bets[bet] += need;
+    out.placed.push({ bet: bet, amount: need });
+  };
+  for (const line of ["pass", "dont"]) {
+    if (!saved[line]) continue;
+    const other = line === "pass" ? "dont" : "pass";
+    if (state.point !== null || (line === "pass" && !passAllowed(state)) || state.bets[other] > 0) {
+      if (state.bets[line] === 0) out.waiting.push(line);
+      continue;
+    }
+    put(line, Math.max(saved[line], tableMin(state)));
+  }
+  if (saved.field) put("field", saved.field);
+  for (const [back, line] of [["odds", "pass"], ["lay", "dont"]]) {
+    if (!saved[back]) continue;
+    if (state.point === null || state.bets[line] === 0) {
+      out.waiting.push(back);
+      continue;
+    }
+    put(back, Math.min(saved[back], backingLimit(state, back)));
+  }
+  for (const bet of Object.keys(saved).filter((b) => betGroup(b))) {
+    const check = extraBetCheck(state, bet);
+    if (check === "noPoint" || check === "fireLate") out.waiting.push(bet);
+    else if (check === "ok" || (check === "fireMax" && state.bets.fire < saved.fire)) {
+      put(bet, bet === "fire" ? Math.min(saved.fire, fireMax(state)) : saved[bet]);
+    }
+  }
+  return out;
 }
 
 function passAllowed(state) {
@@ -296,6 +354,7 @@ function nextShift(old) {
   state.roster = old.roster.slice();
   state.dropped = old.dropped.slice();
   state.locked = old.locked.slice();
+  state.savedBets = old.savedBets ? Object.assign({}, old.savedBets) : null;
   state.interestRate = old.interestRate;
   state.stats = old.stats;
   state.perks = old.perks.slice();

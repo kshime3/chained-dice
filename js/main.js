@@ -11,6 +11,8 @@ let selectedChip = CONFIG.chipValues[0];
 function showChips() {
   const values = chipsFor(state);
   if (!values.includes(selectedChip)) selectedChip = values[0];
+  // A chip you can't afford is no use: switch to the biggest one you can.
+  if (selectedChip > state.cash && values.some((v) => v <= state.cash)) selectedChip = values.filter((v) => v <= state.cash).pop();
   renderChips(values, selectedChip, pickChip);
 }
 let rolling = false; // true while the dice animation plays
@@ -73,6 +75,8 @@ function placeBet(betName) {
       showMessage("You're on the " + BET_NAMES[other] + " this come-out. One side at a time: press Clear bets to switch.");
       return;
     }
+    // The first chip on a line bet covers at least the table minimum.
+    if (state.bets[betName] < tableMin(state)) amount = Math.max(amount, tableMin(state) - state.bets[betName]);
     const moves = fundPassLine(state, amount, betName);
     if (moves === null) {
       showMessage("Not enough money for a " + money(amount) + " " + BET_NAMES[betName] + " bet. Try a smaller chip.");
@@ -202,6 +206,7 @@ function finishRoll(rolled) {
 
   // Pay winners, remove losers, move Come bets.
   settleResults(state, results);
+  showBetPopups(results);
 
   const compNotes = finishArmed(state, results);
 
@@ -493,6 +498,29 @@ document.getElementById("field").onclick = () => placeBet("field");
 document.getElementById("dont-pass").onclick = () => placeBet("dont");
 document.getElementById("lay").onclick = () => placeBet("lay");
 document.getElementById("roll-button").onclick = roll;
+document.getElementById("save-bets").onclick = () => {
+  if (busy() || state.onBreak) return;
+  const saved = saveBets(state);
+  showMessage(saved ? "Saved: " + Object.entries(saved).map(([bet, amount]) => BET_NAMES[bet] + " " + money(amount)).join(", ") + ". Press ↻ Same bets to put them back."
+    : "Nothing on the table to save.");
+  renderState(state);
+};
+document.getElementById("same-bets").onclick = () => {
+  if (busy() || state.onBreak || state.status !== "playing") return;
+  if (!state.savedBets) {
+    showMessage("No saved bets yet. Put chips down, then press 💾 Save bets.");
+    return;
+  }
+  const r = rebet(state);
+  const parts = [];
+  if (r.placed.length) parts.push("Placed " + r.placed.map((p) => BET_NAMES[p.bet] + " " + money(p.amount)).join(", ") + ".");
+  if (r.waiting.length) parts.push(r.waiting.map((b) => BET_NAMES[b]).join(", ") + (state.point === null ? " wait for a point: press again once it's set." : " can't go down right now."));
+  if (r.short.length) parts.push("Not enough cash for " + r.short.map((b) => BET_NAMES[b]).join(", ") + ".");
+  if (!parts.length) parts.push("Your saved bets are already on the table.");
+  if (r.placed.length) playSound("chip");
+  showMessage(parts.join(" "));
+  renderAll();
+};
 document.getElementById("board-toggle").onclick = () => {
   showingExtraBoard = !showingExtraBoard;
   renderState(state);
@@ -528,6 +556,43 @@ document.getElementById("mute").onclick = () => {
   setMuted(!muted);
   renderMuteButton();
   playSound("chip");
+};
+
+// Quick dice: skip the tumbling animation (remembered in this browser).
+const normalDiceMs = CONFIG.diceRollMs;
+let quickDice = false;
+try {
+  quickDice = localStorage.getItem("chainedDice.quickDice") === "yes";
+} catch (e) {
+  // Storage blocked: normal dice.
+}
+function applyQuickDice() {
+  CONFIG.diceRollMs = quickDice ? 0 : normalDiceMs;
+  document.getElementById("quick-dice").textContent = quickDice ? "On" : "Off";
+}
+applyQuickDice();
+document.getElementById("quick-dice").onclick = () => {
+  quickDice = !quickDice;
+  try {
+    localStorage.setItem("chainedDice.quickDice", quickDice ? "yes" : "no");
+  } catch (e) {
+    // Not saved; lasts until the page closes.
+  }
+  applyQuickDice();
+};
+document.getElementById("settings-button").onclick = () => {
+  document.getElementById("settings-message").textContent = "";
+  document.getElementById("settings").classList.remove("hidden");
+};
+document.getElementById("settings-close").onclick = () => document.getElementById("settings").classList.add("hidden");
+document.getElementById("replay-tutorials").onclick = () => {
+  forgetTutorials();
+  document.getElementById("settings-message").textContent = "Done. Each tutorial will show again the next time it comes up.";
+};
+document.getElementById("settings-reset").onclick = () => {
+  if (!confirm("Lock everything again and erase all unlock progress and Reputation? Your current run isn't affected.")) return;
+  resetProfile();
+  document.getElementById("settings-message").textContent = "Progress reset. Everything is locked again from your next run.";
 };
 document.getElementById("how-to-play").onclick = () => showTutorial(introPages());
 document.getElementById("collection-button").onclick = showCollection;

@@ -2,6 +2,19 @@
 
 Dated session log. Newest at the top.
 
+## 2026-10-30: Session 8 (polish pass)
+
+**Done**
+- Audit: a script played 25 full runs (8 escapes, endless mode, up to shift 9) with no errors; screenshots reviewed. Rough edges found: a line bet below the table minimum only complained at Roll; a big chip stayed selected when you couldn't afford it; header buttons overlapped pop-ups.
+- Built: Save bets / Same bets, smarter betting, pop-up layering, win/loss popups, ⚙ Settings (sound, quick dice, replay tutorials, reset progress). tests.html: 398 checks, all passing. Fits one screen on phones.
+- Balance unchanged (BALANCE.md).
+
+**Waiting on the owner**
+- Playtesting the polish pass.
+
+**Exact next step**
+- Owner's choice: more polish (tidier win screen, press-and-hold help on phones), 3D dice, or more content.
+
 ## 2026-10-29: Session 7, continued (Milestone 12b: more bets)
 
 **Done**

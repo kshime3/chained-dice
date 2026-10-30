@@ -954,7 +954,7 @@ function playFall(ms, onDone) {
 
 function renderMuteButton() {
   const button = document.getElementById("mute");
-  button.textContent = muted ? "🔇" : "🔊";
+  button.textContent = muted ? "🔇 Off" : "🔊 On";
   button.title = muted ? "Sound is off. Click to turn it on." : "Sound is on. Click to mute.";
 }
 
@@ -1159,4 +1159,33 @@ function renderExtraBoard(state) {
   html += '<p class="hint extra-note">Hard Ways and Place bets are off on come-out rolls. Tap a bet to add your chip.</p>';
   board.innerHTML = html;
   for (const el of board.querySelectorAll("[data-bet]")) el.onclick = () => placeBet(el.dataset.bet);
+}
+
+// ---------- Win and loss popups ----------
+
+// The spot on the table for a bet (falls back to the dice if that board isn't showing).
+function betSpot(bet) {
+  const ids = { pass: "pass-line", odds: "odds", dont: "dont-pass", lay: "lay", field: "field" };
+  const tile = /^come\d+$/.test(bet) ? "come" : /^dcome\d+$/.test(bet) ? "dontCome" : bet;
+  const el = ids[bet] ? document.getElementById(ids[bet]) : document.querySelector('[data-bet="' + tile + '"]');
+  return el && el.offsetParent !== null ? el : document.getElementById("dice");
+}
+
+// "+$25" floats up from each winning bet; losses drop away in red.
+function showBetPopups(results) {
+  const used = new Map(); // stack popups that share a spot
+  for (const r of results) {
+    if (r.outcome !== "win" && r.outcome !== "lose") continue;
+    const spot = betSpot(r.bet);
+    const box = spot.getBoundingClientRect();
+    const n = used.get(spot) || 0;
+    used.set(spot, n + 1);
+    const pop = document.createElement("div");
+    pop.className = "bet-pop " + (r.outcome === "win" ? "win" : "lose");
+    pop.textContent = r.outcome === "win" ? "+" + money(r.winnings) : "-" + money(r.amount);
+    pop.style.left = box.left + box.width / 2 + "px";
+    pop.style.top = box.top + box.height / 2 - n * 22 + "px";
+    document.body.appendChild(pop);
+    setTimeout(() => pop.remove(), CONFIG.betPopMs);
+  }
 }

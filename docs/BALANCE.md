@@ -252,3 +252,7 @@ Careers (200 each): median runs to first escape **38** (smart) and **32** (smart
 
 - Path: with easy goals the median fell to 21-24 runs. Harder goals for all four helped little; Place bets were the driver (6 and 8 win often, feeding Hot Hand and other mult cards). Cutting Place payouts to 1:1 on 6/8 barely changed it, so payouts stay at casino odds and the Place goal went from 25 to 150 points hit.
 - The Fire Bet is a fun long shot but adds almost nothing on average.
+
+## 2026-10-30: Polish pass retest
+
+No rule changes. New player per-shift survival 57 / 41 / 52 / 51 / 47 / 41 / 33 / 25%, career median 36 runs: same as the 12b entry. No rescale.

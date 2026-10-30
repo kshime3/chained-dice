@@ -223,6 +223,7 @@ const CONFIG = {
   fallMs: 3200,     // how long the floor-opening animation lasts when you fall
   diceRollMs: 600, // how long the dice-rolling animation lasts (0 = no animation)
   sevenOutSplashMs: 5000, // how long the SEVEN OUT screen shows before the Dealer Break (tap skips)
+  betPopMs: 1400,         // how long a "+$25" win popup floats
   unlockSplashMs: 6000,   // how long the "Unlocked" screen shows (tap skips)
   winSplashMs: 5000,      // how long the "Point hit" winnings screen shows (tap skips)
   cutSplashMs: 4000,      // how long the "falls through the floor" screen shows (tap skips)
