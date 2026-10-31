@@ -1,0 +1,19 @@
+Music in Chained Dice
+
+All tracks by Kevin MacLeod (incompetech.com)
+Licensed under Creative Commons: By Attribution 4.0 License
+https://creativecommons.org/licenses/by/4.0/
+Source: https://incompetech.com/music/royalty-free/
+Change made: re-encoded to 96 kbps MP3 (smaller files for the web); otherwise unchanged.
+
+Calm (early shifts):
+  "Deadly Roulette" Kevin MacLeod (incompetech.com)   -> deadly-roulette.mp3
+  "Bass Walker" Kevin MacLeod (incompetech.com)       -> bass-walker.mp3
+  "Comfortable Mystery" Kevin MacLeod (incompetech.com) -> comfortable-mystery.mp3
+
+Tense (shift 5 on, and endless mode):
+  "Dances and Dames" Kevin MacLeod (incompetech.com)  -> dances-and-dames.mp3
+  "Night of Chaos" Kevin MacLeod (incompetech.com)    -> night-of-chaos.mp3
+  "Gloom Horizon" Kevin MacLeod (incompetech.com)     -> gloom-horizon.mp3
+
+The same credits show in the game under Settings > Credits.

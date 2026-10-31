@@ -258,7 +258,12 @@ const CONFIG = {
     volume: 0.4,
     tenseFromShift: 5,
     tracks: [
-      // { file: "music/example.mp3", title: "Example", artist: "Artist", license: "CC BY 4.0", link: "https://creativecommons.org/licenses/by/4.0/", mood: "calm" },
+      { file: "music/deadly-roulette.mp3", title: "Deadly Roulette", artist: "Kevin MacLeod (incompetech.com)", license: "CC BY 4.0", link: "https://creativecommons.org/licenses/by/4.0/", mood: "calm" },
+      { file: "music/bass-walker.mp3", title: "Bass Walker", artist: "Kevin MacLeod (incompetech.com)", license: "CC BY 4.0", link: "https://creativecommons.org/licenses/by/4.0/", mood: "calm" },
+      { file: "music/comfortable-mystery.mp3", title: "Comfortable Mystery", artist: "Kevin MacLeod (incompetech.com)", license: "CC BY 4.0", link: "https://creativecommons.org/licenses/by/4.0/", mood: "calm" },
+      { file: "music/dances-and-dames.mp3", title: "Dances and Dames", artist: "Kevin MacLeod (incompetech.com)", license: "CC BY 4.0", link: "https://creativecommons.org/licenses/by/4.0/", mood: "tense" },
+      { file: "music/night-of-chaos.mp3", title: "Night of Chaos", artist: "Kevin MacLeod (incompetech.com)", license: "CC BY 4.0", link: "https://creativecommons.org/licenses/by/4.0/", mood: "tense" },
+      { file: "music/gloom-horizon.mp3", title: "Gloom Horizon", artist: "Kevin MacLeod (incompetech.com)", license: "CC BY 4.0", link: "https://creativecommons.org/licenses/by/4.0/", mood: "tense" },
     ],
   },
   betPopMs: 1400,         // how long a "+$25" win popup floats

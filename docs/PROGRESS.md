@@ -14,11 +14,13 @@ Dated session log. Newest at the top.
 
 - Step 3 started: music player, settings and credits built and tested with temporary tones (silent until tracks are added).
 
+- Music added: six Kevin MacLeod tracks (CC BY 4.0), calm and tense playlists, credits in Settings and music/CREDITS.txt.
+
 **Waiting on the owner**
-- Either allow incompetech.com / opengameart.org in the environment's network settings, or download chosen tracks into music/ on the 3d-look branch.
+- Listening to the music and looking over look B; approving a merge of `3d-look` into `main` (that makes it live on the GitHub Pages link).
 
 **Exact next step**
-- Add the tracks (licences checked, credits in CONFIG.music), then merge `3d-look` into `main` when the owner is happy.
+- Merge `3d-look` into `main` when approved, run all checks, push.
 
 ## 2026-10-31: Session 9, continued (planning art, music, Android)
 

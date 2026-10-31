@@ -106,6 +106,7 @@ function setMusicVolume(v) {
 // Credits for the Settings screen (CC-BY asks for title, artist, licence and a link).
 function musicCreditsHtml() {
   if (!CONFIG.music.tracks.length) return "<p class=\"hint\">No music added yet.</p>";
-  return CONFIG.music.tracks.map((t) => "<p class=\"credit\">\"" + t.title + "\" by " + t.artist + ". " +
-    (t.link ? '<a href="' + t.link + '" target="_blank" rel="noopener">' + t.license + "</a>" : t.license) + "</p>").join("");
+  return CONFIG.music.tracks.map((t) => "<p class=\"credit\">\"" + t.title + "\" by " + t.artist + ". Licensed under " +
+    (t.link ? '<a href="' + t.link + '" target="_blank" rel="noopener">' + t.license + "</a>" : t.license) + ".</p>").join("") +
+    '<p class="hint">Tracks re-encoded at a lower bitrate for the web; otherwise unchanged.</p>';
 }
