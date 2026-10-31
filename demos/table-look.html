@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Table Look Preview</title>
+  <style>
+    :root { --text: #eee; --muted: #aaa; }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 16px; background: #0b0908; color: var(--text); font-family: system-ui, sans-serif; }
+    h1 { margin: 0 0 4px; font-size: 1.5rem; }
+    .intro { color: var(--muted); margin: 0 0 16px; max-width: 900px; }
+    .option { margin-bottom: 28px; }
+    .option h2 { margin: 0 0 2px; font-size: 1.2rem; }
+    .option p { color: var(--muted); margin: 0 0 8px; font-size: 0.9rem; max-width: 900px; }
+    .frame { position: relative; width: 100%; max-width: 960px; aspect-ratio: 16 / 10; border-radius: 14px; overflow: hidden; background: #050404; border: 1px solid #2a2a2a; }
+    @media (max-width: 700px) { .frame { aspect-ratio: 3 / 4; } }
+
+    /* Shared HUD on top of both scenes */
+    .hud { position: absolute; top: 10px; left: 0; right: 0; display: flex; justify-content: center; gap: 10px; z-index: 5; pointer-events: none; }
+    .hud div { border-radius: 10px; padding: 3px 12px; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; line-height: 1.1; text-align: center; backdrop-filter: blur(2px); }
+    .hud strong { display: block; font-size: 1.3rem; letter-spacing: 0; }
+    .hud .cash { background: rgba(16, 53, 31, 0.85); border: 2px solid #2ecc71; color: #9be7b4; }
+    .hud .owed { background: rgba(58, 36, 16, 0.85); border: 2px solid #ff9f43; color: #ffcf9b; }
+    .roll { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); z-index: 6; background: #ffd84d; border: none; border-radius: 10px;
+      padding: 10px 30px; font-size: 1.1rem; font-weight: bold; cursor: pointer; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6); }
+    .result { position: absolute; bottom: 62px; left: 0; right: 0; text-align: center; z-index: 6; font-weight: bold; color: #ffe08a; text-shadow: 0 2px 6px #000; }
+
+    /* ---------- B: sitting at the table (CSS 3D) ---------- */
+    .scene-b { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 70% at 50% 18%, #3a2a18 0%, #160f0a 45%, #050404 80%); }
+    .scene-b .lamp { position: absolute; top: -4%; left: 50%; width: 22%; transform: translateX(-50%); z-index: 3; }
+    .scene-b .lamp-flicker { animation: flicker 6s infinite; }
+    @keyframes flicker { 0%, 100% { opacity: 1; } 47% { opacity: 1; } 48% { opacity: 0.75; } 49% { opacity: 1; } 72% { opacity: 0.9; } }
+    .scene-b .cone { position: absolute; top: 9%; left: 50%; width: 90%; height: 92%; transform: translateX(-50%); z-index: 2; pointer-events: none;
+      background: radial-gradient(ellipse 45% 60% at 50% 70%, rgba(255, 214, 150, 0.22), rgba(255, 214, 150, 0) 70%);
+      clip-path: polygon(44% 0, 56% 0, 100% 100%, 0 100%); mix-blend-mode: screen; }
+    .scene-b .crew { position: absolute; top: 17%; left: 8%; right: 8%; display: flex; justify-content: space-between; z-index: 1; }
+    .scene-b .crew figure { margin: 0; width: 16%; text-align: center; filter: brightness(0.85); }
+    .scene-b .crew figure.shooting { filter: brightness(1.15) drop-shadow(0 0 10px rgba(255, 216, 77, 0.5)); }
+    .scene-b .crew figcaption { font-size: 0.7rem; color: #c9b79a; margin-top: -4px; letter-spacing: 1px; text-transform: uppercase; }
+    .scene-b .crew figure.shooting figcaption { color: #ffd84d; }
+    .scene-b .chains { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+    .scene-b .table-wrap { position: absolute; left: 4%; right: 4%; bottom: -6%; height: 64%; perspective: 900px; perspective-origin: 50% 0%; z-index: 2; }
+    .scene-b .table { position: absolute; inset: 0; transform: rotateX(48deg); transform-origin: 50% 100%; border-radius: 26px;
+      border: 18px solid #3b2210; box-shadow: inset 0 0 0 3px #1c0f06, 0 30px 60px #000; overflow: hidden;
+      background: radial-gradient(ellipse at 50% 30%, #13703f, #07361e 75%); }
+    .scene-b .table svg { width: 100%; height: 100%; display: block; }
+    .scene-b .dark { position: absolute; inset: 0; z-index: 4; pointer-events: none;
+      background: radial-gradient(ellipse 70% 75% at 50% 55%, rgba(0, 0, 0, 0) 45%, rgba(0, 0, 0, 0.85) 100%); }
+    .scene-b .dust { position: absolute; width: 3px; height: 3px; border-radius: 50%; background: rgba(255, 230, 180, 0.5); z-index: 3; animation: dust 9s linear infinite; }
+    @keyframes dust { from { transform: translate(0, 0); opacity: 0; } 20% { opacity: 1; } to { transform: translate(30px, 120px); opacity: 0; } }
+    /* The two dice: same 3D cubes as the game, seen from above */
+    .scene-b .dice { position: absolute; left: 50%; bottom: 30%; transform: translateX(-50%); display: flex; gap: 26px; z-index: 3; --die: 46px; }
+    .die3d { position: relative; width: var(--die); height: var(--die); }
+    .die-shadow { position: absolute; left: 10%; right: 10%; bottom: -12%; height: 20%; border-radius: 50%; background: rgba(0, 0, 0, 0.6); filter: blur(3px); }
+    .die-hop, .die-view, .die-cube { position: absolute; inset: 0; transform-style: preserve-3d; }
+    .die-view { transform: perspective(500px) rotateX(-62deg) rotateY(15deg); }
+    .die-cube { transition: transform 1000ms cubic-bezier(0.25, 0.6, 0.3, 1); }
+    .die-face { position: absolute; inset: 0; background: #e9e1cf; border: 1px solid #a99e86; border-radius: 18%; padding: 14%;
+      display: grid; grid-template: repeat(3, 1fr) / repeat(3, 1fr); box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.25); }
+    .die-face span { display: flex; align-items: center; justify-content: center; }
+    .die-face .pip::after { content: ""; width: calc(var(--die) * 0.17); height: calc(var(--die) * 0.17); border-radius: 50%; background: #120d0b; }
+    .die-face.f1 .pip::after { background: #9e1b14; width: calc(var(--die) * 0.22); height: calc(var(--die) * 0.22); }
+    .die-face.f1 { transform: rotateY(0deg) translateZ(calc(var(--die) / 2)); }
+    .die-face.f6 { transform: rotateY(180deg) translateZ(calc(var(--die) / 2)); }
+    .die-face.f3 { transform: rotateY(90deg) translateZ(calc(var(--die) / 2)); }
+    .die-face.f4 { transform: rotateY(-90deg) translateZ(calc(var(--die) / 2)); }
+    .die-face.f5 { transform: rotateX(90deg) translateZ(calc(var(--die) / 2)); }
+    .die-face.f2 { transform: rotateX(-90deg) translateZ(calc(var(--die) / 2)); }
+    @keyframes die-hop { 0% { transform: translate(0, 0); } 18% { transform: translate(-30%, -42%); } 36% { transform: translate(-45%, 0); }
+      48% { transform: translate(-30%, -14%); } 60% { transform: translate(-18%, 0); } 100% { transform: translate(0, 0); } }
+    .die-hop.go { animation: die-hop 1000ms ease-out; }
+
+    /* ---------- C: real 3D ---------- */
+    .scene-c canvas { display: block; width: 100%; height: 100%; }
+    .loading { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: #ccc; }
+  </style>
+</head>
+<body>
+  <h1>🕯 Table look: B or C?</h1>
+  <p class="intro">Two ways to make Chained Dice feel like you're sitting at a table in a dark room, like Clover Pit. Press <strong>Roll</strong> on each. These are previews on the <code>3d-look</code> branch; the game itself hasn't changed.</p>
+
+  <section class="option">
+    <h2>B. Sitting at the table (CSS 3D, no library)</h2>
+    <p>The table tilts away from you under a hanging lamp; the crew stand chained at the far edge in the dark. Light enough for any phone, works offline, and our current buttons and screens fit on top.</p>
+    <div class="frame" id="frame-b">
+      <div class="scene-b" id="scene-b">
+        <div class="hud"><div class="cash">Cash<strong>$150</strong></div><div class="owed">Still owed<strong>$200</strong></div></div>
+        <svg class="lamp lamp-flicker" viewBox="0 0 200 130" aria-hidden="true">
+          <line x1="100" y1="0" x2="100" y2="40" stroke="#222" stroke-width="3"/>
+          <path d="M60 80 L80 40 L120 40 L140 80 Z" fill="#2a2420" stroke="#4a3c30" stroke-width="2"/>
+          <ellipse cx="100" cy="80" rx="40" ry="7" fill="#1a1512"/>
+          <ellipse cx="100" cy="82" rx="14" ry="8" fill="#ffe6b0"/>
+          <ellipse cx="100" cy="82" rx="30" ry="14" fill="#ffd9a0" opacity="0.25"/>
+        </svg>
+        <div class="cone lamp-flicker"></div>
+        <svg class="chains" id="chains-b" viewBox="0 0 1000 625" preserveAspectRatio="none" aria-hidden="true"></svg>
+        <div class="crew" id="crew-b"></div>
+        <div class="table-wrap"><div class="table" id="felt-b"></div></div>
+        <div class="dice" id="dice-b"><div class="die3d" id="b-die1"></div><div class="die3d" id="b-die2"></div></div>
+        <div class="dark"></div>
+        <div class="result" id="result-b"></div>
+        <button class="roll" id="roll-b">Roll</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="option">
+    <h2>C. Real 3D scene (Three.js library)</h2>
+    <p>A real 3D room: a spotlight with soft shadows, iron chains hanging into the light, dice you throw from your seat across the table. The most like Clover Pit; heavier on phones, and it adds a library (needs your OK).</p>
+    <div class="frame scene-c" id="frame-c">
+      <div class="hud"><div class="cash">Cash<strong>$150</strong></div><div class="owed">Still owed<strong>$200</strong></div></div>
+      <div class="loading" id="loading-c">Loading 3D…</div>
+      <div class="result" id="result-c"></div>
+      <button class="roll" id="roll-c">Roll</button>
+    </div>
+  </section>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script>
+    // ---------- Shared art (drawn as vector graphics) ----------
+
+    // Crew portraits: dark busts lit from above, each with an iron shackle collar.
+    const CREW = ["Lefty", "Dealer Dee", "Hot Rod", "Jinx", "Ghost"];
+    function crewSVG(name) {
+      const skin = name === "Ghost" ? "#9fb4c4" : "#2a1d17";
+      const body = name === "Ghost" ? "#7d93a3" : "#1a1210";
+      const rim = name === "Ghost" ? "#d6e6f2" : "#6a4630";
+      const ghost = name === "Ghost" ? ' opacity="0.55"' : "";
+      let hat = "", face = "", extra = "";
+      // eyes: small glints catching the lamp
+      face = '<circle cx="86" cy="96" r="3.2" fill="#d8c7a8"/><circle cx="114" cy="96" r="3.2" fill="#d8c7a8"/>';
+      if (name === "Lefty") hat = '<path d="M58 78 Q100 46 142 78 L150 84 Q100 74 50 84 Z" fill="#3a3028" stroke="#5c4a3a" stroke-width="2"/>';
+      if (name === "Dealer Dee") {
+        hat = '<path d="M60 74 Q100 64 140 74 L146 84 Q100 76 54 84 Z" fill="#1f6b3f" opacity="0.85"/><circle cx="100" cy="52" r="13" fill="' + body + '"/>';
+        extra = '<path d="M86 152 L100 160 L114 152 L114 168 L100 160 L86 168 Z" fill="#9e1b14"/>';
+      }
+      if (name === "Hot Rod") hat = '<path d="M64 76 Q70 34 112 40 Q146 44 140 70 Q122 54 100 62 Q80 58 64 76 Z" fill="#0f0b0a" stroke="#4a3220" stroke-width="2"/>';
+      if (name === "Jinx") {
+        hat = '<path d="M50 120 Q48 40 100 36 Q152 40 150 120 Q130 70 100 70 Q70 70 50 120 Z" fill="#0d0a0a" stroke="#3a1414" stroke-width="2"/>';
+        face = '<circle cx="87" cy="97" r="4.5" fill="#ff4b2b"/><circle cx="113" cy="97" r="4.5" fill="#ff4b2b"/><circle cx="87" cy="97" r="10" fill="#ff4b2b" opacity="0.18"/><circle cx="113" cy="97" r="10" fill="#ff4b2b" opacity="0.18"/>';
+      }
+      if (name === "Ghost") face = '<ellipse cx="86" cy="97" rx="5" ry="7" fill="#0b0f14"/><ellipse cx="114" cy="97" rx="5" ry="7" fill="#0b0f14"/>';
+      return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 240"><g' + ghost + '>' +
+        '<path d="M20 240 Q24 168 70 152 L130 152 Q176 168 180 240 Z" fill="' + body + '" stroke="' + rim + '" stroke-width="3"/>' +
+        '<ellipse cx="100" cy="100" rx="38" ry="46" fill="' + skin + '" stroke="' + rim + '" stroke-width="3"/>' + hat + face + extra +
+        '</g><ellipse cx="100" cy="152" rx="34" ry="9" fill="none" stroke="#5d6570" stroke-width="7"/>' +
+        '<ellipse cx="100" cy="152" rx="34" ry="9" fill="none" stroke="#8a4a2a" stroke-width="3"/></svg>';
+    }
+
+    // The craps layout printed on the felt (the half nearest you).
+    function feltSVG() {
+      const line = 'stroke="#e8e2cf" stroke-opacity="0.8" stroke-width="3" fill="none"';
+      const txt = (x, y, s, size = 28, extra = "") => '<text x="' + x + '" y="' + y + '" fill="#e8e2cf" fill-opacity="0.9" font-family="Georgia, serif" font-weight="bold" font-size="' + size + '" text-anchor="middle" ' + extra + ">" + s + "</text>";
+      let boxes = "";
+      ["4", "5", "SIX", "8", "NINE", "10"].forEach((n, i) => {
+        boxes += '<rect x="' + (110 + i * 100) + '" y="30" width="100" height="80" ' + line + "/>" + txt(160 + i * 100, 82, n, n.length > 2 ? 24 : 36);
+      });
+      return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" preserveAspectRatio="none">' + boxes +
+        '<rect x="110" y="120" width="600" height="110" ' + line + "/>" + txt(410, 192, "COME", 56) +
+        '<rect x="110" y="240" width="600" height="80" ' + line + "/>" + txt(410, 275, "FIELD", 30) + txt(410, 307, "2 · 3 · 4 · 9 · 10 · 11 · 12", 22) +
+        '<rect x="110" y="330" width="600" height="46" ' + line + "/>" + txt(410, 362, "DON'T PASS BAR", 24) +
+        '<path d="M60 30 L60 420 Q60 460 100 460 L760 460" ' + line + "/>" + '<path d="M100 30 L100 386 Q100 420 134 420 L760 420" ' + line + "/>" +
+        txt(430, 450, "PASS LINE", 30) + txt(80, 260, "PASS LINE", 24, 'transform="rotate(-90 80 260)"') +
+        '<g transform="translate(330 432)"><ellipse cx="0" cy="6" rx="22" ry="7" fill="#000" opacity="0.4"/><ellipse cx="0" cy="0" rx="22" ry="7" fill="#c0392b" stroke="#fff" stroke-dasharray="4 4" stroke-width="2"/>' +
+        '<ellipse cx="0" cy="-6" rx="22" ry="7" fill="#c0392b" stroke="#fff" stroke-dasharray="4 4" stroke-width="2"/></g></svg>';
+    }
+    const roll6 = () => 1 + Math.floor(Math.random() * 6);
+    const PIPS = { 1: [4], 2: [0, 8], 3: [0, 4, 8], 4: [0, 2, 6, 8], 5: [0, 2, 4, 6, 8], 6: [0, 2, 3, 5, 6, 8] };
+
+    // ---------- B: CSS 3D ----------
+    (function sceneB() {
+      const crew = document.getElementById("crew-b");
+      CREW.forEach((n, i) => (crew.innerHTML += '<figure class="' + (i === 2 ? "shooting" : "") + '">' + crewSVG(n) + "<figcaption>" + n + "</figcaption></figure>"));
+      document.getElementById("felt-b").innerHTML = feltSVG();
+      // Chains from the ceiling down to each shackle, drawn as alternating links.
+      let chains = "";
+      CREW.forEach((n, i) => {
+        const x = 130 + i * 185;
+        for (let y = 0; y < 250; y += 22) {
+          chains += (y / 22) % 2 ? '<rect x="' + (x - 3) + '" y="' + y + '" width="6" height="22" rx="3" fill="#4a4440"/>'
+            : '<rect x="' + (x - 8) + '" y="' + y + '" width="16" height="24" rx="8" fill="none" stroke="#5d5650" stroke-width="5"/>';
+        }
+      });
+      document.getElementById("chains-b").innerHTML = chains;
+      for (let k = 0; k < 14; k++) {
+        const d = document.createElement("div");
+        d.className = "dust";
+        d.style.left = 30 + Math.random() * 40 + "%";
+        d.style.top = 10 + Math.random() * 40 + "%";
+        d.style.animationDelay = -Math.random() * 9 + "s";
+        document.getElementById("scene-b").appendChild(d);
+      }
+      // Dice: number on top, toss and roll (as in the game).
+      const TOP = { 1: [90, 0], 6: [90, 180], 3: [90, -90], 4: [90, 90], 5: [0, 0], 2: [180, 0] };
+      const dice = ["b-die1", "b-die2"].map((id) => {
+        const el = document.getElementById(id);
+        el.innerHTML = '<div class="die-shadow"></div><div class="die-hop"><div class="die-view"><div class="die-cube"></div></div></div>';
+        const cube = el.querySelector(".die-cube");
+        for (let v = 1; v <= 6; v++) {
+          let f = '<div class="die-face f' + v + '">';
+          for (let c = 0; c < 9; c++) f += PIPS[v].includes(c) ? '<span class="pip"></span>' : "<span></span>";
+          cube.innerHTML += f + "</div>";
+        }
+        return { el, cube, x: 0, y: 0, z: 0 };
+      });
+      const near = (from, to) => from + (((((to - from) % 360) + 540) % 360) - 180);
+      function roll() {
+        const v = [roll6(), roll6()];
+        dice.forEach((d, i) => {
+          d.x = near(d.x, TOP[v[i]][0]); d.y = near(d.y, TOP[v[i]][1]); d.z += 360;
+          d.cube.style.transform = "rotateZ(" + d.z + "deg) rotateX(" + d.x + "deg) rotateY(" + d.y + "deg)";
+          const hop = d.el.querySelector(".die-hop");
+          hop.classList.remove("go"); void hop.offsetWidth; hop.classList.add("go");
+        });
+        document.getElementById("result-b").textContent = "";
+        setTimeout(() => (document.getElementById("result-b").textContent = "Rolled " + (v[0] + v[1])), 1000);
+      }
+      document.getElementById("roll-b").onclick = roll;
+      setTimeout(roll, 400);
+    })();
+
+    // ---------- C: Three.js ----------
+    (function sceneC() {
+      const frame = document.getElementById("frame-c");
+      if (typeof THREE === "undefined") {
+        document.getElementById("loading-c").textContent = "Couldn't load the 3D library (no internet?).";
+        return;
+      }
+      document.getElementById("loading-c").remove();
+      const renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      frame.insertBefore(renderer.domElement, frame.firstChild);
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x050404);
+      scene.fog = new THREE.Fog(0x050404, 6, 14);
+      const camera = new THREE.PerspectiveCamera(50, 16 / 10, 0.1, 50);
+      const look = new THREE.Vector3(0, 0.2, -1.2);
+
+      // Light: one warm spotlight from a hanging lamp, a dim red glow from the pit.
+      scene.add(new THREE.AmbientLight(0xffffff, 0.06));
+      const spot = new THREE.SpotLight(0xffd9a0, 2.4, 16, 0.62, 0.55, 1.2);
+      spot.position.set(0, 4.6, -0.6);
+      spot.target.position.set(0, 0, -0.6);
+      spot.castShadow = true;
+      spot.shadow.mapSize.set(1024, 1024);
+      scene.add(spot, spot.target);
+      const pit = new THREE.PointLight(0xff3b1f, 0.25, 7);
+      pit.position.set(0, -1.5, 4);
+      scene.add(pit);
+      scene.add(new THREE.HemisphereLight(0xffe2b8, 0x1a0d08, 0.28)); // soft warm fill so faces read
+
+      // Lamp: cable, shade and a glowing bulb.
+      const lamp = new THREE.Group();
+      const shade = new THREE.Mesh(new THREE.ConeGeometry(0.55, 0.45, 24, 1, true), new THREE.MeshStandardMaterial({ color: 0x2a2420, side: THREE.DoubleSide, roughness: 0.8 }));
+      shade.position.y = 4.75;
+      const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.12, 16, 12), new THREE.MeshBasicMaterial({ color: 0xffe6b0 }));
+      bulb.position.y = 4.55;
+      const cable = new THREE.Mesh(new THREE.CylinderGeometry(0.01, 0.01, 3), new THREE.MeshBasicMaterial({ color: 0x111111 }));
+      cable.position.y = 6.4;
+      lamp.add(shade, bulb, cable);
+      lamp.position.set(0, 0, -0.6);
+      scene.add(lamp);
+
+      // Table: felt with the craps layout, a wooden rail, dark floor.
+      const svgTexture = (svg, w, h, done) => {
+        const img = new Image();
+        img.onload = () => {
+          const c = document.createElement("canvas");
+          c.width = w; c.height = h;
+          const g = c.getContext("2d");
+          done(c, g, img);
+        };
+        img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+      };
+      const feltMat = new THREE.MeshStandardMaterial({ color: 0x0f5c34, roughness: 1 });
+      svgTexture(feltSVG(), 1600, 1000, (c, g, img) => {
+        const grad = g.createRadialGradient(800, 400, 100, 800, 500, 900);
+        grad.addColorStop(0, "#13703f"); grad.addColorStop(1, "#07361e");
+        g.fillStyle = grad; g.fillRect(0, 0, 1600, 1000);
+        g.drawImage(img, 0, 0, 1600, 1000);
+        feltMat.map = new THREE.CanvasTexture(c);
+        feltMat.color.set(0xffffff);
+        feltMat.needsUpdate = true;
+      });
+      const felt = new THREE.Mesh(new THREE.PlaneGeometry(8, 5), feltMat);
+      felt.rotation.x = -Math.PI / 2;
+      felt.position.set(0, 0, -0.6);
+      felt.receiveShadow = true;
+      scene.add(felt);
+      const wood = new THREE.MeshStandardMaterial({ color: 0x3b2210, roughness: 0.6 });
+      for (const [w, d, x, z] of [[8.6, 0.3, 0, 1.95], [8.6, 0.3, 0, -3.15], [0.3, 5.4, -4.15, -0.6], [0.3, 5.4, 4.15, -0.6]]) {
+        const rail = new THREE.Mesh(new THREE.BoxGeometry(w, 0.3, d), wood);
+        rail.position.set(x, 0.12, z);
+        rail.castShadow = true; rail.receiveShadow = true;
+        scene.add(rail);
+      }
+      const floor = new THREE.Mesh(new THREE.PlaneGeometry(40, 40), new THREE.MeshStandardMaterial({ color: 0x0d0a09, roughness: 1 }));
+      floor.rotation.x = -Math.PI / 2;
+      floor.position.y = -1.2;
+      scene.add(floor);
+
+      // Crew: portraits standing at the far edge, each chained to the table.
+      CREW.forEach((n, i) => {
+        const mat = new THREE.MeshBasicMaterial({ transparent: true, color: i === 2 ? 0xffffff : 0xb0b0b0 });
+        svgTexture(crewSVG(n), 400, 480, (c, g, img) => {
+          g.drawImage(img, 0, 0, 400, 480);
+          mat.map = new THREE.CanvasTexture(c);
+          mat.needsUpdate = true;
+        });
+        const x = -3.2 + i * 1.6;
+        const person = new THREE.Mesh(new THREE.PlaneGeometry(1.45, 1.74), mat);
+        person.position.set(x, 1.0, -3.7);
+        scene.add(person);
+        // A chain of alternating iron links from the shackle down to the rail.
+        const iron = new THREE.MeshStandardMaterial({ color: 0x5d5650, metalness: 0.7, roughness: 0.45 });
+        const from = new THREE.Vector3(x, 0.55, -3.62), to = new THREE.Vector3(x * 0.85, 0.3, -3.1);
+        const links = 7;
+        for (let k = 0; k <= links; k++) {
+          const t = k / links;
+          const link = new THREE.Mesh(new THREE.TorusGeometry(0.07, 0.022, 8, 16), iron);
+          link.position.lerpVectors(from, to, t);
+          link.position.y -= Math.sin(t * Math.PI) * 0.12; // sag
+          link.lookAt(to);
+          link.rotation.z = k % 2 ? Math.PI / 2 : 0;
+          link.castShadow = true;
+          scene.add(link);
+        }
+      });
+
+      // A stack of chips on the Pass Line.
+      for (let k = 0; k < 3; k++) {
+        const chip = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 0.05, 24), new THREE.MeshStandardMaterial({ color: 0xc0392b, roughness: 0.5 }));
+        chip.position.set(-0.9, 0.03 + k * 0.05, 1.3);
+        chip.castShadow = true;
+        scene.add(chip);
+      }
+
+      // Dice: bone, with the blood-red single pip.
+      function faceTexture(v) {
+        const c = document.createElement("canvas");
+        c.width = c.height = 128;
+        const g = c.getContext("2d");
+        g.fillStyle = "#e9e1cf"; g.fillRect(0, 0, 128, 128);
+        g.strokeStyle = "#a99e86"; g.lineWidth = 6; g.strokeRect(3, 3, 122, 122);
+        g.fillStyle = v === 1 ? "#9e1b14" : "#120d0b";
+        for (const cell of PIPS[v]) {
+          g.beginPath();
+          g.arc(30 + (cell % 3) * 34, 30 + Math.floor(cell / 3) * 34, v === 1 ? 15 : 11, 0, Math.PI * 2);
+          g.fill();
+        }
+        return new THREE.CanvasTexture(c);
+      }
+      const ORDER = [3, 4, 5, 2, 1, 6]; // +x, -x, +y, -y, +z, -z
+      const mats = ORDER.map((v) => new THREE.MeshStandardMaterial({ map: faceTexture(v), roughness: 0.4 }));
+      const UP = { 5: [0, 0, 0], 2: [Math.PI, 0, 0], 1: [-Math.PI / 2, 0, 0], 6: [Math.PI / 2, 0, 0], 3: [0, 0, Math.PI / 2], 4: [0, 0, -Math.PI / 2] };
+      const dice = [0, 1].map((i) => {
+        const m = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.42, 0.42), mats);
+        m.castShadow = true;
+        m.position.set(i ? 0.4 : -0.4, 0.21, -0.8);
+        scene.add(m);
+        return m;
+      });
+      let anim = null;
+      function roll() {
+        const v = [roll6(), roll6()];
+        anim = { start: performance.now(), ms: 1400, v, plans: dice.map((d, i) => {
+          const final = new THREE.Quaternion().setFromEuler(new THREE.Euler(...UP[v[i]]));
+          final.premultiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), (Math.random() - 0.5) * 1.2));
+          return { mesh: d, from: new THREE.Vector3(-0.6 + i * 0.5, 1.6, 2.6), end: new THREE.Vector3(-0.7 + i * 1.1 + Math.random() * 0.3, 0.21, -1.4 + Math.random() * 0.6),
+            final, axis: new THREE.Vector3(1, (Math.random() - 0.5) * 0.4, (Math.random() - 0.5) * 0.4).normalize(), spins: 3 + Math.random() };
+        }) };
+        document.getElementById("result-c").textContent = "";
+      }
+      document.getElementById("roll-c").onclick = roll;
+
+      function frameLoop(now) {
+        const w = frame.clientWidth, h = frame.clientHeight;
+        if (renderer.domElement.width !== Math.floor(w * renderer.getPixelRatio())) {
+          renderer.setSize(w, h, false);
+          camera.aspect = w / h;
+          camera.updateProjectionMatrix();
+        }
+        // Seated at the near edge, breathing slightly; on tall phone screens, sit further back.
+        const back = camera.aspect < 1 ? 2.2 : 0;
+        camera.position.set(Math.sin(now / 2600) * 0.04, 3.1 + back * 0.6 + Math.sin(now / 1900) * 0.02, 4.4 + back);
+        camera.lookAt(look);
+        bulb.material.color.setHex(Math.random() < 0.004 ? 0x8a7a60 : 0xffe6b0); // a rare flicker
+        if (anim) {
+          const t = Math.min(1, (now - anim.start) / anim.ms);
+          const ease = 1 - Math.pow(1 - t, 3);
+          for (const p of anim.plans) {
+            p.mesh.position.lerpVectors(p.from, p.end, ease);
+            p.mesh.position.y = 0.21 + Math.abs(Math.sin(t * Math.PI * 3)) * 1.1 * Math.pow(1 - t, 2);
+            p.mesh.quaternion.copy(p.final).multiply(new THREE.Quaternion().setFromAxisAngle(p.axis, p.spins * Math.PI * 2 * Math.pow(1 - t, 2)));
+          }
+          if (t >= 1) {
+            document.getElementById("result-c").textContent = "Rolled " + (anim.v[0] + anim.v[1]);
+            anim = null;
+          }
+        }
+        renderer.render(scene, camera);
+        requestAnimationFrame(frameLoop);
+      }
+      requestAnimationFrame(frameLoop);
+      setTimeout(roll, 600);
+    })();
+  </script>
+</body>
+</html>
