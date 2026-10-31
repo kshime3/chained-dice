@@ -24,13 +24,13 @@ const round5 = (n) => Math.max(5, Math.floor(n / 5) * 5);
 const HIRE_PREFERENCE = ["Lucky Lou", "The Professor", "Big Mo", "Snake", "Lefty", "Hot Rod", "Dealer Dee", "Ghost"];
 
 // Cards the bot likes best, first to last.
-const CARD_PREFERENCE = ["muggsy", "oddsAddict", "doubleUp", "pity", "loanShark", "redDice", "hotHand", "doublesCharm", "steadyHand", "comebackKid", "pointCollector", "greenDice", "luckySeven", "snakeEyes", "rattlesnake", "encore", "highRoller", "rodsLighter", "deesLedger", "leftysGlove", "frontOfLine", "sleightOfHand"];
+const CARD_PREFERENCE = ["muggsy", "oddsAddict", "doubleUp", "pity", "loanShark", "redDice", "hotHand", "doublesCharm", "steadyHand", "twinSouls", "torchPass", "earlyBird", "heater", "mirrorDice", "compound", "comebackKid", "pointCollector", "greenDice", "longNight", "boxcars", "stash", "luckySeven", "snakeEyes", "rattlesnake", "encore", "highRoller", "rodsLighter", "deesLedger", "leftysGlove", "frontOfLine", "sleightOfHand"];
 
 function atBreak(state, s) {
   if (state.cash >= amountOwed(state)) { deposit(state, amountOwed(state)); return; }
   if (s.shop && isShopOpen(state)) {
     // Don't Pass bots want the dark-side cards first; Pass Line bots skip them.
-    const prefs = s.side === "dont" ? ["wrongWay", "coldRead"].concat(CARD_PREFERENCE) : CARD_PREFERENCE;
+    const prefs = s.side === "dont" ? ["wrongWay", "undertaker", "graveyardShift", "badOmen", "coldRead", "jinxShadow"].concat(CARD_PREFERENCE) : CARD_PREFERENCE;
     const offers = state.stock.map((id, slot) => ({ id, slot })).filter((o) => o.id && prefs.includes(o.id))
       .sort((x, y) => prefs.indexOf(x.id) - prefs.indexOf(y.id));
     for (const o of offers) {

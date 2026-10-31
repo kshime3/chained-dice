@@ -319,3 +319,8 @@ Dated log of every decision and why. Newest at the bottom.
 
 ## 2026-10-31: Simulator only for gameplay changes
 - Owner: no balance retest (tools/simulate.js) for display, art, sound, music, wording, layout or docs changes. Run it only when editing cards or anything that affects how the game plays (comps, crew, bets, payouts, prices, debts, rules, shop, unlocks). CLAUDE.md working rule updated.
+
+## 2026-10-31: Themed cards
+- Owner chose all four themes (Dark side, Pairs, Hot streak, Money), ~3 cards each, all locked with hidden goals; built as drafted. Cards show a theme label; one card per theme grows with every card of that theme you own.
+- Shop does NOT lean toward your theme (owner's call).
+- Balance: Reputation now every 4 unlocks instead of 3 (owner approved, knowing existing saves may drop a step), and the quickest new goals were raised, keeping the career first escape around run 31.

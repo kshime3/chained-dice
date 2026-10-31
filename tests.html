@@ -855,7 +855,9 @@
     const j = newShiftState(); j.roster = ["Jinx", "You"]; j.crew = ["Jinx", "You"];
     removeCrew(j, "Jinx");
     check("Dropping Jinx unlocks Jinx's Shadow", isUnlocked("jinxShadow"), true);
-    // Reputation: every 3 unlocks earns the next bonus, for new runs
+    // Reputation: every 3 unlocks earns the next bonus, for new runs (pinned here; the game uses CONFIG.reputationEvery)
+    const savedRepEvery = CONFIG.reputationEvery;
+    CONFIG.reputationEvery = 3;
     resetProfile();
     check("No unlocks: no Reputation bonus", [earnedReputation(), newShiftState().cash], [[], 200]);
     profile().unlocked = ["oddsAddict", "pity", "muggsy"];
@@ -876,6 +878,7 @@
     checkUnlocks();
     check("Reaching a Reputation level is announced with the unlock", takeFreshPerks().includes("cash"), true);
     CONFIG.unlockGoals = realGoals;
+    CONFIG.reputationEvery = savedRepEvery;
     resetProfile();
     check("Reset locks everything again", [isUnlocked("oddsAddict"), isUnlocked("pity")], [false, false]);
     CONFIG.unlockEverything = true;
@@ -991,6 +994,57 @@
     for (let i = 0; i < 300; i++) { const st = newShiftState(); st.locked = st.locked.filter((id) => id !== "hardwayHustler" && id !== "steadyHand"); if (newStock(st).some((id) => id === "hardwayHustler" || id === "steadyHand")) leak = true; }
     check("Hardway Hustler and Steady Hand only show up once their bet is unlocked", leak, false);
     CONFIG.unlockEverything = true;
+    }
+
+    // Themed cards (2026-10-31)
+    {
+    const T = (cards) => { const st = newShiftState(); st.cards = cards; st.debt = 2000; return st; };
+    check("Themes: Wrong Way is Dark side, Hot Hand is Hot streak", [themeLabel("wrongWay"), themeLabel("hotHand"), themeLabel("redDice")], ["🌑 Dark side", "🔥 Hot streak", ""]);
+    check("Theme count: 2 Dark side cards (Red Dice doesn't count)", themeCount(T(["wrongWay", "badOmen", "redDice"]), "dark"), 2);
+    check("All 12 themed cards start locked", ["graveyardShift", "badOmen", "undertaker", "mirrorDice", "boxcars", "twinSouls", "heater", "longNight", "torchPass", "compound", "stash", "earlyBird"].every((id) => UNLOCKS[id] && CARDS[id].theme), true);
+    const gs = T(["graveyardShift", "wrongWay"]);
+    const gsRes = [{ bet: "lay", amount: 60, outcome: "win", winnings: 100 }];
+    applyCardsBeforePayout(gs, gsRes, 7, 4);
+    check("Graveyard Shift with 2 Dark side cards: Lay Odds +50% ($100 -> $150)", gsRes[0].winnings, 150);
+    const bo = T(["badOmen"]); bo.bets.dont = 10;
+    const boRes = [{ bet: "dont", amount: 10, outcome: "lose", winnings: 0 }];
+    applyCardsBeforePayout(bo, boRes, 11, null);
+    check("Bad Omen: a come-out 11 is a tie for Don't Pass (bet stays)", [boRes.length, costlyBets(bo, 11, [5, 6]).length], [0, 0]);
+    const ut = T(["undertaker"]); ut.cash = 100;
+    applyCardsAfterRoll(ut, [{ bet: "dont", amount: 10, outcome: "win", winnings: 10 }], 7, 6, true);
+    check("Undertaker: a seven-out your Don't Pass wins pays 3% of $2,000", ut.cash, 160);
+    const md = T(["mirrorDice", "doubleUp"]); md.turnDoubles = 2;
+    check("Mirror Dice with 2 Pairs cards: 2 pairs this turn = +1x", effectiveMult(md), 2);
+    const bx = T(["boxcars"]); bx.cash = 100;
+    applyCardsAfterRoll(bx, [], 12, null, false);
+    check("Boxcars: a 12 pays 6% of $2,000", bx.cash, 220);
+    const ts = T(["twinSouls"]); ts.lastRoll = { dice: [4, 4], total: 8 };
+    const tsRes = [{ bet: "pass", amount: 10, outcome: "win", winnings: 10 }];
+    applyCardsBeforePayout(ts, tsRes, 8, 8);
+    ts.lastRoll = { dice: [5, 3], total: 8 };
+    const tsRes2 = [{ bet: "pass", amount: 10, outcome: "win", winnings: 10 }];
+    applyCardsBeforePayout(ts, tsRes2, 8, 8);
+    check("Twin Souls: point made with 4+4 pays x2, with 5+3 doesn't", [tsRes[0].winnings, tsRes2[0].winnings], [20, 10]);
+    const ht = T(["heater", "hotHand"]);
+    applyCardsAfterRoll(ht, [], 8, 8, false);
+    applyCardsAfterRoll(ht, [], 6, 6, false);
+    ht.hotStreak = 0;
+    check("Heater with 2 Hot streak cards: 2 points made = +1x", [ht.turnPointsMade, effectiveMult(ht)], [2, 2]);
+    const ln = T(["longNight"]); ln.turnRolls = 10;
+    check("Long Night: 10 rolls = +1x", effectiveMult(ln), 2);
+    const tp = T(["torchPass"]); const tp0 = T([]);
+    tp.shooterIndex = 1; tp0.shooterIndex = 1;
+    setupTurn(tp, "Lefty", 3); setupTurn(tp0, "Lefty", 3);
+    check("Torch Pass: after a shooter at 3x, the next starts +1x", tp.mult - tp0.mult, 1);
+    const cp = T(["compound", "loanShark"]);
+    check("Compound with 2 Money cards: interest rate +2%", Math.round(interestRate(cp) * 1000), Math.round((CONFIG.interestRate + 0.02) * 1000));
+    const sa = T(["stash"]); sa.cash = 1000; sa.deposited = 0;
+    check("Stash: $1,000 in hand earns 2% ($20) at the Break", payInterest(sa), 20);
+    const eb = T(["earlyBird"]); eb.debt = 200; eb.cash = 500; eb.shooterIndex = 1;
+    deposit(eb, 200);
+    const eb2 = T(["earlyBird"]); eb2.debt = 200; eb2.cash = 500; eb2.shooterIndex = eb2.crew.length;
+    deposit(eb2, 200);
+    check("Early Bird: paying off before the last shooter gives back 10% ($20); not at the final Break", [eb.status, eb.cash, eb2.status, eb2.cash], ["won", 320, "won", 300]);
     }
 
     check("After unlocking, the reason is shown: Loaded Die", unlockReason("loadedDie"), "Unlocked by surviving shift " + CONFIG.unlockGoals.loadedDie + ".");

@@ -308,3 +308,20 @@ Display and audio only. New player: survive shift 1 56.9%, reach shift 3 23.9% (
 
 ## 2026-10-31: Shift 1 music (Phantasm)
 Audio only; the simulator doesn't load music code, so survival is unchanged. 435 rule checks passing, autoplay 25 runs clean.
+
+## 2026-10-31: Themed cards (12 new, 4 themes)
+Bots taught: Pass Line bots buy the new Pairs, Hot streak and Money cards (mid-list); Don't Pass bots want Undertaker, Graveyard Shift and Bad Omen first.
+
+Each card alone (Pass Line bot, $10 + max Odds, 4,000 runs, % reaching shift 3; no card 25.9%, Hot Hand 38.4%): Long Night 38.7, Mirror Dice 36.0, Twin Souls 32.2, Heater 29.7, Stash 28.1, Early Bird 27.8, Boxcars 27.5, Torch Pass 26.8, Compound 26.6. Dark side cards do nothing for a Pass Line bot (as expected). The "grows" cards are modest alone; they're meant to be stacked with their theme.
+
+| | Result |
+| --- | --- |
+| Brand-new player (smart bot, 8,000 runs) | survive shift 1 57.4%, reach shift 3 24.9%: unchanged (new cards start locked) |
+| Veteran (everything unlocked) | walk out free 29.6% (28.4% without buying the new cards: they add ~1 point) |
+| Career median first escape, first try | 19 (smart), 17 (smart + comps): too fast |
+| + harder goals for the quick unlocks | 23 (smart) |
+| + Reputation every 4 unlocks (was 3) | **31 (smart), 26 (smart + comps)**: back to before |
+| Unlocks found after 10 / 25 / 50 runs (of 46) | 14-16 / 27-32 / 33-36 |
+
+- Why it got faster: 12 more unlocks, many easy, climbed the Reputation ladder sooner. Fixes kept: harder goals (Mirror Dice 300 pairs, Boxcars 40 twelves, Twin Souls 25, Heater 4 points in a turn, Long Night 30 rolls, Torch Pass 6x, Stash $3,000 cash, Early Bird 3 shooters to come) and `reputationEvery` 4 (owner approved; old saves may drop a step until they unlock more).
+- The veteran rate (~29%) was already higher than the 12b table's 14%; worth a look if playtests say late game is too easy.

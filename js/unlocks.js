@@ -44,6 +44,19 @@ const UNLOCKS = {
   hardwayHustler: { kind: "card", how: (g) => "winning " + g.hardwayHustler + " Hard Ways bets (all runs)", done: (c, g) => c.hardWins >= g.hardwayHustler },
   steadyHand:     { kind: "card", how: (g) => "winning " + g.steadyHand + " Place bets (all runs)", done: (c, g) => c.placeWins >= g.steadyHand },
   diceCollector:  { kind: "card", how: (g) => "having " + g.diceCollector + " edited faces on your dice at once", done: (c, g) => c.editedFaces >= g.diceCollector },
+  // Themed cards added 2026-10-31
+  graveyardShift: { kind: "card", how: (g) => "winning " + g.graveyardShift + " Lay Odds bets (all runs)", done: (c, g) => c.layWins >= g.graveyardShift },
+  badOmen:        { kind: "card", how: (g) => "winning " + g.badOmen + " Don't Pass bets in one shift", done: (c, g) => c.shiftDontWins >= g.badOmen },
+  undertaker:     { kind: "card", how: (g) => "your Don't Pass winning " + g.undertaker + " seven-outs in a row", done: (c, g) => c.darkSevens >= g.undertaker },
+  mirrorDice:     { kind: "card", how: (g) => "rolling " + g.mirrorDice + " pairs (all runs)", done: (c, g) => c.pairs >= g.mirrorDice },
+  boxcars:        { kind: "card", how: (g) => "rolling " + g.boxcars + " twelves (all runs)", done: (c, g) => c.twelves >= g.boxcars },
+  twinSouls:      { kind: "card", how: (g) => "making " + g.twinSouls + " points with a pair (all runs)", done: (c, g) => c.pairPoints >= g.twinSouls },
+  heater:         { kind: "card", how: (g) => "one shooter making " + g.heater + " points in one turn", done: (c, g) => c.turnPointsMade >= g.heater },
+  longNight:      { kind: "card", how: (g) => "one shooter rolling " + g.longNight + " times in one turn", done: (c, g) => c.turnRollsMax >= g.longNight },
+  torchPass:      { kind: "card", how: (g) => "making a point at " + g.torchPass + "x mult or more", done: (c, g) => c.bestPointMult >= g.torchPass },
+  compound:       { kind: "card", how: (g) => "earning $" + g.compound + " interest in one run", done: (c, g) => c.runInterest >= g.compound },
+  stash:          { kind: "card", how: (g) => "winning a shift with $" + g.stash.toLocaleString("en-US") + " cash in hand", done: (c, g) => c.bestCash >= g.stash },
+  earlyBird:      { kind: "card", how: (g) => "paying off a shift with " + g.earlyBird + " or more shooters still to come", done: (c, g) => c.shootersLeft >= g.earlyBird },
 };
 
 // Systems that arrive over your first runs, so a new player isn't flooded.
@@ -65,6 +78,8 @@ function newProfile() {
       edits: 0, nudges: 0, copycats: 0, pointsHit: 0, bigMultPoints: 0, hires: 0,
       hardPairs: 0, turnPoints: 0, runPoints: 0, escapes: 0,
       sevenOuts: 0, bestLeftover: 0, hardWins: 0, placeWins: 0, editedFaces: 0,
+      layWins: 0, shiftDontWins: 0, darkSevens: 0, pairs: 0, twelves: 0, pairPoints: 0,
+      turnPointsMade: 0, turnRollsMax: 0, bestPointMult: 0, bestCash: 0, shootersLeft: 0,
     },
     fresh: [], // just unlocked, waiting to be announced (not saved)
     systemsSeen: [], // systems already announced
@@ -170,6 +185,20 @@ function trackRollUnlocks(state, info) {
   if (info.doubles && [4, 6, 8, 10].includes(total)) c.hardPairs += 1;
   best("turnPoints", (state.firePoints || []).length);
   if (info.pointHit && info.multUsed >= 3) c.bigMultPoints += 1;
+  // Themed cards (2026-10-31)
+  c.layWins += wins.filter((r) => r.bet === "lay").length;
+  state.shiftDontWins = (state.shiftDontWins || 0) + wins.filter((r) => r.bet === "dont").length;
+  best("shiftDontWins", state.shiftDontWins);
+  if (info.sevenOut) {
+    state.darkSevens = wins.some((r) => r.bet === "dont") ? (state.darkSevens || 0) + 1 : 0;
+    best("darkSevens", state.darkSevens);
+  }
+  if (info.doubles) c.pairs += 1;
+  if (total === 12) c.twelves += 1;
+  if (info.pointHit && info.doubles) c.pairPoints += 1;
+  best("turnPointsMade", state.turnPointsMade || 0);
+  best("turnRollsMax", state.turnRolls);
+  if (info.pointHit) best("bestPointMult", info.multUsed);
   if (info.doubles) state.turnDoubles = (state.turnDoubles || 0) + 1;
   best("turnDoubles", state.turnDoubles || 0);
   if (info.shooter === "You") {
@@ -186,6 +215,8 @@ function trackShiftWon(state) {
   best("bestShift", state.shift);
   if (!state.endless && state.shift === totalLinks(state)) c.escapes += 1; // walked out free
   best("bestLeftover", totalMoney(state));
+  best("bestCash", state.cash);
+  if (!state.savedByLink) best("shootersLeft", state.shootersLeft || 0);
   for (const name of state.roster) {
     if (name !== "You") c.crewWins[name] = (c.crewWins[name] || 0) + 1;
   }

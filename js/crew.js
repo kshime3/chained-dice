@@ -45,6 +45,7 @@ function setupTurn(state, prevName, prevMult) {
   state.loadedDieUsed = false; // and so does Loaded Die
   state.louGain = 0;
   state.hustleGain = 0;
+  state.turnPointsMade = 0; // Heater
   state.challenge = name === "You" ? newChallenge(state) : null; // pit boss challenge on your turn
 
   // Muggsy: after a point-7, this shooter's winnings are multiplied.
@@ -59,6 +60,13 @@ function setupTurn(state, prevName, prevMult) {
     state.mult += CONFIG.coldReadMult;
     state.coldReadPending = false;
     state.multNotes.push("Cold Read: +" + CONFIG.coldReadMult + "x");
+  }
+
+  // Torch Pass: half the last shooter's extra mult carries over.
+  if (prevName && hasCard(state, "torchPass") && prevMult > CONFIG.startingMult) {
+    const carried = Math.round((prevMult - CONFIG.startingMult) * CONFIG.torchPassShare * 100) / 100;
+    state.mult += carried;
+    state.multNotes.push("Torch Pass: +" + carried + "x from " + prevName);
   }
 
   // Mentor: part of Hot Rod's streak carries over.

@@ -108,6 +108,10 @@ function newShiftState() {
     sevenOutBy: null, // who just sevened out (shown on the Dealer Break)
     interestRate: CONFIG.interestRate, // cards can raise this later
     lastInterest: 0, // interest paid at the latest Dealer Break
+    turnPointsMade: 0, // points the current shooter has made this turn, repeats included (Heater)
+    shiftDontWins: 0, // Don't Pass bets won this shift (unlock goal)
+    darkSevens: 0, // seven-outs in a row your Don't Pass won (unlock goal)
+    earlyBirdBonus: 0, // Early Bird's payback this shift (shown when you win)
   };
   applyLegacy(state); // Reputation bonuses (starting cash, cards, slots...)
   state.stock = newStock(state);
@@ -255,6 +259,12 @@ function deposit(state, amount) {
   state.deposited += paid;
   state.stats.paid += paid;
   if (state.deposited >= state.debt && state.status !== "won") {
+    // Early Bird: paid off with shooters still to come.
+    state.shootersLeft = state.crew.length - state.shooterIndex;
+    if (hasCard(state, "earlyBird") && !isFinalBreak(state)) {
+      state.earlyBirdBonus = roundTo5(CONFIG.earlyBirdPct * state.debt);
+      state.cash += state.earlyBirdBonus;
+    }
     state.status = "won";
     trackShiftWon(state);
   }
@@ -301,10 +311,16 @@ function fundPassLine(state, amount, line = "pass") {
   return moves;
 }
 
+// The interest rate right now (Compound adds to it for every Money card).
+function interestRate(state) {
+  return state.interestRate + (hasCard(state, "compound") ? CONFIG.compoundPerCard * themeCount(state, "money") : 0);
+}
+
 // Interest: a share of everything you've paid, into your cash (rounded down).
 function payInterest(state) {
-  const rate = state.interestRate * (rule(state, "skimmedInterest") ? CONFIG.skimmedInterestX : 1);
-  state.lastInterest = Math.floor(state.deposited * rate);
+  const skim = rule(state, "skimmedInterest") ? CONFIG.skimmedInterestX : 1;
+  const stash = hasCard(state, "stash") ? state.cash * CONFIG.stashRate : 0; // Stash: cash in hand earns too
+  state.lastInterest = Math.floor((state.deposited * interestRate(state) + stash) * skim);
   state.cash += state.lastInterest;
   state.stats.interest += state.lastInterest;
   trackInterest(state);
@@ -393,6 +409,7 @@ function nextShift(old) {
   state.systems = old.systems ? Object.assign({}, old.systems) : undefined;
   state.savedBets = old.savedBets ? Object.assign({}, old.savedBets) : null;
   state.interestRate = old.interestRate;
+  state.darkSevens = old.darkSevens || 0;
   state.stats = old.stats;
   state.perks = old.perks.slice();
   state.endless = old.endless;

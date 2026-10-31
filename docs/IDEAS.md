@@ -106,7 +106,7 @@ Parked ideas and later features. Not in v1 unless moved into the design.
 1. Friends playtest round (owner shares the link; collect where people quit and what confuses them).
 2. Systems that arrive over the first runs + a guaranteed early unlock.
 3. Phone layout with tabs (Table / Hand / Crew) and a code cleanup (split ui.js, an automatic play-through in tests.html).
-4. Builds: themed cards that reward a strategy (dark side, hard ways, crew), shop leaning toward your theme.
+4. Builds: themed cards that reward a strategy [Built 2026-10-31: 4 themes, 12 cards]. Parked: shop leaning toward your theme (owner said no for now); a crew theme; more "grows" cards per theme.
 5. Art (crew portraits, dungeon-casino look, chain motif) and a quiet background music loop.
 
 ## Roadmap goal: Android app (2026-10-31)

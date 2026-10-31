@@ -2,6 +2,19 @@
 
 Dated session log. Newest at the top.
 
+## 2026-10-31: Themed cards
+
+**Done**
+- 12 new themed cards (Dark side, Pairs, Hot streak, Money; 3 each, all locked with hidden goals). Cards show a theme label; Graveyard Shift, Mirror Dice, Heater and Compound grow with every card of their theme you own. Older cards got theme labels too.
+- Reputation is now every 4 unlocks (was 3) to keep the game taking ~30 runs to beat; quick unlock goals raised.
+- Checks: tests.html 450 passing (15 new), 5 screen sizes fit, autoplay 25 runs no errors, balance retest in BALANCE.md.
+
+**Waiting on the owner**
+- Trying the new cards (test steps in chat; `?unlockAll&cards=...` shortcut).
+
+**Exact next step**
+- Owner's choice: more themes or "grows" cards, a crew theme, art polish (card art, the fall), or friend feedback.
+
 ## 2026-10-31: Session 9, continued (look B, step 1, on branch 3d-look)
 
 **Done**

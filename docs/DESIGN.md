@@ -268,7 +268,7 @@ Like Clover Pit's phone. After **every won shift**, it rings before the next shi
 - **Pit boss challenges [Built, Milestone 11]:** from shift 2, a challenge on **your own turn only**, shown in a blue 🎯 box with progress. Hit the point; Make 2 points; Hit a point of 4 or 10; Win the Field 3 times; Roll 3 doubles; Survive 6 rolls without a seven-out; Win a Don't Pass bet; Win a bet at 3x mult or more. Reward (random, shown up front): cash (10% of the debt), money off the debt (5%), a free comp, or a free Shuffle. Tutorial the first time.
 - **Unlocks [Built, Milestone 12a]** (`js/unlocks.js`): new players start with 7 cards (Hot Hand, Snake Eyes, Lucky Seven, Rattlesnake, Red Dice, Double Up, Cold Read), most comps and the 4 starting crew plus Snake and Big Mo. Everything else unlocks by **fully hidden** goals (the Collection shows only "???"; owner, 2026-10-29). Unlocks count across runs, are saved in the browser, get a "🔓 UNLOCKED!" screen, and show up from your **next run**.
   - Goals (numbers in `CONFIG.unlockGoals`, slowed down 2026-10-29 so about half unlock by run 20): Loaded Die / Reroll / Spare Link / Dealer's Bargain (survive shift 3 / 4 / 5 / 6), Odds Addict (win $2,000 on Odds, all runs), Muggsy (15 sevens right after the point is set), Pit Boss's Pity (the floor opens 15 times), Doubles Charm (4 doubles in one turn), Green Dice ($100 interest in one run), Wrong Way (win 25 Don't Pass bets), Jinx's Shadow (drop Jinx), Lefty's Glove / Dee's Ledger / Rod's Lighter / Ghost Story (survive 8 shifts with that crew member seated), Encore (your turn lasts 15+ rolls), High Roller (win $1,500 on one turn of yours), Front of the Line (hire 4 crew in one run), Sleight of Hand (use 6 dice edits), Loaded Shot (hit 40 points), Copycat (use 4 Nudges), Chisel (use 2 Copycats), Lucky Lou (hit 3 points at 3x mult or more), The Professor (hire 8 crew, all runs).
-  - **Reputation [Built]:** every 3 unlocks earns the next lasting bonus, from the next run on (shown on the Collection screen, announced on the unlock screen): +$25 starting cash; +1 comp slot; -1 way to roll 7 on everyone's dice; start with a random uncommon card; +1 card slot; -1 more way to roll 7; +$50 starting cash; start with a Spare Link.
+  - **Reputation [Built]:** every 4 unlocks (was 3 until 2026-10-31) earns the next lasting bonus, from the next run on (shown on the Collection screen, announced on the unlock screen): +$25 starting cash; +1 comp slot; -1 way to roll 7 on everyone's dice; start with a random uncommon card; +1 card slot; -1 more way to roll 7; +$50 starting cash; start with a Spare Link.
   - **Card power [Tuned 2026-10-29]:** starters trimmed (Hot Hand +0.25x per win, Rattlesnake +0.5x, Snake Eyes 6%, Lucky Seven 3%); locked cards strengthened (Muggsy x3, High Roller x3, Wrong Way +100%, Dee's Ledger +100%, Jinx's Shadow x3, Green Dice +1% per 12, Loaded Die once per shooter; Lefty's Glove, Ghost Story and Front of the Line add +1x mult on that seat's turn).
   - **More bets [Built, Milestone 12b]:** four bet groups, each locked behind a hidden goal and counted toward Reputation. They live on a second board (**➕ More bets** swaps it with the main bets; the button appears once one is unlocked). The mult applies to them like any bet.
     - **Hard Ways** (4/6/8/10): the number as a pair before a 7 or the easy way; 7:1 (4, 10), 9:1 (6, 8). Off on come-outs. Goal: roll 40 pairs that make 4/6/8/10.
@@ -290,6 +290,25 @@ Like Clover Pit's phone. After **every won shift**, it rings before the next shi
 - **Reputation** continues: 27 unlocks +$100 starting cash, 30 +1 more comp slot, 33 start with a random rare card.
 - **Hire prices by strength** (`CONFIG.hirePrices`, measured in the simulator): Hot Rod 40% of the debt, Big Mo 30%, Lucky Lou 25%, Dealer Dee / Lefty / The Professor 20%, Ghost 15%, Snake 10%.
 - **Win screen** tidied: lead line, big "7 links to go", then Money left / Dealer's cut / You carry over, then next shift's cash, debt and table minimum.
+
+## Themed cards  [Built, 2026-10-31]
+Cards now belong to themes, shown as a small label on the card. Each theme has one "grows" card that gets stronger for every card of that theme you own (itself included). The shop stays fully random (owner's call): building a theme is luck plus choice. All 12 new cards start locked; goals in `CONFIG.unlockGoals`, numbers in config.js.
+- **🌑 Dark side** (also Wrong Way, Cold Read, Jinx's Shadow)
+  - **Graveyard Shift** (Uncommon, grows): Lay Odds +25% per Dark side card. Goal: win 10 Lay Odds bets.
+  - **Bad Omen** (Common): a come-out 11 is a tie for Don't Pass. Goal: win 5 Don't Pass bets in one shift.
+  - **Undertaker** (Rare): every seven-out your Don't Pass wins pays 3% of the debt. Goal: your Don't Pass wins 3 seven-outs in a row.
+- **🎲 Pairs** (also Double Up, Doubles Charm, Hardway Hustler, Rattlesnake, Snake Eyes)
+  - **Mirror Dice** (Uncommon, grows): every pair this turn adds +0.25x mult per Pairs card. Goal: roll 100 pairs.
+  - **Boxcars** (Common): a 12 pays 6% of the debt. Goal: roll 15 twelves.
+  - **Twin Souls** (Rare): making the point with a pair pays x2. Goal: make 10 points with a pair.
+- **🔥 Hot streak** (also Hot Hand, Point Collector, Rod's Lighter, Comeback Kid)
+  - **Heater** (Uncommon, grows): each point made this turn adds +0.25x mult per Hot streak card. Goal: one shooter makes 3 points in a turn.
+  - **Long Night** (Common): +0.5x mult for every 5 rolls the shooter lasts. Goal: one shooter rolls 20 times in a turn.
+  - **Torch Pass** (Rare): the next shooter starts with half the last shooter's extra mult. Goal: make a point at 4x mult or more.
+- **💰 Money** (also Loan Shark, Green Dice)
+  - **Compound** (Uncommon, grows): interest rate +1% per Money card. Goal: earn $300 interest in one run.
+  - **Stash** (Common): at each Dealer Break, cash in hand earns 2% interest too. Goal: win a shift with $1,000 cash in hand.
+  - **Early Bird** (Rare): paying off before the last shooter gives back 10% of the debt as cash. Goal: pay off with 2 or more shooters still to come.
 
 ## Polish  [Built, 2026-10-30]
 - **Save bets / Same bets** (rules in DECISIONS.md, logic `saveBets` / `rebet` in shift.js).

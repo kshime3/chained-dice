@@ -2,27 +2,27 @@
 // Card numbers and rarity live in config.js.
 
 const CARDS = {
-  hotHand:     { name: "Hot Hand",        text: "+" + CONFIG.hotHandPerWin + "x mult for every winning roll in a row. Resets when a roll loses you a bet without winning one." },
-  snakeEyes:   { name: "Snake Eyes",      text: "Rolling a 2 pays a bonus of " + Math.round(CONFIG.snakeEyesBonusPct * 100) + "% of the debt." },
+  hotHand:     { name: "Hot Hand", theme: "streak",        text: "+" + CONFIG.hotHandPerWin + "x mult for every winning roll in a row. Resets when a roll loses you a bet without winning one." },
+  snakeEyes:   { name: "Snake Eyes", theme: "pairs",      text: "Rolling a 2 pays a bonus of " + Math.round(CONFIG.snakeEyesBonusPct * 100) + "% of the debt." },
   luckySeven:  { name: "Lucky Seven",     text: "A 7 on the come-out pays a bonus of " + Math.round(CONFIG.luckySevenBonusPct * 100) + "% of the debt." },
-  rattlesnake: { name: "Rattlesnake",     text: "Rolling snake eyes (1+1) adds +" + CONFIG.rattlesnakeMult + "x mult for the rest of this shooter's turn." },
+  rattlesnake: { name: "Rattlesnake", theme: "pairs",     text: "Rolling snake eyes (1+1) adds +" + CONFIG.rattlesnakeMult + "x mult for the rest of this shooter's turn." },
   redDice:     { name: "Red Dice",        text: "Craps (2, 3, 12) on the come-out wins the Pass Line at even money instead of losing." },
   oddsAddict:  { name: "Odds Addict",     text: "Odds bets pay " + Math.round(CONFIG.oddsAddictExtra * 100) + "% extra." },
   pity:        { name: "Pit Boss's Pity", text: "The first seven-out of the shift (any shooter) is ignored. Your bets stay (except the Field), and the shooter keeps rolling." },
   muggsy:      { name: "Muggsy",          text: "A 7 right after the point is set costs your Pass Line twice. But the next shooter's winnings are x" + CONFIG.muggsyNextShooterX + " for their whole turn." },
-  doubleUp:    { name: "Double Up",       text: "Doubles come up more: +1 way (out of 36) for each double, on everyone's dice. Fewer 7s, too." },
-  doublesCharm:{ name: "Doubles Charm",   text: "Every 3rd roll of each shooter's turn is guaranteed to be a pair. Pairs can never make 7." },
-  greenDice:   { name: "Green Dice",      text: "Every 12 rolled raises your interest rate by " + Math.round(CONFIG.greenDiceInterestStep * 100) + "% for the rest of the run." },
+  doubleUp:    { name: "Double Up", theme: "pairs",       text: "Doubles come up more: +1 way (out of 36) for each double, on everyone's dice. Fewer 7s, too." },
+  doublesCharm:{ name: "Doubles Charm", theme: "pairs",   text: "Every 3rd roll of each shooter's turn is guaranteed to be a pair. Pairs can never make 7." },
+  greenDice:   { name: "Green Dice", theme: "money",      text: "Every 12 rolled raises your interest rate by " + Math.round(CONFIG.greenDiceInterestStep * 100) + "% for the rest of the run." },
   loadedDie:   { name: "Loaded Die",      text: "Once per shooter, when a roll would cost you, reroll one die of your choice." },
   reroll:      { name: "Reroll",          text: "Once per shooter, when a roll would cost you, reroll both dice." },
-  wrongWay:    { name: "Wrong Way",       text: "Bet against the shooter and get paid for it: Don't Pass winnings +" + Math.round(CONFIG.wrongWayExtra * 100) + "%." },
-  coldRead:    { name: "Cold Read",       text: "When your Don't Pass wins on a seven-out, the next shooter starts at +1x mult." },
+  wrongWay:    { name: "Wrong Way", theme: "dark",       text: "Bet against the shooter and get paid for it: Don't Pass winnings +" + Math.round(CONFIG.wrongWayExtra * 100) + "%." },
+  coldRead:    { name: "Cold Read", theme: "dark",       text: "When your Don't Pass wins on a seven-out, the next shooter starts at +1x mult." },
   bargain:     { name: "Dealer's Bargain", instant: true, text: "One use, works right away, takes no slot. The dealer adds a link to your chain (one more shift to walk free). In return, everyone's dice get -1 way to roll 7 for the rest of the run." },
   // Crew cards: only offered while that crew member is at the table.
   leftysGlove: { name: "Lefty's Glove",  crew: "Lefty", text: "Lefty gets his 6 back on his right die, and +" + CONFIG.leftysGloveMult + "x mult on his turn." },
   deesLedger:  { name: "Dee's Ledger",   crew: "Dealer Dee", text: "On Dealer Dee's turn, Odds and Lay Odds pay " + Math.round(CONFIG.deesLedgerExtra * 100) + "% extra." },
-  rodsLighter: { name: "Rod's Lighter",  crew: "Hot Rod", text: "Hot Rod's streak grows +1.5x per winning roll, and his seven-out no longer costs double." },
-  jinxShadow:  { name: "Jinx's Shadow",  crew: "Jinx", text: "When Jinx shoots, Don't Pass winnings are x" + CONFIG.jinxShadowX + "." },
+  rodsLighter: { name: "Rod's Lighter", theme: "streak",  crew: "Hot Rod", text: "Hot Rod's streak grows +1.5x per winning roll, and his seven-out no longer costs double." },
+  jinxShadow:  { name: "Jinx's Shadow", theme: "dark",  crew: "Jinx", text: "When Jinx shoots, Don't Pass winnings are x" + CONFIG.jinxShadowX + "." },
   ghostStory:  { name: "Ghost Story",    crew: "Ghost", text: "You choose whether Ghost's right die is evens-only or odds-only (at the Break before his turn), and +" + CONFIG.ghostStoryMult + "x mult on his turn." },
   // "You" cards: only offered while you're at the table.
   encore:      { name: "Encore",         crew: "You", text: "Every shift, after the last shooter, you take an extra turn before the final Dealer Break." },
@@ -30,14 +30,46 @@ const CARDS = {
   frontOfLine: { name: "Front of the Line", crew: "You", text: "You shoot first every shift (from the next shift), and +" + CONFIG.frontOfLineMult + "x mult on your turn." },
   sleightOfHand: { name: "Sleight of Hand", crew: "You", text: "The shooter right after you rolls YOUR dice, crafted faces and all." },
   // Added 2026-10-30
-  comebackKid: { name: "Comeback Kid", text: "After any seven-out, the next shooter's first point pays x" + CONFIG.comebackKidX + "." },
-  pointCollector: { name: "Point Collector", text: "+" + CONFIG.pointCollectorMult + "x mult for each different point the shooter has made this turn." },
-  loanShark:   { name: "Loan Shark", text: "The dealer's cut drops: you keep " + Math.round(CONFIG.loanSharkCarry * 100) + "% of your leftover money into the next shift." },
-  hardwayHustler: { name: "Hardway Hustler", needs: "hardWays", text: "Hard Ways pay x" + CONFIG.hardwayHustlerX + ", and any hard pair (2+2, 3+3, 4+4, 5+5) adds +" + CONFIG.hardwayHustlerMult + "x mult for the turn." },
+  comebackKid: { name: "Comeback Kid", theme: "streak", text: "After any seven-out, the next shooter's first point pays x" + CONFIG.comebackKidX + "." },
+  pointCollector: { name: "Point Collector", theme: "streak", text: "+" + CONFIG.pointCollectorMult + "x mult for each different point the shooter has made this turn." },
+  loanShark:   { name: "Loan Shark", theme: "money", text: "The dealer's cut drops: you keep " + Math.round(CONFIG.loanSharkCarry * 100) + "% of your leftover money into the next shift." },
+  hardwayHustler: { name: "Hardway Hustler", theme: "pairs", needs: "hardWays", text: "Hard Ways pay x" + CONFIG.hardwayHustlerX + ", and any hard pair (2+2, 3+3, 4+4, 5+5) adds +" + CONFIG.hardwayHustlerMult + "x mult for the turn." },
   steadyHand:  { name: "Steady Hand", needs: "placeBets", text: "Place bets on 6 and 8 pay " + Math.round(CONFIG.steadyHandExtra * 100) + "% extra." },
   diceCollector: { name: "Dice Collector", crew: "You", text: "+" + CONFIG.diceCollectorMult + "x mult on your turn for every face you've edited on your dice." },
+  // Themed cards (2026-10-31): each theme has one card that grows with every card of that theme you own.
+  graveyardShift: { name: "Graveyard Shift", theme: "dark", text: "Lay Odds pay +" + Math.round(CONFIG.graveyardShiftPerCard * 100) + "% for every Dark side card you own (this one too)." },
+  badOmen:     { name: "Bad Omen", theme: "dark", text: "An 11 on the come-out no longer beats your Don't Pass: it's a tie." },
+  undertaker:  { name: "Undertaker", theme: "dark", text: "Every seven-out your Don't Pass wins pays a bonus of " + Math.round(CONFIG.undertakerBonusPct * 100) + "% of the debt." },
+  mirrorDice:  { name: "Mirror Dice", theme: "pairs", text: "Every pair rolled adds +" + CONFIG.mirrorDicePerCard + "x mult for the turn, for every Pairs card you own (this one too)." },
+  boxcars:     { name: "Boxcars", theme: "pairs", text: "Rolling a 12 (6+6) pays a bonus of " + Math.round(CONFIG.boxcarsBonusPct * 100) + "% of the debt." },
+  twinSouls:   { name: "Twin Souls", theme: "pairs", text: "Making the point with a pair (like 4+4 for an 8) pays x" + CONFIG.twinSoulsX + "." },
+  heater:      { name: "Heater", theme: "streak", text: "Each point the shooter makes adds +" + CONFIG.heaterPerCard + "x mult for the rest of the turn, for every Hot streak card you own (this one too)." },
+  longNight:   { name: "Long Night", theme: "streak", text: "+" + CONFIG.longNightMult + "x mult for every " + CONFIG.longNightEvery + " rolls the shooter lasts." },
+  torchPass:   { name: "Torch Pass", theme: "streak", text: "When a shooter sevens out, the next one starts with " + (CONFIG.torchPassShare === 0.5 ? "half" : Math.round(CONFIG.torchPassShare * 100) + "%") + " of their extra mult." },
+  compound:    { name: "Compound", theme: "money", text: "Your interest rate is +" + Math.round(CONFIG.compoundPerCard * 100) + "% for every Money card you own (this one too)." },
+  stash:       { name: "Stash", theme: "money", text: "At each Dealer Break, the cash in your hand earns " + Math.round(CONFIG.stashRate * 100) + "% interest too." },
+  earlyBird:   { name: "Early Bird", theme: "money", text: "Pay off the shift's debt before the last shooter and get " + Math.round(CONFIG.earlyBirdPct * 100) + "% of the debt back as cash." },
   chainLink:   { name: "Spare Link",      text: "When the floor opens, this link catches you: the shift counts as survived, a link breaks as normal, and the rest of the debt is forgiven. Used up." },
 };
+
+// Card themes: cards of a theme work together, and some grow with every one you own.
+const THEMES = {
+  dark:   { name: "Dark side", icon: "🌑" },
+  pairs:  { name: "Pairs", icon: "🎲" },
+  streak: { name: "Hot streak", icon: "🔥" },
+  money:  { name: "Money", icon: "💰" },
+};
+
+// A card's theme label, e.g. "🌑 Dark side" ("" if it has none).
+function themeLabel(id) {
+  const t = CARDS[id] && THEMES[CARDS[id].theme];
+  return t ? t.icon + " " + t.name : "";
+}
+
+// How many cards of this theme you own (switched-off cards don't count).
+function themeCount(state, theme) {
+  return state.cards.filter((id) => CARDS[id] && CARDS[id].theme === theme && hasCard(state, id)).length;
+}
 
 // Pit Watch (a house rule) switches one of your cards off for the shift.
 function hasCard(state, id) {
@@ -56,8 +88,22 @@ function effectiveMult(state) {
   const highRoller = hasCard(state, "highRoller") && state.crew[state.shooterIndex] === "You" ? CONFIG.highRollerX : 1;
   const collector = hasCard(state, "pointCollector") ? (state.firePoints || []).length * CONFIG.pointCollectorMult : 0;
   const crafted = hasCard(state, "diceCollector") && state.crew[state.shooterIndex] === "You" ? editedFaces(state) * CONFIG.diceCollectorMult : 0;
-  const mult = (state.mult + hotHand + collector + crafted) * state.payoutX * highRoller;
+  const mult = (state.mult + hotHand + collector + crafted + themedMult(state)) * state.payoutX * highRoller;
   return rule(state, "coldDice") ? Math.min(1, mult) : mult; // boss rule: mult capped at 1x
+}
+
+// Mult from the themed cards that build up during a turn: [card, amount] pairs.
+function themedMultParts(state) {
+  const parts = [];
+  if (hasCard(state, "mirrorDice") && state.turnDoubles > 0) parts.push(["Mirror Dice", state.turnDoubles * CONFIG.mirrorDicePerCard * themeCount(state, "pairs")]);
+  if (hasCard(state, "heater") && state.turnPointsMade > 0) parts.push(["Heater", state.turnPointsMade * CONFIG.heaterPerCard * themeCount(state, "streak")]);
+  const nights = Math.floor(state.turnRolls / CONFIG.longNightEvery);
+  if (hasCard(state, "longNight") && nights > 0) parts.push(["Long Night", nights * CONFIG.longNightMult]);
+  return parts;
+}
+
+function themedMult(state) {
+  return themedMultParts(state).reduce((sum, p) => sum + p[1], 0);
 }
 
 // One-use cards that work the moment you buy them.
@@ -88,6 +134,7 @@ function costlyBets(state, total, dice) {
   return resolveRoll(state.bets, total, state.point, { dice: dice, firePoints: state.firePoints }).filter((r) => {
     if (r.outcome !== "lose") return false;
     if (r.bet === "pass" && !pointOn && hasCard(state, "redDice")) return false;
+    if (r.bet === "dont" && !pointOn && total === 11 && hasCard(state, "badOmen")) return false;
     if (r.bet === "dont" && !pointOn && total === CONFIG.sevenOut && CONFIG.jinxCurse && state.crew[state.shooterIndex] === "Jinx") return false;
     if (pointOn && total === CONFIG.sevenOut && hasCard(state, "pity") && !state.pityUsed && state.bets.pass > 0 && !["field", "come", "dontCome"].includes(r.bet)) return false;
     return true;
@@ -115,6 +162,7 @@ function multReasons(state) {
   if (hasCard(state, "diceCollector") && state.crew[state.shooterIndex] === "You" && editedFaces(state) > 0) {
     reasons.push("Dice Collector: +" + editedFaces(state) * CONFIG.diceCollectorMult + "x");
   }
+  for (const [name, amount] of themedMultParts(state)) reasons.push(name + ": +" + Math.round(amount * 100) / 100 + "x");
   return reasons;
 }
 
@@ -155,6 +203,29 @@ function applyCardsBeforePayout(state, results, total, pointBefore) {
       if (r.outcome === "lose" && !["field", "come", "dontCome"].includes(r.bet)) r.outcome = "none";
     }
     notes.push("Pit Boss's Pity: that seven-out is ignored! Your bets stay and the shooter keeps rolling.");
+  }
+
+  // Bad Omen: a come-out 11 is a tie for Don't Pass.
+  if (hasCard(state, "badOmen") && pointBefore === null && total === 11) {
+    for (const r of results) {
+      if (r.bet === "dont" && r.outcome === "lose") {
+        r.outcome = "none";
+        notes.push("Bad Omen: the 11 doesn't count against your Don't Pass.");
+      }
+    }
+  }
+
+  // Twin Souls: making the point with a pair pays double.
+  const pair = state.lastRoll && state.lastRoll.dice[0] === state.lastRoll.dice[1];
+  if (hasCard(state, "twinSouls") && pair && pointBefore !== null && total === pointBefore) {
+    for (const r of results) if (r.outcome === "win") r.winnings *= CONFIG.twinSoulsX;
+    notes.push("Twin Souls: the point came as a pair! x" + CONFIG.twinSoulsX + ".");
+  }
+
+  // Graveyard Shift: Lay Odds pay more for every Dark side card.
+  if (hasCard(state, "graveyardShift")) {
+    const extra = CONFIG.graveyardShiftPerCard * themeCount(state, "dark");
+    for (const r of results) if (r.bet === "lay" && r.outcome === "win") r.winnings = Math.floor(r.winnings * (1 + extra));
   }
 
   // Crew cards that change payouts on a crew member's turn.
@@ -233,6 +304,19 @@ function applyCardsAfterRoll(state, results, total, pointBefore, sevenOut) {
     notes.push("Rattlesnake: +" + CONFIG.rattlesnakeMult + "x mult for this shooter.");
   }
 
+  if (hasCard(state, "boxcars") && total === 12) {
+    const bonus = roundTo5(CONFIG.boxcarsBonusPct * state.debt);
+    state.cash += bonus;
+    notes.push("Boxcars: +$" + bonus + " bonus.");
+  }
+  const dontWon = results.some((r) => r.bet === "dont" && r.outcome === "win");
+  if (hasCard(state, "undertaker") && sevenOut && dontWon) {
+    const bonus = roundTo5(CONFIG.undertakerBonusPct * state.debt);
+    state.cash += bonus;
+    notes.push("Undertaker: +$" + bonus + " for the seven-out.");
+  }
+  if (pointBefore !== null && total === pointBefore) state.turnPointsMade = (state.turnPointsMade || 0) + 1; // Heater
+
   // Cold Read: a Don't Pass win on a seven-out warms up the next shooter.
   if (hasCard(state, "coldRead") && sevenOut && results.some((r) => r.bet === "dont" && r.outcome === "win")) {
     state.coldReadPending = true;
@@ -242,7 +326,7 @@ function applyCardsAfterRoll(state, results, total, pointBefore, sevenOut) {
   // Green Dice: every 12 raises interest for the rest of the run.
   if (hasCard(state, "greenDice") && total === 12) {
     state.interestRate += CONFIG.greenDiceInterestStep;
-    notes.push("Green Dice: interest is now " + Math.round(state.interestRate * 1000) / 10 + "%.");
+    notes.push("Green Dice: interest is now " + Math.round(interestRate(state) * 1000) / 10 + "%.");
   }
 
   // Hot Hand streak (tracked always, only counts if you own the card).

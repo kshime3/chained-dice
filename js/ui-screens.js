@@ -63,6 +63,7 @@ function renderEndScreen(state, handlers) {
       : "The dealer reaches over and unlocks a link. <em>Clank.</em>") + "</p>" +
       '<div class="end-big">' + (state.endless ? "Endless shift " + state.shift + " survived" : linksLeft + (linksLeft === 1 ? " link" : " links") + " to go") + "</div>" +
       '<div class="end-lines">' +
+      (state.earlyBirdBonus > 0 ? "<div><span>Early Bird payback (in money left)</span><strong>+" + money(state.earlyBirdBonus) + "</strong></div>" : "") +
       "<div><span>Money left</span><strong>" + money(left) + "</strong></div>" +
       "<div><span>Dealer's cut (" + Math.round((1 - carryShare(state)) * 100) + "%)</span><strong>-" + money(left - carry) + "</strong></div>" +
       '<div class="total"><span>You carry over</span><strong>' + money(carry) + "</strong></div>" +
@@ -411,7 +412,7 @@ function renderCollection() {
   const order = (ids) => ids.filter(isUnlocked).concat(ids.filter((id) => !isUnlocked(id)));
   const cards = order(Object.keys(CARDS).sort((a, b) => RARITY_ORDER.indexOf(CONFIG.cardRarity[b]) - RARITY_ORDER.indexOf(CONFIG.cardRarity[a])));
   const crew = order(CONFIG.crew.filter((n) => n !== "You").concat(CONFIG.recruits));
-  let html = "<h3>Cards</h3><div class=\"collection-grid\">" + cards.map((id) => tile(id, CARDS[id].name, CARDS[id].text, CONFIG.cardRarity[id])).join("") + "</div>";
+  let html = "<h3>Cards</h3><div class=\"collection-grid\">" + cards.map((id) => tile(id, CARDS[id].name, (themeLabel(id) ? '<span class="theme-tag">' + themeLabel(id) + "</span> " : "") + CARDS[id].text, CONFIG.cardRarity[id])).join("") + "</div>";
   html += "<h3>Comps</h3><div class=\"collection-grid\">" + order(Object.keys(COMPS)).map((id) => tile(id, COMPS[id].name, COMPS[id].text)).join("") + "</div>";
   html += "<h3>Crew</h3><div class=\"collection-grid\">" + crew.map((n) => tile(n, n, CREW_INFO[n].style)).join("") + "</div>";
   html += "<h3>Bets</h3><div class=\"collection-grid\">" + order(Object.keys(BET_GROUPS)).map((g) => tile(g, BET_GROUPS[g].name, BET_GROUPS[g].text)).join("") + "</div>";

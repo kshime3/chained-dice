@@ -145,7 +145,7 @@ function renderState(state) {
   const b = state.bets;
   document.getElementById("shift-number").textContent = state.shift;
   document.getElementById("cash").textContent = money(state.cash);
-  document.getElementById("interest").textContent = Math.round(state.interestRate * 1000) / 10 + "%";
+  document.getElementById("interest").textContent = Math.round(interestRate(state) * 1000) / 10 + "%";
   document.getElementById("owed").textContent = money(amountOwed(state));
   document.getElementById("debt-of").textContent = "of " + money(state.debt);
   document.querySelector(".owed-box").classList.toggle("paid-off", amountOwed(state) <= 0);

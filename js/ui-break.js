@@ -38,9 +38,10 @@ function renderBreak(state) {
   document.getElementById("shop-section").classList.toggle("hidden", !isShopOpen(state));
   document.getElementById("break-owed").textContent = money(amountOwed(state));
   document.getElementById("break-cash").textContent = money(state.cash);
-  const rate = Math.round(state.interestRate * 1000) / 10 + "%";
+  const rate = Math.round(interestRate(state) * 1000) / 10 + "%";
+  const stashNote = hasCard(state, "stash") ? ", plus " + Math.round(CONFIG.stashRate * 100) + "% of your cash (Stash)" : "";
   document.getElementById("break-interest").innerHTML = state.lastInterest > 0
-    ? "Interest added to your cash: <strong>+" + money(state.lastInterest) + "</strong> (" + rate + " of the " + money(state.deposited) + " you've paid)."
+    ? "Interest added to your cash: <strong>+" + money(state.lastInterest) + "</strong> (" + rate + " of the " + money(state.deposited) + " you've paid" + stashNote + ")."
     : "Paid money earns " + rate + " interest at every Break, added to your cash.";
 
   // Paying opens after the first shooter. Pay off debt needs the whole amount.
@@ -94,7 +95,7 @@ function cardBox(id, buttonText, onClick, disabled) {
   const box = document.createElement("div");
   box.className = "card " + rarity;
   box.innerHTML = '<div class="card-name">' + card.name + '</div><div class="card-rarity">' + rarity +
-    '</div><div class="card-text">' + card.text + "</div>";
+    '</div>' + (themeLabel(id) ? '<div class="theme-tag">' + themeLabel(id) + "</div>" : "") + '<div class="card-text">' + card.text + "</div>";
   if (buttonText) {
     const button = document.createElement("button");
     button.textContent = buttonText;
@@ -379,7 +380,7 @@ function renderHand(state, handlers) {
     tile.className = "hand-card " + CONFIG.cardRarity[id] + (off ? " switched-off" : "");
     tile.title = CARDS[id].text;
     tile.innerHTML = "<strong>" + (off ? "👁 " : "") + CARDS[id].name + '</strong><span class="rarity">' + CONFIG.cardRarity[id] + '</span><div class="hand-text">' +
-      (off ? "<em>Switched off this shift (Pit Watch).</em> " : "") + CARDS[id].text + "</div>";
+      (off ? "<em>Switched off this shift (Pit Watch).</em> " : "") + (themeLabel(id) ? '<span class="theme-tag">' + themeLabel(id) + "</span> " : "") + CARDS[id].text + "</div>";
     cards.appendChild(tile);
   }
   const comps = systemOn(state, "comps") ? section("Comps (" + state.comps.length + " / " + compSlots(state) + ")") : document.createElement("div");

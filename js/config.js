@@ -91,9 +91,22 @@ const CONFIG = {
     hardwayHustler: 10, // Hard Ways bets won, all runs
     steadyHand: 30,     // Place bets won, all runs
     diceCollector: 4,   // faces edited on your dice at once
+    // Themed cards added 2026-10-31
+    graveyardShift: 10, // Lay Odds bets won, all runs
+    badOmen: 5,         // Don't Pass bets won in one shift
+    undertaker: 3,      // seven-outs in a row with your Don't Pass winning
+    mirrorDice: 300,    // pairs rolled, all runs
+    boxcars: 40,        // 12s rolled, all runs
+    twinSouls: 25,      // points made with a pair, all runs
+    heater: 4,          // points made by one shooter in one turn (repeats count)
+    longNight: 30,      // rolls by one shooter in one turn
+    torchPass: 6,       // a point made at this mult or more
+    compound: 300,      // interest earned in one run
+    stash: 3000,        // cash in hand when you win a shift
+    earlyBird: 3,       // shooters still to come when you pay off a shift
   },
   // Reputation: every few unlocks earns the next lasting bonus (from the next run on).
-  reputationEvery: 3,
+  reputationEvery: 4,
   reputation: [
     { id: "cash", text: "+$25 starting cash" },
     { id: "compSlot", text: "+1 comp slot" },
@@ -174,6 +187,18 @@ const CONFIG = {
     hardwayHustler: "uncommon",
     steadyHand: "uncommon",
     diceCollector: "uncommon",
+    graveyardShift: "uncommon",
+    badOmen: "common",
+    undertaker: "rare",
+    mirrorDice: "uncommon",
+    boxcars: "common",
+    twinSouls: "rare",
+    heater: "uncommon",
+    longNight: "common",
+    torchPass: "rare",
+    compound: "uncommon",
+    stash: "common",
+    earlyBird: "rare",
   },
 
   // Card numbers
@@ -204,6 +229,19 @@ const CONFIG = {
   hardwayHustlerMult: 0.5,    // Hardway Hustler: +mult for the turn on any hard pair (2+2, 3+3, 4+4, 5+5)
   steadyHandExtra: 0.5,       // Steady Hand: Place 6 and 8 winnings +50%
   diceCollectorMult: 0.25,    // Dice Collector: +mult on your turn per edited face
+  // Themed cards (2026-10-31). "Per theme card" counts every card of that theme you own, itself included.
+  graveyardShiftPerCard: 0.25, // Graveyard Shift: Lay Odds winnings + this per Dark side card
+  undertakerBonusPct: 0.03,   // Undertaker: a seven-out your Don't Pass wins pays this share of the debt
+  mirrorDicePerCard: 0.25,    // Mirror Dice: + this mult per pair this turn, per Pairs card
+  boxcarsBonusPct: 0.06,      // Boxcars: rolling 12 pays this share of the debt
+  twinSoulsX: 2,              // Twin Souls: a point made with a pair pays x this
+  heaterPerCard: 0.25,        // Heater: + this mult per point made this turn, per Hot streak card
+  longNightEvery: 5,          // Long Night: every this many rolls in a turn...
+  longNightMult: 0.5,         // ...adds this much mult
+  torchPassShare: 0.5,        // Torch Pass: the next shooter starts with this share of the last one's extra mult
+  compoundPerCard: 0.01,      // Compound: interest rate + this per Money card
+  stashRate: 0.02,            // Stash: cash in hand earns this much interest at each Dealer Break
+  earlyBirdPct: 0.10,         // Early Bird: paying off before the last shooter gives back this share of the debt
 
   // The Pit Boss phone: after each won shift, pick 1 of these many different perks.
   phoneChoices: 3,
