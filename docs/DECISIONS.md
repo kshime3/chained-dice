@@ -299,3 +299,9 @@ Dated log of every decision and why. Newest at the bottom.
 - **ui.js split** into ui.js (table), ui-break.js (Dealer Break), ui-screens.js (full-screen views); code moved, not rewritten.
 - **Removed** the hidden one-line cards row (replaced by the hand and phone tabs) and unused styles.
 - **`?autoplay`** (js/autoplay.js, loaded only then): a bot plays whole runs through the real screen with tiny debts and reports errors or stuck screens. It turns off saving and unlocks everything, so it never touches the player's progress. Linked from tests.html.
+
+## 2026-10-31 (art, music, roadmap)
+
+- **Android app = a roadmap goal**, only if the owner feels good about the game after art/music and a wider playtest. Path when ready: Capacitor wrap (needs owner OK for build tools), rewarded ads rather than forced ones (or a one-time price / "remove ads"), Play Console forms, closed test with testers. Never published without the owner's explicit permission.
+- **Art and music next.** Owner originally wanted a full 3D feel like Clover Pit. Two previews to compare, on a separate git branch `3d-look` (main stays as the playable game): **B "Sitting at the table"** (CSS 3D: tilted lit table, dark room, crew portraits, chains) and **C "Real 3D scene"** (Three.js, needs library approval if chosen).
+- **Art: Claude draws it** (vector/SVG, dark palette matching the logo). **Music: free licensed tracks** (Claude checks licenses; credits listed in the game).

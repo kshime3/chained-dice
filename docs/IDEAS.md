@@ -108,3 +108,6 @@ Parked ideas and later features. Not in v1 unless moved into the design.
 3. Phone layout with tabs (Table / Hand / Crew) and a code cleanup (split ui.js, an automatic play-through in tests.html).
 4. Builds: themed cards that reward a strategy (dark side, hard ways, crew), shop leaning toward your theme.
 5. Art (crew portraits, dungeon-casino look, chain motif) and a quiet background music loop.
+
+## Roadmap goal: Android app (2026-10-31)
+If the owner feels good after art, music and a wider playtest: wrap with Capacitor, add rewarded ads (or a one-time price / remove-ads purchase), Play Store listing and closed testing. Rough effort: 1.5-2.5 months of calendar time, much of it waiting. Owner's explicit permission needed before any publishing.

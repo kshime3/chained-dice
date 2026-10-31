@@ -2,6 +2,15 @@
 
 Dated session log. Newest at the top.
 
+## 2026-10-31: Session 9, continued (planning art, music, Android)
+
+**Done**
+- Discussed an Android release (estimate, money models, readiness). Decision: Android is a roadmap goal; art and music first.
+- Art direction previews (B: CSS 3D "sitting at the table", C: Three.js 3D scene) are built on the `3d-look` branch; main stays as the playable game.
+
+**Exact next step**
+- Owner picks B or C from the previews; then free licensed music.
+
 ## 2026-10-31: Session 9, continued (code cleanup)
 
 **Done**
