@@ -10,8 +10,10 @@ Dated session log. Newest at the top.
 **Waiting on the owner**
 - Looking at step 1 (screenshots or by checking out the branch).
 
+- Step 2 done: the whole game themed to match (wood, leather, brass, parchment, serif headings). tests 435 passing, all sizes fit, autoplay clean.
+
 **Exact next step**
-- Step 2: restyle the rest to match (Dealer Break, shop, cards, buttons, pop-ups). Step 3: music (free licensed tracks). Then merge `3d-look` into `main` when the owner is happy.
+- Step 3: music (free licensed tracks, licenses checked, credits). Then merge `3d-look` into `main` when the owner is happy.
 
 ## 2026-10-31: Session 9, continued (planning art, music, Android)
 
