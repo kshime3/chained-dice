@@ -85,6 +85,7 @@ function drawCoach(state) {
     return;
   }
   const msg = coachMessage(state);
+  if (typeof phoneTab !== "undefined" && phoneTab !== "table") showTab("table"); // the coach always works on the table
   const target = document.getElementById(msg.target);
   if (!target || target.offsetParent === null) {
     hideCoach();

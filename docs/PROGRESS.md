@@ -2,6 +2,18 @@
 
 Dated session log. Newest at the top.
 
+## 2026-10-31: Session 9, continued (sticky unlock screens, phone tabs)
+
+**Done**
+- Unlock / "New from your next run" screens wait for a Continue button.
+- Phone layout with tabs: Table / Hand / Crew. Fits 360x740, 390x844 and iPhone SE 375x667; laptops and desktops unchanged. tests.html: 432 checks, all passing; 25 auto-played runs with no errors.
+
+**Waiting on the owner**
+- Testing the tabs on a phone; more friend feedback.
+
+**Exact next step**
+- Code cleanup (split ui.js; an automatic play-through in tests.html), then builds/themed cards, then art and music.
+
 ## 2026-10-31: Session 9 (teaching craps)
 
 **Done**

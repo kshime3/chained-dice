@@ -4,12 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Chained Dice</title>
-  <link rel="icon" type="image/svg+xml" href="img/logo.svg?v=20261031a">
-  <link rel="icon" type="image/png" sizes="32x32" href="img/icon-32.png?v=20261031a">
-  <link rel="apple-touch-icon" href="img/icon-180.png?v=20261031a">
+  <link rel="icon" type="image/svg+xml" href="img/logo.svg?v=20261031c">
+  <link rel="icon" type="image/png" sizes="32x32" href="img/icon-32.png?v=20261031c">
+  <link rel="apple-touch-icon" href="img/icon-180.png?v=20261031c">
   <link rel="manifest" href="manifest.webmanifest">
   <meta name="theme-color" content="#0d2a1a">
-  <link rel="stylesheet" href="css/style.css?v=20261031a">
+  <link rel="stylesheet" href="css/style.css?v=20261031c">
 </head>
 <body>
   <!-- Opening animation: a die rolls in leaving a blood trail, the chain snaps, the title appears, then it all fades. -->
@@ -60,7 +60,7 @@
 
   <header class="top">
     <div class="title-row">
-      <h1><img src="img/logo.svg?v=20261031a" class="title-logo" alt="">Chained Dice</h1>
+      <h1><img src="img/logo.svg?v=20261031c" class="title-logo" alt="">Chained Dice</h1>
       <div class="title-buttons">
         <button id="settings-button" class="mute-button" title="Settings">⚙</button>
         <button id="collection-button" class="how-to-play" title="Collection: everything you've unlocked">📖<span class="hide-mobile"> Collection</span></button>
@@ -81,6 +81,7 @@
   <main class="layout">
     <section class="side">
       <div id="crew" class="crew"></div>
+      <div id="crew-list" class="crew-list"></div>
       <div id="shooter" class="shooter"></div>
       <div id="mult" class="mult"></div>
       <div class="rule-row">
@@ -152,6 +153,13 @@
       <div id="message" class="message">You wake up chained to the table. Pick a chip, put it on the Pass Line, then roll.</div>
     </section>
   </main>
+
+  <!-- Phones only: tabs at the bottom of the screen -->
+  <nav id="tabbar" class="tabbar">
+    <button data-tab="table">🎲<span>Table</span></button>
+    <button data-tab="hand">🃏<span>Hand</span><i id="hand-dot" class="tab-dot hidden"></i></button>
+    <button data-tab="crew">⛓<span>Crew</span></button>
+  </nav>
 
   <div id="break-screen" class="overlay hidden">
     <div class="end-box">
@@ -302,24 +310,24 @@
   </div>
 
   <!-- Load order matters: config first, then logic, then display, then main. -->
-  <script src="js/config.js?v=20261031a"></script>
-  <script src="js/dice.js?v=20261031a"></script>
-  <script src="js/bets.js?v=20261031a"></script>
-  <script src="js/crew.js?v=20261031a"></script>
-  <script src="js/cards.js?v=20261031a"></script>
-  <script src="js/shop.js?v=20261031a"></script>
-  <script src="js/stats.js?v=20261031a"></script>
-  <script src="js/perks.js?v=20261031a"></script>
-  <script src="js/crafting.js?v=20261031a"></script>
-  <script src="js/comps.js?v=20261031a"></script>
-  <script src="js/unlocks.js?v=20261031a"></script>
-  <script src="js/rules.js?v=20261031a"></script>
-  <script src="js/save.js?v=20261031a"></script>
-  <script src="js/shift.js?v=20261031a"></script>
-  <script src="js/sound.js?v=20261031a"></script>
-  <script src="js/ui.js?v=20261031a"></script>
-  <script src="js/tutorials.js?v=20261031a"></script>
-  <script src="js/coach.js?v=20261031a"></script>
-  <script src="js/main.js?v=20261031a"></script>
+  <script src="js/config.js?v=20261031c"></script>
+  <script src="js/dice.js?v=20261031c"></script>
+  <script src="js/bets.js?v=20261031c"></script>
+  <script src="js/crew.js?v=20261031c"></script>
+  <script src="js/cards.js?v=20261031c"></script>
+  <script src="js/shop.js?v=20261031c"></script>
+  <script src="js/stats.js?v=20261031c"></script>
+  <script src="js/perks.js?v=20261031c"></script>
+  <script src="js/crafting.js?v=20261031c"></script>
+  <script src="js/comps.js?v=20261031c"></script>
+  <script src="js/unlocks.js?v=20261031c"></script>
+  <script src="js/rules.js?v=20261031c"></script>
+  <script src="js/save.js?v=20261031c"></script>
+  <script src="js/shift.js?v=20261031c"></script>
+  <script src="js/sound.js?v=20261031c"></script>
+  <script src="js/ui.js?v=20261031c"></script>
+  <script src="js/tutorials.js?v=20261031c"></script>
+  <script src="js/coach.js?v=20261031c"></script>
+  <script src="js/main.js?v=20261031c"></script>
 </body>
 </html>

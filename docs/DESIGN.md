@@ -297,6 +297,7 @@ Like Clover Pit's phone. After **every won shift**, it rings before the next shi
 - "+$25" popups float up from winning bets, losses drop away in red.
 - ⚙ Settings: sound, quick dice, replay tutorials, reset progress.
 - Controls on two rows (chips + Roll; small buttons below).
+- **Phone tabs:** Table / Hand / Crew at the bottom on phones; bigger screens show everything at once.
 - **Teaching craps** (for players who never played): guided first shooter (coach bubble), live "Wins / Loses" hints on every bet, plain-English roll headlines, 2-page first-visit intro.
 - **Logo and opening:** C3 "Blood Pip" logo (img/logo.svg); a 4-second opening where the die rolls in leaving a blood trail and breaks the chain (tap to skip).
 - **Systems over the first runs:** run 1 = table, crew, cards, hiring, Trapdoor, phone. After the first run: comps, dice crafting, pit boss challenges. The run after first reaching shift 3: house rules and boss rules.

@@ -296,3 +296,6 @@ No rescale.
 
 ## 2026-10-31: Teaching craps
 Display and tutorials only; no rule changes. No retest needed (432 rule checks passing).
+
+## 2026-10-31: Phone tabs
+Layout only; no rule changes (432 rule checks passing).

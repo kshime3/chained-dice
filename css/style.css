@@ -703,7 +703,7 @@ h1 { display: flex; align-items: center; }
 .roll-details { font-size: 0.85rem; color: #ccc; }
 @media (max-width: 760px) { .roll-headline { font-size: 0.85rem; } .roll-details { font-size: 0.72rem; } }
 .show-mobile { display: none; }
-@media (max-width: 760px) { .show-mobile { display: inline; } .puck { white-space: nowrap; font-size: 0.78rem; } }
+@media (max-width: 760px) { .show-mobile { display: inline; } .puck { font-size: 0.75rem; } }
 
 /* The coach (guided first shooter) */
 .coach { position: fixed; z-index: 16; width: min(320px, calc(100vw - 16px)); background: #fff8dc; color: #1b1b1b; border: 3px solid #ffd84d;
@@ -715,3 +715,51 @@ h1 { display: flex; align-items: center; }
 .coach-target { position: relative; z-index: 15; animation: coach-pulse 1.2s ease-in-out infinite; }
 @keyframes coach-pulse { 0%, 100% { box-shadow: 0 0 0 3px #ffd84d, 0 0 12px rgba(255, 216, 77, 0.6); } 50% { box-shadow: 0 0 0 6px #ffd84d, 0 0 24px rgba(255, 216, 77, 0.9); } }
 @media (max-width: 760px) { .coach { font-size: 0.8rem; padding: 8px 10px; } }
+
+/* ---------- Phone tabs (bigger screens show everything at once) ---------- */
+.tabbar, .crew-list { display: none; }
+@media (max-width: 760px) {
+  body { padding-bottom: 62px; }
+  .tabbar { display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 9; background: #141414; border-top: 1px solid #333;
+    padding: 4px 6px calc(4px + env(safe-area-inset-bottom)); gap: 6px; }
+  .tabbar button { flex: 1; position: relative; display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 5px 0; font-size: 1.1rem;
+    background: #222; color: #ccc; border: 1px solid #333; border-radius: 10px; }
+  .tabbar button span { font-size: 0.7rem; }
+  .tabbar button.active { background: #ffd84d; color: #111; border-color: #ffd84d; font-weight: bold; }
+  .tab-dot { position: absolute; top: 4px; right: 18%; width: 9px; height: 9px; border-radius: 50%; background: #ff9f43; box-shadow: 0 0 6px #ff9f43; }
+  .tab-dot.hidden { display: none; }
+
+  /* Table tab: just the shooter line, house rule and challenge above the table */
+  body[data-tab="table"] .side > #crew, body[data-tab="table"] .side > #crew-list,
+  body[data-tab="table"] .side > #my-cards, body[data-tab="table"] .side > #hand { display: none; }
+  /* Hand tab: your cards, comps and perks */
+  body[data-tab="hand"] .play, body[data-tab="crew"] .play { display: none; }
+  body[data-tab="hand"] .side > *:not(#hand) { display: none; }
+  body[data-tab="hand"] .side > #hand { display: block; }
+  body[data-tab="hand"] .hand-row { grid-template-columns: 1fr 1fr; }
+  body[data-tab="hand"] .hand-text { -webkit-line-clamp: unset; display: block; }
+  /* Crew tab: everyone at the table, written out */
+  body[data-tab="crew"] .side > #my-cards, body[data-tab="crew"] .side > #hand, body[data-tab="crew"] .side > #crew { display: none; }
+  body[data-tab="crew"] .side > #crew-list { display: block; }
+  .crew-list { text-align: left; }
+  .crew-list h3 { margin: 6px 0; font-size: 1rem; }
+  .crew-card { background: #242424; border-radius: 10px; padding: 8px 10px; margin-bottom: 6px; font-size: 0.85rem; border-left: 5px solid #555; }
+  .crew-card.shooting { border-left-color: #ffd84d; background: #2e2a18; }
+  .crew-card.done { opacity: 0.55; }
+  .crew-status { float: right; font-size: 0.75rem; color: #ffd84d; }
+}
+@media (max-width: 760px) {
+  /* The table has room now that crew and cards have their own tabs */
+  body[data-tab="table"] .dice { --die: 46px; margin-left: 8px; gap: 18px; }
+  body[data-tab="table"] .roll-row { gap: 10px; }
+}
+/* Short phones (iPhone SE and similar): a little tighter */
+@media (max-width: 760px) and (max-height: 700px) {
+  body[data-tab="table"] .dice { --die: 38px; }
+  .bet-area { padding: 3px 6px; }
+  .bet-title { font-size: 0.85rem; }
+  .chip { width: 40px; height: 40px; }
+  .big-button { padding: 6px 18px; }
+  .tabbar button { padding: 3px 0; }
+  body { padding-bottom: 56px; }
+}

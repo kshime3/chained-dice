@@ -1423,3 +1423,36 @@ function showRollResult(headline, details, sevenOut) {
     box.appendChild(rest);
   }
 }
+
+// ---------- Phone tabs ----------
+
+// The Crew tab: everyone at the table, written out (hover text doesn't work on phones).
+function renderCrewList(state) {
+  const box = document.getElementById("crew-list");
+  box.innerHTML = "<h3>At the table</h3>";
+  state.crew.forEach((name, i) => {
+    const info = CREW_INFO[name];
+    if (!info) return;
+    const row = document.createElement("div");
+    row.className = "crew-card" + (i === state.shooterIndex ? " shooting" : "") + (i < state.shooterIndex ? " done" : "");
+    const status = i === state.shooterIndex ? "🎲 Shooting now" : i < state.shooterIndex ? "Done this shift" : "Shoots " + (i - state.shooterIndex === 1 ? "next" : "later");
+    const faces = name === "You" ? "<br>Your dice: " + state.myDice.left.join(" ") + " / " + state.myDice.right.join(" ") : "";
+    row.innerHTML = "<strong>" + name + '</strong><span class="crew-status">' + status + "</span><br>" + info.style + faces +
+      '<br><span class="hint">Dice: ' + info.dice + "</span> · Chance of a 7: <strong>" + percent(sevenChance(name, state)) + "</strong>";
+    box.appendChild(row);
+  });
+}
+
+// Which tab is showing on phones (bigger screens show everything at once).
+let phoneTab = "table";
+function showTab(tab) {
+  phoneTab = tab;
+  document.body.dataset.tab = tab;
+  for (const b of document.querySelectorAll("#tabbar button")) b.classList.toggle("active", b.dataset.tab === tab);
+}
+
+// A dot on the Hand tab when a comp is ready to use.
+function renderTabBar(state) {
+  const ready = state.comps.some((id) => !compBlocked(state, id));
+  document.getElementById("hand-dot").classList.toggle("hidden", !ready || phoneTab === "hand");
+}

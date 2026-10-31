@@ -500,6 +500,8 @@ function renderAll() {
   renderShop(state, { buy: buy, sell: sell, cut: cut, hire: hireCrew });
   renderComps(state, { buyComp: buyCompSlot, sellComp: sellCompSlot, useComp: useCompSlot });
   renderHand(state, { useComp: useCompSlot });
+  renderCrewList(state);
+  renderTabBar(state);
   renderBreak(state);
 
   // Falling: the floor opens first, then the stats screen.
@@ -549,6 +551,11 @@ document.getElementById("field").onclick = () => placeBet("field");
 document.getElementById("dont-pass").onclick = () => placeBet("dont");
 document.getElementById("lay").onclick = () => placeBet("lay");
 document.getElementById("roll-button").onclick = roll;
+for (const b of document.querySelectorAll("#tabbar button")) b.onclick = () => {
+  showTab(b.dataset.tab);
+  renderAll();
+};
+showTab("table");
 document.getElementById("save-bets").onclick = () => {
   if (busy() || state.onBreak) return;
   const saved = saveBets(state);
