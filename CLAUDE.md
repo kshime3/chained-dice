@@ -66,6 +66,7 @@ js/autoplay.js     testing tool: index.html?autoplay lets a bot play whole runs 
 demos/dice-3d.html  preview: three 3D dice styles to choose from (not part of the game)
 demos/logo-options.html  preview: four logo directions to choose from (not part of the game)
 demos/table-look.html  preview: table looks B (CSS 3D) and C (Three.js) (not part of the game)
+demos/music-options.html  preview: darker shift-1 music candidates (not part of the game)
 tools/simulate.js  balance simulator (Node.js, not part of the game): node tools/simulate.js 20000
 ```
 Testing shortcuts: add `?target=300` to the page address to set shift 1's debt; add `?fast` to skip the dice animation, splash screens and fall animation; add `?cards=doubleUp,greenDice` to start with those cards (ids are in js/cards.js). `?shift=5` starts the run at that shift (to test later shifts, e.g. the tense music). `?rule=houseDie` forces that house rule every shift (ids are in js/rules.js). `?unlockAll` makes everything available without touching saved progress. `?autoplay` (or `?autoplay=100`) lets a bot play whole runs through the real screen and report errors or stuck screens; it never saves. Combine with `&`, e.g. `?target=300&fast&cards=doublesCharm`.
