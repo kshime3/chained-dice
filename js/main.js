@@ -488,6 +488,7 @@ function renderAll() {
   }
   announceUnlocks();
   explainNewBets();
+  updateMusic(state);
   if (!awaitingResume) saveRun(state);
 }
 
@@ -595,7 +596,21 @@ document.getElementById("quick-dice").onclick = () => {
   }
   applyQuickDice();
 };
+// Music: on/off and volume (remembered in this browser), credits.
+function renderMusicSettings() {
+  document.getElementById("music-toggle").textContent = musicOn ? "🎵 On" : "🎵 Off";
+  document.getElementById("music-volume").value = musicVolume;
+  document.getElementById("music-credits").innerHTML = musicCreditsHtml();
+}
+document.getElementById("music-toggle").onclick = () => {
+  setMusicOn(!musicOn, state);
+  renderMusicSettings();
+};
+document.getElementById("music-volume").oninput = (e) => setMusicVolume(Number(e.target.value));
+armMusic(() => state);
+
 document.getElementById("settings-button").onclick = () => {
+  renderMusicSettings();
   document.getElementById("settings-message").textContent = "";
   document.getElementById("settings").classList.remove("hidden");
 };

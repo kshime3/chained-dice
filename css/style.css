@@ -867,3 +867,10 @@ button:not(:disabled):hover { filter: brightness(1.15); }
 .coach .link-button { color: #6b5a2e; }
 /* Second buttons on cards (Sell): dark leather, readable */
 .card button + button, .card.comp button + button { background: var(--leather); color: var(--cream); font-weight: normal; border: 1px solid #5c4330; text-shadow: none; }
+
+/* Settings: music and credits */
+#music-volume { width: 110px; vertical-align: middle; accent-color: #d3a640; }
+.credits { margin: 10px 0 6px; text-align: left; font-size: 0.85rem; }
+.credits summary { cursor: pointer; color: #ecd9ae; }
+.credits .credit { margin: 4px 0; }
+.credits a { color: #f6d98a; }

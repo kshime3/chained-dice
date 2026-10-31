@@ -251,6 +251,16 @@ const CONFIG = {
   plaquePct: 0.10,        // paying the dealer: each plaque dropped in the drop box is this share of the debt
   winSoundTiers: [0.03, 0.10, 0.30], // a roll's winnings as a share of the debt: above each, a bigger win sound
   openingMs: 4200,        // the opening animation (die rolls in, blood trail, chain snaps); tap skips
+  // Background music (js/music.js). Add tracks here once the files are in the music/ folder.
+  // mood: "calm" plays early in a run, "tense" from tenseFromShift (and in endless mode).
+  // license/link: shown in Settings > Credits (CC-BY needs title, artist, licence and a link).
+  music: {
+    volume: 0.4,
+    tenseFromShift: 5,
+    tracks: [
+      // { file: "music/example.mp3", title: "Example", artist: "Artist", license: "CC BY 4.0", link: "https://creativecommons.org/licenses/by/4.0/", mood: "calm" },
+    ],
+  },
   betPopMs: 1400,         // how long a "+$25" win popup floats
   winSplashMs: 5000,      // how long the "Point hit" winnings screen shows (tap skips)
   cutSplashMs: 4000,      // how long the "falls through the floor" screen shows (tap skips)

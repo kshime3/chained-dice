@@ -12,8 +12,13 @@ Dated session log. Newest at the top.
 
 - Step 2 done: the whole game themed to match (wood, leather, brass, parchment, serif headings). tests 435 passing, all sizes fit, autoplay clean.
 
+- Step 3 started: music player, settings and credits built and tested with temporary tones (silent until tracks are added).
+
+**Waiting on the owner**
+- Either allow incompetech.com / opengameart.org in the environment's network settings, or download chosen tracks into music/ on the 3d-look branch.
+
 **Exact next step**
-- Step 3: music (free licensed tracks, licenses checked, credits). Then merge `3d-look` into `main` when the owner is happy.
+- Add the tracks (licences checked, credits in CONFIG.music), then merge `3d-look` into `main` when the owner is happy.
 
 ## 2026-10-31: Session 9, continued (planning art, music, Android)
 

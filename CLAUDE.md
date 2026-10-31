@@ -54,6 +54,8 @@ js/unlocks.js      logic: locked cards/comps/crew, hidden unlock goals, saved pr
 js/rules.js        logic: house rules, boss rules, pit boss challenges
 js/sound.js        display: sound effects made in the browser (Web Audio), mute setting
 js/art.js          display: drawings made in code (crew portraits, SVG)
+js/music.js        display: background music (tracks listed in CONFIG.music; calm/tense playlists; credits)
+music/             music files (free licensed; credits in CONFIG.music)
 js/ui.js           display: the table (dice, bets and hints, crew, mult, roll results, popups, phone tabs)
 js/ui-break.js     display: the Dealer Break (drop box, shop, comps, dice workshop, hiring, phone call, your hand)
 js/ui-screens.js   display: full-screen views (splashes, prompts, end screen and stats, fall, tutorials, Collection, opening)
@@ -70,4 +72,4 @@ Testing shortcuts: add `?target=300` to the page address to set shift 1's debt; 
 
 tests.html pins its own numbers (shift 1: $200 cash, $2,000 debt, 6 seats, everything unlocked, progress never saved) so tuning config.js doesn't break the checks. Shift cash and debts are in `CONFIG.shifts`; the current debt is `state.debt`.
 
-Scripts load with plain `<script>` tags in a set order (config, logic: dice, bets, crew, cards, shop, stats, perks, crafting, comps, unlocks, rules, save, shift; then display: sound, art, ui, ui-break, ui-screens, tutorials, coach; then main), not ES modules, so double-clicking index.html works.
+Scripts load with plain `<script>` tags in a set order (config, logic: dice, bets, crew, cards, shop, stats, perks, crafting, comps, unlocks, rules, save, shift; then display: sound, music, art, ui, ui-break, ui-screens, tutorials, coach; then main), not ES modules, so double-clicking index.html works.
