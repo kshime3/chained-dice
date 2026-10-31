@@ -290,3 +290,4 @@ Dated log of every decision and why. Newest at the bottom.
   - **Live "what wins" hints:** every main bet shows "Wins: ... · Loses: ..." for the next roll (`nextRollOutcomes` in bets.js); the puck says "FIRST ROLL · 7 or 11 wins · 2, 3, 12 lose" or "POINT 8 · roll it again before a 7" (shorter on phones).
   - **Plain-English roll results:** a coloured headline from your side of the table ("🎯 8 is the point...", "🎉 Point hit!", "💀 ... seven out") with the money per bet underneath.
   - **Short intro:** first visit shows 2 pages (the story, "Never played craps?"); the full pages stay under How to play.
+- **Unlock screens stay up** (owner, 2026-10-31): unlock / "New from your next run" screens no longer close on their own or on a background tap; they wait for the Continue button.

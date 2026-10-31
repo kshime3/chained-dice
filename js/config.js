@@ -252,7 +252,6 @@ const CONFIG = {
   winSoundTiers: [0.03, 0.10, 0.30], // a roll's winnings as a share of the debt: above each, a bigger win sound
   openingMs: 4200,        // the opening animation (die rolls in, blood trail, chain snaps); tap skips
   betPopMs: 1400,         // how long a "+$25" win popup floats
-  unlockSplashMs: 6000,   // how long the "Unlocked" screen shows (tap skips)
   winSplashMs: 5000,      // how long the "Point hit" winnings screen shows (tap skips)
   cutSplashMs: 4000,      // how long the "falls through the floor" screen shows (tap skips)
 

@@ -943,6 +943,7 @@ function runStatsHtml(state) {
 // Turn one roll into plain-language sentences.
 
 // A full-screen splash (seven-out, point hit). Tap to skip; onDone runs after.
+// ms = null: it stays until its Continue button is pressed (unlock news is worth reading).
 let splashOpen = false;
 let splashQueue = []; // splashes waiting for the current one to close
 function showSplash(html, kind, ms, onDone) {
@@ -963,8 +964,14 @@ function showSplash(html, kind, ms, onDone) {
   splashOpen = true;
   document.getElementById("splash-content").innerHTML = html;
   box.className = "overlay splash " + kind;
-  box.onclick = close;
-  setTimeout(close, ms);
+  if (ms === null) {
+    box.onclick = null;
+    const button = box.querySelector(".splash-continue");
+    if (button) button.onclick = close;
+  } else {
+    box.onclick = close;
+    setTimeout(close, ms);
+  }
 }
 
 // Loaded Die / Reroll: offer to reroll a roll that would cost you.
@@ -1154,7 +1161,7 @@ function unlockSplash(ids, perks, systems = []) {
     (ids.length ? "<p>It can show up from your <strong>next run</strong>. See it in the 📖 Collection.</p>" : "") +
     perks.map((id) => '<p class="boost">⭐ Reputation up! From your next run: <strong>' + perkText(id) + "</strong></p>").join("") +
     systems.map((id) => '<p class="boost">🆕 New from your next run: <strong>' + SYSTEMS[id].name + "</strong>. " + SYSTEMS[id].text + "</p>").join("") +
-    '<p class="hint">Tap to continue</p>';
+    '<button class="big-button splash-continue">Continue</button>';
 }
 
 // The Reputation ladder: earned bonuses ticked, the rest shown with how many unlocks they need.

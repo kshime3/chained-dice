@@ -540,7 +540,7 @@ function explainNewBets() {
 function announceUnlocks() {
   if (busy() || tutorialOpen() || (profile().fresh.length === 0 && profile().freshSystems.length === 0)) return;
   playSound("win2");
-  showSplash(unlockSplash(takeFreshUnlocks(), takeFreshPerks(), takeFreshSystems()), "good", CONFIG.unlockSplashMs, renderAll);
+  showSplash(unlockSplash(takeFreshUnlocks(), takeFreshPerks(), takeFreshSystems()), "good", null, renderAll); // stays until Continue
 }
 
 document.getElementById("pass-line").onclick = () => placeBet("pass");
