@@ -601,10 +601,12 @@ function renderMusicSettings() {
   document.getElementById("music-toggle").textContent = musicOn ? "🎵 On" : "🎵 Off";
   document.getElementById("music-volume").value = musicVolume;
   document.getElementById("music-credits").innerHTML = musicCreditsHtml();
+  document.getElementById("music-status").textContent = music.status;
 }
 document.getElementById("music-toggle").onclick = () => {
   setMusicOn(!musicOn, state);
   renderMusicSettings();
+  setTimeout(renderMusicSettings, 800); // show how starting went
 };
 document.getElementById("music-volume").oninput = (e) => setMusicVolume(Number(e.target.value));
 armMusic(() => state);

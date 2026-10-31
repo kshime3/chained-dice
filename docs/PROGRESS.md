@@ -18,8 +18,10 @@ Dated session log. Newest at the top.
 
 - **Merged `3d-look` into `main`** (owner approved): look B and the music are live on the GitHub Pages link. All checks passed on main (435 rule checks, 5 screen sizes, coach flow, autoplay 25 runs with 13 escapes and no errors, balance unchanged).
 
+- Music fix for phones (starts on a real tap; volume through Web Audio; status line in Settings).
+
 **Waiting on the owner**
-- Playing the new look and music; friend feedback.
+- Checking the music on the iPhone (Settings shows the music status); friend feedback.
 
 **Exact next step**
 - Owner's choice: builds (themed cards that reward a strategy), more art polish (card art, the fall), or the Android roadmap when ready.
