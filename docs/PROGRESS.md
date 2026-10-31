@@ -16,11 +16,13 @@ Dated session log. Newest at the top.
 
 - Music added: six Kevin MacLeod tracks (CC BY 4.0), calm and tense playlists, credits in Settings and music/CREDITS.txt.
 
+- **Merged `3d-look` into `main`** (owner approved): look B and the music are live on the GitHub Pages link. All checks passed on main (435 rule checks, 5 screen sizes, coach flow, autoplay 25 runs with 13 escapes and no errors, balance unchanged).
+
 **Waiting on the owner**
-- Listening to the music and looking over look B; approving a merge of `3d-look` into `main` (that makes it live on the GitHub Pages link).
+- Playing the new look and music; friend feedback.
 
 **Exact next step**
-- Merge `3d-look` into `main` when approved, run all checks, push.
+- Owner's choice: builds (themed cards that reward a strategy), more art polish (card art, the fall), or the Android roadmap when ready.
 
 ## 2026-10-31: Session 9, continued (planning art, music, Android)
 

@@ -302,3 +302,6 @@ Layout only; no rule changes (432 rule checks passing).
 
 ## 2026-10-31: Code cleanup retest
 Simulator now uses the game's own playRoll. New player per-shift survival 57 / 42 / 54 / 58 / 51 / 47 / 39 / 43%, career median 31 runs: unchanged.
+
+## 2026-10-31: Look B and music merged
+Display and audio only. New player: survive shift 1 56.9%, reach shift 3 23.9% (unchanged). Autoplay 25 runs clean.
