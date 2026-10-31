@@ -299,3 +299,6 @@ Display and tutorials only; no rule changes. No retest needed (432 rule checks p
 
 ## 2026-10-31: Phone tabs
 Layout only; no rule changes (432 rule checks passing).
+
+## 2026-10-31: Code cleanup retest
+Simulator now uses the game's own playRoll. New player per-shift survival 57 / 42 / 54 / 58 / 51 / 47 / 39 / 43%, career median 31 runs: unchanged.

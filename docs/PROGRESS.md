@@ -2,6 +2,17 @@
 
 Dated session log. Newest at the top.
 
+## 2026-10-31: Session 9, continued (code cleanup)
+
+**Done**
+- Shared `playRoll` for game and simulator; ui.js split into three display files; hidden cards row and unused styles removed; `index.html?autoplay` bot (25 runs in under a minute: 17 escapes, endless mode, no errors). tests.html: 435 checks, all passing. Balance unchanged.
+
+**Waiting on the owner**
+- Trying `?autoplay`; playtesting.
+
+**Exact next step**
+- Builds: themed cards that reward a strategy (dark side, hard ways, crew) and a shop that leans toward your theme. Then art and music.
+
 ## 2026-10-31: Session 9, continued (sticky unlock screens, phone tabs)
 
 **Done**

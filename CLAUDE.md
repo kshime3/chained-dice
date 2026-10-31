@@ -59,11 +59,12 @@ js/ui-screens.js   display: full-screen views (splashes, prompts, end screen and
 js/tutorials.js    display: tutorial pages (intro, shop, comps, phone) and "seen" memory
 js/coach.js        display: the guided first shooter (coach bubble for brand-new players)
 js/main.js         wires buttons to logic and display
+js/autoplay.js     testing tool: index.html?autoplay lets a bot play whole runs and report errors (loaded only then)
 demos/dice-3d.html  preview: three 3D dice styles to choose from (not part of the game)
 demos/logo-options.html  preview: four logo directions to choose from (not part of the game)
 tools/simulate.js  balance simulator (Node.js, not part of the game): node tools/simulate.js 20000
 ```
-Testing shortcuts: add `?target=300` to the page address to set shift 1's debt; add `?fast` to skip the dice animation, splash screens and fall animation; add `?cards=doubleUp,greenDice` to start with those cards (ids are in js/cards.js). `?rule=houseDie` forces that house rule every shift (ids are in js/rules.js). `?unlockAll` makes everything available without touching saved progress. Combine with `&`, e.g. `?target=300&fast&cards=doublesCharm`.
+Testing shortcuts: add `?target=300` to the page address to set shift 1's debt; add `?fast` to skip the dice animation, splash screens and fall animation; add `?cards=doubleUp,greenDice` to start with those cards (ids are in js/cards.js). `?rule=houseDie` forces that house rule every shift (ids are in js/rules.js). `?unlockAll` makes everything available without touching saved progress. `?autoplay` (or `?autoplay=100`) lets a bot play whole runs through the real screen and report errors or stuck screens; it never saves. Combine with `&`, e.g. `?target=300&fast&cards=doublesCharm`.
 
 tests.html pins its own numbers (shift 1: $200 cash, $2,000 debt, 6 seats, everything unlocked, progress never saved) so tuning config.js doesn't break the checks. Shift cash and debts are in `CONFIG.shifts`; the current debt is `state.debt`.
 

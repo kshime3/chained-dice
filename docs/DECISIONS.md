@@ -292,3 +292,10 @@ Dated log of every decision and why. Newest at the bottom.
   - **Short intro:** first visit shows 2 pages (the story, "Never played craps?"); the full pages stay under How to play.
 - **Unlock screens stay up** (owner, 2026-10-31): unlock / "New from your next run" screens no longer close on their own or on a background tap; they wait for the Continue button.
 - **Phone layout with tabs** (owner chose tabs, 2026-10-31): on phones a bottom tab bar switches between **Table** (dice, all bets, chips, Roll, results; one shooter/mult line), **Hand** (cards with full text, comps with Use buttons, perks; an orange dot when a comp is ready) and **Crew** (each seat written out: style, dice, chance of a 7, shooting now/next/later). Money and the chain stay on top. Bigger screens unchanged. The coach always works on the Table tab. Also fits an iPhone SE (375x667) via a compact mode for short phones.
+
+## 2026-10-31 (code cleanup)
+
+- **One shared `playRoll`** (shift.js) settles every roll for both the game and the simulator (they had drifted: the free comp happened at a different moment, and the simulator skipped run stats).
+- **ui.js split** into ui.js (table), ui-break.js (Dealer Break), ui-screens.js (full-screen views); code moved, not rewritten.
+- **Removed** the hidden one-line cards row (replaced by the hand and phone tabs) and unused styles.
+- **`?autoplay`** (js/autoplay.js, loaded only then): a bot plays whole runs through the real screen with tiny debts and reports errors or stuck screens. It turns off saving and unlocks everything, so it never touches the player's progress. Linked from tests.html.

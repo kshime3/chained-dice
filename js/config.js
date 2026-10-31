@@ -311,7 +311,13 @@ const testTarget = Number(new URLSearchParams(location.search).get("target"));
 if (testTarget > 0) CONFIG.shifts[0].debt = testTarget;
 
 // Testing shortcut: add ?fast to the page address to skip the dice animation.
-if (new URLSearchParams(location.search).has("fast")) {
+// Testing tool: ?autoplay lets a bot play whole runs (js/autoplay.js). It is fast too,
+// sees everything, and never saves over your progress or run.
+if (new URLSearchParams(location.search).has("autoplay")) {
+  CONFIG.saveProgress = false;
+  CONFIG.unlockEverything = true;
+}
+if (new URLSearchParams(location.search).has("fast") || new URLSearchParams(location.search).has("autoplay")) {
   CONFIG.diceRollMs = 0;
   CONFIG.openingMs = 0;
   CONFIG.sevenOutSplashMs = 0;

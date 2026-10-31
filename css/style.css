@@ -751,3 +751,9 @@ h1 { display: flex; align-items: center; }
   .tabbar button { padding: 3px 0; }
   body { padding-bottom: 56px; }
 }
+
+/* Testing tool: the ?autoplay status panel */
+.autoplay-panel { position: fixed; right: 8px; bottom: 8px; z-index: 50; max-width: 340px; background: #111; color: #eee; border: 2px solid #555;
+  border-radius: 10px; padding: 8px 10px; font-size: 0.8rem; text-align: left; }
+.autoplay-panel.good { border-color: #2ecc71; }
+.autoplay-panel.bad { border-color: #e74c3c; }

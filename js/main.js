@@ -626,6 +626,13 @@ drawDie("die1", 1);
 drawDie("die2", 1);
 renderAll();
 
+// Testing tool: ?autoplay loads the bot that plays whole runs (js/autoplay.js).
+if (new URLSearchParams(location.search).has("autoplay")) {
+  const bot = document.createElement("script");
+  bot.src = "js/autoplay.js";
+  document.body.appendChild(bot);
+}
+
 // The opening animation plays on top of whatever comes next.
 playOpening(CONFIG.openingMs);
 
