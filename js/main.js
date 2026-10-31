@@ -7,6 +7,7 @@ const savedRun = loadRun();
 let awaitingResume = !!savedRun; // don't save over it until the player chooses
 let state = newShiftState();
 giveTestCards(state);
+state = giveTestShift(state);
 giveTestRule(state);
 let selectedChip = CONFIG.chipValues[0];
 
@@ -402,6 +403,17 @@ function giveTestCards(st) {
   if (!wanted) return;
   st.cards = wanted.split(",").filter((id) => CARDS[id]).slice(0, maxCards(st));
   st.stock = newStock(st);
+}
+
+// Testing shortcut: ?shift=5 starts the run at that shift (earlier shifts count as won).
+function giveTestShift(st) {
+  const n = Number(new URLSearchParams(location.search).get("shift"));
+  for (let k = 1; k < n; k++) {
+    st.status = "won";
+    st.deposited = st.debt;
+    st = nextShift(st);
+  }
+  return st;
 }
 
 // Testing shortcut: ?rule=houseDie forces that house rule every shift.
