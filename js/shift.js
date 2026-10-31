@@ -501,3 +501,53 @@ function endBreak(state) {
     fall(state, "fell-broke");
   }
 }
+
+// Settle one roll: every rule, card, crew effect, comp and tracker, in order.
+// The game (main.js finishRoll) and the balance simulator both use this, so they can't drift apart.
+// Returns what the screen needs to explain the roll.
+function playRoll(state, rolled) {
+  const moneyBefore = totalMoney(state);
+  const shooter = state.crew[state.shooterIndex];
+  const odds = diceOdds(currentDice(state), nextRollPairs(state)); // the chances this roll had (run stats)
+  state.lastRoll = rolled;
+  state.turnRolls += 1;
+  const total = rolled.total;
+  const doubles = rolled.dice[0] === rolled.dice[1];
+  const pointBefore = state.point;
+  const lineBet = state.bets.pass > 0 ? "pass" : state.bets.dont > 0 ? "dont" : null;
+  const results = resolveRoll(state.bets, total, pointBefore, { dice: rolled.dice, firePoints: state.firePoints });
+  for (const r of results) r.plain = r.winnings; // before cards and mult, for the win screen
+  const doubled = !!state.armed.doubleDown && results.some((r) => r.outcome === "win");
+  const multUsed = effectiveMult(state) * (doubled ? 2 : 1);
+  const multWhy = multReasons(state).concat(doubled ? ["Double Down x2"] : []);
+  const crewBefore = applyCrewBeforePayout(state, results, total, pointBefore);
+  const before = applyCardsBeforePayout(state, results, total, pointBefore);
+  applyMult(results, multUsed);
+  settleResults(state, results); // pay winners, remove losers, move Come bets
+  const compNotes = finishArmed(state, results);
+
+  // Pit Boss's Pity keeps the point on after an ignored seven-out.
+  state.point = before.pity ? pointBefore : nextPoint(pointBefore, total);
+  const sevenOut = !before.pity && pointBefore !== null && total === CONFIG.sevenOut;
+  const pointHit = pointBefore !== null && total === pointBefore;
+  const cardNotes = applyCardsAfterRoll(state, results, total, pointBefore, sevenOut);
+  const crewNotes = applyCrewEffects(state, results, sevenOut, pointHit);
+  if (pointHit && !state.firePoints.includes(pointBefore)) state.firePoints.push(pointBefore); // Fire Bet
+  const challengeNote = shooter === "You"
+    ? trackChallenge(state, results, { pointHit: pointHit, total: total, doubles: doubles, sevenOut: sevenOut, multUsed: multUsed })
+    : null;
+  if (challengeNote) compNotes.push(challengeNote);
+  trackRollUnlocks(state, { results: results, pointHit: pointHit, sevenOut: sevenOut, doubles: doubles, multUsed: multUsed, shooter: shooter });
+  recordRoll(state.stats, state, rolled, totalMoney(state) - moneyBefore, sevenOut, pointHit, odds, multUsed, shooter, state.turnRolls);
+  afterRoll(state, sevenOut);
+
+  // A free comp for hitting a point at a big mult.
+  if (pointHit && multUsed >= CONFIG.freeCompMult && gainComp(state, randomComp(state))) {
+    compNotes.push("The dealer is impressed: a free " + COMPS[state.comps[state.comps.length - 1]].name + " comp!");
+  }
+  return {
+    results, total, pointBefore, lineBet, sevenOut, pointHit, multUsed, multWhy, challengeNote,
+    notes: crewBefore.concat(before.notes, cardNotes, crewNotes, compNotes),
+    turnNotes: cardNotes.concat(crewNotes), // for the seven-out screen
+  };
+}

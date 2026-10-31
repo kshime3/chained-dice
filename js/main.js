@@ -194,52 +194,14 @@ function offerRerollOrFinish(rolled) {
 // Settle every bet once the dice land.
 function finishRoll(rolled) {
   delete state.pendingRoll;
-  const moneyBefore = totalMoney(state);
-  const shooter = state.crew[state.shooterIndex];
-  const odds = diceOdds(currentDice(state), nextRollPairs(state));
-  state.lastRoll = rolled;
-  state.turnRolls += 1;
-  const total = state.lastRoll.total;
-  const pointBefore = state.point;
-  const lineBet = state.bets.pass > 0 ? "pass" : state.bets.dont > 0 ? "dont" : null; // whose side you're on, for the headline
-  const results = resolveRoll(state.bets, total, pointBefore, { dice: rolled.dice, firePoints: state.firePoints });
-  for (const r of results) r.plain = r.winnings; // before cards and mult, for the win screen
+  const r = playRoll(state, rolled); // all the rules (shift.js)
+  const { results, total, pointBefore, sevenOut, pointHit, challengeNote } = r;
   const boosts = [];
-  const doubled = !!state.armed.doubleDown && results.some((r) => r.outcome === "win");
-  const multUsed = effectiveMult(state) * (doubled ? 2 : 1);
-  if (multUsed !== 1) boosts.push("Mult " + multUsed + "x" + (multReasons(state).length || doubled ? " (" + multReasons(state).concat(doubled ? ["Double Down x2"] : []).join(", ") + ")" : ""));
-  const crewBefore = applyCrewBeforePayout(state, results, total, pointBefore);
-  const before = applyCardsBeforePayout(state, results, total, pointBefore);
-  if (hasCard(state, "oddsAddict") && results.some((r) => r.bet === "odds" && r.outcome === "win")) boosts.push("Odds Addict (+50% Odds)");
-  applyMult(results, multUsed);
-
-  // Pay winners, remove losers, move Come bets.
-  settleResults(state, results);
+  if (r.multUsed !== 1) boosts.push("Mult " + r.multUsed + "x" + (r.multWhy.length ? " (" + r.multWhy.join(", ") + ")" : ""));
+  if (hasCard(state, "oddsAddict") && results.some((x) => x.bet === "odds" && x.outcome === "win")) boosts.push("Odds Addict (+" + Math.round(CONFIG.oddsAddictExtra * 100) + "% Odds)");
   showBetPopups(results);
-
-  const compNotes = finishArmed(state, results);
-
-  // Pit Boss's Pity keeps the point on after an ignored seven-out.
-  state.point = before.pity ? pointBefore : nextPoint(pointBefore, total);
-  const sevenOut = !before.pity && pointBefore !== null && total === CONFIG.sevenOut;
-  const cardNotes = applyCardsAfterRoll(state, results, total, pointBefore, sevenOut);
-  const crewNotes = applyCrewEffects(state, results, sevenOut, pointBefore !== null && total === pointBefore);
-  const pointHit = pointBefore !== null && total === pointBefore;
-  if (pointHit && !state.firePoints.includes(pointBefore)) state.firePoints.push(pointBefore); // Fire Bet
-  const challengeNote = shooter === "You"
-    ? trackChallenge(state, results, { pointHit: pointHit, total: total, doubles: rolled.dice[0] === rolled.dice[1], sevenOut: sevenOut, multUsed: multUsed })
-    : null;
-  if (challengeNote) compNotes.push(challengeNote);
-  trackRollUnlocks(state, { results: results, pointHit: pointHit, sevenOut: sevenOut, doubles: rolled.dice[0] === rolled.dice[1], multUsed: multUsed, shooter: shooter });
-  recordRoll(state.stats, state, rolled, totalMoney(state) - moneyBefore, sevenOut, pointHit, odds, multUsed, shooter, state.turnRolls);
-  afterRoll(state, sevenOut);
-
-  // A free comp for hitting a point at a big mult.
-  if (pointHit && multUsed >= CONFIG.freeCompMult && gainComp(state, randomComp(state))) {
-    compNotes.push("The dealer is impressed: a free " + COMPS[state.comps[state.comps.length - 1]].name + " comp!");
-  }
-  const notes = crewBefore.concat(before.notes, cardNotes, crewNotes, compNotes);
-  const headline = rollHeadline(total, pointBefore, state.point, lineBet, sevenOut);
+  const notes = r.notes;
+  const headline = rollHeadline(total, pointBefore, state.point, r.lineBet, sevenOut);
   showRollResult(headline, rollDetails(results) + (notes.length ? " " + notes.join(" ") : ""), sevenOut);
   coachAfterRoll(state, total, pointBefore, sevenOut);
   saveRun(state); // settled: a refresh from here on won't settle this roll again
@@ -259,7 +221,7 @@ function finishRoll(rolled) {
     renderState(state);
     const lost = results.filter((r) => r.outcome === "lose").reduce((sum, r) => sum + r.amount, 0);
     const won = results.filter((r) => r.outcome === "win" && r.bet !== "field").reduce((sum, r) => sum + r.winnings, 0);
-    showSplash(sevenOutSplash(state.sevenOutBy, lost, cardNotes.concat(crewNotes), won), "bad", CONFIG.sevenOutSplashMs, renderAll);
+    showSplash(sevenOutSplash(state.sevenOutBy, lost, r.turnNotes, won), "bad", CONFIG.sevenOutSplashMs, renderAll);
     return;
   }
   renderAll();

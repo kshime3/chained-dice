@@ -1064,6 +1064,17 @@
     check("Odds before a point: not working", nextRollOutcomes("odds", null), null);
     check("Hard 6 with a point: wins 6 (3+3 only), loses 7 and an easy 6", nextRollOutcomes("hard6", 5), { wins: [6], loses: [7, 6], note: "3+3 only" });
 
+    // playRoll: the one roll-settling function the game and simulator share
+    {
+    const pr = newShiftState(); pr.onBreak = false; pr.bets.pass = 10; pr.cash -= 10;
+    const r1 = playRoll(pr, { dice: [3, 5], total: 8 });
+    check("playRoll: an 8 on the first roll sets the point", [r1.pointHit, r1.sevenOut, pr.point, pr.turnRolls], [false, false, 8, 1]);
+    const r2 = playRoll(pr, { dice: [4, 4], total: 8 });
+    check("playRoll: hitting it pays the Pass Line (the bet stays up) and counts in the run stats", [r2.pointHit, pr.cash, pr.bets.pass, pr.stats.pointsHit, pr.firePoints], [true, 200, 10, 1, [8]]);
+    playRoll(pr, { dice: [2, 2], total: 4 }); const r4 = playRoll(pr, { dice: [3, 4], total: 7 });
+    check("playRoll: a 7 with a point on is a seven-out, next shooter, Dealer Break", [r4.sevenOut, pr.shooterIndex, pr.onBreak], [true, 1, true]);
+    }
+
     // Dice: 10,000 rolls stay in range, and 7 is the most common total
     const counts = {};
     let inRange = true;

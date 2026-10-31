@@ -15,30 +15,7 @@ const source = files.map((f) => fs.readFileSync(path.join(__dirname, "..", "js",
 const simulator = `
 // One roll, settled the same way main.js finishRoll does it.
 function simRoll(state) {
-  const shooter = state.crew[state.shooterIndex];
-  const rolled = rollDice(currentDice(state), nextRollPairs(state));
-  state.lastRoll = rolled;
-  state.turnRolls += 1;
-  const total = rolled.total;
-  const pointBefore = state.point;
-  const results = resolveRoll(state.bets, total, pointBefore, { dice: rolled.dice, firePoints: state.firePoints });
-  const doubled = !!state.armed.doubleDown && results.some((r) => r.outcome === "win");
-  const multUsed = effectiveMult(state) * (doubled ? 2 : 1);
-  const crewBefore = applyCrewBeforePayout(state, results, total, pointBefore);
-  const before = applyCardsBeforePayout(state, results, total, pointBefore);
-  applyMult(results, multUsed);
-  settleResults(state, results);
-  finishArmed(state, results);
-  if (pointBefore !== null && total === pointBefore && multUsed >= CONFIG.freeCompMult) gainComp(state, randomComp(state));
-  state.point = before.pity ? pointBefore : nextPoint(pointBefore, total);
-  const sevenOut = !before.pity && pointBefore !== null && total === CONFIG.sevenOut;
-  applyCardsAfterRoll(state, results, total, pointBefore, sevenOut);
-  const pointHit = pointBefore !== null && total === pointBefore;
-  if (pointHit && !state.firePoints.includes(pointBefore)) state.firePoints.push(pointBefore); // Fire Bet
-  applyCrewEffects(state, results, sevenOut, pointHit);
-  trackRollUnlocks(state, { results: results, pointHit: pointHit, sevenOut: sevenOut, doubles: rolled.dice[0] === rolled.dice[1], multUsed: multUsed, shooter: shooter });
-  if (shooter === "You") trackChallenge(state, results, { pointHit: pointHit, total: total, doubles: rolled.dice[0] === rolled.dice[1], sevenOut: sevenOut, multUsed: multUsed });
-  afterRoll(state, sevenOut);
+  playRoll(state, rollDice(currentDice(state), nextRollPairs(state))); // the game's own roll logic
 }
 
 const round5 = (n) => Math.max(5, Math.floor(n / 5) * 5);
