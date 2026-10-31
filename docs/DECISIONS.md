@@ -316,3 +316,6 @@ Dated log of every decision and why. Newest at the bottom.
 ## 2026-10-31: Shift 1 gets its own dark track
 - Owner wanted shift 1 darker and creepier; picked "Phantasm" (Kevin MacLeod, CC BY 4.0) from demos/music-options.html.
 - New music mood "first" plays on shift 1 only (CONFIG.music.calmFromShift = 2); shifts 2-4 keep the calm playlist, tense from shift 5. Credits updated in Settings > Credits (automatic from CONFIG) and music/CREDITS.txt.
+
+## 2026-10-31: Simulator only for gameplay changes
+- Owner: no balance retest (tools/simulate.js) for display, art, sound, music, wording, layout or docs changes. Run it only when editing cards or anything that affects how the game plays (comps, crew, bets, payouts, prices, debts, rules, shop, unlocks). CLAUDE.md working rule updated.
