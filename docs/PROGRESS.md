@@ -2,6 +2,17 @@
 
 Dated session log. Newest at the top.
 
+## 2026-10-31: Session 9, continued (look B, step 1, on branch 3d-look)
+
+**Done**
+- Owner picked look B. On branch `3d-look`: the room (lamp light, flicker, dust, dark edges), tilted table with wooden rail, chained crew portraits (js/art.js). Fits all screen sizes; tests.html 435 passing; autoplay 25 runs no errors.
+
+**Waiting on the owner**
+- Looking at step 1 (screenshots or by checking out the branch).
+
+**Exact next step**
+- Step 2: restyle the rest to match (Dealer Break, shop, cards, buttons, pop-ups). Step 3: music (free licensed tracks). Then merge `3d-look` into `main` when the owner is happy.
+
 ## 2026-10-31: Session 9, continued (planning art, music, Android)
 
 **Done**

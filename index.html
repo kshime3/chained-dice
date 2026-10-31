@@ -4,12 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Chained Dice</title>
-  <link rel="icon" type="image/svg+xml" href="img/logo.svg?v=20261031i">
-  <link rel="icon" type="image/png" sizes="32x32" href="img/icon-32.png?v=20261031i">
-  <link rel="apple-touch-icon" href="img/icon-180.png?v=20261031i">
+  <link rel="icon" type="image/svg+xml" href="img/logo.svg?v=20261031l">
+  <link rel="icon" type="image/png" sizes="32x32" href="img/icon-32.png?v=20261031l">
+  <link rel="apple-touch-icon" href="img/icon-180.png?v=20261031l">
   <link rel="manifest" href="manifest.webmanifest">
   <meta name="theme-color" content="#0d2a1a">
-  <link rel="stylesheet" href="css/style.css?v=20261031i">
+  <link rel="stylesheet" href="css/style.css?v=20261031l">
 </head>
 <body>
   <!-- Opening animation: a die rolls in leaving a blood trail, the chain snaps, the title appears, then it all fades. -->
@@ -60,7 +60,7 @@
 
   <header class="top">
     <div class="title-row">
-      <h1><img src="img/logo.svg?v=20261031i" class="title-logo" alt="">Chained Dice</h1>
+      <h1><img src="img/logo.svg?v=20261031l" class="title-logo" alt="">Chained Dice</h1>
       <div class="title-buttons">
         <button id="settings-button" class="mute-button" title="Settings">⚙</button>
         <button id="collection-button" class="how-to-play" title="Collection: everything you've unlocked">📖<span class="hide-mobile"> Collection</span></button>
@@ -92,6 +92,15 @@
     </section>
 
     <section class="play">
+      <!-- The lamp over the table, its light, and dust in the air -->
+      <div class="lamp" aria-hidden="true">
+        <svg viewBox="0 0 200 110"><line x1="100" y1="0" x2="100" y2="34" stroke="#222" stroke-width="3"/>
+          <path d="M62 74 L80 34 L120 34 L138 74 Z" fill="#2a2420" stroke="#4a3c30" stroke-width="2"/>
+          <ellipse cx="100" cy="74" rx="38" ry="7" fill="#1a1512"/><ellipse cx="100" cy="76" rx="14" ry="8" fill="#ffe6b0"/>
+          <ellipse cx="100" cy="76" rx="30" ry="14" fill="#ffd9a0" opacity="0.25"/></svg>
+      </div>
+      <div class="lamp-cone" aria-hidden="true"></div>
+      <div class="dust" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
       <div class="table">
         <div class="roll-row">
           <div id="dice" class="dice" title="Tap the dice to roll">
@@ -309,26 +318,27 @@
   </div>
 
   <!-- Load order matters: config first, then logic, then display, then main. -->
-  <script src="js/config.js?v=20261031i"></script>
-  <script src="js/dice.js?v=20261031i"></script>
-  <script src="js/bets.js?v=20261031i"></script>
-  <script src="js/crew.js?v=20261031i"></script>
-  <script src="js/cards.js?v=20261031i"></script>
-  <script src="js/shop.js?v=20261031i"></script>
-  <script src="js/stats.js?v=20261031i"></script>
-  <script src="js/perks.js?v=20261031i"></script>
-  <script src="js/crafting.js?v=20261031i"></script>
-  <script src="js/comps.js?v=20261031i"></script>
-  <script src="js/unlocks.js?v=20261031i"></script>
-  <script src="js/rules.js?v=20261031i"></script>
-  <script src="js/save.js?v=20261031i"></script>
-  <script src="js/shift.js?v=20261031i"></script>
-  <script src="js/sound.js?v=20261031i"></script>
-  <script src="js/ui.js?v=20261031i"></script>
-  <script src="js/ui-break.js?v=20261031i"></script>
-  <script src="js/ui-screens.js?v=20261031i"></script>
-  <script src="js/tutorials.js?v=20261031i"></script>
-  <script src="js/coach.js?v=20261031i"></script>
-  <script src="js/main.js?v=20261031i"></script>
+  <script src="js/config.js?v=20261031l"></script>
+  <script src="js/dice.js?v=20261031l"></script>
+  <script src="js/bets.js?v=20261031l"></script>
+  <script src="js/crew.js?v=20261031l"></script>
+  <script src="js/cards.js?v=20261031l"></script>
+  <script src="js/shop.js?v=20261031l"></script>
+  <script src="js/stats.js?v=20261031l"></script>
+  <script src="js/perks.js?v=20261031l"></script>
+  <script src="js/crafting.js?v=20261031l"></script>
+  <script src="js/comps.js?v=20261031l"></script>
+  <script src="js/unlocks.js?v=20261031l"></script>
+  <script src="js/rules.js?v=20261031l"></script>
+  <script src="js/save.js?v=20261031l"></script>
+  <script src="js/shift.js?v=20261031l"></script>
+  <script src="js/sound.js?v=20261031l"></script>
+  <script src="js/art.js?v=20261031l"></script>
+  <script src="js/ui.js?v=20261031l"></script>
+  <script src="js/ui-break.js?v=20261031l"></script>
+  <script src="js/ui-screens.js?v=20261031l"></script>
+  <script src="js/tutorials.js?v=20261031l"></script>
+  <script src="js/coach.js?v=20261031l"></script>
+  <script src="js/main.js?v=20261031l"></script>
 </body>
 </html>

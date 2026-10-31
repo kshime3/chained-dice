@@ -218,7 +218,7 @@ function renderCrew(state) {
     seat.className = "seat" + (i === state.shooterIndex ? " shooting" : "") + (i < state.shooterIndex ? " done" : "");
     const crafted = name === "You" && isEdited(state);
     const encore = name === "You" && i > 0 && state.crew.indexOf("You") < i;
-    seat.innerHTML = "⛓<br>" + name + (crafted ? " 🔨" : "") + (encore ? " (Encore)" : "");
+    seat.innerHTML = crewPortrait(name) + '<span class="seat-name">' + name + (crafted ? " 🔨" : "") + (encore ? " (Encore)" : "") + "</span>";
     const info = CREW_INFO[name];
     if (info) {
       const tip = document.createElement("div");
@@ -526,7 +526,7 @@ function renderCrewList(state) {
     row.className = "crew-card" + (i === state.shooterIndex ? " shooting" : "") + (i < state.shooterIndex ? " done" : "");
     const status = i === state.shooterIndex ? "🎲 Shooting now" : i < state.shooterIndex ? "Done this shift" : "Shoots " + (i - state.shooterIndex === 1 ? "next" : "later");
     const faces = name === "You" ? "<br>Your dice: " + state.myDice.left.join(" ") + " / " + state.myDice.right.join(" ") : "";
-    row.innerHTML = "<strong>" + name + '</strong><span class="crew-status">' + status + "</span><br>" + info.style + faces +
+    row.innerHTML = '<div class="crew-face">' + crewPortrait(name) + "</div><strong>" + name + '</strong><span class="crew-status">' + status + "</span><br>" + info.style + faces +
       '<br><span class="hint">Dice: ' + info.dice + "</span> · Chance of a 7: <strong>" + percent(sevenChance(name, state)) + "</strong>";
     box.appendChild(row);
   });

@@ -53,6 +53,7 @@ js/save.js         logic: saving the run in progress (browser), cleared when the
 js/unlocks.js      logic: locked cards/comps/crew, hidden unlock goals, saved progress (browser)
 js/rules.js        logic: house rules, boss rules, pit boss challenges
 js/sound.js        display: sound effects made in the browser (Web Audio), mute setting
+js/art.js          display: drawings made in code (crew portraits, SVG)
 js/ui.js           display: the table (dice, bets and hints, crew, mult, roll results, popups, phone tabs)
 js/ui-break.js     display: the Dealer Break (drop box, shop, comps, dice workshop, hiring, phone call, your hand)
 js/ui-screens.js   display: full-screen views (splashes, prompts, end screen and stats, fall, tutorials, Collection, opening)
@@ -62,10 +63,11 @@ js/main.js         wires buttons to logic and display
 js/autoplay.js     testing tool: index.html?autoplay lets a bot play whole runs and report errors (loaded only then)
 demos/dice-3d.html  preview: three 3D dice styles to choose from (not part of the game)
 demos/logo-options.html  preview: four logo directions to choose from (not part of the game)
+demos/table-look.html  preview: table looks B (CSS 3D) and C (Three.js) (not part of the game)
 tools/simulate.js  balance simulator (Node.js, not part of the game): node tools/simulate.js 20000
 ```
 Testing shortcuts: add `?target=300` to the page address to set shift 1's debt; add `?fast` to skip the dice animation, splash screens and fall animation; add `?cards=doubleUp,greenDice` to start with those cards (ids are in js/cards.js). `?rule=houseDie` forces that house rule every shift (ids are in js/rules.js). `?unlockAll` makes everything available without touching saved progress. `?autoplay` (or `?autoplay=100`) lets a bot play whole runs through the real screen and report errors or stuck screens; it never saves. Combine with `&`, e.g. `?target=300&fast&cards=doublesCharm`.
 
 tests.html pins its own numbers (shift 1: $200 cash, $2,000 debt, 6 seats, everything unlocked, progress never saved) so tuning config.js doesn't break the checks. Shift cash and debts are in `CONFIG.shifts`; the current debt is `state.debt`.
 
-Scripts load with plain `<script>` tags in a set order (config, logic: dice, bets, crew, cards, shop, stats, perks, crafting, comps, unlocks, rules, save, shift; then display: sound, ui, ui-break, ui-screens, tutorials, coach; then main), not ES modules, so double-clicking index.html works.
+Scripts load with plain `<script>` tags in a set order (config, logic: dice, bets, crew, cards, shop, stats, perks, crafting, comps, unlocks, rules, save, shift; then display: sound, art, ui, ui-break, ui-screens, tutorials, coach; then main), not ES modules, so double-clicking index.html works.
