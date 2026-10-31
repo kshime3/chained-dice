@@ -6,7 +6,10 @@ https://creativecommons.org/licenses/by/4.0/
 Source: https://incompetech.com/music/royalty-free/
 Change made: re-encoded to 96 kbps MP3 (smaller files for the web); otherwise unchanged.
 
-Calm (early shifts):
+Shift 1:
+  "Phantasm" Kevin MacLeod (incompetech.com)          -> phantasm.mp3
+
+Calm (shifts 2 to 4):
   "Deadly Roulette" Kevin MacLeod (incompetech.com)   -> deadly-roulette.mp3
   "Bass Walker" Kevin MacLeod (incompetech.com)       -> bass-walker.mp3
   "Comfortable Mystery" Kevin MacLeod (incompetech.com) -> comfortable-mystery.mp3

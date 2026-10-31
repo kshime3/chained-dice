@@ -305,3 +305,6 @@ Simulator now uses the game's own playRoll. New player per-shift survival 57 / 4
 
 ## 2026-10-31: Look B and music merged
 Display and audio only. New player: survive shift 1 56.9%, reach shift 3 23.9% (unchanged). Autoplay 25 runs clean.
+
+## 2026-10-31: Shift 1 music (Phantasm)
+Audio only; the simulator doesn't load music code, so survival is unchanged. 435 rule checks passing, autoplay 25 runs clean.

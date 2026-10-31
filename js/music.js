@@ -1,5 +1,5 @@
 // Display: background music. Plays the tracks listed in CONFIG.music, looping through
-// a calm playlist early in a run and a tense one in later shifts, with a crossfade.
+// a dark track for shift 1, a calm playlist for the next shifts and a tense one later, with a crossfade.
 //
 // Phones are strict about music: it may only start inside a real tap (finger lifted),
 // each player needs that permission, and iPhones ignore an audio element's volume.
@@ -25,7 +25,9 @@ function musicTracks(mood) {
 
 // Which playlist fits this moment of the run.
 function musicMoodFor(state) {
-  return state.endless || state.shift >= CONFIG.music.tenseFromShift ? "tense" : "calm";
+  if (state.endless || state.shift >= CONFIG.music.tenseFromShift) return "tense";
+  if (state.shift < CONFIG.music.calmFromShift && musicTracks("first").length) return "first";
+  return "calm";
 }
 
 // Build the two decks. Web Audio volume only works for pages served over http(s):

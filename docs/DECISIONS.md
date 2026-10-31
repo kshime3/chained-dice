@@ -312,3 +312,7 @@ Dated log of every decision and why. Newest at the bottom.
 - **Merged `3d-look` into `main`** (owner, 2026-10-31): look B (room, tilted table, crew portraits, wood/brass/parchment theme) and the music are live.
 - **Music fix for phones** (owner reported silence on an iPhone, 2026-10-31): the music started on the first touch-down, which phones don't count as permission to play, and it never retried. Now it starts on a real tap (pointerup/touchend/click/key), keeps trying until a track plays, blesses both players in that first tap so later tracks and crossfades are allowed, routes volume through Web Audio (iPhones ignore an audio element's volume; file:// falls back to element volume), pauses in the background. Settings shows a music status line for troubleshooting. Couldn't test real Safari here (only Chrome's engine is available), so the owner checks on the phone.
 - Owner confirmed music plays on the iPhone after the first tap. Added testing shortcut `?shift=N` (start a run at shift N) to hear the tense playlist.
+
+## 2026-10-31: Shift 1 gets its own dark track
+- Owner wanted shift 1 darker and creepier; picked "Phantasm" (Kevin MacLeod, CC BY 4.0) from demos/music-options.html.
+- New music mood "first" plays on shift 1 only (CONFIG.music.calmFromShift = 2); shifts 2-4 keep the calm playlist, tense from shift 5. Credits updated in Settings > Credits (automatic from CONFIG) and music/CREDITS.txt.

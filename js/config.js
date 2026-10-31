@@ -252,12 +252,14 @@ const CONFIG = {
   winSoundTiers: [0.03, 0.10, 0.30], // a roll's winnings as a share of the debt: above each, a bigger win sound
   openingMs: 4200,        // the opening animation (die rolls in, blood trail, chain snaps); tap skips
   // Background music (js/music.js). Add tracks here once the files are in the music/ folder.
-  // mood: "calm" plays early in a run, "tense" from tenseFromShift (and in endless mode).
+  // mood: "first" plays on shift 1, "calm" until tenseFromShift, "tense" from then on (and in endless mode).
   // license/link: shown in Settings > Credits (CC-BY needs title, artist, licence and a link).
   music: {
     volume: 0.4,
+    calmFromShift: 2,
     tenseFromShift: 5,
     tracks: [
+      { file: "music/phantasm.mp3", title: "Phantasm", artist: "Kevin MacLeod (incompetech.com)", license: "CC BY 4.0", link: "https://creativecommons.org/licenses/by/4.0/", mood: "first" },
       { file: "music/deadly-roulette.mp3", title: "Deadly Roulette", artist: "Kevin MacLeod (incompetech.com)", license: "CC BY 4.0", link: "https://creativecommons.org/licenses/by/4.0/", mood: "calm" },
       { file: "music/bass-walker.mp3", title: "Bass Walker", artist: "Kevin MacLeod (incompetech.com)", license: "CC BY 4.0", link: "https://creativecommons.org/licenses/by/4.0/", mood: "calm" },
       { file: "music/comfortable-mystery.mp3", title: "Comfortable Mystery", artist: "Kevin MacLeod (incompetech.com)", license: "CC BY 4.0", link: "https://creativecommons.org/licenses/by/4.0/", mood: "calm" },
