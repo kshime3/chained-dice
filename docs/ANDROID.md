@@ -6,7 +6,7 @@
 
 - **Model:** a one-time price (owner's choice). No ads.
 - **Computer:** Windows PC. The owner's phone is an iPhone, so Android testing happens on the PC's Android emulator and on friends' Android phones.
-- **Google Play:** no developer account yet.
+- **Google Play:** developer account created 2026-11-02 (ID verification still to submit). Node.js and Android Studio installed on the PC.
 - **The game is ready to wrap:** plain HTML/CSS/JS, no internet needed (no outside fonts or files), about 16 MB with music, saves stay on the device, touch controls and press-and-hold help already done.
 
 Rough total: **6 to 10 weeks of calendar time**, much of it waiting (account checks, the 14-day test, Google's review). Hands-on work fits the one-hour-a-day pace.
@@ -37,12 +37,27 @@ Each phase ends with a short check-in, like our milestones. **Who** says who doe
 - [ ] Store art made by Claude: phone screenshots (1080 x 1920), the 1024 x 500 feature graphic, the 512 x 512 icon.
 
 ### Phase B: accounts and tools (owner, 1-2 sessions plus waiting)
-- [ ] Create a **Google Play Console** account: personal account, $25 one-time fee, ID verification (can take a few days).
+- [ ] Create a **Google Play Console** account: personal account, $25 one-time fee, ID verification (can take a few days). *Account created 2026-11-02; ID still to submit.*
 - [ ] Set up a **payments profile** (needed to sell: name, address, tax info, bank account).
-- [ ] On the Windows PC, install **Node.js (LTS)** and **Android Studio** (big downloads, about an hour). Claude gives click-by-click steps.
+- [x] On the Windows PC, install **Node.js (LTS)** and **Android Studio** (done 2026-11-02).
 
 ### Phase C: wrap the game (together, 2-3 sessions)
-- [ ] Claude adds the Capacitor setup to the repo (`package.json`, `capacitor.config.json`, a script that copies the game into the app). It uses the current Capacitor version, which targets the Android version Play currently requires (Android 16 / API 36 for new apps since August 31, 2026).
+**Done in the repo (2026-11-02):** Capacitor 8.6 (targets Android 16 / API 36), `package.json`, `capacitor.config.json` (app ID `com.kshime3.chaineddice`), `tools/copy-web.js` (copies the game into `www/`, adds Capacitor's core script to the app's copy only), the `android/` project (portrait only, version 1.0.0), and the App plugin for the back button.
+
+**Owner: run it on the PC (first time, about an hour, mostly downloads)**
+1. Install **GitHub Desktop** (desktop.github.com), sign in with your GitHub account, then *File > Clone repository > kshime3/chained-dice*. It goes into `Documents\GitHub\chained-dice`.
+2. In GitHub Desktop: *Repository > Open in Command Prompt* (or PowerShell). Type these, one at a time, pressing Enter after each:
+   - `npm install` (downloads Capacitor into the folder, about a minute)
+   - `npm run sync` (copies the game into the Android project)
+3. Open **Android Studio** > *Open* > pick the `android` folder inside `chained-dice`. Wait for "Gradle sync" to finish at the bottom (the first time it downloads a lot: 5-15 minutes). If it offers to install an SDK platform or tools, say yes.
+4. *Tools > Device Manager > Create device*: pick **Pixel 8**, then a system image with **API 36** (download it), Finish.
+5. Press the green **Run ▶** button at the top. The emulator starts and the game opens in it.
+6. Try: tap to start the music, play a shooter, press the emulator's **back** button with a popup open (it should close), then with nothing open (it should ask to leave). Turn the emulator sideways: the game should stay upright.
+7. Tell Claude what happened (a screenshot of any red error text helps).
+
+**Later updates** (after Claude changes the game): GitHub Desktop *Fetch / Pull*, then `npm run sync`, then Run ▶ again.
+
+- [x] Claude adds the Capacitor setup to the repo (done 2026-11-02, see above).
 - [ ] Owner runs a few commands on the PC (Claude provides them exactly), opens the project in Android Studio and starts the game in the **Android emulator**.
 - [ ] Fix what's different in the app: sound unlock on first tap, back button, status bar colour, text sizes.
 

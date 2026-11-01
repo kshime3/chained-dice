@@ -369,3 +369,8 @@ Dated log of every decision and why. Newest at the bottom.
 ## 2026-11-01: Android decisions accepted
 - Owner accepted all six recommendations: Capacitor (build tools approved for the app), $2.99, the free website stays for friends until launch then becomes a demo or comes down, 100% promo codes for closed testers, app ID com.kshime3.chaineddice, 18+ with "simulated gambling" declared.
 - The privacy page names no email: contact goes through the developer email on the Play listing (owner's choice of address later).
+
+## 2026-11-02: Android project set up
+- Capacitor 8.6.0 (exact versions in package.json), targeting Android 16 / API 36. The android/ folder is committed so the owner only clones and opens it; copied game files (www/, android assets) and node_modules are not committed.
+- No bundler: tools/copy-web.js adds Capacitor's core script only to the app's copy of index.html, and controls.js registers the App plugin by name for the back button.
+- Owner gets the repo onto the PC with GitHub Desktop.

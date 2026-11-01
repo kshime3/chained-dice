@@ -2,6 +2,18 @@
 
 Dated session log. Newest at the top.
 
+## 2026-11-02: Android Phase C, repo side
+
+**Done**
+- Owner: Play Console account created (ID still to submit), Node.js and Android Studio installed.
+- Capacitor 8.6 Android project in the repo (app ID com.kshime3.chaineddice, API 36, portrait, version 1.0.0), copy script, App plugin for the back button. The app copy loads cleanly; tests 479 passing, autoplay clean.
+
+**Waiting on the owner**
+- Submit the Play ID check. Clone with GitHub Desktop, `npm install`, `npm run sync`, open `android` in Android Studio, run it in a Pixel 8 / API 36 emulator (steps in docs/ANDROID.md, Phase C), and report back.
+
+**Exact next step**
+- Fix whatever shows up in the emulator; then Phase A part 2 (app icon and store art).
+
 ## 2026-11-01: Android Phase A, part 1 (app foundations)
 
 **Done**

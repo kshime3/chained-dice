@@ -1,0 +1,9 @@
+{
+  "appId": "com.kshime3.chaineddice",
+  "appName": "Chained Dice",
+  "webDir": "www",
+  "backgroundColor": "#0a0807",
+  "android": {
+    "backgroundColor": "#0a0807"
+  }
+}

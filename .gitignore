@@ -1,0 +1,3 @@
+# Android app (Capacitor): installed packages and the copied game are rebuilt with "npm install" and "npm run sync"
+node_modules/
+www/

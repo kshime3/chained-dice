@@ -168,7 +168,8 @@ document.addEventListener("contextmenu", (e) => {
 // Pausing sound in the background: music.js pauses the music; sound effects stop here.
 (function androidApp() {
   const cap = typeof window !== "undefined" ? window.Capacitor : null;
-  const app = cap && cap.Plugins && cap.Plugins.App;
+  // The app loads Capacitor's core script (tools/copy-web.js), which can register the App plugin by name.
+  const app = cap && ((cap.Plugins && cap.Plugins.App) || (cap.registerPlugin && cap.isNativePlatform && cap.isNativePlatform() ? cap.registerPlugin("App") : null));
   if (app && app.addListener) {
     app.addListener("backButton", () => {
       if (keyEscape()) return;

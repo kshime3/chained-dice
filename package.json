@@ -1,0 +1,19 @@
+{
+  "name": "chained-dice",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Chained Dice as an Android app (Capacitor). The game itself needs none of this: open index.html.",
+  "scripts": {
+    "copy-web": "node tools/copy-web.js",
+    "sync": "node tools/copy-web.js && npx cap sync android",
+    "open": "npx cap open android"
+  },
+  "dependencies": {
+    "@capacitor/android": "8.6.0",
+    "@capacitor/app": "8.1.2",
+    "@capacitor/core": "8.6.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "8.6.0"
+  }
+}
