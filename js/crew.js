@@ -76,11 +76,17 @@ function setupTurn(state, prevName, prevMult) {
     state.multNotes.push("Mentor: +" + carried + "x from Hot Rod's streak");
   }
   // Cards that warm up one seat's turn.
-  for (const [card, who, extra] of [["leftysGlove", "Lefty", CONFIG.leftysGloveMult], ["ghostStory", "Ghost", CONFIG.ghostStoryMult], ["frontOfLine", "You", CONFIG.frontOfLineMult]]) {
+  for (const [card, who, extra] of [["leftysGlove", "Lefty", CONFIG.leftysGloveMult], ["ghostStory", "Ghost", CONFIG.ghostStoryMult], ["frontOfLine", "You", CONFIG.frontOfLineMult], ["bigMoBelt", "Big Mo", CONFIG.bigMoBeltMult]]) {
     if (name === who && hasCard(state, card)) {
       state.mult += extra;
       state.multNotes.push(CARDS[card].name + ": +" + extra + "x");
     }
+  }
+  // Roll Call: every shooter starts warmer for each Crew card you own.
+  if (hasCard(state, "rollCall")) {
+    const extra = CONFIG.rollCallPerCard * themeCount(state, "crew");
+    state.mult += extra;
+    state.multNotes.push("Roll Call: +" + extra + "x");
   }
   // Cold Table: Jinx leaves the table cold for the next shooter.
   if (prevName === "Jinx") {
@@ -157,7 +163,8 @@ function backingLimit(state, back) {
     const [win, per] = CONFIG.layPayouts[state.point];
     base = Math.min(base, back === "odds" ? state.bets.pass * CONFIG.tightOddsX : Math.floor((state.bets.dont * CONFIG.tightOddsX * per) / win));
   }
-  return state.crew[state.shooterIndex] === "The Professor" ? base * CONFIG.professorOddsX : base;
+  const professorX = hasCard(state, "professorsNotes") ? CONFIG.professorsNotesOddsX : CONFIG.professorOddsX;
+  return state.crew[state.shooterIndex] === "The Professor" ? base * professorX : base;
 }
 
 // Crew effects after a roll has been paid out. Returns sentences for the message.
@@ -185,10 +192,11 @@ function applyCrewEffects(state, results, sevenOut, pointHit) {
   // It never takes you below the minimum Pass Line bet.
   // Lucky Lou: + mult every time he hits a point.
   if (pointHit && name === "Lucky Lou") {
-    state.mult += CONFIG.luckyLouMult;
-    state.louGain = (state.louGain || 0) + CONFIG.luckyLouMult;
+    const gain = hasCard(state, "lousHorseshoe") ? CONFIG.lousHorseshoeMult : CONFIG.luckyLouMult;
+    state.mult += gain;
+    state.louGain = (state.louGain || 0) + gain;
     setMultNote(state, "Lucky Lou", "Lucky Lou: +" + state.louGain + "x");
-    notes.push("Lucky Lou hits it again: +" + CONFIG.luckyLouMult + "x mult.");
+    notes.push("Lucky Lou hits it again: +" + gain + "x mult.");
   }
 
   if (sevenOut && name === "Hot Rod" && !state.hotRodPenaltyUsed && !hasCard(state, "rodsLighter")) {

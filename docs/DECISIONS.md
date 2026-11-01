@@ -348,3 +348,6 @@ Dated log of every decision and why. Newest at the bottom.
 
 ## 2026-11-01: Comp and perk art
 - Same style E: comps on a steel-blue panel (like their cards), phone perks on purple (like the phone). Perk badges in the hand stay text-only (small).
+
+## 2026-11-01: Crew theme
+- Owner chose "both": the existing crew cards join a Crew theme, the 4 crew without a card get one, plus whole-table cards; all locked. Built as drafted, then tuned in the simulator (harder goals; Crew Captain and Roll Call toned down) to keep the first escape near run 30.

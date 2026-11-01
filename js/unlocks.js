@@ -57,6 +57,15 @@ const UNLOCKS = {
   compound:       { kind: "card", how: (g) => "earning $" + g.compound + " interest in one run", done: (c, g) => c.runInterest >= g.compound },
   stash:          { kind: "card", how: (g) => "winning a shift with $" + g.stash.toLocaleString("en-US") + " cash in hand", done: (c, g) => c.bestCash >= g.stash },
   earlyBird:      { kind: "card", how: (g) => "paying off a shift with " + g.earlyBird + " or more shooters still to come", done: (c, g) => c.shootersLeft >= g.earlyBird },
+  // Crew theme added 2026-11-01
+  snakeFangs:      { kind: "card", how: (g) => "seeing Snake roll craps " + g.snakeFangs + " times (all runs)", done: (c, g) => c.snakeCraps >= g.snakeFangs },
+  bigMoBelt:       { kind: "card", how: (g) => "surviving " + g.newCrewCard + " shifts with Big Mo at the table", done: (c, g) => (c.crewWins["Big Mo"] || 0) >= g.newCrewCard },
+  lousHorseshoe:   { kind: "card", how: (g) => "surviving " + g.newCrewCard + " shifts with Lucky Lou at the table", done: (c, g) => (c.crewWins["Lucky Lou"] || 0) >= g.newCrewCard },
+  professorsNotes: { kind: "card", how: (g) => "surviving " + g.newCrewCard + " shifts with The Professor at the table", done: (c, g) => (c.crewWins["The Professor"] || 0) >= g.newCrewCard },
+  jinxJar:         { kind: "card", how: (g) => "seeing Jinx seven out " + g.jinxJar + " times (all runs)", done: (c, g) => c.jinxSevenOuts >= g.jinxJar },
+  rollCall:        { kind: "card", how: (g) => "owning " + g.rollCall + " Crew cards at once", done: (c, g) => c.crewCards >= g.rollCall },
+  crewCaptain:     { kind: "card", how: (g) => "winning " + g.crewCaptain + " shifts with every seat filled (all runs)", done: (c, g) => c.fullTableWins >= g.crewCaptain },
+  recruiter:       { kind: "card", how: (g) => "hiring " + g.recruiter + " crew (all runs)", done: (c, g) => c.hires >= g.recruiter },
 };
 
 // Systems that arrive over your first runs, so a new player isn't flooded.
@@ -81,6 +90,7 @@ function newProfile() {
       layWins: 0, shiftDontWins: 0, darkSevens: 0, pairs: 0, twelves: 0, pairPoints: 0,
       turnPointsMade: 0, turnRollsMax: 0, bestPointMult: 0, bestCash: 0, shootersLeft: 0,
       bestEndless: 0, bestWin: 0, // high scores: furthest endless shift survived, biggest single-roll win
+      snakeCraps: 0, jinxSevenOuts: 0, crewCards: 0, mostSeated: 0, fullTableWins: 0,
     },
     fresh: [], // just unlocked, waiting to be announced (not saved)
     systemsSeen: [], // systems already announced
@@ -201,6 +211,11 @@ function trackRollUnlocks(state, info) {
   best("turnRollsMax", state.turnRolls);
   if (info.pointHit) best("bestPointMult", info.multUsed);
   best("bestWin", wins.reduce((sum, r) => sum + r.winnings, 0)); // high score
+  // Crew theme (2026-11-01)
+  if (info.shooter === "Snake" && CONFIG.comeOutLosers.includes(total)) c.snakeCraps += 1;
+  if (info.shooter === "Jinx" && info.sevenOut) c.jinxSevenOuts += 1;
+  best("crewCards", themeCount(state, "crew"));
+  best("mostSeated", state.roster.length);
   if (info.doubles) state.turnDoubles = (state.turnDoubles || 0) + 1;
   best("turnDoubles", state.turnDoubles || 0);
   if (info.shooter === "You") {
@@ -218,6 +233,7 @@ function trackShiftWon(state) {
   if (!state.endless && state.shift === totalLinks(state)) c.escapes += 1; // walked out free
   best("bestLeftover", totalMoney(state));
   best("bestCash", state.cash);
+  if (state.roster.length >= CONFIG.maxSeats) c.fullTableWins += 1; // Crew Captain's goal
   if (state.endless) best("bestEndless", state.shift); // high score
   if (!state.savedByLink) best("shootersLeft", state.shootersLeft || 0);
   for (const name of state.roster) {

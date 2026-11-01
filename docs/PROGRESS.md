@@ -2,6 +2,15 @@
 
 Dated session log. Newest at the top.
 
+## 2026-11-01: Crew theme
+
+**Done**
+- 🤝 Crew theme: 8 new locked cards (Snake's Fangs, Big Mo's Belt, Lou's Horseshoe, Professor's Notes, Jinx Jar, Roll Call, Crew Captain, Recruiter) with art; Lefty's Glove, Dee's Ledger, Rod's Lighter and Ghost Story joined the theme.
+- Balance: first escape back near before (28 / 26 runs) after harder goals and toning down Crew Captain and Roll Call. Tests 470 passing (9 new), 5 sizes fit, autoplay clean.
+
+**Exact next step**
+- Friend feedback, or card upgrades (Hot Hand II), or the Android roadmap.
+
 ## 2026-11-01: Comp and perk art
 
 **Done**

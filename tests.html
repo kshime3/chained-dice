@@ -1048,6 +1048,36 @@
     check("Early Bird: paying off before the last shooter gives back 10% ($20); not at the final Break", [eb.status, eb.cash, eb2.status, eb2.cash], ["won", 320, "won", 300]);
     }
 
+    // Crew theme (2026-11-01)
+    {
+    const C = (cards, roster) => { const st = newShiftState(); st.cards = cards; st.debt = 2000; if (roster) { st.roster = roster.slice(); st.crew = roster.slice(); } return st; };
+    check("Crew theme: Rod's Lighter and the new cards are Crew", [themeLabel("rodsLighter"), themeLabel("jinxJar"), themeCount(C(["leftysGlove", "rollCall", "hotHand"]), "crew")], ["🤝 Crew", "🤝 Crew", 2]);
+    const sf = C(["snakeFangs"], ["Snake", "You"]); sf.cash = 100;
+    applyCardsAfterRoll(sf, [], 3, null, false);
+    check("Snake's Fangs: Snake rolls craps -> 4% of $2,000", sf.cash, 180);
+    const jj = C(["jinxJar"], ["Jinx", "You"]); jj.cash = 100;
+    applyCardsAfterRoll(jj, [], 7, 6, true);
+    check("Jinx Jar: Jinx sevens out -> 5% of $2,000", jj.cash, 200);
+    const bm = C(["bigMoBelt"], ["Big Mo", "You"]);
+    const bmRes = [{ bet: "field", amount: 10, outcome: "win", winnings: 10 }];
+    applyCardsBeforePayout(bm, bmRes, 11, null);
+    setupTurn(bm, null, 1);
+    check("Big Mo's Belt: Field x2 and +1x on his turn", [bmRes[0].winnings, bm.mult], [20, 2]);
+    const lh = C(["lousHorseshoe"], ["Lucky Lou", "You"]);
+    applyCrewEffects(lh, [], false, true);
+    check("Lou's Horseshoe: +2x per point", lh.mult, 1 + CONFIG.lousHorseshoeMult);
+    const pn = C(["professorsNotes"], ["The Professor", "You"]); pn.bets.pass = 10; pn.point = 6;
+    const pn0 = C([], ["The Professor", "You"]); pn0.bets.pass = 10; pn0.point = 6;
+    check("Professor's Notes: Odds limit doubles again (x4 instead of x2)", backingLimit(pn, "odds"), backingLimit(pn0, "odds") * 2);
+    const rc = C(["rollCall", "leftysGlove", "deesLedger"], ["Jinx", "You"]); rc.shooterIndex = 1;
+    setupTurn(rc, null, 1);
+    check("Roll Call with 3 Crew cards: shooter starts +0.75x", rc.mult, 1.75);
+    const cc = C(["crewCaptain"], ["Jinx", "Lefty", "Ghost", "Snake", "You"]); cc.hotStreak = 0;
+    check("Crew Captain: 5 at the table = +1x", effectiveMult(cc), 2);
+    const rq = C(["recruiter"]); const rq0 = C([]);
+    check("Recruiter: hiring costs half", hirePrice(rq, "Snake"), roundTo5(hirePrice(rq0, "Snake") / 2));
+    }
+
     // Huge numbers (2026-11-01)
     {
     check("Money: plain up to $999,999, then short", [money(5), money(999999), money(1250000), money(45600000), money(7.89e12), money(250000), money(100e6)], ["$5", "$999,999", "$1.25M", "$45.6M", "$7.89T", "$250,000", "$100M"]);

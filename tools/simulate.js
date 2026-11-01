@@ -24,7 +24,7 @@ const round5 = (n) => Math.max(5, Math.floor(n / 5) * 5);
 const HIRE_PREFERENCE = ["Lucky Lou", "The Professor", "Big Mo", "Snake", "Lefty", "Hot Rod", "Dealer Dee", "Ghost"];
 
 // Cards the bot likes best, first to last.
-const CARD_PREFERENCE = ["snowball", "fullHouse", "avalanche", "deepPockets", "sweetSpot", "muggsy", "oddsAddict", "doubleUp", "pity", "loanShark", "redDice", "hotHand", "doublesCharm", "steadyHand", "twinSouls", "torchPass", "earlyBird", "heater", "mirrorDice", "compound", "comebackKid", "pointCollector", "greenDice", "longNight", "boxcars", "stash", "luckySeven", "snakeEyes", "rattlesnake", "encore", "highRoller", "rodsLighter", "deesLedger", "leftysGlove", "frontOfLine", "sleightOfHand"];
+const CARD_PREFERENCE = ["snowball", "fullHouse", "avalanche", "deepPockets", "sweetSpot", "muggsy", "oddsAddict", "doubleUp", "pity", "loanShark", "redDice", "hotHand", "doublesCharm", "steadyHand", "lousHorseshoe", "crewCaptain", "rollCall", "professorsNotes", "recruiter", "bigMoBelt", "twinSouls", "torchPass", "earlyBird", "heater", "mirrorDice", "compound", "comebackKid", "pointCollector", "greenDice", "longNight", "boxcars", "stash", "snakeFangs", "jinxJar", "luckySeven", "snakeEyes", "rattlesnake", "encore", "highRoller", "rodsLighter", "deesLedger", "leftysGlove", "frontOfLine", "sleightOfHand"];
 
 function atBreak(state, s) {
   if (state.cash >= amountOwed(state)) { deposit(state, amountOwed(state)); return; }
@@ -244,6 +244,8 @@ vm.runInThisContext(source + "\n" + simulator);
 if (process.env.CFG) Object.assign(CONFIG, JSON.parse(process.env.CFG));
 // NOXMULT=1: the bots never buy the endless x-mult cards.
 if (process.env.NOXMULT) CARD_PREFERENCE.splice(0, 5);
+// NOCREW=1: the bots never buy the Crew theme's new cards (2026-11-01).
+if (process.env.NOCREW) for (const id of ["lousHorseshoe", "crewCaptain", "rollCall", "professorsNotes", "recruiter", "bigMoBelt", "snakeFangs", "jinxJar"]) CARD_PREFERENCE.splice(CARD_PREFERENCE.indexOf(id), 1);
 globalThis.ORIGINAL_SHIFTS = CONFIG.shifts.slice();
 // Unlocks: the bots normally play with everything unlocked (comparable with older results).
 // LOCKED=1 plays as a brand-new player. Nothing is ever saved.

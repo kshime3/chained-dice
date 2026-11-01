@@ -97,9 +97,8 @@ Parked ideas and later features. Not in v1 unless moved into the design.
 ## Polish ideas (2026-10-30)
 - [Built 2026-11-01] Press-and-hold help on phones; keyboard shortcuts.
 
-## Card ideas not picked yet (2026-10-30)
-- **Crew Captain** (Uncommon): +0.5x mult for every seat filled beyond 3.
-- **Jinx Jar** (Common): whenever Jinx sevens out, you get 5% of the debt.
+## Card ideas (2026-10-30)
+- [Built 2026-11-01 in the Crew theme] Crew Captain, Jinx Jar.
 
 ## Planned next (owner agreed, 2026-10-30)
 1. Friends playtest round (owner shares the link; collect where people quit and what confuses them).

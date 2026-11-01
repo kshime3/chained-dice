@@ -458,7 +458,7 @@ function addEncoreTurn(state) {
 // Hiring: new crew can join while a seat is empty (fewer than maxSeats at the table).
 function hirePrice(state, name) {
   const pct = CONFIG.hirePrices[name] !== undefined ? CONFIG.hirePrices[name] : CONFIG.hirePricePct;
-  return roundTo5(pct * state.debt * priceX(state));
+  return roundTo5(pct * state.debt * priceX(state) * (hasCard(state, "recruiter") ? CONFIG.recruiterPriceX : 1));
 }
 
 // Markup (a house rule) raises shop prices.

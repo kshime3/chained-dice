@@ -341,3 +341,18 @@ Simulator learned endless: `ENDLESS=1` takes Double or nothing after escaping an
 - Compounding interest (`endlessInterestCarry`): 1.0 made it far too easy (25% past 20 shifts); 0.5 with the house rule fits the target (millions around endless shift 6, billions for the best ~1%).
 - x-mult cards barely change bot survival (bots bet the table minimum) but raise the peak win ~10x; a human betting bigger chips will feel them more.
 - 8-shift run unchanged: new player survive shift 1 57.9%, shift 2 24.9%; veteran escape 28.8%.
+
+## 2026-11-01: Crew theme (8 new cards)
+Bots taught: Lou's Horseshoe, Crew Captain, Roll Call, Professor's Notes, Recruiter, Big Mo's Belt mid-list; Snake's Fangs and Jinx Jar low. `NOCREW=1` skips buying them.
+
+| | Result |
+| --- | --- |
+| Brand-new player (8,000 runs) | survive shift 1 57.3%, reach shift 3 23.5%: unchanged (all locked) |
+| Career median first escape, first try | 22 (smart), 21 (smart + comps): too fast |
+| + harder goals (Jinx Jar 60 seven-outs, Crew Captain 4 full-table wins, Recruiter 30 hires, new crew cards 15 shifts seated) | 27 / 22 |
+| Veteran escape: with / without buying crew cards | 32.2% / 26.9%: the cards themselves were strong |
+| + Crew Captain +0.25x per seat (was 0.5), Roll Call +0.2x per card (was 0.25) | **28 (smart), 26 (smart + comps)**; veteran escape 29.0% |
+| Unlocks found after 10 / 25 / 50 runs (of 54) | 15-16 / 31-36 / 37-40 |
+
+- Close to before (31 / 26; career medians move about ±2 between runs), at the low end of the 30-60 target. Levers if playtests feel quick: harder goals for Snake's Fangs (54% of careers) or the crew-seated goals, or `reputationEvery` 4 -> 5.
+- Rod's Lighter moved from Hot streak to Crew (as drafted), so Hot streak has 6 cards now.

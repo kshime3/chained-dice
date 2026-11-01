@@ -108,6 +108,13 @@ const CONFIG = {
     compound: 300,      // interest earned in one run
     stash: 3000,        // cash in hand when you win a shift
     earlyBird: 3,       // shooters still to come when you pay off a shift
+    // Crew theme (2026-11-01). Big Mo's Belt, Lou's Horseshoe and Professor's Notes use crewCard.
+    snakeFangs: 10,     // times Snake rolls craps (2, 3 or 12), all runs
+    jinxJar: 60,        // times Jinx sevens out, all runs
+    rollCall: 3,        // Crew cards owned at once
+    newCrewCard: 15,    // shifts survived with that crew member seated (Big Mo's Belt, Lou's Horseshoe, Professor's Notes)
+    crewCaptain: 4,     // shifts won with every seat filled, all runs
+    recruiter: 30,      // crew hired, all runs
   },
   // Reputation: every few unlocks earns the next lasting bonus (from the next run on).
   reputationEvery: 4,
@@ -208,6 +215,14 @@ const CONFIG = {
     avalanche: "rare",
     deepPockets: "rare",
     fullHouse: "rare",
+    snakeFangs: "uncommon",
+    bigMoBelt: "uncommon",
+    lousHorseshoe: "uncommon",
+    professorsNotes: "uncommon",
+    jinxJar: "common",
+    rollCall: "uncommon",
+    crewCaptain: "common",
+    recruiter: "rare",
   },
 
   // Card numbers
@@ -251,6 +266,17 @@ const CONFIG = {
   compoundPerCard: 0.01,      // Compound: interest rate + this per Money card
   stashRate: 0.02,            // Stash: cash in hand earns this much interest at each Dealer Break
   earlyBirdPct: 0.10,         // Early Bird: paying off before the last shooter gives back this share of the debt
+  // Crew theme (2026-11-01)
+  snakeFangsBonusPct: 0.04,   // Snake's Fangs: Snake rolling craps (2, 3, 12) pays this share of the debt
+  bigMoBeltFieldX: 2,         // Big Mo's Belt: Field winnings x this on Big Mo's turn...
+  bigMoBeltMult: 1,           // ...and + this mult on his turn
+  lousHorseshoeMult: 2,       // Lou's Horseshoe: Lucky Lou's mult per point (instead of luckyLouMult)
+  professorsNotesOddsX: 4,    // Professor's Notes: his Odds / Lay Odds limit multiplier (instead of professorOddsX)...
+  professorsNotesExtra: 0.25, // ...and his Odds / Lay Odds pay this much extra
+  jinxJarBonusPct: 0.05,      // Jinx Jar: every Jinx seven-out pays this share of the debt
+  rollCallPerCard: 0.2,       // Roll Call: every shooter starts + this mult per Crew card
+  crewCaptainPerSeat: 0.25,   // Crew Captain: + this mult per person at the table beyond 3
+  recruiterPriceX: 0.5,       // Recruiter: hiring prices x this
   // Endless-only x-mult cards (2026-11-01): they multiply the mult, so they stack.
   snowballX: 1.5,             // Snowball: mult x this
   sweetSpotX: 2,              // Sweet Spot: mult x this while the point is 6 or 8

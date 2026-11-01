@@ -4,7 +4,7 @@
 // Every drawing uses a 100 x 70 box. Cards without a drawing yet get a plain die.
 
 // Panel colour per theme ("none" for cards without a theme).
-const CARD_ART_TINT = { dark: "#4b3b5c", pairs: "#2c6e8f", streak: "#b8461f", money: "#2f7a4a", endless: "#8e1f18", none: "#5a4632" };
+const CARD_ART_TINT = { dark: "#4b3b5c", pairs: "#2c6e8f", streak: "#b8461f", money: "#2f7a4a", crew: "#8a6a2a", endless: "#8e1f18", none: "#5a4632" };
 
 // The palette every symbol is drawn with.
 const ART = { ink: "#6a3a1e", bone: "#e9e1cf", bone2: "#c9b994", hi: "#c9a57a", red: "#c0281c", black: "#120d0b", gold: "#d6b46a", ice: "#9cc8e0", w: 2.4 };
@@ -314,6 +314,54 @@ const CARD_ART = {
     '<rect x="38" y="12" width="24" height="48" rx="12" fill="none" stroke="' + ART.gold + '" stroke-width="6.5"/>' +
     '<path d="M42 18 Q44 14 50 14" fill="none" stroke="#fff3c4" stroke-width="2.2" stroke-linecap="round"/></g>' +
     [[22, 14], [84, 52], [74, 10]].map(([x, y]) => '<path d="M' + x + " " + (y - 5) + " L" + (x + 1.5) + " " + (y - 1.5) + " L" + (x + 5) + " " + y + " L" + (x + 1.5) + " " + (y + 1.5) + " L" + x + " " + (y + 5) + " L" + (x - 1.5) + " " + (y + 1.5) + " L" + (x - 5) + " " + y + " L" + (x - 1.5) + " " + (y - 1.5) + ' Z" fill="#fff3c4"/>').join(""),
+  // ---------- Crew ----------
+  snakeFangs: () => // Snake's head, fangs out, over a craps roll (1 + 2)
+    '<path d="M18 30 Q20 10 46 10 Q70 10 76 26 L60 30 L76 34 Q70 50 46 50 Q20 50 18 30 Z" fill="#3f7a3a" stroke="' + ART.bone + '" stroke-width="1.8" stroke-linejoin="round"/>' +
+    '<path d="M60 30 L76 26 L76 34 Z" fill="' + ART.black + '"/>' +
+    '<path d="M62 27 L64 34 L66 28 M68 33 L70 26 L72 32" fill="' + ART.bone + '" stroke="' + ART.bone + '" stroke-width="1"/>' +
+    '<ellipse cx="44" cy="22" rx="5" ry="4" fill="#9be35f" stroke="' + ART.ink + '" stroke-width="1"/><rect x="43" y="18.5" width="2" height="7" rx="1" fill="' + ART.black + '"/>' +
+    '<path d="M78 30 L88 30 L92 26 M88 30 L92 34" fill="none" stroke="' + ART.red + '" stroke-width="2" stroke-linecap="round"/>' +
+    artDie(30, 50, 16, [4], { red: 4, rotate: -10 }) + artDie(50, 50, 16, [0, 8], { rotate: 10 }),
+  bigMoBelt: () => // Big Mo's championship belt
+    '<path d="M4 26 Q50 18 96 26 V44 Q50 36 4 44 Z" fill="#4a1e1e" stroke="' + ART.bone + '" stroke-width="1.8"/>' +
+    '<ellipse cx="50" cy="34" rx="22" ry="17" fill="' + ART.gold + '" stroke="' + ART.ink + '" stroke-width="' + ART.w + '"/>' +
+    '<ellipse cx="50" cy="34" rx="16" ry="11.5" fill="none" stroke="#a07a2e" stroke-width="1.6"/>' +
+    '<text x="50" y="39" text-anchor="middle" font-family="Georgia,serif" font-weight="bold" font-size="14" fill="' + ART.ink + '">MO</text>' +
+    artDie(76, 46, 14, [0, 2, 3, 5, 6, 8], { rotate: 12 }) + artDie(10, 46, 14, [0, 2, 3, 5, 6, 8], { rotate: -12 }),
+  lousHorseshoe: () => // Lucky Lou's gold horseshoe with his clover
+    '<path d="M30 10 V30 Q30 50 50 50 Q70 50 70 30 V10" fill="none" stroke="' + ART.ink + '" stroke-width="13" stroke-linecap="round"/>' +
+    '<path d="M30 10 V30 Q30 50 50 50 Q70 50 70 30 V10" fill="none" stroke="' + ART.gold + '" stroke-width="8" stroke-linecap="round"/>' +
+    [[30, 18], [32, 34], [68, 34], [70, 18]].map(([x, y]) => '<circle cx="' + x + '" cy="' + y + '" r="1.6" fill="' + ART.ink + '"/>').join("") +
+    [[0, -5], [5, 0], [0, 5], [-5, 0]].map(([dx, dy]) => '<circle cx="' + (50 + dx) + '" cy="' + (26 + dy) + '" r="4.6" fill="#3f9a5a" stroke="' + ART.ink + '" stroke-width="1.2"/>').join("") +
+    artBigText(84, 62, 13, "+2", ART.gold),
+  professorsNotes: () => // the Professor's notebook of odds, and his glasses
+    '<g transform="rotate(-6 46 36)"><rect x="18" y="8" width="56" height="56" rx="3" fill="' + ART.bone + '" stroke="' + ART.ink + '" stroke-width="' + ART.w + '"/>' +
+    [20, 30, 40, 50].map((y) => '<path d="M24 ' + y + ' H68" stroke="#9cc8e0" stroke-width="1"/>').join("") +
+    '<text x="28" y="27" font-family="Georgia,serif" font-style="italic" font-size="9" fill="' + ART.ink + '">6 : 5</text>' +
+    '<text x="28" y="38" font-family="Georgia,serif" font-style="italic" font-size="9" fill="' + ART.ink + '">3 : 2</text>' +
+    '<text x="28" y="49" font-family="Georgia,serif" font-style="italic" font-size="9" fill="' + ART.red + '">x4 !</text></g>' +
+    '<circle cx="70" cy="54" r="8" fill="none" stroke="' + ART.gold + '" stroke-width="2.4"/><circle cx="88" cy="54" r="8" fill="none" stroke="' + ART.gold + '" stroke-width="2.4"/><path d="M78 54 H80" stroke="' + ART.gold + '" stroke-width="2.4"/>',
+  jinxJar: () => // a jar with Jinx's red eyes inside, and the coins his seven-outs pay
+    '<path d="M28 20 Q26 24 26 30 V56 Q26 64 34 64 H66 Q74 64 74 56 V30 Q74 24 72 20 Z" fill="#1a1212" fill-opacity="0.85" stroke="' + ART.bone + '" stroke-width="' + ART.w + '"/>' +
+    '<rect x="30" y="12" width="40" height="9" rx="2" fill="' + ART.hi + '" stroke="' + ART.ink + '" stroke-width="' + ART.w + '"/>' +
+    '<circle cx="43" cy="36" r="6" fill="#ff4b2b" opacity="0.25"/><circle cx="57" cy="36" r="6" fill="#ff4b2b" opacity="0.25"/><circle cx="43" cy="36" r="2.6" fill="#ff4b2b"/><circle cx="57" cy="36" r="2.6" fill="#ff4b2b"/>' +
+    artStack(42, 60, 2, 7) + artStack(58, 60, 3, 7) + artCoin(86, 60, 6),
+  rollCall: () => // a clipboard roster, everyone ticked
+    '<rect x="26" y="10" width="48" height="56" rx="4" fill="#7a4a2a" stroke="' + ART.ink + '" stroke-width="' + ART.w + '"/>' +
+    '<rect x="31" y="16" width="38" height="46" rx="2" fill="' + ART.bone + '"/><rect x="42" y="6" width="16" height="8" rx="2" fill="#9a9a9a" stroke="' + ART.ink + '" stroke-width="1.4"/>' +
+    [24, 34, 44, 54].map((y) => '<path d="M35 ' + y + ' L38 ' + (y + 3) + ' L43 ' + (y - 3) + '" fill="none" stroke="#3f9a5a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M47 ' + y + ' H64" stroke="' + ART.hi + '" stroke-width="1.6"/>').join(""),
+  crewCaptain: () => // a captain's cap over a full table of seats
+    '<path d="M28 28 Q30 10 50 10 Q70 10 72 28 Z" fill="#1a2438" stroke="' + ART.bone + '" stroke-width="1.8"/>' +
+    '<path d="M24 28 H76 Q74 34 50 34 Q26 34 24 28 Z" fill="' + ART.black + '" stroke="' + ART.bone + '" stroke-width="1.6"/>' +
+    '<circle cx="50" cy="20" r="5" fill="' + ART.gold + '" stroke="' + ART.ink + '" stroke-width="1.2"/>' +
+    [14, 28, 42, 56, 70, 84].map((x) => '<circle cx="' + x + '" cy="52" r="5" fill="' + ART.bone2 + '" stroke="' + ART.ink + '" stroke-width="1.4"/><path d="M' + (x - 6) + " 64 Q" + x + " 54 " + (x + 6) + ' 64 Z" fill="' + ART.bone2 + '" stroke="' + ART.ink + '" stroke-width="1.4"/>').join(""),
+  recruiter: () => // a hiring sign, half price
+    '<path d="M30 6 L50 18 L70 6" fill="none" stroke="' + ART.hi + '" stroke-width="2"/>' +
+    '<rect x="16" y="18" width="68" height="30" rx="3" fill="' + ART.bone + '" stroke="' + ART.ink + '" stroke-width="' + ART.w + '"/>' +
+    '<text x="50" y="31" text-anchor="middle" font-family="Georgia,serif" font-weight="bold" font-size="10" fill="' + ART.ink + '">NOW</text>' +
+    '<text x="50" y="43" text-anchor="middle" font-family="Georgia,serif" font-weight="bold" font-size="10" fill="' + ART.ink + '">HIRING</text>' +
+    '<g transform="rotate(14 74 56)"><path d="M62 48 H84 L90 56 L84 64 H62 Z" fill="' + ART.red + '" stroke="' + ART.ink + '" stroke-width="1.6"/><circle cx="85" cy="56" r="1.8" fill="' + ART.bone + '"/>' +
+    '<text x="72" y="60" text-anchor="middle" font-family="Georgia,serif" font-weight="bold" font-size="10" fill="' + ART.bone + '">½</text></g>',
   // ---------- Endless (x-mult) ----------
   snowball: () => // a snowball rolling downhill, growing
     '<path d="M4 18 L96 64 L4 64 Z" fill="' + ART.bone2 + '" stroke="' + ART.ink + '" stroke-width="' + ART.w + '" stroke-linejoin="round"/>' +

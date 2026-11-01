@@ -19,11 +19,11 @@ const CARDS = {
   coldRead:    { name: "Cold Read", theme: "dark",       text: "When your Don't Pass wins on a seven-out, the next shooter starts at +1x mult." },
   bargain:     { name: "Dealer's Bargain", instant: true, text: "One use, works right away, takes no slot. The dealer adds a link to your chain (one more shift to walk free). In return, everyone's dice get -1 way to roll 7 for the rest of the run." },
   // Crew cards: only offered while that crew member is at the table.
-  leftysGlove: { name: "Lefty's Glove",  crew: "Lefty", text: "Lefty gets his 6 back on his right die, and +" + CONFIG.leftysGloveMult + "x mult on his turn." },
-  deesLedger:  { name: "Dee's Ledger",   crew: "Dealer Dee", text: "On Dealer Dee's turn, Odds and Lay Odds pay " + Math.round(CONFIG.deesLedgerExtra * 100) + "% extra." },
-  rodsLighter: { name: "Rod's Lighter", theme: "streak",  crew: "Hot Rod", text: "Hot Rod's streak grows +1.5x per winning roll, and his seven-out no longer costs double." },
+  leftysGlove: { name: "Lefty's Glove", theme: "crew",  crew: "Lefty", text: "Lefty gets his 6 back on his right die, and +" + CONFIG.leftysGloveMult + "x mult on his turn." },
+  deesLedger:  { name: "Dee's Ledger", theme: "crew",   crew: "Dealer Dee", text: "On Dealer Dee's turn, Odds and Lay Odds pay " + Math.round(CONFIG.deesLedgerExtra * 100) + "% extra." },
+  rodsLighter: { name: "Rod's Lighter", theme: "crew",  crew: "Hot Rod", text: "Hot Rod's streak grows +1.5x per winning roll, and his seven-out no longer costs double." },
   jinxShadow:  { name: "Jinx's Shadow", theme: "dark",  crew: "Jinx", text: "When Jinx shoots, Don't Pass winnings are x" + CONFIG.jinxShadowX + "." },
-  ghostStory:  { name: "Ghost Story",    crew: "Ghost", text: "You choose whether Ghost's right die is evens-only or odds-only (at the Break before his turn), and +" + CONFIG.ghostStoryMult + "x mult on his turn." },
+  ghostStory:  { name: "Ghost Story", theme: "crew",    crew: "Ghost", text: "You choose whether Ghost's right die is evens-only or odds-only (at the Break before his turn), and +" + CONFIG.ghostStoryMult + "x mult on his turn." },
   // "You" cards: only offered while you're at the table.
   encore:      { name: "Encore",         crew: "You", text: "Every shift, after the last shooter, you take an extra turn before the final Dealer Break." },
   highRoller:  { name: "High Roller",    crew: "You", text: "Your winnings are x" + CONFIG.highRollerX + " on your own turn." },
@@ -49,6 +49,15 @@ const CARDS = {
   compound:    { name: "Compound", theme: "money", text: "Your interest rate is +" + Math.round(CONFIG.compoundPerCard * 100) + "% for every Money card you own (this one too)." },
   stash:       { name: "Stash", theme: "money", text: "At each Dealer Break, the cash in your hand earns " + Math.round(CONFIG.stashRate * 100) + "% interest too." },
   earlyBird:   { name: "Early Bird", theme: "money", text: "Pay off the shift's debt before the last shooter and get " + Math.round(CONFIG.earlyBirdPct * 100) + "% of the debt back as cash." },
+  // Crew theme (2026-11-01). Cards with "crew" are only offered while that person is at the table.
+  snakeFangs:  { name: "Snake's Fangs", theme: "crew", crew: "Snake", text: "Whenever Snake rolls craps (2, 3 or 12), you get a bonus of " + Math.round(CONFIG.snakeFangsBonusPct * 100) + "% of the debt." },
+  bigMoBelt:   { name: "Big Mo's Belt", theme: "crew", crew: "Big Mo", text: "On Big Mo's turn, Field wins pay x" + CONFIG.bigMoBeltFieldX + ", and +" + CONFIG.bigMoBeltMult + "x mult." },
+  lousHorseshoe: { name: "Lou's Horseshoe", theme: "crew", crew: "Lucky Lou", text: "Lucky Lou gains +" + CONFIG.lousHorseshoeMult + "x mult for every point he makes (instead of +" + CONFIG.luckyLouMult + "x)." },
+  professorsNotes: { name: "Professor's Notes", theme: "crew", crew: "The Professor", text: "On The Professor's turn, Odds and Lay Odds can be x" + CONFIG.professorsNotesOddsX + " bigger (instead of x" + CONFIG.professorOddsX + ") and pay " + Math.round(CONFIG.professorsNotesExtra * 100) + "% extra." },
+  jinxJar:     { name: "Jinx Jar", theme: "crew", crew: "Jinx", text: "Every time Jinx sevens out, you get " + Math.round(CONFIG.jinxJarBonusPct * 100) + "% of the debt." },
+  rollCall:    { name: "Roll Call", theme: "crew", text: "Every shooter starts at +" + CONFIG.rollCallPerCard + "x mult for every Crew card you own (this one too)." },
+  crewCaptain: { name: "Crew Captain", theme: "crew", text: "+" + CONFIG.crewCaptainPerSeat + "x mult for every person at the table beyond 3." },
+  recruiter:   { name: "Recruiter", theme: "crew", text: "Hiring crew costs " + (CONFIG.recruiterPriceX === 0.5 ? "half" : Math.round(CONFIG.recruiterPriceX * 100) + "%") + "." },
   // Endless-only (2026-11-01): x-mult cards, offered only after Double or nothing. They multiply the mult.
   snowball:    { name: "Snowball", theme: "endless", endless: true, text: "Endless only. Mult x" + CONFIG.snowballX + "." },
   sweetSpot:   { name: "Sweet Spot", theme: "endless", endless: true, text: "Endless only. Mult x" + CONFIG.sweetSpotX + " while the point is 6 or 8." },
@@ -64,6 +73,7 @@ const THEMES = {
   pairs:  { name: "Pairs", icon: "🎲" },
   streak: { name: "Hot streak", icon: "🔥" },
   money:  { name: "Money", icon: "💰" },
+  crew:   { name: "Crew", icon: "🤝" },
   endless: { name: "Endless", icon: "♾️" },
 };
 
@@ -104,6 +114,7 @@ function themedMultParts(state) {
   const parts = [];
   if (hasCard(state, "mirrorDice") && state.turnDoubles > 0) parts.push(["Mirror Dice", state.turnDoubles * CONFIG.mirrorDicePerCard * themeCount(state, "pairs")]);
   if (hasCard(state, "heater") && state.turnPointsMade > 0) parts.push(["Heater", state.turnPointsMade * CONFIG.heaterPerCard * themeCount(state, "streak")]);
+  if (hasCard(state, "crewCaptain") && state.roster.length > 3) parts.push(["Crew Captain", (state.roster.length - 3) * CONFIG.crewCaptainPerSeat]);
   const nights = Math.floor(state.turnRolls / CONFIG.longNightEvery);
   if (hasCard(state, "longNight") && nights > 0) parts.push(["Long Night", nights * CONFIG.longNightMult]);
   return parts;
@@ -264,6 +275,8 @@ function applyCardsBeforePayout(state, results, total, pointBefore) {
       r.winnings = Math.floor(r.winnings * (1 + CONFIG.deesLedgerExtra));
     }
     if (shooter === "Jinx" && hasCard(state, "jinxShadow") && r.bet === "dont") r.winnings *= CONFIG.jinxShadowX;
+    if (shooter === "Big Mo" && hasCard(state, "bigMoBelt") && r.bet === "field") r.winnings *= CONFIG.bigMoBeltFieldX;
+    if (shooter === "The Professor" && hasCard(state, "professorsNotes") && (r.bet === "odds" || r.bet === "lay")) r.winnings = Math.floor(r.winnings * (1 + CONFIG.professorsNotesExtra));
   }
 
   // Wrong Way: Don't Pass winnings +50%.
@@ -336,6 +349,17 @@ function applyCardsAfterRoll(state, results, total, pointBefore, sevenOut) {
     const bonus = roundTo5(CONFIG.boxcarsBonusPct * state.debt);
     state.cash += bonus;
     notes.push("Boxcars: +" + money(bonus) + " bonus.");
+  }
+  const shooterNow = state.crew[state.shooterIndex];
+  if (hasCard(state, "snakeFangs") && shooterNow === "Snake" && CONFIG.comeOutLosers.includes(total)) {
+    const bonus = roundTo5(CONFIG.snakeFangsBonusPct * state.debt);
+    state.cash += bonus;
+    notes.push("Snake's Fangs: craps! +" + money(bonus) + ".");
+  }
+  if (hasCard(state, "jinxJar") && sevenOut && shooterNow === "Jinx") {
+    const bonus = roundTo5(CONFIG.jinxJarBonusPct * state.debt);
+    state.cash += bonus;
+    notes.push("Jinx Jar: +" + money(bonus) + " for Jinx's seven-out.");
   }
   const dontWon = results.some((r) => r.bet === "dont" && r.outcome === "win");
   if (hasCard(state, "undertaker") && sevenOut && dontWon) {
