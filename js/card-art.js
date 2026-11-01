@@ -57,6 +57,49 @@ const CARD_ART = {
     '<path d="M26 58 L40 18" stroke="' + ART.ink + '" stroke-width="5" stroke-linecap="round"/><path d="M26 58 L40 18" stroke="' + ART.hi + '" stroke-width="2.4" stroke-linecap="round"/>' +
     '<path d="M36 14 L46 18 L42 28 L32 24 Z" fill="' + ART.bone + '" stroke="' + ART.ink + '" stroke-width="' + ART.w + '"/>' +
     '<path d="M22 54 L32 58" stroke="' + ART.ink + '" stroke-width="4" stroke-linecap="round"/>',
+  // ---------- Pairs ----------
+  doubleUp: () => // two matching dice with an up arrow
+    artDie(16, 24, 30, [0, 4, 8], { red: 4, rotate: -8 }) + artDie(54, 24, 30, [0, 4, 8], { red: 4, rotate: 8 }) +
+    '<path d="M50 20 V4 M42 12 L50 4 L58 12" fill="none" stroke="' + ART.ink + '" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>' +
+    '<path d="M50 20 V4 M42 12 L50 4 L58 12" fill="none" stroke="' + ART.gold + '" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>',
+  doublesCharm: () => // a lucky horseshoe with a pair of dice hanging from it
+    '<path d="M32 6 V22 Q32 38 50 38 Q68 38 68 22 V6" fill="none" stroke="' + ART.ink + '" stroke-width="12" stroke-linecap="round"/>' +
+    '<path d="M32 6 V22 Q32 38 50 38 Q68 38 68 22 V6" fill="none" stroke="' + ART.bone + '" stroke-width="7" stroke-linecap="round"/>' +
+    [[32, 12], [34, 26], [66, 26], [68, 12]].map(([x, y]) => '<circle cx="' + x + '" cy="' + y + '" r="1.6" fill="' + ART.ink + '"/>').join("") +
+    '<path d="M44 39 L38 46 M56 39 L62 46" stroke="' + ART.hi + '" stroke-width="1.6"/>' +
+    artDie(28, 45, 17, [0, 8], { rotate: -12 }) + artDie(55, 45, 17, [0, 8], { rotate: 12 }),
+  hardwayHustler: () => // a hustler's fedora over a hard 8 (4 + 4)
+    '<path d="M18 26 Q50 18 82 26 Q78 30 66 28 L64 12 Q50 4 36 12 L34 28 Q22 30 18 26 Z" fill="#1a1212" stroke="' + ART.bone + '" stroke-width="' + ART.w + '" stroke-linejoin="round"/>' +
+    '<path d="M35 24 Q50 20 65 24" stroke="' + ART.red + '" stroke-width="3.5" fill="none"/>' +
+    artDie(22, 34, 28, [0, 2, 6, 8], { rotate: -6 }) + artDie(50, 34, 28, [0, 2, 6, 8], { rotate: 6 }),
+  rattlesnake: () => // a coiled rattlesnake, tongue out
+    '<path d="M22 60 Q10 60 12 50 Q14 40 30 42 Q50 44 52 36 Q54 28 44 26 Q36 24 40 16" fill="none" stroke="' + ART.ink + '" stroke-width="12" stroke-linecap="round"/>' +
+    '<path d="M22 60 Q10 60 12 50 Q14 40 30 42 Q50 44 52 36 Q54 28 44 26 Q36 24 40 16" fill="none" stroke="' + ART.bone2 + '" stroke-width="7" stroke-linecap="round"/>' +
+    '<path d="M22 60 Q10 60 12 50 Q14 40 30 42 Q50 44 52 36 Q54 28 44 26 Q36 24 40 16" fill="none" stroke="' + ART.ink + '" stroke-width="7" stroke-dasharray="2 6" stroke-linecap="round" opacity="0.6"/>' +
+    '<ellipse cx="46" cy="12" rx="10" ry="6.5" fill="' + ART.bone + '" stroke="' + ART.ink + '" stroke-width="' + ART.w + '"/>' +
+    '<circle cx="50" cy="10" r="1.8" fill="' + ART.black + '"/>' +
+    '<path d="M56 13 L66 14 L70 11 M66 14 L70 17" fill="none" stroke="' + ART.red + '" stroke-width="2" stroke-linecap="round"/>' +
+    [[26, 60], [32, 61], [38, 62]].map(([x, y], i) => '<ellipse cx="' + x + '" cy="' + y + '" rx="3.6" ry="4.6" fill="' + (i % 2 ? ART.hi : ART.bone) + '" stroke="' + ART.ink + '" stroke-width="1.6"/>').join("") +
+    artDie(62, 38, 24, [4], { red: 4, rotate: 10 }),
+  snakeEyes: () => // two 1s staring back, with snake pupils
+    [[18, -8], [54, 8]].map(([x, r]) => '<g transform="rotate(' + r + ' ' + (x + 14) + ' 35)"><rect x="' + x + '" y="21" width="28" height="28" rx="6" fill="' + ART.bone + '" stroke="' + ART.ink + '" stroke-width="' + ART.w + '"/>' +
+      '<ellipse cx="' + (x + 14) + '" cy="35" rx="7" ry="5.5" fill="#9be35f" stroke="' + ART.ink + '" stroke-width="1.4"/><rect x="' + (x + 12.8) + '" y="30" width="2.4" height="10" rx="1.2" fill="' + ART.black + '"/></g>').join("") +
+    '<path d="M50 52 V60 L46 65 M50 60 L54 65" fill="none" stroke="' + ART.red + '" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>',
+  mirrorDice: () => // a die and its reflection
+    '<line x1="50" y1="8" x2="50" y2="62" stroke="' + ART.hi + '" stroke-width="2" stroke-dasharray="3 3"/>' +
+    artDie(16, 21, 28, [0, 4, 8], { red: 4, rotate: -10 }) +
+    '<g opacity="0.6">' + artDie(56, 21, 28, [2, 4, 6], { red: 4, rotate: 10 }) + "</g>",
+  boxcars: () => // a pair of 6s riding in a railway boxcar
+    artDie(26, 11, 23, [0, 2, 3, 5, 6, 8], { rotate: -6 }) + artDie(51, 11, 23, [0, 2, 3, 5, 6, 8], { rotate: 7 }) +
+    '<rect x="16" y="32" width="68" height="22" rx="2" fill="#7a3a22" stroke="' + ART.ink + '" stroke-width="' + ART.w + '"/>' +
+    '<path d="M30 32 V54 M50 32 V54 M70 32 V54" stroke="' + ART.ink + '" stroke-width="1.6"/>' +
+    '<path d="M8 62 H92" stroke="' + ART.hi + '" stroke-width="2"/>' +
+    [26, 40, 60, 74].map((x) => '<circle cx="' + x + '" cy="58" r="4.5" fill="' + ART.black + '" stroke="' + ART.bone2 + '" stroke-width="1.8"/>').join(""),
+  twinSouls: () => // two ghosts rising from a pair
+    [[34, -1], [66, 1]].map(([x, d]) => '<path d="M' + (x - 13) + ' 52 V26 Q' + (x - 13) + ' 10 ' + x + ' 10 Q' + (x + 13) + ' 10 ' + (x + 13) + ' 26 V52 L' + (x + 8) + ' 47 L' + (x + 4) + ' 52 L' + x + ' 47 L' + (x - 4) + ' 52 L' + (x - 8) + ' 47 Z" fill="' + ART.bone + '" opacity="0.92" stroke="' + ART.ink + '" stroke-width="' + ART.w + '" stroke-linejoin="round"/>' +
+      '<ellipse cx="' + (x - 4 + d * 2) + '" cy="26" rx="2.6" ry="3.6" fill="' + ART.black + '"/><ellipse cx="' + (x + 4 + d * 2) + '" cy="26" rx="2.6" ry="3.6" fill="' + ART.black + '"/>').join("") +
+    artDie(36, 50, 13, [0, 8], { rotate: -10 }) + artDie(51, 50, 13, [0, 8], { rotate: 10 }) +
+    '<path d="M47 36 Q50 32 53 36" fill="none" stroke="' + ART.red + '" stroke-width="2" stroke-linecap="round"/>',
 };
 
 // A card's art as an SVG string. cls: the CSS class ("card-art", "hand-art"...).

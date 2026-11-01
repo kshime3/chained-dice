@@ -2,6 +2,14 @@
 
 Dated session log. Newest at the top.
 
+## 2026-11-01: Card art, batch 2 (Pairs)
+
+**Done**
+- Owner liked batch 1. Drew the 8 Pairs cards (Double Up, Doubles Charm, Hardway Hustler, Rattlesnake, Snake Eyes, Mirror Dice, Boxcars, Twin Souls). Tests 450 passing, autoplay clean.
+
+**Exact next step**
+- Card art batch 3: Hot streak (Hot Hand, Point Collector, Rod's Lighter, Comeback Kid, Heater, Long Night, Torch Pass), then Money, then cards with no theme.
+
 ## 2026-11-01: Card art, batch 1 (Dark side)
 
 **Done**
