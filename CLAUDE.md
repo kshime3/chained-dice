@@ -36,6 +36,7 @@ docs/WORDING.md    approved game wording (Break the Chain theme)
 docs/ANDROID.md    the Android app plan: decisions, phases, checklist
 index.html         the game page (open this to play)
 tests.html         rule checks: open to see green/red results
+privacy.html       privacy policy (linked in Settings; the Play listing needs it)
 css/style.css      colors and layout
 img/logo.svg       the logo (C3 "Blood Pip"); img/icon-*.png are renders of it for tabs and home screens
 manifest.webmanifest  name and icons for "add to home screen"
@@ -74,7 +75,7 @@ demos/music-options.html  preview: darker shift-1 music candidates (not part of 
 demos/card-art.html  preview: card art styles (A, B, C and mixes D, E) to choose from (not part of the game)
 tools/simulate.js  balance simulator (Node.js, not part of the game): node tools/simulate.js 20000
 ```
-Testing shortcuts: add `?target=300` to the page address to set shift 1's debt; add `?fast` to skip the dice animation, splash screens and fall animation; add `?cards=doubleUp,greenDice` to start with those cards (ids are in js/cards.js). `?shift=5` starts the run at that shift (to test later shifts, e.g. the tense music). `?endless` starts in endless mode at shift 9 (or `&shift=N`), with 30% of the debt as cash; it never saves. `?rule=houseDie` forces that house rule every shift (ids are in js/rules.js). `?unlockAll` makes everything available without touching saved progress. `?autoplay` (or `?autoplay=100`) lets a bot play whole runs through the real screen and report errors or stuck screens; it never saves. Combine with `&`, e.g. `?target=300&fast&cards=doublesCharm`.
+Testing shortcuts: add `?target=300` to the page address to set shift 1's debt; add `?fast` to skip the dice animation, splash screens and fall animation; add `?cards=doubleUp,greenDice` to start with those cards (ids are in js/cards.js). `?shift=5` starts the run at that shift (to test later shifts, e.g. the tense music). `?endless` starts in endless mode at shift 9 (or `&shift=N`), with 30% of the debt as cash; it never saves. `?app` previews the Android app mode (feedback note, back button handling). `?rule=houseDie` forces that house rule every shift (ids are in js/rules.js). `?unlockAll` makes everything available without touching saved progress. `?autoplay` (or `?autoplay=100`) lets a bot play whole runs through the real screen and report errors or stuck screens; it never saves. Combine with `&`, e.g. `?target=300&fast&cards=doublesCharm`.
 
 tests.html pins its own numbers (shift 1: $200 cash, $2,000 debt, 6 seats, everything unlocked, progress never saved) so tuning config.js doesn't break the checks. Shift cash and debts are in `CONFIG.shifts`; the current debt is `state.debt`.
 

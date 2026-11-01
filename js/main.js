@@ -630,6 +630,12 @@ document.getElementById("music-volume").oninput = (e) => setMusicVolume(Number(e
 armMusic(() => state);
 
 document.getElementById("key-help").innerHTML = keyHelpHtml();
+document.getElementById("app-version").textContent = "Version " + CONFIG.appVersion;
+if (CONFIG.inApp) {
+  document.body.classList.add("in-app");
+  // In the app, feedback goes to the developer email on the Play Store page, and reviews to the store.
+  document.getElementById("feedback-intro").innerHTML = "Enjoying it? A review on Google Play helps a lot. Found a bug or something confusing? Answer below, tap <strong>Copy</strong>, and email it to the developer address on the Play Store page.";
+}
 document.getElementById("settings-button").onclick = () => {
   renderMusicSettings();
   document.getElementById("settings-message").textContent = "";

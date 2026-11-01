@@ -2,6 +2,18 @@
 
 Dated session log. Newest at the top.
 
+## 2026-11-01: Android Phase A, part 1 (app foundations)
+
+**Done**
+- Owner accepted the Android recommendations (D1-D6).
+- App mode (`CONFIG.inApp`, `?app` to preview), Android back button (closes popups, asks before leaving), sound suspends in the background, notch spacing in the app, version in Settings, privacy.html (linked in Settings). Tests 479 passing, 5 sizes fit, autoplay clean; back button tested with a simulated app.
+
+**Waiting on the owner**
+- Phase B: Google Play Console account ($25, ID check) and payments profile; install Node.js LTS and Android Studio on the PC (steps on request).
+
+**Exact next step**
+- Phase A part 2: Android app icons and the store art (screenshots, feature graphic, 512 icon).
+
 ## 2026-11-01: Android plan
 
 **Done**

@@ -365,3 +365,7 @@ Dated log of every decision and why. Newest at the bottom.
 ## 2026-11-01: Android plan started; card upgrades dropped
 - Owner removed card upgrades (Hot Hand II, editions) as a milestone.
 - Android: one-time price (no ads), Windows PC, no Play account yet. Plan in docs/ANDROID.md with decisions D1-D6 waiting on the owner (wrapper tool, price, the free website, promo codes for the closed test, app ID, age rating).
+
+## 2026-11-01: Android decisions accepted
+- Owner accepted all six recommendations: Capacitor (build tools approved for the app), $2.99, the free website stays for friends until launch then becomes a demo or comes down, 100% promo codes for closed testers, app ID com.kshime3.chaineddice, 18+ with "simulated gambling" declared.
+- The privacy page names no email: contact goes through the developer email on the Play listing (owner's choice of address later).

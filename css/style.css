@@ -905,3 +905,7 @@ button:not(:disabled):hover { filter: brightness(1.15); }
 .hold-help.hidden { display: none; }
 /* Holding a finger shouldn't select text or open the phone's own menu */
 .bet-area, .hand-card, .hand-comp, .chip, .card, .seat, button { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
+
+/* Android app: keep the header clear of a notch if the app draws under the status bar
+   (env() is 0 when it doesn't). The tab bar already keeps clear of the gesture bar. */
+body.in-app .top { padding-top: env(safe-area-inset-top); }

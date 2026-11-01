@@ -162,3 +162,23 @@ document.addEventListener("click", (e) => {
 document.addEventListener("contextmenu", (e) => {
   if (holdShown || holdStart) e.preventDefault();
 });
+
+// ---------- Android app (Capacitor) ----------
+// The back button closes whatever is open (like Esc); with nothing open it asks before leaving.
+// Pausing sound in the background: music.js pauses the music; sound effects stop here.
+(function androidApp() {
+  const cap = typeof window !== "undefined" ? window.Capacitor : null;
+  const app = cap && cap.Plugins && cap.Plugins.App;
+  if (app && app.addListener) {
+    app.addListener("backButton", () => {
+      if (keyEscape()) return;
+      if (window.confirm("Leave Chained Dice? Your run is saved.")) app.exitApp();
+    });
+  }
+  document.addEventListener("visibilitychange", () => {
+    const ctx = typeof audio !== "undefined" ? audio : null; // sound.js's Web Audio context, if it exists yet
+    if (!ctx) return;
+    if (document.hidden) ctx.suspend().catch(() => {});
+    else ctx.resume().catch(() => {});
+  });
+})();

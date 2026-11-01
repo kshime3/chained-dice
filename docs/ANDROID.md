@@ -11,7 +11,7 @@
 
 Rough total: **6 to 10 weeks of calendar time**, much of it waiting (account checks, the 14-day test, Google's review). Hands-on work fits the one-hour-a-day pace.
 
-## Decisions to make first
+## Decisions (owner accepted all recommendations, 2026-11-01)
 
 | # | Decision | Recommendation | Why it matters |
 | --- | --- | --- | --- |
@@ -27,12 +27,12 @@ Rough total: **6 to 10 weeks of calendar time**, much of it waiting (account che
 Each phase ends with a short check-in, like our milestones. **Who** says who does the hands-on part.
 
 ### Phase A: make the game app-ready (Claude, in the repo, 3-4 sessions)
-- [ ] Lock to portrait; respect phone notches and the gesture bar (safe areas).
-- [ ] Android **back button**: closes the open popup (same as Esc), and asks before leaving the game.
-- [ ] Pause and mute when the app goes to the background (music already pauses; check sound effects).
-- [ ] An app mode for app-only differences: hide the testing shortcuts, and change the feedback note ("paste it in a message to whoever sent you the link") to an in-store review / email option.
-- [ ] Version number in Settings (matches the store's version).
-- [ ] **Privacy policy** page (`privacy.html`): no data collected, saves stay on your device. Hosted on GitHub Pages (Play needs a link).
+- [x] Safe areas: the tab bar already clears the gesture bar; in the app the header clears a notch. Portrait lock goes in the Android settings in Phase C (it can't be set from a web page).
+- [x] Android **back button**: closes the open popup (same as Esc), and asks "Leave Chained Dice? Your run is saved." before leaving. (Uses the Capacitor App plugin, added in Phase C.)
+- [x] Pause sound when the app goes to the background (music pauses; sound effects suspend).
+- [x] App mode (`CONFIG.inApp`; `?app` previews it in a browser): the feedback note points to a Play review and the developer email. Testing shortcuts need address extras, which the app never has.
+- [x] Version number in Settings > Credits (`CONFIG.appVersion`, now 1.0.0).
+- [x] **Privacy policy** page (`privacy.html`, linked in Settings > Credits): no data collected, saves stay on your device. It will be at https://kshime3.github.io/chained-dice/privacy.html for the Play listing.
 - [ ] App icons: Android adaptive icon (foreground + background layers) from the logo.
 - [ ] Store art made by Claude: phone screenshots (1080 x 1920), the 1024 x 500 feature graphic, the 512 x 512 icon.
 

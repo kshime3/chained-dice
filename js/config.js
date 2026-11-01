@@ -60,6 +60,7 @@ const CONFIG = {
   recruits: ["Snake", "Big Mo", "The Professor", "Lucky Lou"],
   maxSeats: 6,        // most people at the table, including you
   // Unlocks (js/unlocks.js): progress is saved in the browser.
+  appVersion: "1.0.0",     // shown in Settings; must match the version in the Android app (docs/ANDROID.md)
   saveProgress: true,      // tests.html turns this off so checks never touch your progress
   unlockEverything: false, // testing: ?unlockAll in the address turns this on
   // Hidden unlock goals (what each locked thing needs). Tuned so about half unlock by run 20.
@@ -418,6 +419,10 @@ if (new URLSearchParams(location.search).has("autoplay")) {
   CONFIG.saveProgress = false;
   CONFIG.unlockEverything = true;
 }
+// App mode: running inside the Android app (Capacitor), or ?app to preview it in a browser.
+// The app opens index.html with no address extras, so players can't use the testing shortcuts there.
+CONFIG.inApp = !!(typeof window !== "undefined" && window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()) ||
+  new URLSearchParams(location.search).has("app");
 // ?endless (testing shortcut) fakes an escape and money, so nothing it does is saved.
 if (new URLSearchParams(location.search).has("endless")) CONFIG.saveProgress = false;
 if (new URLSearchParams(location.search).has("fast") || new URLSearchParams(location.search).has("autoplay")) {
