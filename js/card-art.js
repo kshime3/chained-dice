@@ -255,11 +255,19 @@ const CARD_ART = {
     [20, 27, 34, 41].map((y, i) => '<path d="M30 ' + y + " H" + (i === 3 ? 52 : 68) + '" stroke="' + ART.hi + '" stroke-width="1.6"/>').join("") +
     '<circle cx="62" cy="48" r="8" fill="' + ART.red + '" stroke="#7a1410" stroke-width="1.6"/><path d="M59 45 L65 51 M65 45 L59 51" stroke="#7a1410" stroke-width="1.4"/>' +
     '<ellipse cx="86" cy="34" rx="6" ry="10" fill="none" stroke="#6f6a66" stroke-width="4"/>',
-  leftysGlove: () => // Lefty's leather glove, holding a 6
-    '<path d="M64 64 L64 40 Q64 36 60.5 36 Q57 36 57 40 L57 24 Q57 20 53.5 20 Q50 20 50 24 L50 22 Q50 18 46.5 18 Q43 18 43 22 L43 26 Q43 22 39.5 22 Q36 22 36 26 L36 50 Q36 66 48 66 L58 66 Q64 66 64 64 Z" fill="#7a4a2a" stroke="' + ART.bone + '" stroke-width="1.8"/>' +
-    '<path d="M64 50 Q70 44 74 40 Q76 36 72 35 Q68 35 62 42" fill="#7a4a2a" stroke="' + ART.bone + '" stroke-width="1.8"/>' +
-    '<path d="M38 58 H62" stroke="' + ART.bone2 + '" stroke-width="3"/>' +
-    artDie(16, 34, 20, [0, 2, 3, 5, 6, 8], { rotate: -14 }),
+  leftysGlove: () => { // Lefty's leather glove (back of the left hand), with the 6 he gets back
+    const leather = "#7a4a2a", dark = "#5a3420", line = ART.bone;
+    const finger = (x, top) => '<rect x="' + x + '" y="' + top + '" width="8" height="' + (38 - top) + '" rx="4" fill="' + leather + '" stroke="' + line + '" stroke-width="1.6"/>';
+    return '<g transform="rotate(-8 50 40)">' +
+      '<rect x="30" y="30" width="9" height="26" rx="4.5" fill="' + leather + '" stroke="' + line + '" stroke-width="1.6" transform="rotate(-32 35 54)"/>' + // thumb, its base tucked under the hand
+      finger(33, 13) + finger(41, 8) + finger(49, 10) + finger(57, 16) +
+      '<rect x="32" y="30" width="34" height="26" rx="7" fill="' + leather + '" stroke="' + line + '" stroke-width="1.6"/>' + // back of the hand
+      '<rect x="33" y="28" width="32" height="8" fill="' + leather + '"/>' + // joins the fingers to the hand
+      '<path d="M41 36 V46 M49 35 V46 M57 36 V46" stroke="' + dark + '" stroke-width="1.4" stroke-linecap="round"/>' + // the stitched "points"
+      '<rect x="31" y="54" width="36" height="11" rx="2" fill="' + dark + '" stroke="' + line + '" stroke-width="1.6"/>' + // cuff
+      '<path d="M34 59.5 H64" stroke="' + ART.gold + '" stroke-width="1.2" stroke-dasharray="2.5 2"/></g>' +
+      artDie(72, 30, 20, [0, 2, 3, 5, 6, 8], { rotate: 14 });
+  },
   deesLedger: () => // Dealer Dee's ledger and quill
     '<path d="M50 18 Q34 12 14 16 V60 Q34 56 50 62 Q66 56 86 60 V16 Q66 12 50 18 Z" fill="' + ART.bone + '" stroke="' + ART.ink + '" stroke-width="' + ART.w + '"/>' +
     '<path d="M50 18 V62" stroke="' + ART.ink + '" stroke-width="1.6"/>' +
