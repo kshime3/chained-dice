@@ -19,6 +19,13 @@ function artDie(x, y, size, spots, opts) {
     '" rx="' + size / 5 + '" fill="' + o.fill + '" stroke="' + ART.ink + '" stroke-width="' + ART.w + '"/>' + pips + "</g>";
 }
 
+// A flame: orange outside, gold inside. (x, y) is the bottom point, h the height.
+function artFlame(x, y, h, w) {
+  const drop = (hh, ww, fill) => '<path d="M' + x + " " + y + " C" + (x - ww) + " " + (y - hh * 0.25) + " " + (x - ww * 0.55) + " " + (y - hh * 0.7) + " " + x + " " + (y - hh) +
+    " C" + (x + ww * 0.55) + " " + (y - hh * 0.7) + " " + (x + ww) + " " + (y - hh * 0.25) + " " + x + " " + y + ' Z" fill="' + fill + '"/>';
+  return drop(h, w || h * 0.55, "#e0501f") + drop(h * 0.62, (w || h * 0.55) * 0.6, ART.gold);
+}
+
 // The drawings, by card id.
 const CARD_ART = {
   // ---------- Dark side ----------
@@ -100,6 +107,49 @@ const CARD_ART = {
       '<ellipse cx="' + (x - 4 + d * 2) + '" cy="26" rx="2.6" ry="3.6" fill="' + ART.black + '"/><ellipse cx="' + (x + 4 + d * 2) + '" cy="26" rx="2.6" ry="3.6" fill="' + ART.black + '"/>').join("") +
     artDie(36, 50, 13, [0, 8], { rotate: -10 }) + artDie(51, 50, 13, [0, 8], { rotate: 10 }) +
     '<path d="M47 36 Q50 32 53 36" fill="none" stroke="' + ART.red + '" stroke-width="2" stroke-linecap="round"/>',
+  // ---------- Hot streak ----------
+  hotHand: () => // an open palm in flames
+    artFlame(30, 64, 44, 22) + artFlame(70, 64, 44, 22) + artFlame(50, 60, 58, 30) +
+    '<path d="M36 64 L36 40 Q36 36 39.5 36 Q43 36 43 40 L43 24 Q43 20 46.5 20 Q50 20 50 24 L50 22 Q50 18 53.5 18 Q57 18 57 22 L57 26 Q57 22 60.5 22 Q64 22 64 26 L64 50 Q64 66 52 66 L42 66 Q36 66 36 64 Z" fill="' + ART.bone + '" stroke="' + ART.ink + '" stroke-width="' + ART.w + '"/>' +
+    '<path d="M36 50 Q30 44 26 40 Q24 36 28 35 Q32 35 38 42" fill="' + ART.bone + '" stroke="' + ART.ink + '" stroke-width="' + ART.w + '"/>' +
+    '<path d="M43 40 V30 M50 38 V26 M57 40 V30" stroke="' + ART.ink + '" stroke-width="1.4" opacity="0.5"/>',
+  pointCollector: () => // the ON puck and a row of points collected
+    '<circle cx="30" cy="30" r="17" fill="' + ART.bone + '" stroke="' + ART.ink + '" stroke-width="' + ART.w + '"/>' +
+    '<text x="30" y="35.5" text-anchor="middle" font-family="Georgia,serif" font-weight="bold" font-size="14" fill="' + ART.black + '">ON</text>' +
+    [[56, 48, "4"], [70, 38, "6"], [84, 28, "9"], [62, 22, "10"]].map(([x, y, n]) => '<circle cx="' + x + '" cy="' + y + '" r="9.5" fill="#1a1212" stroke="' + ART.gold + '" stroke-width="2"/>' +
+      '<text x="' + x + '" y="' + (y + 4) + '" text-anchor="middle" font-family="Georgia,serif" font-weight="bold" font-size="' + (n.length > 1 ? 9 : 11) + '" fill="' + ART.gold + '">' + n + "</text>").join("") +
+    '<path d="M14 58 Q30 62 46 54" fill="none" stroke="' + ART.red + '" stroke-width="2" stroke-dasharray="2 3" stroke-linecap="round"/>',
+  rodsLighter: () => // Hot Rod's flip lighter, lit
+    artFlame(52, 30, 26, 11) +
+    '<rect x="34" y="30" width="30" height="34" rx="4" fill="' + ART.bone2 + '" stroke="' + ART.ink + '" stroke-width="' + ART.w + '"/>' +
+    '<path d="M34 40 H64" stroke="' + ART.ink + '" stroke-width="1.6"/>' +
+    '<path d="M34 30 L24 16 Q22 12 26 12 L34 14" fill="' + ART.bone + '" stroke="' + ART.ink + '" stroke-width="' + ART.w + '" stroke-linejoin="round"/>' +
+    '<rect x="44" y="26" width="14" height="5" rx="1" fill="' + ART.hi + '" stroke="' + ART.ink + '" stroke-width="1.4"/>' +
+    '<path d="M41 50 L49 46 L45 56 L55 50" fill="none" stroke="' + ART.red + '" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>',
+  comebackKid: () => // a line that crashes on a 7, then climbs back past where it started
+    '<path d="M10 24 L30 30 L42 58 L58 36 L72 40 L88 12" fill="none" stroke="' + ART.ink + '" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>' +
+    '<path d="M10 24 L30 30 L42 58 L58 36 L72 40 L88 12" fill="none" stroke="' + ART.bone + '" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>' +
+    '<path d="M76 12 L89 10 L87 23" fill="none" stroke="' + ART.gold + '" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>' +
+    '<circle cx="42" cy="58" r="7" fill="' + ART.red + '" stroke="' + ART.ink + '" stroke-width="1.6"/><text x="42" y="62" text-anchor="middle" font-family="Georgia,serif" font-weight="bold" font-size="10" fill="' + ART.bone + '">7</text>',
+  heater: () => // a thermometer climbing into the red
+    '<rect x="44" y="8" width="12" height="44" rx="6" fill="' + ART.bone + '" stroke="' + ART.ink + '" stroke-width="' + ART.w + '"/>' +
+    '<rect x="47.5" y="18" width="5" height="36" rx="2.5" fill="' + ART.red + '"/>' +
+    '<circle cx="50" cy="56" r="9" fill="' + ART.red + '" stroke="' + ART.ink + '" stroke-width="' + ART.w + '"/><circle cx="47" cy="53" r="2.2" fill="#ff8a7a"/>' +
+    [16, 24, 32, 40].map((y) => '<path d="M57 ' + y + ' H62" stroke="' + ART.ink + '" stroke-width="1.6"/>').join("") +
+    artFlame(28, 62, 30, 13) + artFlame(74, 62, 30, 13) +
+    '<path d="M66 16 L72 10 M70 22 L78 20" stroke="' + ART.gold + '" stroke-width="2.2" stroke-linecap="round"/>',
+  longNight: () => // a candle burned low under the moon
+    '<path d="M74 8 A11 11 0 1 0 84 26 A9 9 0 1 1 74 8 Z" fill="' + ART.bone + '" stroke="' + ART.ink + '" stroke-width="1.8"/>' +
+    '<ellipse cx="44" cy="62" rx="22" ry="5" fill="' + ART.hi + '" stroke="' + ART.ink + '" stroke-width="' + ART.w + '"/>' +
+    '<path d="M34 60 V34 Q34 31 37 32 Q44 34 51 32 Q54 31 54 34 V60 Z" fill="' + ART.bone + '" stroke="' + ART.ink + '" stroke-width="' + ART.w + '"/>' +
+    '<path d="M38 33 V42 Q38 45 40 45 Q42 45 42 42 V34 M49 33 V48 Q49 51 51 51 Q53 51 53 48 V36" fill="' + ART.bone2 + '" stroke="' + ART.ink + '" stroke-width="1.4"/>' +
+    '<path d="M44 33 V28" stroke="' + ART.black + '" stroke-width="1.6"/>' + artFlame(44, 29, 17, 6),
+  torchPass: () => // a torch handed on to the next shooter
+    '<path d="M62 30 Q84 30 86 50" fill="none" stroke="' + ART.gold + '" stroke-width="3" stroke-dasharray="4 4" stroke-linecap="round"/>' +
+    '<path d="M80 46 L86 54 L91 45" fill="none" stroke="' + ART.gold + '" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>' +
+    '<path d="M22 64 L44 28" stroke="' + ART.ink + '" stroke-width="8" stroke-linecap="round"/><path d="M22 64 L44 28" stroke="' + ART.hi + '" stroke-width="4.5" stroke-linecap="round"/>' +
+    '<path d="M38 32 L50 39 L54 31 L42 24 Z" fill="' + ART.bone2 + '" stroke="' + ART.ink + '" stroke-width="' + ART.w + '" stroke-linejoin="round"/>' +
+    artFlame(48, 28, 26, 13),
 };
 
 // A card's art as an SVG string. cls: the CSS class ("card-art", "hand-art"...).

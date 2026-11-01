@@ -2,6 +2,14 @@
 
 Dated session log. Newest at the top.
 
+## 2026-11-01: Card art, batch 3 (Hot streak)
+
+**Done**
+- Drew the 7 Hot streak cards (Hot Hand, Point Collector, Rod's Lighter, Comeback Kid, Heater, Long Night, Torch Pass). Tests 450 passing, autoplay clean.
+
+**Exact next step**
+- Card art batch 4: Money (Loan Shark, Green Dice, Compound, Stash, Early Bird), then the cards with no theme.
+
 ## 2026-11-01: Card art, batch 2 (Pairs)
 
 **Done**
