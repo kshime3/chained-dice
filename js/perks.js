@@ -73,6 +73,11 @@ function takePerk(state, id, target) {
 }
 
 // "+1 / -1 way to roll a total" from perks, as [[total, ways], ...] for the dice.
+// Endless mode: the house loads the dice against you, +1 way to roll 7 every few endless shifts survived.
+function endlessSevens(state) {
+  return state.endless ? Math.floor(endlessShiftsSurvived(state) / CONFIG.endlessSevenEvery) : 0;
+}
+
 function perkTotalWays(state) {
   const ways = {};
   for (const id of state.perks) {
@@ -80,5 +85,6 @@ function perkTotalWays(state) {
     if (id === "minusSeven") ways[7] = (ways[7] || 0) - 1;
   }
   if (state.extraLinks > 0) ways[7] = (ways[7] || 0) - state.extraLinks; // Dealer's Bargain
+  if (endlessSevens(state) > 0) ways[7] = (ways[7] || 0) + endlessSevens(state); // endless: the house fights back
   return Object.entries(ways).map(([total, n]) => [Number(total), n]);
 }

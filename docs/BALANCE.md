@@ -325,3 +325,19 @@ Each card alone (Pass Line bot, $10 + max Odds, 4,000 runs, % reaching shift 3; 
 
 - Why it got faster: 12 more unlocks, many easy, climbed the Reputation ladder sooner. Fixes kept: harder goals (Mirror Dice 300 pairs, Boxcars 40 twelves, Twin Souls 25, Heater 4 points in a turn, Long Night 30 rolls, Torch Pass 6x, Stash $3,000 cash, Early Bird 3 shooters to come) and `reputationEvery` 4 (owner approved; old saves may drop a step until they unlock more).
 - The veteran rate (~29%) was already higher than the 12b table's 14%; worth a look if playtests say late game is too easy.
+
+## 2026-11-01: Huge numbers (endless mode)
+Simulator learned endless: `ENDLESS=1` takes Double or nothing after escaping and plays until the floor opens (cap `ENDLESS_CAP`, default 40); `NOXMULT=1` skips the x-mult cards; `CFG='{"key":value}'` overrides config numbers; `SEVENS=1` samples the 7 odds late in endless.
+
+**Finding:** endless had a runaway tail before any of this: veterans stack "-1 way to roll 7" perks until 7s sit at the 2-in-36 floor, shooters almost never seven out, and income keeps pace with any debt (7% of escapers survived 20+ endless shifts, some forever). Faster debt growth didn't fix it. Fix: **the house fights back**: +1 way to roll 7 on everyone's dice every 2 endless shifts survived (`endlessSevenEvery`).
+
+| Veteran smart bot, endless (4,000 runs, 1,153 escapes) | Result |
+| --- | --- |
+| Survived endless shift 1 / 3 / 6 / 10 / 12 / 15 | 77% / 51% / 26% / 9% / 5% / 1% |
+| Median extra shifts; best | 3; 21 |
+| Debts | shift 12 $656K, 14 $3.2M, 16 $15M, 20 $360M, 24 $8.4B |
+| Biggest debt paid / biggest roll win | $434B / $181B |
+
+- Compounding interest (`endlessInterestCarry`): 1.0 made it far too easy (25% past 20 shifts); 0.5 with the house rule fits the target (millions around endless shift 6, billions for the best ~1%).
+- x-mult cards barely change bot survival (bots bet the table minimum) but raise the peak win ~10x; a human betting bigger chips will feel them more.
+- 8-shift run unchanged: new player survive shift 1 57.9%, shift 2 24.9%; veteran escape 28.8%.

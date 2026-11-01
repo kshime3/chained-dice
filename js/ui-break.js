@@ -41,7 +41,8 @@ function renderBreak(state) {
   const rate = Math.round(interestRate(state) * 1000) / 10 + "%";
   const stashNote = hasCard(state, "stash") ? ", plus " + Math.round(CONFIG.stashRate * 100) + "% of your cash (Stash)" : "";
   document.getElementById("break-interest").innerHTML = state.lastInterest > 0
-    ? "Interest added to your cash: <strong>+" + money(state.lastInterest) + "</strong> (" + rate + " of the " + money(state.deposited) + " you've paid" + stashNote + ")."
+    ? "Interest added to your cash: <strong>+" + money(state.lastInterest) + "</strong> (" + rate + " of the " + money(state.deposited) + " you've paid" +
+      (state.endless && state.endlessPaid > 0 ? " this shift, plus " + Math.round(CONFIG.endlessInterestCarry * 100) + "% of the " + money(state.endlessPaid) + " paid in earlier endless shifts" : "") + stashNote + ")."
     : "Paid money earns " + rate + " interest at every Break, added to your cash.";
 
   // Paying opens after the first shooter. Pay off debt needs the whole amount.

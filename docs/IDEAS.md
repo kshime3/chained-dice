@@ -78,7 +78,7 @@ Parked ideas and later features. Not in v1 unless moved into the design.
 - **Crew-specific dark cards:** "Jinx's Shadow" (Don't Pass on Jinx pays 2x), "Hot Rod's Rival" (Don't Pass on Hot Rod gains mult when he sevens out).
 - **Smaller Lay limit option** for the dark side, or a card that lets Lay Odds pay true odds +25%.
 
-## Huge numbers (owner, 2026-10-27; not now)
+## Huge numbers (owner, 2026-10-27) [Built 2026-11-01 for endless: big-number display, growing chips, x-mult cards, compounding interest, high scores. Not built: card upgrades (Hot Hand II...), a whole-run version]
 - Part of the fun of Balatro and Clover Pit is that scores scale to 100 million and beyond. Endless mode should get there: multiplying mults (x2, x3 cards stacking), mult that multiplies other mult, interest that compounds, chip values that grow (a $5 chip becomes $5,000 late in a run). Needs number formatting for big values ($1.2M, $45B) and a debt curve that keeps up.
 
 ## Card idea from the owner (2026-10-27): voluntary link break

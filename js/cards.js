@@ -49,6 +49,12 @@ const CARDS = {
   compound:    { name: "Compound", theme: "money", text: "Your interest rate is +" + Math.round(CONFIG.compoundPerCard * 100) + "% for every Money card you own (this one too)." },
   stash:       { name: "Stash", theme: "money", text: "At each Dealer Break, the cash in your hand earns " + Math.round(CONFIG.stashRate * 100) + "% interest too." },
   earlyBird:   { name: "Early Bird", theme: "money", text: "Pay off the shift's debt before the last shooter and get " + Math.round(CONFIG.earlyBirdPct * 100) + "% of the debt back as cash." },
+  // Endless-only (2026-11-01): x-mult cards, offered only after Double or nothing. They multiply the mult.
+  snowball:    { name: "Snowball", theme: "endless", endless: true, text: "Endless only. Mult x" + CONFIG.snowballX + "." },
+  sweetSpot:   { name: "Sweet Spot", theme: "endless", endless: true, text: "Endless only. Mult x" + CONFIG.sweetSpotX + " while the point is 6 or 8." },
+  avalanche:   { name: "Avalanche", theme: "endless", endless: true, text: "Endless only. Every point the shooter makes multiplies the mult by another x" + CONFIG.avalancheX + " for the rest of the turn." },
+  deepPockets: { name: "Deep Pockets", theme: "endless", endless: true, text: "Endless only. Mult x" + CONFIG.deepPocketsX + " for every endless shift you've survived (it compounds)." },
+  fullHouse:   { name: "Full House", theme: "endless", endless: true, text: "Endless only. Mult x" + CONFIG.fullHousePerCard + " for every card you hold (5 cards = x" + 5 * CONFIG.fullHousePerCard + ")." },
   chainLink:   { name: "Spare Link",      text: "When the floor opens, this link catches you: the shift counts as survived, a link breaks as normal, and the rest of the debt is forgiven. Used up." },
 };
 
@@ -58,6 +64,7 @@ const THEMES = {
   pairs:  { name: "Pairs", icon: "🎲" },
   streak: { name: "Hot streak", icon: "🔥" },
   money:  { name: "Money", icon: "💰" },
+  endless: { name: "Endless", icon: "♾️" },
 };
 
 // A card's theme label, e.g. "🌑 Dark side" ("" if it has none).
@@ -88,7 +95,7 @@ function effectiveMult(state) {
   const highRoller = hasCard(state, "highRoller") && state.crew[state.shooterIndex] === "You" ? CONFIG.highRollerX : 1;
   const collector = hasCard(state, "pointCollector") ? (state.firePoints || []).length * CONFIG.pointCollectorMult : 0;
   const crafted = hasCard(state, "diceCollector") && state.crew[state.shooterIndex] === "You" ? editedFaces(state) * CONFIG.diceCollectorMult : 0;
-  const mult = (state.mult + hotHand + collector + crafted + themedMult(state)) * state.payoutX * highRoller;
+  const mult = (state.mult + hotHand + collector + crafted + themedMult(state)) * state.payoutX * highRoller * xMult(state);
   return rule(state, "coldDice") ? Math.min(1, mult) : mult; // boss rule: mult capped at 1x
 }
 
@@ -104,6 +111,26 @@ function themedMultParts(state) {
 
 function themedMult(state) {
   return themedMultParts(state).reduce((sum, p) => sum + p[1], 0);
+}
+
+// Endless shifts survived so far (0 during the first endless shift).
+function endlessShiftsSurvived(state) {
+  return state.endless ? Math.max(0, state.shift - totalLinks(state) - 1) : 0;
+}
+
+// The endless-only x-mult cards: [card, factor] pairs (factors of 1 are left out).
+function xMultParts(state) {
+  const parts = [];
+  if (hasCard(state, "snowball")) parts.push(["Snowball", CONFIG.snowballX]);
+  if (hasCard(state, "sweetSpot") && (state.point === 6 || state.point === 8)) parts.push(["Sweet Spot", CONFIG.sweetSpotX]);
+  if (hasCard(state, "avalanche") && state.turnPointsMade > 0) parts.push(["Avalanche", Math.pow(CONFIG.avalancheX, state.turnPointsMade)]);
+  if (hasCard(state, "deepPockets") && endlessShiftsSurvived(state) > 0) parts.push(["Deep Pockets", Math.pow(CONFIG.deepPocketsX, endlessShiftsSurvived(state))]);
+  if (hasCard(state, "fullHouse")) parts.push(["Full House", Math.max(1, CONFIG.fullHousePerCard * state.cards.length)]);
+  return parts.filter((p) => p[1] !== 1);
+}
+
+function xMult(state) {
+  return xMultParts(state).reduce((product, p) => product * p[1], 1);
 }
 
 // One-use cards that work the moment you buy them.
@@ -163,6 +190,7 @@ function multReasons(state) {
     reasons.push("Dice Collector: +" + editedFaces(state) * CONFIG.diceCollectorMult + "x");
   }
   for (const [name, amount] of themedMultParts(state)) reasons.push(name + ": +" + Math.round(amount * 100) / 100 + "x");
+  for (const [name, factor] of xMultParts(state)) reasons.push(name + ": x" + Math.round(factor * 100) / 100);
   return reasons;
 }
 
@@ -290,12 +318,12 @@ function applyCardsAfterRoll(state, results, total, pointBefore, sevenOut) {
   if (hasCard(state, "snakeEyes") && total === 2) {
     const bonus = roundTo5(CONFIG.snakeEyesBonusPct * state.debt);
     state.cash += bonus;
-    notes.push("Snake Eyes: +$" + bonus + " bonus.");
+    notes.push("Snake Eyes: +" + money(bonus) + " bonus.");
   }
   if (hasCard(state, "luckySeven") && pointBefore === null && total === 7) {
     const bonus = roundTo5(CONFIG.luckySevenBonusPct * state.debt);
     state.cash += bonus;
-    notes.push("Lucky Seven: +$" + bonus + " bonus.");
+    notes.push("Lucky Seven: +" + money(bonus) + " bonus.");
   }
   if (hasCard(state, "rattlesnake") && total === 2) {
     state.mult += CONFIG.rattlesnakeMult;
@@ -307,13 +335,13 @@ function applyCardsAfterRoll(state, results, total, pointBefore, sevenOut) {
   if (hasCard(state, "boxcars") && total === 12) {
     const bonus = roundTo5(CONFIG.boxcarsBonusPct * state.debt);
     state.cash += bonus;
-    notes.push("Boxcars: +$" + bonus + " bonus.");
+    notes.push("Boxcars: +" + money(bonus) + " bonus.");
   }
   const dontWon = results.some((r) => r.bet === "dont" && r.outcome === "win");
   if (hasCard(state, "undertaker") && sevenOut && dontWon) {
     const bonus = roundTo5(CONFIG.undertakerBonusPct * state.debt);
     state.cash += bonus;
-    notes.push("Undertaker: +$" + bonus + " for the seven-out.");
+    notes.push("Undertaker: +" + money(bonus) + " for the seven-out.");
   }
   if (pointBefore !== null && total === pointBefore) state.turnPointsMade = (state.turnPointsMade || 0) + 1; // Heater
 
@@ -342,7 +370,7 @@ function applyCardsAfterRoll(state, results, total, pointBefore, sevenOut) {
   if (hasCard(state, "muggsy") && sevenOut && state.rollsSincePoint === 1) {
     const extra = chargeExtra(state, results, CONFIG.muggsyCost, ["pass"]);
     state.muggsyPending = true;
-    notes.push("Muggsy: point-7! " + (extra > 0 ? "Another $" + extra + " from your cash. " : "") +
+    notes.push("Muggsy: point-7! " + (extra > 0 ? "Another " + money(extra) + " from your cash. " : "") +
       "The next shooter's winnings are x" + CONFIG.muggsyNextShooterX + ".");
   }
   if (pointBefore === null && state.point !== null) state.rollsSincePoint = 0;

@@ -2,6 +2,19 @@
 
 Dated session log. Newest at the top.
 
+## 2026-11-01: Huge numbers (endless mode)
+
+**Done**
+- Endless only: big-number display ($1.25M, $45.6B...), growing chips, compounding interest, 5 ♾️ Endless x-mult cards with art, high scores (best endless shift, biggest win), escape-screen explanation, `?endless` testing shortcut.
+- Balance: endless had a runaway tail (7-free dice); added "the house fights back" (+1 way to roll 7 every 2 endless shifts). Veteran escapers: 26% survive 6 endless shifts (millions), 9% 10, 1% 15 (billions). 8-shift run unchanged.
+- Checks: tests.html 461 passing (11 new), 5 sizes fit, autoplay clean.
+
+**Waiting on the owner**
+- Trying endless (`?endless`), and friend feedback.
+
+**Exact next step**
+- 5. Small polish (keyboard shortcuts, press-and-hold help), or act on friend feedback.
+
 ## 2026-11-01: Playtest feedback note
 
 **Done**

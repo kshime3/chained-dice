@@ -139,3 +139,10 @@ Unchanged for shifts 1-5. Shifts 6-8 follow the existing x1.5 growth: $1,800, $2
 - Intro: "Playtesting? Thank you! Answer what you like, tap **Copy**, then paste it in a message to whoever sent you the link."
 - Questions: "How fun was that run?" (1-5) · "Would you play another run?" (Yes / Maybe / No) · "What confused you?" (placeholder "Anything: rules, buttons, cards, the dealer...").
 - Button: **"Copy feedback"**. Then: "Copied! Paste it in a message to whoever sent you the link." If copying is blocked: "Couldn't copy automatically: the text is selected below. Copy it and paste it in a message."
+
+## Endless mode and huge numbers (2026-11-01)
+- On the escape screen, under "Double or nothing?": "Double or nothing is endless mode: the debts grow fast, your chips grow with them, interest compounds, new ♾️ Endless cards in the shop multiply your mult, and every 2 shifts the house adds another way to roll 7. How high can you go?"
+- Big money: $999,999 then $1.25M, $45.6B, $7.89T, Qa, Qi... Chips: $2.5K, $250K. Mult: 1,250x, 4.2Mx.
+- Endless cards (theme label "♾️ Endless"): Snowball, Sweet Spot, Avalanche, Deep Pockets, Full House; each text starts "Endless only."
+- Dealer Break interest in endless: "(5% of the $X you've paid this shift, plus 50% of the $Y paid in earlier endless shifts)".
+- High scores: "🏆 Best endless shift: N · Biggest single win: $X" (end-of-run screen and Collection).

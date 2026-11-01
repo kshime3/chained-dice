@@ -406,13 +406,19 @@ function giveTestCards(st) {
 }
 
 // Testing shortcut: ?shift=5 starts the run at that shift (earlier shifts count as won).
+// ?endless: start in endless mode (shift 9, or ?shift=N if higher), with cash to play with
+// (a real escape carries money over; this shortcut fakes it with 30% of the debt).
 function giveTestShift(st) {
-  const n = Number(new URLSearchParams(location.search).get("shift"));
+  const params = new URLSearchParams(location.search);
+  let n = Number(params.get("shift"));
+  if (params.has("endless")) n = Math.max(n, totalLinks(st) + 1);
   for (let k = 1; k < n; k++) {
     st.status = "won";
     st.deposited = st.debt;
+    if (params.has("endless") && k >= totalLinks(st)) st.endless = true;
     st = nextShift(st);
   }
+  if (params.has("endless")) st.cash = Math.max(st.cash, Math.round(st.debt * 0.3));
   return st;
 }
 

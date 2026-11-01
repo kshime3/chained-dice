@@ -80,6 +80,7 @@ function newProfile() {
       sevenOuts: 0, bestLeftover: 0, hardWins: 0, placeWins: 0, editedFaces: 0,
       layWins: 0, shiftDontWins: 0, darkSevens: 0, pairs: 0, twelves: 0, pairPoints: 0,
       turnPointsMade: 0, turnRollsMax: 0, bestPointMult: 0, bestCash: 0, shootersLeft: 0,
+      bestEndless: 0, bestWin: 0, // high scores: furthest endless shift survived, biggest single-roll win
     },
     fresh: [], // just unlocked, waiting to be announced (not saved)
     systemsSeen: [], // systems already announced
@@ -199,6 +200,7 @@ function trackRollUnlocks(state, info) {
   best("turnPointsMade", state.turnPointsMade || 0);
   best("turnRollsMax", state.turnRolls);
   if (info.pointHit) best("bestPointMult", info.multUsed);
+  best("bestWin", wins.reduce((sum, r) => sum + r.winnings, 0)); // high score
   if (info.doubles) state.turnDoubles = (state.turnDoubles || 0) + 1;
   best("turnDoubles", state.turnDoubles || 0);
   if (info.shooter === "You") {
@@ -216,6 +218,7 @@ function trackShiftWon(state) {
   if (!state.endless && state.shift === totalLinks(state)) c.escapes += 1; // walked out free
   best("bestLeftover", totalMoney(state));
   best("bestCash", state.cash);
+  if (state.endless) best("bestEndless", state.shift); // high score
   if (!state.savedByLink) best("shootersLeft", state.shootersLeft || 0);
   for (const name of state.roster) {
     if (name !== "You") c.crewWins[name] = (c.crewWins[name] || 0) + 1;
@@ -317,12 +320,12 @@ function applyLegacy(state) {
   if (hasLegacy(state, "minusSeven")) state.perks.push("minusSeven"); // same as the phone perk
   if (hasLegacy(state, "minusSeven2")) state.perks.push("minusSeven");
   if (hasLegacy(state, "startCard")) {
-    const pool = Object.keys(CARDS).filter((id) => CONFIG.cardRarity[id] === CONFIG.reputationCardRarity && !CARDS[id].crew && available(state, id));
+    const pool = Object.keys(CARDS).filter((id) => CONFIG.cardRarity[id] === CONFIG.reputationCardRarity && !CARDS[id].crew && !CARDS[id].endless && available(state, id));
     if (pool.length) state.cards.push(pool[Math.floor(Math.random() * pool.length)]);
   }
   if (hasLegacy(state, "spareLink")) state.cards.push("chainLink");
   if (hasLegacy(state, "rareCard")) {
-    const rares = Object.keys(CARDS).filter((id) => CONFIG.cardRarity[id] === "rare" && !CARDS[id].crew && !CARDS[id].instant && !CARDS[id].needs && available(state, id) && !state.cards.includes(id));
+    const rares = Object.keys(CARDS).filter((id) => CONFIG.cardRarity[id] === "rare" && !CARDS[id].crew && !CARDS[id].endless && !CARDS[id].instant && !CARDS[id].needs && available(state, id) && !state.cards.includes(id));
     if (rares.length) state.cards.push(rares[Math.floor(Math.random() * rares.length)]);
   }
 }

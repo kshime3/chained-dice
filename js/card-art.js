@@ -4,7 +4,7 @@
 // Every drawing uses a 100 x 70 box. Cards without a drawing yet get a plain die.
 
 // Panel colour per theme ("none" for cards without a theme).
-const CARD_ART_TINT = { dark: "#4b3b5c", pairs: "#2c6e8f", streak: "#b8461f", money: "#2f7a4a", none: "#5a4632" };
+const CARD_ART_TINT = { dark: "#4b3b5c", pairs: "#2c6e8f", streak: "#b8461f", money: "#2f7a4a", endless: "#8e1f18", none: "#5a4632" };
 
 // The palette every symbol is drawn with.
 const ART = { ink: "#6a3a1e", bone: "#e9e1cf", bone2: "#c9b994", hi: "#c9a57a", red: "#c0281c", black: "#120d0b", gold: "#d6b46a", ice: "#9cc8e0", w: 2.4 };
@@ -314,6 +314,30 @@ const CARD_ART = {
     '<rect x="38" y="12" width="24" height="48" rx="12" fill="none" stroke="' + ART.gold + '" stroke-width="6.5"/>' +
     '<path d="M42 18 Q44 14 50 14" fill="none" stroke="#fff3c4" stroke-width="2.2" stroke-linecap="round"/></g>' +
     [[22, 14], [84, 52], [74, 10]].map(([x, y]) => '<path d="M' + x + " " + (y - 5) + " L" + (x + 1.5) + " " + (y - 1.5) + " L" + (x + 5) + " " + y + " L" + (x + 1.5) + " " + (y + 1.5) + " L" + x + " " + (y + 5) + " L" + (x - 1.5) + " " + (y + 1.5) + " L" + (x - 5) + " " + y + " L" + (x - 1.5) + " " + (y - 1.5) + ' Z" fill="#fff3c4"/>').join(""),
+  // ---------- Endless (x-mult) ----------
+  snowball: () => // a snowball rolling downhill, growing
+    '<path d="M4 18 L96 64 L4 64 Z" fill="' + ART.bone2 + '" stroke="' + ART.ink + '" stroke-width="' + ART.w + '" stroke-linejoin="round"/>' +
+    [[16, 20, 4], [34, 26, 7], [62, 34, 12]].map(([x, y, r]) => '<circle cx="' + x + '" cy="' + y + '" r="' + r + '" fill="' + ART.bone + '" stroke="' + ART.ink + '" stroke-width="' + ART.w + '"/>').join("") +
+    '<path d="M56 30 Q62 26 68 30" fill="none" stroke="' + ART.hi + '" stroke-width="1.6"/>' + artBigText(84, 22, 14, "x1.5", ART.gold),
+  sweetSpot: () => // a bullseye with a dart in the 6 / 8
+    [26, 19, 12, 5].map((r, i) => '<circle cx="44" cy="36" r="' + r + '" fill="' + (i % 2 ? ART.red : ART.bone) + '" stroke="' + ART.ink + '" stroke-width="1.6"/>').join("") +
+    '<path d="M44 36 L80 12" stroke="' + ART.ink + '" stroke-width="5" stroke-linecap="round"/><path d="M44 36 L80 12" stroke="' + ART.hi + '" stroke-width="2.4" stroke-linecap="round"/>' +
+    '<path d="M76 8 L88 6 L84 16 Z M80 12 L90 14 L86 20 Z" fill="' + ART.gold + '" stroke="' + ART.ink + '" stroke-width="1.2"/>' +
+    artBigText(16, 64, 13, "6", ART.gold) + artBigText(74, 64, 13, "8", ART.gold),
+  avalanche: () => // a mountain shedding a growing slide of rocks
+    '<path d="M4 64 L40 10 L62 40 L74 28 L96 64 Z" fill="' + ART.bone2 + '" stroke="' + ART.ink + '" stroke-width="' + ART.w + '" stroke-linejoin="round"/>' +
+    '<path d="M32 22 L40 10 L48 22 L44 20 L40 24 L36 20 Z" fill="' + ART.bone + '"/>' +
+    [[54, 46, 4], [64, 52, 6], [78, 56, 8]].map(([x, y, r]) => '<circle cx="' + x + '" cy="' + y + '" r="' + r + '" fill="#6f6a66" stroke="' + ART.ink + '" stroke-width="1.6"/>').join("") +
+    '<path d="M48 40 L56 42 M58 48 L66 50" stroke="' + ART.hi + '" stroke-width="1.6" stroke-linecap="round"/>',
+  deepPockets: () => // a deep pocket spilling gold
+    '<path d="M24 8 H76 V40 Q76 64 50 66 Q24 64 24 40 Z" fill="#2a3a5a" stroke="' + ART.bone + '" stroke-width="' + ART.w + '"/>' +
+    '<path d="M24 8 Q50 26 76 8" fill="#1a2438" stroke="' + ART.bone + '" stroke-width="' + ART.w + '"/>' +
+    '<path d="M30 40 Q50 46 70 40" fill="none" stroke="' + ART.gold + '" stroke-width="1.6" stroke-dasharray="3 3"/>' +
+    artCoin(44, 14, 7) + artCoin(56, 10, 7) + artCoin(50, 6, 6) +
+    '<path d="M80 30 L86 22 M84 36 L92 34" stroke="' + ART.gold + '" stroke-width="2" stroke-linecap="round"/>',
+  fullHouse: () => // a fanned hand of five cards
+    [-30, -15, 0, 15, 30].map((a, i) => '<g transform="rotate(' + a + ' 50 74)"><rect x="40" y="14" width="20" height="30" rx="3" fill="' + ART.bone + '" stroke="' + ART.ink + '" stroke-width="1.6"/>' +
+      (i === 2 ? '<path d="M50 22 L54 29 L50 36 L46 29 Z" fill="' + ART.red + '"/>' : '<circle cx="50" cy="29" r="3" fill="' + (i % 2 ? ART.red : ART.black) + '"/>') + "</g>").join(""),
 };
 
 // A card's art as an SVG string. cls: the CSS class ("card-art", "hand-art"...).

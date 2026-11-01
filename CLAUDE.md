@@ -39,6 +39,7 @@ css/style.css      colors and layout
 img/logo.svg       the logo (C3 "Blood Pip"); img/icon-*.png are renders of it for tabs and home screens
 manifest.webmanifest  name and icons for "add to home screen"
 js/config.js       ALL tunable numbers
+js/numbers.js      logic: writing money and mults for people ($1.25M, 4.2Mx)
 js/dice.js         logic: rolling dice
 js/bets.js         logic: settling bets
 js/shift.js        logic: shift turns, roster vs shooting order, hiring, dealer breaks and deposits, win/fall checks
@@ -71,8 +72,8 @@ demos/music-options.html  preview: darker shift-1 music candidates (not part of 
 demos/card-art.html  preview: card art styles (A, B, C and mixes D, E) to choose from (not part of the game)
 tools/simulate.js  balance simulator (Node.js, not part of the game): node tools/simulate.js 20000
 ```
-Testing shortcuts: add `?target=300` to the page address to set shift 1's debt; add `?fast` to skip the dice animation, splash screens and fall animation; add `?cards=doubleUp,greenDice` to start with those cards (ids are in js/cards.js). `?shift=5` starts the run at that shift (to test later shifts, e.g. the tense music). `?rule=houseDie` forces that house rule every shift (ids are in js/rules.js). `?unlockAll` makes everything available without touching saved progress. `?autoplay` (or `?autoplay=100`) lets a bot play whole runs through the real screen and report errors or stuck screens; it never saves. Combine with `&`, e.g. `?target=300&fast&cards=doublesCharm`.
+Testing shortcuts: add `?target=300` to the page address to set shift 1's debt; add `?fast` to skip the dice animation, splash screens and fall animation; add `?cards=doubleUp,greenDice` to start with those cards (ids are in js/cards.js). `?shift=5` starts the run at that shift (to test later shifts, e.g. the tense music). `?endless` starts in endless mode at shift 9 (or `&shift=N`), with 30% of the debt as cash; it never saves. `?rule=houseDie` forces that house rule every shift (ids are in js/rules.js). `?unlockAll` makes everything available without touching saved progress. `?autoplay` (or `?autoplay=100`) lets a bot play whole runs through the real screen and report errors or stuck screens; it never saves. Combine with `&`, e.g. `?target=300&fast&cards=doublesCharm`.
 
 tests.html pins its own numbers (shift 1: $200 cash, $2,000 debt, 6 seats, everything unlocked, progress never saved) so tuning config.js doesn't break the checks. Shift cash and debts are in `CONFIG.shifts`; the current debt is `state.debt`.
 
-Scripts load with plain `<script>` tags in a set order (config, logic: dice, bets, crew, cards, shop, stats, perks, crafting, comps, unlocks, rules, save, shift; then display: sound, music, art, card-art, ui, ui-break, ui-screens, tutorials, coach; then main), not ES modules, so double-clicking index.html works.
+Scripts load with plain `<script>` tags in a set order (config, numbers, logic: dice, bets, crew, cards, shop, stats, perks, crafting, comps, unlocks, rules, save, shift; then display: sound, music, art, card-art, ui, ui-break, ui-screens, tutorials, coach; then main), not ES modules, so double-clicking index.html works.

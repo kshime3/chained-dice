@@ -195,7 +195,7 @@ function applyCrewEffects(state, results, sevenOut, pointHit) {
     state.hotRodPenaltyUsed = true;
     const extra = chargeExtra(state, results, CONFIG.hotRodSevenOutCost);
     if (extra > 0) {
-      notes.push("Hot Rod's seven-out costs double: another $" + extra + " from your cash.");
+      notes.push("Hot Rod's seven-out costs double: another " + money(extra) + " from your cash.");
     }
   }
   return notes;

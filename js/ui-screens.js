@@ -50,7 +50,9 @@ function renderEndScreen(state, handlers) {
     showStats = true;
   } else if (state.status === "won" && hasEscaped(state)) {
     title = "YOU WALK OUT FREE.";
-    body = "The last link falls away. You stand up from the table, and nobody stops you. The dealer smiles: \"Double or nothing?\"";
+    body = "The last link falls away. You stand up from the table, and nobody stops you. The dealer smiles: \"Double or nothing?\"" +
+      '<span class="endless-rules">Double or nothing is endless mode: the debts grow fast, your chips grow with them, interest compounds, ' +
+      "new ♾️ Endless cards in the shop multiply your mult, and every 2 shifts the house adds another way to roll 7. How high can you go?</span>";
     primary = "Double or nothing";
     secondary = "Walk away";
     showStats = true;
@@ -85,7 +87,7 @@ function renderEndScreen(state, handlers) {
 
   document.getElementById("end-title").textContent = title;
   document.getElementById("end-body").innerHTML = body;
-  document.getElementById("run-stats").innerHTML = showStats ? runStatsHtml(state) : "";
+  document.getElementById("run-stats").innerHTML = showStats ? highScoreHtml() + runStatsHtml(state) : "";
   renderFeedback(state, showStats);
   const first = document.getElementById("play-again");
   first.textContent = primary;
@@ -109,6 +111,14 @@ function renderEndScreen(state, handlers) {
   }
   chainShownFor = key;
   screen.className = "overlay " + mood;
+}
+
+// High scores (saved in the browser): the furthest endless shift survived and the biggest single-roll win.
+function highScoreHtml() {
+  const c = profile().counts;
+  if (!c.bestEndless && !c.bestWin) return "";
+  return '<p class="high-scores">🏆 ' + (c.bestEndless ? "Best endless shift: <strong>" + c.bestEndless + "</strong> · " : "") +
+    "Biggest single win: <strong>" + money(c.bestWin) + "</strong></p>";
 }
 
 // ---------- Playtest feedback (end of a run) ----------
@@ -290,7 +300,7 @@ function runStatsHtml(state) {
     statTile("Paid to the dealer", money(st.paid), money(st.interest) + " interest earned") +
     statTile("Spent in the shop", money(st.spent)) +
     statTile("Points hit / seven-outs", st.pointsHit + " / " + st.sevenOuts) +
-    statTile("Highest mult", st.maxMult + "x") +
+    statTile("Highest mult", multText(st.maxMult)) +
     statTile("Best shooter", best ? best.name : "-", best ? (best.amount >= 0 ? "+" : "-") + money(Math.abs(best.amount)) + " for you" : "") +
     "</div>";
   html += '<h3>Your money over the run</h3><p class="hint">Cash plus bets after every roll. Drops at a Break are payments to the dealer; dashed lines mark new shifts.</p>' + moneyChartSvg(st);
@@ -565,6 +575,8 @@ function renderCollection() {
   html += "<h3>Bets</h3><div class=\"collection-grid\">" + order(Object.keys(BET_GROUPS)).map((g) => tile(g, BET_GROUPS[g].name, BET_GROUPS[g].text)).join("") + "</div>";
   const all = cards.concat(Object.keys(COMPS), crew, Object.keys(BET_GROUPS));
   document.getElementById("collection-count").textContent = all.filter(isUnlocked).length + " of " + all.length + " found. Locked things unlock by playing. How? That's for you to discover.";
+  const scores = document.getElementById("collection-scores");
+  if (scores) scores.innerHTML = highScoreHtml();
   document.getElementById("collection-body").innerHTML = reputationHtml() + html;
 }
 

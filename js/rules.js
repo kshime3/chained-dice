@@ -71,8 +71,8 @@ function newChallenge(state) {
 }
 
 function rewardText(state, reward) {
-  if (reward === "cash") return "$" + roundTo5(CONFIG.challengeCashPct * state.debt) + " cash";
-  if (reward === "debtCut") return "$" + roundTo5(CONFIG.challengeDebtCutPct * state.debt) + " off the debt";
+  if (reward === "cash") return money(roundTo5(CONFIG.challengeCashPct * state.debt)) + " cash";
+  if (reward === "debtCut") return money(roundTo5(CONFIG.challengeDebtCutPct * state.debt)) + " off the debt";
   if (reward === "comp") return "a free comp";
   return "a free Shuffle";
 }

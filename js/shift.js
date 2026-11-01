@@ -23,6 +23,13 @@ function tableMin(state) {
 
 // The chips shown this shift.
 function chipsFor(state) {
+  if (state.endless && tableMin(state) > CONFIG.bigChipValues[0]) {
+    // Endless: chips grow with the table, from a nice round base (1, 2.5 or 5 times a power of ten).
+    const min = tableMin(state);
+    const power = Math.pow(10, Math.floor(Math.log10(min)));
+    const base = [5, 2.5, 1].map((k) => k * power).find((v) => v <= min);
+    return CONFIG.endlessChipX.map((x) => base * x);
+  }
   return tableMin(state) >= 25 ? CONFIG.bigChipValues : CONFIG.chipValues;
 }
 
@@ -320,7 +327,8 @@ function interestRate(state) {
 function payInterest(state) {
   const skim = rule(state, "skimmedInterest") ? CONFIG.skimmedInterestX : 1;
   const stash = hasCard(state, "stash") ? state.cash * CONFIG.stashRate : 0; // Stash: cash in hand earns too
-  state.lastInterest = Math.floor((state.deposited * interestRate(state) + stash) * skim);
+  const carried = state.endless ? (state.endlessPaid || 0) * CONFIG.endlessInterestCarry : 0; // endless: interest compounds
+  state.lastInterest = Math.floor(((state.deposited + carried) * interestRate(state) + stash) * skim);
   state.cash += state.lastInterest;
   state.stats.interest += state.lastInterest;
   trackInterest(state);
@@ -410,6 +418,7 @@ function nextShift(old) {
   state.savedBets = old.savedBets ? Object.assign({}, old.savedBets) : null;
   state.interestRate = old.interestRate;
   state.darkSevens = old.darkSevens || 0;
+  state.endlessPaid = old.endless ? (old.endlessPaid || 0) + old.deposited : 0; // everything paid since endless began
   state.stats = old.stats;
   state.perks = old.perks.slice();
   state.endless = old.endless;

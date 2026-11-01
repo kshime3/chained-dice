@@ -238,6 +238,7 @@ button {
 .chip-5 { background: #c0392b; }
 .chip-25 { background: #27ae60; }
 .chip-100 { background: #222; }
+.chip.chip-tier-0 { background: #c0392b; } .chip.chip-tier-1 { background: #27ae60; } .chip.chip-tier-2 { background: #222; }
 .chip.selected { outline: 4px solid #ffd84d; }
 
 .big-button {
@@ -892,3 +893,7 @@ button:not(:disabled):hover { filter: brightness(1.15); }
 .feedback textarea { width: 100%; box-sizing: border-box; font: inherit; font-size: 0.9rem; border-radius: 6px; padding: 6px; background: #f3e9d2; color: #222; border: 1px solid #8a6640; }
 .feedback #feedback-copy { display: block; margin: 10px auto 4px; }
 .feedback-status { font-size: 0.85rem; text-align: center; margin: 4px 0; color: #e2c89a; min-height: 1em; }
+
+/* High scores (endless shift, biggest win) */
+.high-scores { text-align: center; color: #ffd84d; font-size: 0.95rem; margin: 6px 0 10px; }
+.endless-rules { display: block; margin-top: 8px; font-size: 0.85rem; color: #e2c89a; }

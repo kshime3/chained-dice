@@ -38,6 +38,7 @@ function newStock(state) {
   for (let slot = 0; slot < CONFIG.shopSlots; slot++) {
     const pool = Object.keys(CARDS).filter((id) => !state.cards.includes(id) && !stock.includes(id) &&
       !(id === "bargain" && state.endless) && available(state, id) && // no chain to add a link to in endless mode
+      (!CARDS[id].endless || state.endless) && // x-mult cards only after Double or nothing
       (!CARDS[id].crew || state.roster.includes(CARDS[id].crew)) && // crew cards need that person at the table
       (!CARDS[id].needs || available(state, CARDS[id].needs))); // bet cards need that bet unlocked
     if (pool.length === 0) {

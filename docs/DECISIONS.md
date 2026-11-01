@@ -337,3 +337,8 @@ Dated log of every decision and why. Newest at the bottom.
 
 ## 2026-11-01: Playtest feedback note
 - Owner chose a copy button (no server, no Google Form), three questions (fun 1-5, play again, what confused you), and a small button on every end-of-run screen (not a pop-up). Not shown between shifts.
+
+## 2026-11-01: Huge numbers
+- Owner: endless only; growing chips, x-mult cards and compounding interest (not card upgrades); a saved high score. Built as drafted (5 x-mult cards).
+- Added after simulating (balance lever, not in the draft): in endless the house adds +1 way to roll 7 every 2 endless shifts, because stacked "-1 way to roll 7" perks made some endless runs never end. Interest carry set to 50%.
+- ?endless testing shortcut never saves (it fakes the escape and money).

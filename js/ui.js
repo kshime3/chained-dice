@@ -105,9 +105,6 @@ for (const n of [4, 5, 6, 8, 9, 10]) {
   BET_NAMES["dcome" + n] = "Don't Come bet on " + n;
 }
 
-function money(n) {
-  return "$" + n.toLocaleString();
-}
 
 // "Jinx's" or "Your", so sentences read right when it's your turn.
 function whose(name) {
@@ -132,13 +129,14 @@ function sevenChance(name, state) {
 function renderChips(values, selectedChip, onPick) {
   const box = document.getElementById("chips");
   box.innerHTML = "";
-  for (const value of values) {
+  values.forEach((value, tier) => {
     const chip = document.createElement("button");
-    chip.className = "chip chip-" + value + (value === selectedChip ? " selected" : "");
-    chip.textContent = money(value);
+    const tierClass = [5, 25, 100].includes(value) ? "" : " chip-tier-" + tier; // endless chips get colours by size
+    chip.className = "chip chip-" + value + tierClass + (value === selectedChip ? " selected" : "");
+    chip.textContent = shortMoney(value);
     chip.onclick = () => onPick(value);
     box.appendChild(chip);
-  }
+  });
 }
 
 function renderState(state) {
@@ -284,7 +282,7 @@ function renderMult(state) {
   const gain = multShown !== null && mult > multShown + 1e-9 ? mult - multShown : 0;
   multShown = mult;
   const notes = multReasons(state);
-  box.innerHTML = "Mult: <strong>" + Math.round(mult * 100) / 100 + "x</strong>" + (notes.length ? " · " + notes.join(" · ") : "");
+  box.innerHTML = "Mult: <strong>" + multText(mult) + "</strong>" + (notes.length ? " · " + notes.join(" · ") : "");
   box.className = "mult" + (mult > 1 ? " hot" : mult < 1 ? " cold" : "");
   if (gain) popMult(box, gain);
 }
@@ -426,7 +424,7 @@ function showBetPopups(results) {
 function popMult(box, gain) {
   const pop = document.createElement("div");
   pop.className = "mult-pop";
-  pop.textContent = "+" + Math.round(gain * 100) / 100 + "x mult";
+  pop.textContent = "+" + multText(gain) + " mult";
   const r = box.getBoundingClientRect();
   pop.style.left = r.left + r.width / 2 + "px";
   pop.style.top = r.top + "px";
@@ -485,7 +483,7 @@ function rollHeadline(total, pointBefore, pointAfter, line, sevenOut) {
 function rollDetails(results) {
   const parts = [];
   for (const r of results) {
-    if (r.outcome === "win") parts.push(BET_NAMES[r.bet] + " +" + money(r.winnings) + (r.mult !== undefined && r.mult !== 1 ? " (x" + r.mult + ")" : ""));
+    if (r.outcome === "win") parts.push(BET_NAMES[r.bet] + " +" + money(r.winnings) + (r.mult !== undefined && r.mult !== 1 ? " (x" + bigNumber(Math.round(r.mult * 100) / 100) + ")" : ""));
     if (r.outcome === "lose") parts.push(BET_NAMES[r.bet] + " -" + money(r.amount));
     if (r.outcome === "move") parts.push(BET_NAMES[r.bet] + " moves to the " + r.to.replace(/\D/g, ""));
   }

@@ -23,6 +23,10 @@ const CONFIG = {
   laterDebtGrowth: 2.2,  // endless: each debt is this times the last (rounded to $50)
   laterCashStep: 0,      // endless: each shift adds this much more cash than the last
   laterMinBetPct: 0.025, // endless: the minimum bet is this share of the debt (rounded to $25)
+  // Huge numbers in endless mode (2026-11-01)
+  endlessChipX: [1, 5, 25],     // endless chips: the table minimum (rounded to a nice number) times these
+  endlessInterestCarry: 0.5,    // endless: this share of everything paid in earlier endless shifts also earns interest (compounding)
+  endlessSevenEvery: 2,         // endless: the house adds +1 way to roll 7 (everyone's dice) every this many endless shifts survived
 
   // The dealer won't take payments until the first shooter of the shift has rolled.
   // Stops paying off a new shift's debt straight from leftover money. false = pay any time.
@@ -199,6 +203,11 @@ const CONFIG = {
     compound: "uncommon",
     stash: "common",
     earlyBird: "rare",
+    snowball: "uncommon",
+    sweetSpot: "uncommon",
+    avalanche: "rare",
+    deepPockets: "rare",
+    fullHouse: "rare",
   },
 
   // Card numbers
@@ -242,6 +251,12 @@ const CONFIG = {
   compoundPerCard: 0.01,      // Compound: interest rate + this per Money card
   stashRate: 0.02,            // Stash: cash in hand earns this much interest at each Dealer Break
   earlyBirdPct: 0.10,         // Early Bird: paying off before the last shooter gives back this share of the debt
+  // Endless-only x-mult cards (2026-11-01): they multiply the mult, so they stack.
+  snowballX: 1.5,             // Snowball: mult x this
+  sweetSpotX: 2,              // Sweet Spot: mult x this while the point is 6 or 8
+  avalancheX: 1.25,           // Avalanche: mult x this for every point made this turn (compounding)
+  deepPocketsX: 1.25,         // Deep Pockets: mult x this for every endless shift survived (compounding)
+  fullHousePerCard: 0.5,      // Full House: mult x (this times the cards you hold), never below x1
 
   // The Pit Boss phone: after each won shift, pick 1 of these many different perks.
   phoneChoices: 3,
@@ -372,6 +387,8 @@ if (new URLSearchParams(location.search).has("autoplay")) {
   CONFIG.saveProgress = false;
   CONFIG.unlockEverything = true;
 }
+// ?endless (testing shortcut) fakes an escape and money, so nothing it does is saved.
+if (new URLSearchParams(location.search).has("endless")) CONFIG.saveProgress = false;
 if (new URLSearchParams(location.search).has("fast") || new URLSearchParams(location.search).has("autoplay")) {
   CONFIG.diceRollMs = 0;
   CONFIG.openingMs = 0;

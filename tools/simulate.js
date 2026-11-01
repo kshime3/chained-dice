@@ -9,7 +9,7 @@ const vm = require("vm");
 
 // Load the logic files exactly as the browser does (no display code).
 globalThis.location = { search: "" };
-const files = ["config", "dice", "bets", "crew", "cards", "shop", "stats", "perks", "crafting", "comps", "unlocks", "rules", "shift"];
+const files = ["config", "numbers", "dice", "bets", "crew", "cards", "shop", "stats", "perks", "crafting", "comps", "unlocks", "rules", "shift"];
 const source = files.map((f) => fs.readFileSync(path.join(__dirname, "..", "js", f + ".js"), "utf8")).join("\n");
 
 const simulator = `
@@ -24,7 +24,7 @@ const round5 = (n) => Math.max(5, Math.floor(n / 5) * 5);
 const HIRE_PREFERENCE = ["Lucky Lou", "The Professor", "Big Mo", "Snake", "Lefty", "Hot Rod", "Dealer Dee", "Ghost"];
 
 // Cards the bot likes best, first to last.
-const CARD_PREFERENCE = ["muggsy", "oddsAddict", "doubleUp", "pity", "loanShark", "redDice", "hotHand", "doublesCharm", "steadyHand", "twinSouls", "torchPass", "earlyBird", "heater", "mirrorDice", "compound", "comebackKid", "pointCollector", "greenDice", "longNight", "boxcars", "stash", "luckySeven", "snakeEyes", "rattlesnake", "encore", "highRoller", "rodsLighter", "deesLedger", "leftysGlove", "frontOfLine", "sleightOfHand"];
+const CARD_PREFERENCE = ["snowball", "fullHouse", "avalanche", "deepPockets", "sweetSpot", "muggsy", "oddsAddict", "doubleUp", "pity", "loanShark", "redDice", "hotHand", "doublesCharm", "steadyHand", "twinSouls", "torchPass", "earlyBird", "heater", "mirrorDice", "compound", "comebackKid", "pointCollector", "greenDice", "longNight", "boxcars", "stash", "luckySeven", "snakeEyes", "rattlesnake", "encore", "highRoller", "rodsLighter", "deesLedger", "leftysGlove", "frontOfLine", "sleightOfHand"];
 
 function atBreak(state, s) {
   if (state.cash >= amountOwed(state)) { deposit(state, amountOwed(state)); return; }
@@ -178,6 +178,9 @@ function playShift(s, carry) {
 
 function run(label, s, n, scale) {
   let wins = 0, broke = 0, short = 0, rolls = 0, left = 0, cards = 0;
+  let escapes = 0, bestDebt = 0, bestWin = 0;
+  const endlessReached = {}, endlessRuns = [];
+  const sevenSamples = [];
   const reached = scale.map(() => 0); // how many runs survived each shift
   const seats = [];
   CONFIG.shifts = scale.map(([cash, debt, minBet], k) => ({ cash: cash, debt: debt, minBet: minBet || (ORIGINAL_SHIFTS[k] || { minBet: 5 }).minBet }));
@@ -198,6 +201,33 @@ function run(label, s, n, scale) {
       seats[k] = (seats[k] || 0) + r.roster.length;
       carry = r;
     }
+    // ENDLESS=1: after walking out free, take Double or nothing and keep going until the floor opens.
+    if (process.env.ENDLESS && carry && reached[scale.length - 1] && carry.shift === scale.length && carry.status === "won") {
+      carry.endless = true;
+      escapes++;
+      let extra = 0;
+      while (extra < (Number(process.env.ENDLESS_CAP) || 40)) {
+        const r = playShift(s, carry);
+        if (r.status !== "won") break;
+        extra++;
+        endlessReached[extra] = (endlessReached[extra] || 0) + 1;
+        bestDebt = Math.max(bestDebt, r.debt);
+        bestWin = Math.max(bestWin, r.stats.biggestHit.amount);
+        if (process.env.SEVENS && (extra === 5 || extra === 15)) sevenSamples.push(extra + ":" + (diceOdds(currentDice(r))[7] * 36).toFixed(1));
+        carry = r;
+      }
+      endlessRuns.push(extra);
+    }
+  }
+  if (process.env.ENDLESS && escapes) {
+    endlessRuns.sort((a, b) => a - b);
+    const fmt = (v) => typeof money === "function" ? money(v) : "$" + v;
+    console.log("   ENDLESS after " + escapes + " escapes: median extra shifts " + endlessRuns[Math.floor(escapes / 2)] +
+      ", best " + endlessRuns[escapes - 1] + " | survived endless shift: " +
+      [1, 2, 3, 4, 5, 6, 8, 10, 12, 15, 20].map((x) => x + ":" + (100 * (endlessReached[x] || 0) / escapes).toFixed(0) + "%").join(" ") +
+      " | biggest debt paid " + fmt(bestDebt) + ", biggest roll win " + fmt(bestWin));
+    if (process.env.SEVENS) console.log("   ways to roll 7 (endless shift:ways): " + sevenSamples.slice(0, 40).join(" "));
+    console.log("   endless debts: " + [9, 10, 12, 14, 16, 18, 20, 24].map((n) => "shift " + n + " " + fmt(shiftScale(n).debt)).join(", "));
   }
   const pct = (x) => (100 * x / n).toFixed(1).padStart(5) + "%";
   // SEATS=1 also prints the average number of seats filled after each won shift.
@@ -210,6 +240,10 @@ function run(label, s, n, scale) {
 
 vm.runInThisContext(source + "\n" + simulator);
 
+// CFG='{"endlessInterestCarry":0}' overrides config numbers for a test run.
+if (process.env.CFG) Object.assign(CONFIG, JSON.parse(process.env.CFG));
+// NOXMULT=1: the bots never buy the endless x-mult cards.
+if (process.env.NOXMULT) CARD_PREFERENCE.splice(0, 5);
 globalThis.ORIGINAL_SHIFTS = CONFIG.shifts.slice();
 // Unlocks: the bots normally play with everything unlocked (comparable with older results).
 // LOCKED=1 plays as a brand-new player. Nothing is ever saved.

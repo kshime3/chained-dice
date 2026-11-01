@@ -119,7 +119,7 @@ function useComp(state, index, face) {
     const added = roundTo5(lent * CONFIG.cashAdvanceCost);
     state.cash += lent;
     state.debt += added;
-    return "Cash Advance: +$" + lent + " now. Your debt grows by $" + added + ".";
+    return "Cash Advance: +" + money(lent) + " now. Your debt grows by " + money(added) + ".";
   }
   return null;
 }
@@ -145,7 +145,7 @@ function finishArmed(state, results) {
       .reduce((sum, r) => sum + r.amount, 0);
     if (lost > 0) {
       state.cash += lost;
-      notes.push("Insurance pays back your $" + lost + " line bet.");
+      notes.push("Insurance pays back your " + money(lost) + " line bet.");
     }
   }
   const won = results.some((r) => r.outcome === "win");
