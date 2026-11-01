@@ -356,3 +356,21 @@ Bots taught: Lou's Horseshoe, Crew Captain, Roll Call, Professor's Notes, Recrui
 
 - Close to before (31 / 26; career medians move about ±2 between runs), at the low end of the 30-60 target. Levers if playtests feel quick: harder goals for Snake's Fangs (54% of careers) or the crew-seated goals, or `reputationEvery` 4 -> 5.
 - Rod's Lighter moved from Hot streak to Crew (as drafted), so Hot streak has 6 cards now.
+
+## 2026-11-01: Are the trapdoor and "+1 way to roll 7" worth it? (owner question)
+Simulator switches added: `START_PERKS=plus7,minusSeven` (start with phone perks), `CUT=Name` (drop that crew member at the first chance, like `CUT_JINX=1`).
+
+6,000 runs each, everything unlocked. Survive shift 2 / walk out free:
+
+| | Pass Line bot (13) | Don't Pass bot (16) |
+| --- | --- | --- |
+| Normal | 23.4% / 0.8% | 25.9% / 0.3% |
+| Drop Jinx | 18.4% / 0.5% | 17.4% / 0.4% |
+| Drop Lefty | 20.4% / 0.7% | 22.3% / 0.2% |
+| Start with +1 way to roll 7 | 17.1% / 0.3% | 27.8% / 0.3% |
+| Start with -1 way to roll 7 | 30.3% / 1.7% | 24.7% / 0.3% |
+
+- Dropping crew is a net loss even for Jinx (fewer turns to earn, plus the price). Idea: give it a payoff (debt cut or mult for the rest).
+- +1 way to roll 7 is a trap for Pass Line players and only a small boost for dark side. Idea: offer it only with a Dark side card, and give it a payoff.
+- Dark side matches the Pass Line early but escapes less often (0.3% vs 0.8%). Idea: more late-game scaling for dark builds.
+No rules changed yet (waiting on the owner).

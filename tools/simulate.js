@@ -143,6 +143,8 @@ function playShift(s, carry) {
     takePerk(state, pick, state.crew.find((n) => n === "Jinx") || state.crew[0]);
   }
   if (s.startCards && !carry) { state.cards = s.startCards.slice(); state.stock = newStock(state); }
+  // START_PERKS=plus7,minusSeven: start the run with these phone perks (to measure them).
+  if (process.env.START_PERKS && !carry) state.perks = process.env.START_PERKS.split(",");
   // Recruit test: seat this crew member from the start (a starter is swapped in if needed).
   if (s.extraSeat && !carry) {
     state.roster = ["Jinx", s.extraSeat, "You"];
@@ -158,6 +160,8 @@ function playShift(s, carry) {
       if (s.shop && isShopOpen(state)) {
         // CUT_JINX=1: drop Jinx through the Trapdoor as soon as it's affordable.
         if (process.env.CUT_JINX && cuttableCrew(state).includes("Jinx") && state.cash - cutChainPrice(state) >= s.shopReserve) cutChain(state, "Jinx");
+        // CUT=Lefty: drop that crew member the same way (any name).
+        if (process.env.CUT && cuttableCrew(state).includes(process.env.CUT) && state.cash - cutChainPrice(state) >= s.shopReserve) cutChain(state, process.env.CUT);
         for (const name of HIRE_PREFERENCE) {
           if (state.hireOffers.includes(name) && state.cash - hirePrice(state, name) >= s.shopReserve) hire(state, name);
         }
