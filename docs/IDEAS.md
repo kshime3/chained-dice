@@ -71,14 +71,14 @@ Parked ideas and later features. Not in v1 unless moved into the design.
 5. **More bets as unlocks** (Place, Hard Ways, Come, Fire Bet, Different Doubles): more ways to win, and the phone can unlock them.
 6. **House rules and pit boss challenges** [Built, Milestone 11].
 7. **Dealer loans.** Borrow from the dealer mid-shift at steep interest. A risk lever when you're about to go broke.
-8. **Card upgrades / editions.** Buying a card you own levels it up (Hot Hand II), or cards come in foil/gold versions with extra effects.
+8. ~~**Card upgrades / editions.**~~ Dropped by the owner (2026-11-01): not a milestone.
 
 ## Making "bet against the shooter" pay (from the Milestone 7 simulator finding)
 - **Jinx's come-out curse:** when Jinx shoots, come-out 7s don't count against Don't Pass (they're a tie). Makes him the perfect shooter to bet against.
 - **Crew-specific dark cards:** "Jinx's Shadow" (Don't Pass on Jinx pays 2x), "Hot Rod's Rival" (Don't Pass on Hot Rod gains mult when he sevens out).
 - **Smaller Lay limit option** for the dark side, or a card that lets Lay Odds pay true odds +25%.
 
-## Huge numbers (owner, 2026-10-27) [Built 2026-11-01 for endless: big-number display, growing chips, x-mult cards, compounding interest, high scores. Not built: card upgrades (Hot Hand II...), a whole-run version]
+## Huge numbers (owner, 2026-10-27) [Built 2026-11-01 for endless: big-number display, growing chips, x-mult cards, compounding interest, high scores. Not built: a whole-run version; card upgrades dropped by the owner]
 - Part of the fun of Balatro and Clover Pit is that scores scale to 100 million and beyond. Endless mode should get there: multiplying mults (x2, x3 cards stacking), mult that multiplies other mult, interest that compounds, chip values that grow (a $5 chip becomes $5,000 late in a run). Needs number formatting for big values ($1.2M, $45B) and a debt curve that keeps up.
 
 ## Card idea from the owner (2026-10-27): voluntary link break
@@ -108,6 +108,7 @@ Parked ideas and later features. Not in v1 unless moved into the design.
 5. Art (crew portraits, dungeon-casino look, chain motif) and a quiet background music loop.
 
 ## Roadmap goal: Android app (2026-10-31)
+**Now an active plan: see docs/ANDROID.md (2026-11-01).**
 If the owner feels good after art, music and a wider playtest: wrap with Capacitor, add rewarded ads (or a one-time price / remove-ads purchase), Play Store listing and closed testing. Rough effort: 1.5-2.5 months of calendar time, much of it waiting. Owner's explicit permission needed before any publishing.
 
 ## Art ideas (2026-11-01)
