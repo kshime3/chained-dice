@@ -2,6 +2,18 @@
 
 Dated session log. Newest at the top.
 
+## 2026-11-01: Card art, batch 1 (Dark side)
+
+**Done**
+- Owner picked style E. js/card-art.js draws card art in code; shown on shop cards, hand tiles and the Collection. Batch 1 drawn: the 6 Dark side cards. Other cards show a plain die until their batch.
+- Checks: tests.html 450 passing, 5 screen sizes fit (with a full hand), autoplay 25 runs no errors. Display only, no simulator.
+
+**Waiting on the owner**
+- Feedback on the Dark side drawings.
+
+**Exact next step**
+- Card art batch 2: Pairs (Double Up, Doubles Charm, Hardway Hustler, Rattlesnake, Snake Eyes, Mirror Dice, Boxcars, Twin Souls), then Hot streak, Money, and the cards with no theme.
+
 ## 2026-11-01: The fall scene
 
 **Done**

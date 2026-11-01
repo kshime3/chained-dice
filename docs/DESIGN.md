@@ -310,6 +310,9 @@ Cards now belong to themes, shown as a small label on the card. Each theme has o
   - **Stash** (Common): at each Dealer Break, cash in hand earns 2% interest too. Goal: win a shift with $1,000 cash in hand.
   - **Early Bird** (Rare): paying off before the last shooter gives back 10% of the debt as cash. Goal: pay off with 2 or more shooters still to come.
 
+## Card art  [In progress, 2026-11-01]
+Style E (owner's pick from demos/card-art.html): a dark panel tinted with the card's theme colour (Dark side purple, Pairs blue, Hot streak orange, Money green, no theme warm brown), lit from above like the lamp, with a bold bone-white symbol outlined in rust and a touch of blood red. Drawn in code (js/card-art.js). Shown on shop cards (full picture), hand tiles (small icon beside the name on wide screens, a strip across the top on phones) and the Collection (locked cards show a padlock, giving nothing away). Drawn in batches by theme; undrawn cards show a plain die. Done: Dark side (Wrong Way, Cold Read, Jinx's Shadow, Graveyard Shift, Bad Omen, Undertaker).
+
 ## Polish  [Built, 2026-10-30]
 - **Save bets / Same bets** (rules in DECISIONS.md, logic `saveBets` / `rebet` in shift.js).
 - First chip on a line bet covers the table minimum; unaffordable chips switch to one you can afford.

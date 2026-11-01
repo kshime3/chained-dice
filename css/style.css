@@ -870,4 +870,12 @@ button:not(:disabled):hover { filter: brightness(1.15); }
 .credits a { color: #f6d98a; }
 
 /* Card themes (2026-10-31): a small label like "🌑 Dark side" */
-.theme-tag { display: inline-block; width: fit-content; font-size: 0.7rem; font-weight: bold; letter-spacing: 0.02em; color: #f3e3c3; background: #3a2618; border-radius: 10px; padding: 0 7px; margin: 2px 0 4px; }
+.theme-tag { display: inline-block; width: fit-content; white-space: nowrap; font-size: 0.7rem; font-weight: bold; letter-spacing: 0.02em; color: #f3e3c3; background: #3a2618; border-radius: 10px; padding: 0 7px; margin: 2px 0 4px; }
+
+/* Card art (js/card-art.js): a picture at the top of shop cards and Collection tiles, a small one on hand tiles */
+.card-art { display: block; width: 100%; height: auto; aspect-ratio: 10 / 7; border-radius: 6px; margin-bottom: 6px; }
+/* Wide screens: a small picture beside the card's name (keeps the side column short). Phones (Hand tab): a strip across the top. */
+.hand-art { display: inline-block; width: 30px; height: 21px; border-radius: 3px; margin-right: 5px; vertical-align: middle; }
+.hand-card .theme-name { display: none; } /* narrow side column: just the theme's icon */
+@media (max-width: 760px) { .hand-card .theme-name { display: inline; } }
+@media (max-width: 760px) { .hand-art { display: block; width: 100%; height: 44px; border-radius: 4px; margin: 0 0 4px; } }

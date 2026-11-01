@@ -329,3 +329,8 @@ Dated log of every decision and why. Newest at the bottom.
 - Owner picked a drawn scene (like the opening) over upgrading the old drop, with the actual crew, a cause line (broke / debt unpaid), random dealer last words, and richer sound with the music fading out.
 - The moving parts are animated by script (SVG transform attributes), not CSS transforms on SVG, which behaved differently across browsers.
 - Order agreed for what's next: 1. fall scene, 2. card art, 3. friends playtest, 4. huge numbers, 5. small polish.
+
+## 2026-11-01: Card art style
+- Owner saw A (dark engraved), B (tarot), C (bold flat) and two A+C mixes; picked **E** (theme-tinted dark panel, bold bone symbol). Shown on shop cards, hand tiles and the Collection.
+- Locked cards in the Collection show a padlock, not a silhouette (keeps unlocks fully hidden, as decided in Milestone 12).
+- Hand tiles: a small icon beside the name on wide screens (a full strip pushed the laptop layout 82px too tall), a strip on phones.

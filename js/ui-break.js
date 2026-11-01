@@ -94,7 +94,7 @@ function cardBox(id, buttonText, onClick, disabled) {
   const rarity = CONFIG.cardRarity[id];
   const box = document.createElement("div");
   box.className = "card " + rarity;
-  box.innerHTML = '<div class="card-name">' + card.name + '</div><div class="card-rarity">' + rarity +
+  box.innerHTML = cardArt(id, "card-art") + '<div class="card-name">' + card.name + '</div><div class="card-rarity">' + rarity +
     '</div>' + (themeLabel(id) ? '<div class="theme-tag">' + themeLabel(id) + "</div>" : "") + '<div class="card-text">' + card.text + "</div>";
   if (buttonText) {
     const button = document.createElement("button");
@@ -379,8 +379,8 @@ function renderHand(state, handlers) {
     const tile = document.createElement("div");
     tile.className = "hand-card " + CONFIG.cardRarity[id] + (off ? " switched-off" : "");
     tile.title = CARDS[id].text;
-    tile.innerHTML = "<strong>" + (off ? "👁 " : "") + CARDS[id].name + '</strong><span class="rarity">' + CONFIG.cardRarity[id] + '</span><div class="hand-text">' +
-      (off ? "<em>Switched off this shift (Pit Watch).</em> " : "") + (themeLabel(id) ? '<span class="theme-tag">' + themeLabel(id) + "</span> " : "") + CARDS[id].text + "</div>";
+    tile.innerHTML = cardArt(id, "hand-art") + "<strong>" + (off ? "👁 " : "") + CARDS[id].name + '</strong><span class="rarity">' + CONFIG.cardRarity[id] + '</span><div class="hand-text">' +
+      (off ? "<em>Switched off this shift (Pit Watch).</em> " : "") + (themeLabel(id) ? '<span class="theme-tag">' + THEMES[CARDS[id].theme].icon + '<span class="theme-name"> ' + THEMES[CARDS[id].theme].name + "</span></span> " : "") + CARDS[id].text + "</div>";
     cards.appendChild(tile);
   }
   const comps = systemOn(state, "comps") ? section("Comps (" + state.comps.length + " / " + compSlots(state) + ")") : document.createElement("div");
