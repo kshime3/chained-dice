@@ -2,6 +2,15 @@
 
 Dated session log. Newest at the top.
 
+## 2026-11-01: Dark side late game (Body Count)
+
+**Done**
+- New rare Dark side card Body Count (locked): every seven-out your Don't Pass wins adds +0.1x mult for the rest of the run. Art drawn. Tuned in the simulator; career pace unchanged. Tests 479 passing, 5 sizes fit, autoplay clean.
+- The three balance follow-ups from the owner's question (Trapdoor payoff, "+1 way to roll 7", dark late game) are all done.
+
+**Exact next step**
+- Friend feedback, card upgrades (Hot Hand II), or the Android roadmap.
+
 ## 2026-11-01: "+1 way to roll 7" fix
 
 **Done**

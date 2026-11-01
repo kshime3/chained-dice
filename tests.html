@@ -1061,6 +1061,19 @@
     check("...no bonus when you were on the Pass Line", p7b.cash, 100);
     }
 
+    // Body Count (2026-11-01): dark-side mult that never resets
+    {
+    const bc = newShiftState(); bc.cards = ["bodyCount"]; bc.hotStreak = 0;
+    applyCardsAfterRoll(bc, [{ bet: "dont", amount: 10, outcome: "win", winnings: 10 }], 7, 6, true);
+    applyCardsAfterRoll(bc, [{ bet: "dont", amount: 10, outcome: "win", winnings: 10 }], 7, 8, true);
+    applyCardsAfterRoll(bc, [{ bet: "pass", amount: 10, outcome: "lose", winnings: 0 }], 7, 5, true);
+    check("Body Count: 2 Don't Pass seven-outs = +2 x " + CONFIG.bodyCountMult + "x (a Pass Line seven-out adds nothing)", Math.round(bc.bodyCount * 100) / 100, Math.round(2 * CONFIG.bodyCountMult * 100) / 100);
+    setupTurn(bc, "Lefty", 1);
+    check("...it survives a new shooter", Math.round(effectiveMult(bc) * 100) / 100, Math.round((1 + 2 * CONFIG.bodyCountMult) * 100) / 100);
+    bc.status = "won";
+    check("...and the next shift", nextShift(bc).bodyCount, bc.bodyCount);
+    }
+
     // Trapdoor payoff (2026-11-01): everyone left heats up for the rest of the run
     {
     const td = newShiftState(); td.roster = ["Lefty", "Jinx", "Ghost", "You"]; td.crew = td.roster.slice(); td.shooterIndex = 1; td.onBreak = true; td.cash = 5000;

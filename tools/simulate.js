@@ -30,7 +30,7 @@ function atBreak(state, s) {
   if (state.cash >= amountOwed(state)) { deposit(state, amountOwed(state)); return; }
   if (s.shop && isShopOpen(state)) {
     // Don't Pass bots want the dark-side cards first; Pass Line bots skip them.
-    const prefs = s.side === "dont" ? ["wrongWay", "undertaker", "graveyardShift", "badOmen", "coldRead", "jinxShadow"].concat(CARD_PREFERENCE) : CARD_PREFERENCE;
+    const prefs = s.side === "dont" ? ["bodyCount", "wrongWay", "undertaker", "graveyardShift", "badOmen", "coldRead", "jinxShadow"].concat(CARD_PREFERENCE) : CARD_PREFERENCE;
     const offers = state.stock.map((id, slot) => ({ id, slot })).filter((o) => o.id && prefs.includes(o.id))
       .sort((x, y) => prefs.indexOf(x.id) - prefs.indexOf(y.id));
     for (const o of offers) {
@@ -145,6 +145,8 @@ function playShift(s, carry) {
     takePerk(state, pick, state.crew.find((n) => n === "Jinx") || state.crew[0]);
   }
   if (s.startCards && !carry) { state.cards = s.startCards.slice(); state.stock = newStock(state); }
+  // START_CARDS=bodyCount,wrongWay: start the run with these cards (to measure them).
+  if (process.env.START_CARDS && !carry) { state.cards = process.env.START_CARDS.split(","); state.stock = newStock(state); }
   // START_PERKS=plus7,minusSeven: start the run with these phone perks (to measure them).
   if (process.env.START_PERKS && !carry) state.perks = process.env.START_PERKS.split(",");
   // Recruit test: seat this crew member from the start (a starter is swapped in if needed).

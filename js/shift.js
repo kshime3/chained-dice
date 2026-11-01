@@ -119,6 +119,7 @@ function newShiftState() {
     shiftDontWins: 0, // Don't Pass bets won this shift (unlock goal)
     darkSevens: 0, // seven-outs in a row your Don't Pass won (unlock goal)
     earlyBirdBonus: 0, // Early Bird's payback this shift (shown when you win)
+    bodyCount: 0, // Body Count: mult from seven-outs your Don't Pass won (whole run)
     trapdoorMult: 0, // + mult for every shooter, from crew dropped through a Trapdoor (whole run)
   };
   applyLegacy(state); // Reputation bonuses (starting cash, cards, slots...)
@@ -423,6 +424,7 @@ function nextShift(old) {
   state.interestRate = old.interestRate;
   state.darkSevens = old.darkSevens || 0;
   state.trapdoorMult = old.trapdoorMult || 0; // the Trapdoor's boost lasts the whole run
+  state.bodyCount = old.bodyCount || 0; // Body Count lasts the whole run
   state.endlessPaid = old.endless ? (old.endlessPaid || 0) + old.deposited : 0; // everything paid since endless began
   state.stats = old.stats;
   state.perks = old.perks.slice();

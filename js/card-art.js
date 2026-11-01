@@ -98,6 +98,12 @@ const CARD_ART = {
     '<path d="M26 58 L40 18" stroke="' + ART.ink + '" stroke-width="5" stroke-linecap="round"/><path d="M26 58 L40 18" stroke="' + ART.hi + '" stroke-width="2.4" stroke-linecap="round"/>' +
     '<path d="M36 14 L46 18 L42 28 L32 24 Z" fill="' + ART.bone + '" stroke="' + ART.ink + '" stroke-width="' + ART.w + '"/>' +
     '<path d="M22 54 L32 58" stroke="' + ART.ink + '" stroke-width="4" stroke-linecap="round"/>',
+  bodyCount: () => // tally marks scratched into the wall, one per seven-out
+    [[14, 0], [46, 0]].map(([x0]) => [0, 7, 14, 21].map((dx) => '<path d="M' + (x0 + dx) + ' 14 L' + (x0 + dx + 2) + ' 50" stroke="' + ART.ink + '" stroke-width="7" stroke-linecap="round"/><path d="M' + (x0 + dx) + ' 14 L' + (x0 + dx + 2) + ' 50" stroke="' + ART.bone + '" stroke-width="3.6" stroke-linecap="round"/>').join("") +
+      '<path d="M' + (x0 - 4) + ' 44 L' + (x0 + 27) + ' 18" stroke="' + ART.red + '" stroke-width="4" stroke-linecap="round"/>').join("") +
+    '<path d="M78 14 L80 50" stroke="' + ART.ink + '" stroke-width="7" stroke-linecap="round"/><path d="M78 14 L80 50" stroke="' + ART.bone + '" stroke-width="3.6" stroke-linecap="round"/>' +
+    '<path d="M86 14 L88 50" stroke="' + ART.ink + '" stroke-width="7" stroke-linecap="round" opacity="0.5"/>' +
+    '<path d="M6 60 H94" stroke="' + ART.hi + '" stroke-width="2"/>',
   // ---------- Pairs ----------
   doubleUp: () => // two matching dice with an up arrow
     artDie(16, 24, 30, [0, 4, 8], { red: 4, rotate: -8 }) + artDie(54, 24, 30, [0, 4, 8], { red: 4, rotate: 8 }) +

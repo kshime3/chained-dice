@@ -57,6 +57,7 @@ const UNLOCKS = {
   compound:       { kind: "card", how: (g) => "earning $" + g.compound + " interest in one run", done: (c, g) => c.runInterest >= g.compound },
   stash:          { kind: "card", how: (g) => "winning a shift with $" + g.stash.toLocaleString("en-US") + " cash in hand", done: (c, g) => c.bestCash >= g.stash },
   earlyBird:      { kind: "card", how: (g) => "paying off a shift with " + g.earlyBird + " or more shooters still to come", done: (c, g) => c.shootersLeft >= g.earlyBird },
+  bodyCount:      { kind: "card", how: (g) => "your Don't Pass winning " + g.bodyCount + " seven-outs in one run", done: (c, g) => c.runDarkSevens >= g.bodyCount },
   // Crew theme added 2026-11-01
   snakeFangs:      { kind: "card", how: (g) => "seeing Snake roll craps " + g.snakeFangs + " times (all runs)", done: (c, g) => c.snakeCraps >= g.snakeFangs },
   bigMoBelt:       { kind: "card", how: (g) => "surviving " + g.newCrewCard + " shifts with Big Mo at the table", done: (c, g) => (c.crewWins["Big Mo"] || 0) >= g.newCrewCard },
@@ -90,7 +91,7 @@ function newProfile() {
       layWins: 0, shiftDontWins: 0, darkSevens: 0, pairs: 0, twelves: 0, pairPoints: 0,
       turnPointsMade: 0, turnRollsMax: 0, bestPointMult: 0, bestCash: 0, shootersLeft: 0,
       bestEndless: 0, bestWin: 0, // high scores: furthest endless shift survived, biggest single-roll win
-      snakeCraps: 0, jinxSevenOuts: 0, crewCards: 0, mostSeated: 0, fullTableWins: 0,
+      snakeCraps: 0, jinxSevenOuts: 0, runDarkSevens: 0, crewCards: 0, mostSeated: 0, fullTableWins: 0,
     },
     fresh: [], // just unlocked, waiting to be announced (not saved)
     systemsSeen: [], // systems already announced
@@ -203,6 +204,10 @@ function trackRollUnlocks(state, info) {
   if (info.sevenOut) {
     state.darkSevens = wins.some((r) => r.bet === "dont") ? (state.darkSevens || 0) + 1 : 0;
     best("darkSevens", state.darkSevens);
+    if (wins.some((r) => r.bet === "dont")) {
+      state.stats.darkSevens = (state.stats.darkSevens || 0) + 1; // Body Count's goal (stats last the whole run)
+      best("runDarkSevens", state.stats.darkSevens);
+    }
   }
   if (info.doubles) c.pairs += 1;
   if (total === 12) c.twelves += 1;

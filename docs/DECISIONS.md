@@ -358,3 +358,6 @@ Dated log of every decision and why. Newest at the bottom.
 
 ## 2026-11-01: "+1 way to roll 7" fix
 - Owner chose the seven-out bonus (2% of the debt per copy when your Don't Pass wins on a seven-out), and the perk is only offered with a Dark side card.
+
+## 2026-11-01: Dark side late game
+- Owner picked a new card with mult that never resets (Body Count) over a stronger Graveyard Shift. Tuned to +0.1x per seven-out (0.25 made dark escapes 8x more likely).

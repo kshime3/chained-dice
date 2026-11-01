@@ -403,3 +403,17 @@ Only offered once you own a Dark side card; each copy makes every seven-out your
 | Pass Line bot starting with one copy (it won't be offered without a Dark side card) | 48.0% / 17.6% / 0.4% vs 53.3% / 23.1% / 0.9% normal |
 
 - Now a real build piece for the dark side and no longer a wasted choice for Pass Line players. Pass Line bots never take it, so career numbers are unchanged.
+
+## 2026-11-01: Dark side late game (Body Count)
+Why dark builds fade: Don't Pass wins on the seven-out, which ends the turn, so in-turn mult (Hot Hand, Heater, Hot Rod...) never helps. Per-shift survival, Pass Line vs Don't Pass bot: shifts 2-4 dark is better (71/78/64% vs 43/62/63%), shifts 5-8 worse (55/44/45/36% vs 61/51/57/56%).
+
+Fix (owner's pick): **Body Count** (Rare, Dark side, locked): every seven-out your Don't Pass wins adds mult for the rest of the run. New switch `START_CARDS=id,id`.
+
+Don't Pass bot, 6,000 runs, starting with Body Count; walk out free (normal dark 0.6%, Pass Line 0.9%, Pass Line starting with Hot Hand 1.2%):
+
+| bodyCountMult | 0.05 | **0.1 (chosen)** | 0.15 | 0.25 | 0.5 |
+| --- | --- | --- | --- | --- | --- |
+| Walk out free | 0.9% | 1.5% | 3.0% | 4.8% | 8.7% |
+
+- It compounds over a run (a dark run sees many seven-outs), so small numbers matter. At 0.1 a dark build with its rare card edges out a Pass Line build with Hot Hand.
+- Career median first escape 28 runs: unchanged (the Pass Line career bot doesn't use it; one more unlock).

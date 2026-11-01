@@ -109,6 +109,7 @@ const CONFIG = {
     stash: 3000,        // cash in hand when you win a shift
     earlyBird: 3,       // shooters still to come when you pay off a shift
     // Crew theme (2026-11-01). Big Mo's Belt, Lou's Horseshoe and Professor's Notes use crewCard.
+    bodyCount: 12,      // seven-outs your Don't Pass wins in one run (Body Count)
     snakeFangs: 10,     // times Snake rolls craps (2, 3 or 12), all runs
     jinxJar: 60,        // times Jinx sevens out, all runs
     rollCall: 3,        // Crew cards owned at once
@@ -215,6 +216,7 @@ const CONFIG = {
     avalanche: "rare",
     deepPockets: "rare",
     fullHouse: "rare",
+    bodyCount: "rare",
     snakeFangs: "uncommon",
     bigMoBelt: "uncommon",
     lousHorseshoe: "uncommon",
@@ -266,6 +268,7 @@ const CONFIG = {
   compoundPerCard: 0.01,      // Compound: interest rate + this per Money card
   stashRate: 0.02,            // Stash: cash in hand earns this much interest at each Dealer Break
   earlyBirdPct: 0.10,         // Early Bird: paying off before the last shooter gives back this share of the debt
+  bodyCountMult: 0.1,         // Body Count: + this mult for the rest of the run per seven-out your Don't Pass wins
   // Crew theme (2026-11-01)
   snakeFangsBonusPct: 0.04,   // Snake's Fangs: Snake rolling craps (2, 3, 12) pays this share of the debt
   bigMoBeltFieldX: 2,         // Big Mo's Belt: Field winnings x this on Big Mo's turn...

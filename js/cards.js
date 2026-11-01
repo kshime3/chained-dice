@@ -49,6 +49,8 @@ const CARDS = {
   compound:    { name: "Compound", theme: "money", text: "Your interest rate is +" + Math.round(CONFIG.compoundPerCard * 100) + "% for every Money card you own (this one too)." },
   stash:       { name: "Stash", theme: "money", text: "At each Dealer Break, the cash in your hand earns " + Math.round(CONFIG.stashRate * 100) + "% interest too." },
   earlyBird:   { name: "Early Bird", theme: "money", text: "Pay off the shift's debt before the last shooter and get " + Math.round(CONFIG.earlyBirdPct * 100) + "% of the debt back as cash." },
+  // Dark side late game (2026-11-01): mult that never resets.
+  bodyCount:   { name: "Body Count", theme: "dark", text: "Every seven-out your Don't Pass wins adds +" + CONFIG.bodyCountMult + "x mult for the rest of the run. It never resets." },
   // Crew theme (2026-11-01). Cards with "crew" are only offered while that person is at the table.
   snakeFangs:  { name: "Snake's Fangs", theme: "crew", crew: "Snake", text: "Whenever Snake rolls craps (2, 3 or 12), you get a bonus of " + Math.round(CONFIG.snakeFangsBonusPct * 100) + "% of the debt." },
   bigMoBelt:   { name: "Big Mo's Belt", theme: "crew", crew: "Big Mo", text: "On Big Mo's turn, Field wins pay x" + CONFIG.bigMoBeltFieldX + ", and +" + CONFIG.bigMoBeltMult + "x mult." },
@@ -105,7 +107,8 @@ function effectiveMult(state) {
   const highRoller = hasCard(state, "highRoller") && state.crew[state.shooterIndex] === "You" ? CONFIG.highRollerX : 1;
   const collector = hasCard(state, "pointCollector") ? (state.firePoints || []).length * CONFIG.pointCollectorMult : 0;
   const crafted = hasCard(state, "diceCollector") && state.crew[state.shooterIndex] === "You" ? editedFaces(state) * CONFIG.diceCollectorMult : 0;
-  const mult = (state.mult + hotHand + collector + crafted + themedMult(state)) * state.payoutX * highRoller * xMult(state);
+  const bodyCount = hasCard(state, "bodyCount") ? state.bodyCount || 0 : 0;
+  const mult = (state.mult + hotHand + collector + crafted + bodyCount + themedMult(state)) * state.payoutX * highRoller * xMult(state);
   return rule(state, "coldDice") ? Math.min(1, mult) : mult; // boss rule: mult capped at 1x
 }
 
@@ -200,6 +203,7 @@ function multReasons(state) {
   if (hasCard(state, "diceCollector") && state.crew[state.shooterIndex] === "You" && editedFaces(state) > 0) {
     reasons.push("Dice Collector: +" + editedFaces(state) * CONFIG.diceCollectorMult + "x");
   }
+  if (hasCard(state, "bodyCount") && state.bodyCount > 0) reasons.push("Body Count: +" + Math.round(state.bodyCount * 100) / 100 + "x");
   for (const [name, amount] of themedMultParts(state)) reasons.push(name + ": +" + Math.round(amount * 100) / 100 + "x");
   for (const [name, factor] of xMultParts(state)) reasons.push(name + ": x" + Math.round(factor * 100) / 100);
   return reasons;
@@ -366,6 +370,11 @@ function applyCardsAfterRoll(state, results, total, pointBefore, sevenOut) {
     const bonus = roundTo5(CONFIG.undertakerBonusPct * state.debt);
     state.cash += bonus;
     notes.push("Undertaker: +" + money(bonus) + " for the seven-out.");
+  }
+  // Body Count: every seven-out your Don't Pass wins adds mult for the rest of the run.
+  if (hasCard(state, "bodyCount") && sevenOut && dontWon) {
+    state.bodyCount = (state.bodyCount || 0) + CONFIG.bodyCountMult;
+    notes.push("Body Count: +" + CONFIG.bodyCountMult + "x for the rest of the run (now +" + Math.round(state.bodyCount * 100) / 100 + "x).");
   }
   // "+1 way to roll 7" phone perk (dark side): seven-outs pay you.
   const plusSevens = state.perks.filter((id) => id === "plus7").length;

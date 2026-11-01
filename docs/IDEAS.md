@@ -116,4 +116,4 @@ If the owner feels good after art, music and a wider playtest: wrap with Capacit
 
 ## Open from the 2026-11-01 balance question
 - [Built 2026-11-01] "+1 way to roll 7" is now a dark-side piece (gated, with a seven-out bonus).
-- Dark side late game: more scaling (stronger Graveyard Shift, or a dark card that grows with the debt); dark builds escape less often (0.3% vs 0.8%).
+- [Built 2026-11-01] Dark side late game: Body Count. Still possible later: a stronger Graveyard Shift.
