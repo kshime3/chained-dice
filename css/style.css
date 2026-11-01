@@ -448,7 +448,7 @@ button:disabled { opacity: 0.4; cursor: not-allowed; }
 .risky { display: inline-block; align-self: flex-start; background: #c0392b; color: #fff; font-size: 0.7rem; font-weight: bold; border-radius: 4px; padding: 1px 6px; }
 .card-badge.perk { background: #e8daef; border-left-color: #9b59b6; }
 
-/* The fall: shake, then everything drops into the pit */
+/* The fall: a short shake, then the drawn scene (index.html #fall-scene) */
 body.quake .layout, body.quake .top { animation: quake 0.09s linear infinite; }
 @keyframes quake {
   0% { transform: translate(0, 0); }
@@ -457,31 +457,25 @@ body.quake .layout, body.quake .top { animation: quake 0.09s linear infinite; }
   75% { transform: translate(-2px, -3px); }
   100% { transform: translate(0, 0); }
 }
-body.falling { overflow: hidden; }
-body.falling .seat, body.falling .side > *, body.falling .table, body.falling .controls, body.falling .message {
-  transition: transform 1.2s cubic-bezier(0.55, 0, 1, 0.45), opacity 1.2s ease-in;
-  transition-delay: var(--fall-delay, 0.5s);
-  transform: translateY(115vh) rotate(var(--fall-spin, 10deg));
-  opacity: 0.2;
-}
-.fall-pit {
-  position: fixed;
-  inset: 0;
-  z-index: 16;
-  pointer-events: none;
-  background: #000;
-  animation: pit-open 3s ease-in forwards;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.fall-pit.hidden { display: none; }
-@keyframes pit-open {
-  0%, 35% { opacity: 0; }
-  100% { opacity: 1; }
-}
-.fall-text { color: #ff3b30; font-size: 2.2rem; font-weight: 900; letter-spacing: 3px; opacity: 0; animation: fall-text 3s ease-in forwards; text-shadow: 0 0 14px rgba(255, 59, 48, 0.6); }
-@keyframes fall-text { 0%, 40% { opacity: 0; } 70%, 100% { opacity: 1; } }
+.fall-scene { position: fixed; inset: 0; z-index: 40; background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; cursor: pointer; padding: 16px; text-align: center; }
+.fall-scene.hidden { display: none; }
+.fall-scene.fs-playing { animation: fs-in 0.5s ease-out both; }
+.fall-scene.closing { animation: fs-out 0.6s ease-in forwards; }
+@keyframes fs-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fs-out { to { opacity: 0; } }
+.fall-svg { width: min(92vw, 560px, calc((100vh - 200px) * 1.333)); height: auto; }
+.fall-quote { font-family: Georgia, "Times New Roman", serif; font-style: italic; color: #e2c89a; font-size: clamp(1rem, 4.2vw, 1.4rem); opacity: 0; min-height: 1.6em; }
+.fall-cause { color: #e9e1cf; font-size: clamp(1rem, 4vw, 1.3rem); opacity: 0; min-height: 1.4em; }
+.fall-text { color: #ff3b30; font-size: clamp(1.6rem, 7vw, 2.4rem); font-weight: 900; letter-spacing: 3px; opacity: 0; text-shadow: 0 0 14px rgba(255, 59, 48, 0.6); }
+.fall-scene .opening-skip { position: absolute; bottom: 18px; }
+.fall-scene.fs-playing .fall-quote { animation: fs-quote 2.6s ease both 0.3s; }
+@keyframes fs-quote { 0% { opacity: 0; } 20%, 70% { opacity: 1; } 100% { opacity: 0.25; } }
+.fall-scene.fs-playing .fall-cause { animation: fs-show 0.6s ease both 2.7s; }
+.fall-scene.fs-playing .fall-text { animation: fs-show 0.8s ease both 3.1s; }
+@keyframes fs-show { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+/* The doors, lamp, table and crew are moved by js/ui-screens.js (same on every browser); only the light flickers here */
+.fall-scene.fs-playing .fs-light { animation: fs-flicker 1.2s steps(1) forwards 1.5s; }
+@keyframes fs-flicker { 0% { opacity: 1; } 10% { opacity: 0.2; } 18% { opacity: 1; } 30% { opacity: 0.1; } 40% { opacity: 0.8; } 60% { opacity: 0.3; } to { opacity: 0.5; } }
 
 /* Don't Pass side of the table */
 .bet-area.dark-side { border-color: #9fb8a8; background: rgba(0, 0, 0, 0.18); }

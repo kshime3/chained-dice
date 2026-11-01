@@ -283,7 +283,7 @@ const CONFIG = {
 
   // Presentation
   soundVolume: 0.5, // 0 = silent, 1 = full volume (the mute button turns sound off)
-  fallMs: 3200,     // how long the floor-opening animation lasts when you fall
+  fallMs: 5200,     // how long the fall scene lasts (tap skips it)
   diceRollMs: 1000, // how long the dice-rolling animation lasts (0 = no animation)
   sevenOutSplashMs: 5000, // how long the SEVEN OUT screen shows before the Dealer Break (tap skips)
   plaquePct: 0.10,        // paying the dealer: each plaque dropped in the drop box is this share of the debt

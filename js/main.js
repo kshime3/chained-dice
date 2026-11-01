@@ -482,7 +482,7 @@ function renderAll() {
   if (state.status.startsWith("fell") && !fallPlayed) {
     fallPlayed = true;
     playSound("fall");
-    playFall(CONFIG.fallMs, () => {
+    playFall(CONFIG.fallMs, state, () => {
       renderEndScreen(state, endHandlers());
       announceUnlocks(); // things this run unlocked, shown before the next run starts
     });

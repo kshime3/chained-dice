@@ -108,13 +108,25 @@ function playNextTrack() {
 // Called after every screen update: switch playlists when the mood changes.
 function updateMusic(state) {
   music.state = state;
-  if (!music.started || !musicOn) return;
+  if (!music.started || !musicOn || music.hold) return;
   const mood = musicMoodFor(state);
   if (mood !== music.mood) {
     music.mood = mood;
     music.queue = [];
     playNextTrack();
   }
+}
+
+// The fall: fade the music out and keep it quiet until the next run starts.
+function holdMusic(ms) {
+  music.hold = true;
+  if (music.started && music.decks.length) deckVolume(music.live, 0, ms);
+}
+
+function releaseMusic() {
+  music.hold = false;
+  music.mood = null; // a fresh track when the next screen update comes (the next run)
+  music.queue = [];
 }
 
 // The first real tap, click or key press starts the music (phones only allow it then).

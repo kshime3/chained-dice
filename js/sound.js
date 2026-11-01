@@ -89,7 +89,12 @@ const SOUNDS = {
   buy: () => { [880, 1175, 1568].forEach((f, i) => tone("triangle", f, f, i * 0.06, 0.12, 0.35)); },
   clank: () => { tone("square", 420, 380, 0, 0.12, 0.25); tone("square", 610, 560, 0.02, 0.18, 0.2); noise(0, 0.12, 0.5, 5000); },
   ring: () => { for (let i = 0; i < 2; i++) for (let j = 0; j < 8; j++) tone("square", j % 2 ? 480 : 440, j % 2 ? 480 : 440, i * 0.6 + j * 0.045, 0.04, 0.12); },
-  fall: () => { noise(0, 0.5, 0.6, 600); tone("sine", 900, 80, 0.3, 1.6, 0.4); noise(1.6, 0.8, 0.5, 250); },
+  fall: () => { // creaking wood, the hinge bang, chains rattling, then a long rumble into the pit
+    tone("sawtooth", 72, 64, 0.1, 0.9, 0.12); tone("sawtooth", 96, 84, 0.7, 0.7, 0.1); noise(0.1, 1.2, 0.25, 500);
+    noise(1.5, 0.18, 0.9, 1400); tone("sine", 110, 38, 1.5, 0.5, 0.9); tone("square", 180, 90, 1.5, 0.12, 0.25);
+    for (let i = 0; i < 12; i++) { noise(1.6 + i * 0.07 + Math.random() * 0.03, 0.03, 0.4, 7000); tone("square", 2200 + Math.random() * 900, 1800, 1.6 + i * 0.07, 0.04, 0.06); }
+    noise(1.7, 3.2, 0.55, 160); tone("sine", 58, 28, 1.7, 3.2, 0.45);
+  },
   snap: () => { tone("square", 1400, 300, 0, 0.18, 0.3); noise(0, 0.25, 0.7, 6000); tone("triangle", 2600, 2200, 0.02, 0.3, 0.2); noise(0.35, 0.15, 0.4, 2000); },
   shiftWon: () => { [392, 523, 659, 784].forEach((f, i) => tone("triangle", f, f, i * 0.12, 0.4, 0.4)); },
 };

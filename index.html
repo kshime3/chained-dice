@@ -4,12 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Chained Dice</title>
-  <link rel="icon" type="image/svg+xml" href="img/logo.svg?v=20261031v">
-  <link rel="icon" type="image/png" sizes="32x32" href="img/icon-32.png?v=20261031v">
-  <link rel="apple-touch-icon" href="img/icon-180.png?v=20261031v">
+  <link rel="icon" type="image/svg+xml" href="img/logo.svg?v=20261101a">
+  <link rel="icon" type="image/png" sizes="32x32" href="img/icon-32.png?v=20261101a">
+  <link rel="apple-touch-icon" href="img/icon-180.png?v=20261101a">
   <link rel="manifest" href="manifest.webmanifest">
   <meta name="theme-color" content="#0d2a1a">
-  <link rel="stylesheet" href="css/style.css?v=20261031v">
+  <link rel="stylesheet" href="css/style.css?v=20261101a">
 </head>
 <body>
   <!-- Opening animation: a die rolls in leaving a blood trail, the chain snaps, the title appears, then it all fades. -->
@@ -60,7 +60,7 @@
 
   <header class="top">
     <div class="title-row">
-      <h1><img src="img/logo.svg?v=20261031v" class="title-logo" alt="">Chained Dice</h1>
+      <h1><img src="img/logo.svg?v=20261101a" class="title-logo" alt="">Chained Dice</h1>
       <div class="title-buttons">
         <button id="settings-button" class="mute-button" title="Settings">⚙</button>
         <button id="collection-button" class="how-to-play" title="Collection: everything you've unlocked">📖<span class="hide-mobile"> Collection</span></button>
@@ -223,7 +223,47 @@
     </div>
   </div>
 
-  <div id="fall-pit" class="fall-pit hidden"><div class="fall-text">The floor opens.</div></div>
+  <!-- The fall: the dealer's last words, the trapdoor drops, your crew falls into the dark. Crew portraits are added by js/ui-screens.js. -->
+  <div id="fall-scene" class="fall-scene hidden" title="Tap to skip">
+    <div id="fall-quote" class="fall-quote"></div>
+    <svg class="fall-svg" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <radialGradient id="fs-pitglow" cx="0.5" cy="1" r="0.8">
+          <stop offset="0" stop-color="#3a0704"/><stop offset="1" stop-color="#000"/>
+        </radialGradient>
+        <linearGradient id="fs-cone" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#ffd58a" stop-opacity="0.35"/><stop offset="1" stop-color="#ffd58a" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+      <rect x="0" y="0" width="400" height="300" fill="#0b0807"/>
+      <!-- the stone floor and the pit under the trapdoor -->
+      <rect x="0" y="232" width="400" height="68" fill="#1a1310"/>
+      <path d="M0 250 H400 M0 272 H400 M60 232 V250 M150 250 V272 M250 232 V250 M330 250 V272 M100 272 V300 M290 272 V300" stroke="#0e0a08" stroke-width="2"/>
+      <rect x="40" y="232" width="320" height="68" fill="url(#fs-pitglow)"/>
+      <!-- the lamp, swinging once the floor goes -->
+      <g class="fs-lamp">
+        <path d="M200 0 V44" stroke="#3a3430" stroke-width="3" stroke-dasharray="5 3"/>
+        <polygon class="fs-light" points="186,58 214,58 330,232 70,232" fill="url(#fs-cone)"/>
+        <path d="M180 60 Q200 36 220 60 Z" fill="#2b2724" stroke="#5c4a3a" stroke-width="2"/>
+        <circle cx="200" cy="60" r="5" fill="#ffd58a"/>
+      </g>
+      <!-- crew sit behind the table; their portraits go in here -->
+      <g id="fall-crew"></g>
+      <!-- the table -->
+      <g class="fs-table">
+        <rect x="92" y="200" width="10" height="32" fill="#2a1a10"/><rect x="298" y="200" width="10" height="32" fill="#2a1a10"/>
+        <rect x="70" y="178" width="260" height="26" rx="8" fill="#4a2c18" stroke="#6b4426" stroke-width="2"/>
+        <rect x="82" y="172" width="236" height="10" rx="3" fill="#1f6b3f"/>
+        <rect x="186" y="164" width="12" height="12" rx="2" fill="#e9e1cf"/><rect x="202" y="166" width="12" height="12" rx="2" fill="#e9e1cf" transform="rotate(14 208 172)"/>
+      </g>
+      <!-- the trapdoor: two doors hinged at the outside edges -->
+      <g class="fs-door fs-door-left"><rect x="40" y="230" width="160" height="10" fill="#3a2618" stroke="#5c3d26" stroke-width="2"/><path d="M80 230 V240 M120 230 V240 M160 230 V240" stroke="#2a1a10" stroke-width="2"/></g>
+      <g class="fs-door fs-door-right"><rect x="200" y="230" width="160" height="10" fill="#3a2618" stroke="#5c3d26" stroke-width="2"/><path d="M240 230 V240 M280 230 V240 M320 230 V240" stroke="#2a1a10" stroke-width="2"/></g>
+    </svg>
+    <div id="fall-cause" class="fall-cause"></div>
+    <div class="fall-text">THE FLOOR OPENS.</div>
+    <div class="opening-skip">tap to skip</div>
+  </div>
 
   <div id="phone" class="overlay hidden">
     <div class="end-box phone-box">
@@ -324,28 +364,28 @@
   </div>
 
   <!-- Load order matters: config first, then logic, then display, then main. -->
-  <script src="js/config.js?v=20261031v"></script>
-  <script src="js/dice.js?v=20261031v"></script>
-  <script src="js/bets.js?v=20261031v"></script>
-  <script src="js/crew.js?v=20261031v"></script>
-  <script src="js/cards.js?v=20261031v"></script>
-  <script src="js/shop.js?v=20261031v"></script>
-  <script src="js/stats.js?v=20261031v"></script>
-  <script src="js/perks.js?v=20261031v"></script>
-  <script src="js/crafting.js?v=20261031v"></script>
-  <script src="js/comps.js?v=20261031v"></script>
-  <script src="js/unlocks.js?v=20261031v"></script>
-  <script src="js/rules.js?v=20261031v"></script>
-  <script src="js/save.js?v=20261031v"></script>
-  <script src="js/shift.js?v=20261031v"></script>
-  <script src="js/sound.js?v=20261031v"></script>
-  <script src="js/music.js?v=20261031v"></script>
-  <script src="js/art.js?v=20261031v"></script>
-  <script src="js/ui.js?v=20261031v"></script>
-  <script src="js/ui-break.js?v=20261031v"></script>
-  <script src="js/ui-screens.js?v=20261031v"></script>
-  <script src="js/tutorials.js?v=20261031v"></script>
-  <script src="js/coach.js?v=20261031v"></script>
-  <script src="js/main.js?v=20261031v"></script>
+  <script src="js/config.js?v=20261101a"></script>
+  <script src="js/dice.js?v=20261101a"></script>
+  <script src="js/bets.js?v=20261101a"></script>
+  <script src="js/crew.js?v=20261101a"></script>
+  <script src="js/cards.js?v=20261101a"></script>
+  <script src="js/shop.js?v=20261101a"></script>
+  <script src="js/stats.js?v=20261101a"></script>
+  <script src="js/perks.js?v=20261101a"></script>
+  <script src="js/crafting.js?v=20261101a"></script>
+  <script src="js/comps.js?v=20261101a"></script>
+  <script src="js/unlocks.js?v=20261101a"></script>
+  <script src="js/rules.js?v=20261101a"></script>
+  <script src="js/save.js?v=20261101a"></script>
+  <script src="js/shift.js?v=20261101a"></script>
+  <script src="js/sound.js?v=20261101a"></script>
+  <script src="js/music.js?v=20261101a"></script>
+  <script src="js/art.js?v=20261101a"></script>
+  <script src="js/ui.js?v=20261101a"></script>
+  <script src="js/ui-break.js?v=20261101a"></script>
+  <script src="js/ui-screens.js?v=20261101a"></script>
+  <script src="js/tutorials.js?v=20261101a"></script>
+  <script src="js/coach.js?v=20261101a"></script>
+  <script src="js/main.js?v=20261101a"></script>
 </body>
 </html>

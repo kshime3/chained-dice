@@ -324,3 +324,8 @@ Dated log of every decision and why. Newest at the bottom.
 - Owner chose all four themes (Dark side, Pairs, Hot streak, Money), ~3 cards each, all locked with hidden goals; built as drafted. Cards show a theme label; one card per theme grows with every card of that theme you own.
 - Shop does NOT lean toward your theme (owner's call).
 - Balance: Reputation now every 4 unlocks instead of 3 (owner approved, knowing existing saves may drop a step), and the quickest new goals were raised, keeping the career first escape around run 31.
+
+## 2026-11-01: The fall scene
+- Owner picked a drawn scene (like the opening) over upgrading the old drop, with the actual crew, a cause line (broke / debt unpaid), random dealer last words, and richer sound with the music fading out.
+- The moving parts are animated by script (SVG transform attributes), not CSS transforms on SVG, which behaved differently across browsers.
+- Order agreed for what's next: 1. fall scene, 2. card art, 3. friends playtest, 4. huge numbers, 5. small polish.

@@ -286,29 +286,92 @@ function showRerollPrompt(rolled, lose, options, onChoose) {
   box.classList.remove("hidden");
 }
 
-// The fall: the floor shakes, everything drops into the pit, then onDone (the stats screen).
+// The fall: the dealer's last words, the trapdoor drops, your crew falls into the dark,
+// then onDone (the stats screen). Tap to skip. ms = 0 skips it.
+const FALL_LINES = [
+  "The house always collects.",
+  "Nothing personal. Just the debt.",
+  "Should've walked away.",
+  "Mind the gap.",
+  "The pit's hungry tonight.",
+  "Next.",
+  "Same time tomorrow? Oh. Right.",
+];
 let fallingNow = false;
-function playFall(ms, onDone) {
+function playFall(ms, state, onDone) {
   if (ms <= 0) {
     onDone();
     return;
   }
   fallingNow = true;
-  const body = document.body;
-  // Each piece falls a moment after the last, spinning a little.
-  document.querySelectorAll(".seat, .side > *, .table, .controls, .message").forEach((el, i) => {
-    el.style.setProperty("--fall-delay", (0.45 + i * 0.05).toFixed(2) + "s");
-    el.style.setProperty("--fall-spin", (Math.random() * 50 - 25).toFixed(0) + "deg");
-  });
-  document.getElementById("fall-pit").classList.remove("hidden");
-  body.classList.add("quake");
-  setTimeout(() => body.classList.add("falling"), 450);
-  setTimeout(() => {
-    body.classList.remove("quake", "falling");
-    document.getElementById("fall-pit").classList.add("hidden");
-    fallingNow = false;
-    onDone();
-  }, ms);
+  const box = document.getElementById("fall-scene");
+  document.getElementById("fall-quote").textContent = "\u201C" + FALL_LINES[Math.floor(Math.random() * FALL_LINES.length)] + "\u201D \u2014 the dealer";
+  document.getElementById("fall-cause").textContent = state.status === "fell-broke" ? "Out of chips." : "The debt went unpaid.";
+  // Your crew, seated behind the table, each dropping a moment after the last.
+  const crew = state.roster.length ? state.roster : ["You"];
+  const w = 62, h = 74, gap = Math.min(66, 236 / crew.length);
+  const left = 200 - (gap * (crew.length - 1)) / 2;
+  const people = crew.map((name, i) => ({ x: left + i * gap, delay: 1.65 + i * 0.09, spin: Math.random() * 60 - 30 }));
+  document.getElementById("fall-crew").innerHTML = crew.map((name, i) =>
+    '<g class="fs-person">' + crewPortrait(name).replace('<svg class="portrait"', '<svg x="' + (people[i].x - w / 2).toFixed(1) + '" y="' + (192 - h) + '" width="' + w + '" height="' + h + '"') + "</g>").join("");
+  // Restart the animations from the top.
+  box.classList.remove("hidden", "fs-playing", "closing");
+  void box.offsetWidth;
+  box.classList.add("fs-playing");
+  document.body.classList.add("quake");
+  setTimeout(() => document.body.classList.remove("quake"), 600);
+  holdMusic(900);
+  let done = false;
+  const finish = () => {
+    if (done) return;
+    done = true;
+    box.classList.add("closing");
+    onDone(); // the stats screen goes up underneath while the scene fades out
+    setTimeout(() => {
+      box.classList.add("hidden");
+      box.classList.remove("fs-playing", "closing");
+      fallingNow = false;
+      releaseMusic();
+    }, 600);
+  };
+  box.onclick = finish;
+  setTimeout(finish, ms);
+  animateFall(box, people, h, () => done);
+}
+
+// Moves the scene's parts frame by frame (SVG transform attributes work the same on every browser).
+// Times in seconds from the start: the doors drop at 1.5, the table at 1.62, each person a moment later.
+function animateFall(box, people, h, isDone) {
+  const svg = box.querySelector(".fall-svg");
+  const doorL = svg.querySelector(".fs-door-left"), doorR = svg.querySelector(".fs-door-right");
+  const lamp = svg.querySelector(".fs-lamp"), table = svg.querySelector(".fs-table");
+  const persons = svg.querySelectorAll(".fs-person");
+  const clamp = (v) => Math.max(0, Math.min(1, v));
+  const start = performance.now();
+  const frame = (now) => {
+    if (isDone() && now - start > 700) return;
+    const t = (now - start) / 1000;
+    // Trapdoor doors swing down on their outer hinges, with a little bounce.
+    const d = t - 1.5;
+    const angle = d <= 0 ? 0 : d < 0.35 ? 96 * (d / 0.35) ** 2 : 90 + 6 * Math.exp(-(d - 0.35) * 8) * Math.cos((d - 0.35) * 25);
+    doorL.setAttribute("transform", "rotate(" + angle.toFixed(1) + " 40 235)");
+    doorR.setAttribute("transform", "rotate(" + (-angle).toFixed(1) + " 360 235)");
+    // The lamp swings and settles.
+    const swing = d <= 0 ? 0 : 12 * Math.exp(-d * 0.9) * Math.sin(d * 4);
+    lamp.setAttribute("transform", "rotate(" + swing.toFixed(2) + " 200 0)");
+    // The table and the crew drop into the pit.
+    const tp = clamp((t - 1.62) / 1.1);
+    table.setAttribute("transform", "translate(0 " + (240 * tp * tp).toFixed(1) + ")");
+    table.setAttribute("opacity", (1 - tp * tp).toFixed(2));
+    persons.forEach((el, i) => {
+      const p = clamp((t - people[i].delay) / 1.2);
+      const cy = 192 - h / 2;
+      el.setAttribute("transform", "translate(0 " + (260 * p * p).toFixed(1) + ") rotate(" + (people[i].spin * p).toFixed(1) + " " + people[i].x.toFixed(1) + " " + cy + ")");
+      el.setAttribute("opacity", (1 - p * p).toFixed(2));
+    });
+    requestAnimationFrame(frame);
+  };
+  requestAnimationFrame(frame);
 }
 
 function renderMuteButton() {

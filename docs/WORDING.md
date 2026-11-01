@@ -38,6 +38,11 @@
 - **Walk away:** the run ends as a win. Stats, then Play again.
 - **Double or nothing:** the chain goes back on. Endless shifts (9, 10, 11…) with ever-bigger debts, played for score.
 
+**The fall scene** (plays first, about 5 seconds, tap to skip):
+- The dealer's last words, one picked at random: "The house always collects." / "Nothing personal. Just the debt." / "Should've walked away." / "Mind the gap." / "The pit's hungry tonight." / "Next." / "Same time tomorrow? Oh. Right." (shown as *"…" — the dealer*)
+- Why you fell: broke: **"Out of chips."**; debt not paid at the final Break: **"The debt went unpaid."**
+- Then: **THE FLOOR OPENS.**
+
 **Fall (before escaping):**
 > **THE FLOOR OPENS.**
 > The chains drag the whole crew down into the dark.
