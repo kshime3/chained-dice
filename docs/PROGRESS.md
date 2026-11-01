@@ -2,6 +2,17 @@
 
 Dated session log. Newest at the top.
 
+## 2026-11-01: Card art, batch 5 (no theme): all cards drawn
+
+**Done**
+- Drew the last 18 cards (the ones with no theme). All 44 cards now have art. Tests 450 passing, 5 screen sizes fit, autoplay clean.
+
+**Waiting on the owner**
+- A look at the last batch.
+
+**Exact next step**
+- Agreed order: 3. friends playtest round (owner shares the link; optionally an in-game "What did you think?" note), 4. huge numbers (endless scaling), 5. small polish (keyboard shortcuts, press-and-hold help).
+
 ## 2026-11-01: Card art, batch 4 (Money)
 
 **Done**

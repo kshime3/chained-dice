@@ -111,3 +111,7 @@ Parked ideas and later features. Not in v1 unless moved into the design.
 
 ## Roadmap goal: Android app (2026-10-31)
 If the owner feels good after art, music and a wider playtest: wrap with Capacitor, add rewarded ads (or a one-time price / remove-ads purchase), Play Store listing and closed testing. Rough effort: 1.5-2.5 months of calendar time, much of it waiting. Owner's explicit permission needed before any publishing.
+
+## Art ideas (2026-11-01)
+- Art for comps (one-use items) and Pit Boss phone perks in the same style E.
+- New cards need a drawing in js/card-art.js (otherwise they show the plain die).

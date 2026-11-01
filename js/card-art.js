@@ -38,6 +38,28 @@ function artStack(x, bottom, count, rx) {
   return out;
 }
 
+// A casino chip seen from above, with edge stripes and an optional label.
+function artChip(x, y, r, colour, label) {
+  const stripes = [0, 60, 120, 180, 240, 300].map((a) => '<rect x="' + (x - r * 0.12) + '" y="' + (y - r) + '" width="' + r * 0.24 + '" height="' + r * 0.28 + '" fill="' + ART.bone + '" transform="rotate(' + a + " " + x + " " + y + ')"/>').join("");
+  return '<circle cx="' + x + '" cy="' + y + '" r="' + r + '" fill="' + colour + '" stroke="' + ART.ink + '" stroke-width="1.6"/>' + stripes +
+    '<circle cx="' + x + '" cy="' + y + '" r="' + r * 0.6 + '" fill="none" stroke="' + ART.bone + '" stroke-width="1.2" stroke-dasharray="2 2"/>' +
+    (label ? '<text x="' + x + '" y="' + (y + r * 0.3) + '" text-anchor="middle" font-family="Georgia,serif" font-weight="bold" font-size="' + r * 0.8 + '" fill="' + ART.bone + '">' + label + "</text>" : "");
+}
+// A side-on stack of chips.
+function artChipStack(x, bottom, count, colour) {
+  let out = "";
+  for (let i = 0; i < count; i++) {
+    const y = bottom - i * 5;
+    out += '<rect x="' + (x - 11) + '" y="' + (y - 5) + '" width="22" height="5" rx="1.5" fill="' + colour + '" stroke="' + ART.ink + '" stroke-width="1.2"/>' +
+      '<path d="M' + (x - 6) + " " + (y - 5) + " V" + y + " M" + x + " " + (y - 5) + " V" + y + " M" + (x + 6) + " " + (y - 5) + " V" + y + '" stroke="' + ART.bone + '" stroke-width="1.6"/>';
+  }
+  return out;
+}
+// A big serif number or word, bone with a rust outline.
+function artBigText(x, y, size, text, fill) {
+  return '<text x="' + x + '" y="' + y + '" text-anchor="middle" font-family="Georgia,serif" font-weight="bold" font-size="' + size + '" fill="' + (fill || ART.bone) + '" stroke="' + ART.ink + '" stroke-width="1.6" paint-order="stroke">' + text + "</text>";
+}
+
 // The drawings, by card id.
 const CARD_ART = {
   // ---------- Dark side ----------
@@ -192,6 +214,106 @@ const CARD_ART = {
     '<path d="M63 32 L70 34 L63 36 Z" fill="' + ART.hi + '"/>' +
     '<circle cx="74" cy="35" r="6" fill="' + ART.gold + '" stroke="' + ART.ink + '" stroke-width="1.6"/><text x="74" y="38.5" text-anchor="middle" font-family="Georgia,serif" font-weight="bold" font-size="8" fill="' + ART.ink + '">$</text>' +
     '<path d="M42 49 V54 M48 49 V54" stroke="' + ART.hi + '" stroke-width="1.6"/>',
+  // ---------- No theme ----------
+  luckySeven: () => // a lucky 7 with a four-leaf clover
+    artBigText(44, 62, 64, "7") +
+    [[0, -6], [6, 0], [0, 6], [-6, 0]].map(([dx, dy]) => '<circle cx="' + (76 + dx) + '" cy="' + (22 + dy) + '" r="5.5" fill="#3f9a5a" stroke="' + ART.ink + '" stroke-width="1.4"/>').join("") +
+    '<path d="M76 22 Q78 32 74 38" fill="none" stroke="#2f6e40" stroke-width="2"/>',
+  redDice: () => // red dice showing craps (1 + 2)
+    artDie(16, 22, 30, [4], { fill: "#b8322a", pip: ART.bone, rotate: -10 }) + artDie(54, 22, 30, [0, 8], { fill: "#b8322a", pip: ART.bone, rotate: 10 }) +
+    '<path d="M42 60 Q50 66 58 60" fill="none" stroke="' + ART.gold + '" stroke-width="2.4" stroke-linecap="round"/>',
+  oddsAddict: () => // a tall stack of chips behind the line, paying 3 to 2
+    artChipStack(30, 62, 4, "#b8322a") + artChipStack(52, 62, 8, "#2c6e8f") +
+    '<path d="M14 64 H70" stroke="' + ART.bone + '" stroke-width="2.4"/>' +
+    '<rect x="66" y="12" width="28" height="18" rx="3" fill="' + ART.gold + '" stroke="' + ART.ink + '" stroke-width="1.6"/>' +
+    '<text x="80" y="25" text-anchor="middle" font-family="Georgia,serif" font-weight="bold" font-size="11" fill="' + ART.ink + '">3:2</text>',
+  pity: () => // the 7 that didn't count: patched up with a bandage
+    artBigText(50, 62, 62, "7", ART.red) +
+    '<g transform="rotate(-25 50 36)"><rect x="24" y="30" width="52" height="13" rx="6" fill="' + ART.bone2 + '" stroke="' + ART.ink + '" stroke-width="1.6"/>' +
+    '<rect x="42" y="30" width="16" height="13" fill="' + ART.bone + '" stroke="' + ART.ink + '" stroke-width="1"/>' +
+    [44, 48, 52, 56].map((x) => '<circle cx="' + x + '" cy="36.5" r="0.9" fill="' + ART.hi + '"/>').join("") + "</g>",
+  muggsy: () => // a mugshot board: x3 for the next shooter
+    [16, 26, 36, 46].map((y) => '<path d="M6 ' + y + ' H94" stroke="' + ART.hi + '" stroke-width="1" opacity="0.5"/>').join("") +
+    '<path d="M38 10 Q50 2 62 10 L64 18 H36 Z" fill="#2a2420" stroke="' + ART.bone + '" stroke-width="1.6"/>' +
+    '<path d="M34 18 H68" stroke="' + ART.bone + '" stroke-width="2"/>' +
+    '<rect x="24" y="34" width="52" height="28" rx="2" fill="' + ART.black + '" stroke="' + ART.bone + '" stroke-width="' + ART.w + '"/>' +
+    '<path d="M36 34 L50 24 L64 34" fill="none" stroke="' + ART.hi + '" stroke-width="1.4"/>' +
+    '<text x="50" y="55" text-anchor="middle" font-family="Georgia,serif" font-weight="bold" font-size="18" fill="' + ART.red + '">x3</text>',
+  loadedDie: () => // a die with a lead weight showing inside
+    artDie(30, 14, 40, [0, 2, 3, 5, 6, 8], { rotate: -8 }) +
+    '<g transform="rotate(-8 50 34)"><rect x="40" y="40" width="20" height="14" rx="3" fill="#6f6a66" stroke="' + ART.ink + '" stroke-width="1.6"/>' +
+    '<text x="50" y="51" text-anchor="middle" font-family="Georgia,serif" font-weight="bold" font-size="9" fill="' + ART.bone + '">Pb</text></g>' +
+    '<path d="M22 60 H30 M70 60 H78 M50 62 V68" stroke="' + ART.gold + '" stroke-width="2" stroke-linecap="round"/>',
+  reroll: () => // two dice inside a circle of arrows
+    '<path d="M24 20 A30 30 0 0 1 80 26" fill="none" stroke="' + ART.gold + '" stroke-width="3.4" stroke-linecap="round"/>' +
+    '<path d="M76 50 A30 30 0 0 1 20 44" fill="none" stroke="' + ART.gold + '" stroke-width="3.4" stroke-linecap="round"/>' +
+    '<path d="M72 20 L81 27 L84 16 M28 50 L19 43 L16 54" fill="none" stroke="' + ART.gold + '" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>' +
+    artDie(28, 22, 22, [0, 4, 8], { rotate: -12 }) + artDie(52, 24, 22, [0, 2, 6, 8], { red: -1, rotate: 14 }),
+  bargain: () => // the dealer's contract, sealed in red, with an extra link
+    '<path d="M22 10 H70 Q76 10 76 16 V60 H28 Q22 60 22 54 Z" fill="' + ART.bone + '" stroke="' + ART.ink + '" stroke-width="' + ART.w + '"/>' +
+    '<path d="M18 60 Q18 66 24 66 H74 Q80 66 80 60 V58 H28 Q24 58 24 62" fill="' + ART.bone2 + '" stroke="' + ART.ink + '" stroke-width="1.6"/>' +
+    [20, 27, 34, 41].map((y, i) => '<path d="M30 ' + y + " H" + (i === 3 ? 52 : 68) + '" stroke="' + ART.hi + '" stroke-width="1.6"/>').join("") +
+    '<circle cx="62" cy="48" r="8" fill="' + ART.red + '" stroke="#7a1410" stroke-width="1.6"/><path d="M59 45 L65 51 M65 45 L59 51" stroke="#7a1410" stroke-width="1.4"/>' +
+    '<ellipse cx="86" cy="34" rx="6" ry="10" fill="none" stroke="#6f6a66" stroke-width="4"/>',
+  leftysGlove: () => // Lefty's leather glove, holding a 6
+    '<path d="M64 64 L64 40 Q64 36 60.5 36 Q57 36 57 40 L57 24 Q57 20 53.5 20 Q50 20 50 24 L50 22 Q50 18 46.5 18 Q43 18 43 22 L43 26 Q43 22 39.5 22 Q36 22 36 26 L36 50 Q36 66 48 66 L58 66 Q64 66 64 64 Z" fill="#7a4a2a" stroke="' + ART.bone + '" stroke-width="1.8"/>' +
+    '<path d="M64 50 Q70 44 74 40 Q76 36 72 35 Q68 35 62 42" fill="#7a4a2a" stroke="' + ART.bone + '" stroke-width="1.8"/>' +
+    '<path d="M38 58 H62" stroke="' + ART.bone2 + '" stroke-width="3"/>' +
+    artDie(16, 34, 20, [0, 2, 3, 5, 6, 8], { rotate: -14 }),
+  deesLedger: () => // Dealer Dee's ledger and quill
+    '<path d="M50 18 Q34 12 14 16 V60 Q34 56 50 62 Q66 56 86 60 V16 Q66 12 50 18 Z" fill="' + ART.bone + '" stroke="' + ART.ink + '" stroke-width="' + ART.w + '"/>' +
+    '<path d="M50 18 V62" stroke="' + ART.ink + '" stroke-width="1.6"/>' +
+    [26, 33, 40, 47].map((y) => '<path d="M20 ' + y + ' H44 M56 ' + y + ' H80" stroke="' + ART.hi + '" stroke-width="1.2"/>').join("") +
+    '<path d="M36 22 V54 M70 22 V54" stroke="' + ART.red + '" stroke-width="1" opacity="0.7"/>' +
+    '<path d="M86 6 Q70 18 62 40 Q74 26 90 12 Z" fill="' + ART.bone2 + '" stroke="' + ART.ink + '" stroke-width="1.4"/><path d="M62 40 L60 46" stroke="' + ART.black + '" stroke-width="1.8"/>',
+  ghostStory: () => // Ghost, with the dice faces he can choose between
+    '<path d="M24 60 V30 Q24 10 42 10 Q60 10 60 30 V60 L54 54 L48 60 L42 54 L36 60 L30 54 Z" fill="#b6c8d4" opacity="0.9" stroke="' + ART.ink + '" stroke-width="' + ART.w + '" stroke-linejoin="round"/>' +
+    '<ellipse cx="36" cy="30" rx="3.4" ry="5" fill="' + ART.black + '"/><ellipse cx="48" cy="30" rx="3.4" ry="5" fill="' + ART.black + '"/>' +
+    '<ellipse cx="42" cy="42" rx="3" ry="4" fill="' + ART.black + '"/>' +
+    artBigText(78, 26, 16, "2 4 6", ART.bone).replace('font-size="16"', 'font-size="11"') +
+    '<path d="M68 33 H88" stroke="' + ART.hi + '" stroke-width="1.4"/>' +
+    artBigText(78, 46, 16, "1 3 5", ART.bone).replace('font-size="16"', 'font-size="11"'),
+  encore: () => // stage curtains around a spotlight
+    '<ellipse cx="50" cy="60" rx="24" ry="6" fill="' + ART.gold + '" opacity="0.45"/><path d="M42 8 L58 8 L74 60 L26 60 Z" fill="' + ART.gold + '" opacity="0.14"/>' +
+    '<path d="M4 4 H40 Q36 30 30 44 Q26 56 30 66 H4 Z" fill="#8e1f18" stroke="' + ART.ink + '" stroke-width="1.6"/>' +
+    '<path d="M96 4 H60 Q64 30 70 44 Q74 56 70 66 H96 Z" fill="#8e1f18" stroke="' + ART.ink + '" stroke-width="1.6"/>' +
+    '<path d="M14 6 Q16 36 12 64 M26 6 Q26 30 20 64 M86 6 Q84 36 88 64 M74 6 Q74 30 80 64" stroke="#5e130e" stroke-width="2" fill="none"/>' +
+    '<path d="M4 4 H96 V12 Q75 18 50 12 Q25 18 4 12 Z" fill="#a8261d" stroke="' + ART.ink + '" stroke-width="1.6"/>' +
+    '<path d="M50 30 L53.5 40 L64 40 L55.5 46 L58.5 56 L50 50 L41.5 56 L44.5 46 L36 40 L46.5 40 Z" fill="' + ART.gold + '" stroke="' + ART.ink + '" stroke-width="1.6" stroke-linejoin="round"/>',
+  highRoller: () => // a top hat on a pile of big chips
+    artChipStack(28, 64, 3, "#1a1212") + artChipStack(72, 64, 4, "#6b2d8f") +
+    '<path d="M30 32 H70" stroke="' + ART.bone + '" stroke-width="5" stroke-linecap="round"/>' +
+    '<path d="M38 32 V8 Q50 4 62 8 V32 Z" fill="#1a1212" stroke="' + ART.bone + '" stroke-width="1.8"/>' +
+    '<rect x="38" y="24" width="24" height="5" fill="' + ART.red + '"/>' +
+    artChip(50, 52, 11, "#b8322a", "$"),
+  frontOfLine: () => // a first-place medal, red ribbon
+    '<path d="M38 6 L50 30 L62 6" fill="none" stroke="' + ART.red + '" stroke-width="9"/><path d="M38 6 L50 30 L62 6" fill="none" stroke="#7a1410" stroke-width="1.4"/>' +
+    '<circle cx="50" cy="44" r="18" fill="' + ART.gold + '" stroke="' + ART.ink + '" stroke-width="' + ART.w + '"/><circle cx="50" cy="44" r="13" fill="none" stroke="#a07a2e" stroke-width="1.6"/>' +
+    artBigText(50, 52, 22, "1", ART.bone) +
+    '<path d="M10 44 H24 M18 38 L24 44 L18 50" fill="none" stroke="' + ART.bone + '" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>',
+  sleightOfHand: () => // a die slipping out of a sleeve
+    '<path d="M2 22 L56 46 L48 64 L-4 40 Z" fill="#2a2420" stroke="' + ART.bone + '" stroke-width="1.8"/>' +
+    '<path d="M52 40 L64 46 L56 66 L44 60 Z" fill="' + ART.bone + '" stroke="' + ART.ink + '" stroke-width="1.6"/>' +
+    '<path d="M62 50 Q74 52 78 46 Q76 58 66 62" fill="' + ART.bone2 + '" stroke="' + ART.ink + '" stroke-width="1.6"/>' +
+    artDie(64, 12, 22, [0, 2, 4, 6, 8], { red: 4, rotate: 18 }) +
+    '<path d="M60 36 Q64 30 68 32 M56 30 Q58 24 62 24" fill="none" stroke="' + ART.gold + '" stroke-width="1.8" stroke-linecap="round"/>',
+  steadyHand: () => // a spirit level holding a 6 and an 8 perfectly flat
+    artChip(32, 26, 13, "#b8322a", "6") + artChip(68, 26, 13, "#2c6e8f", "8") +
+    '<rect x="10" y="44" width="80" height="14" rx="3" fill="' + ART.gold + '" stroke="' + ART.ink + '" stroke-width="' + ART.w + '"/>' +
+    '<rect x="38" y="47" width="24" height="8" rx="4" fill="#cfe9a8" stroke="' + ART.ink + '" stroke-width="1.4"/><circle cx="50" cy="51" r="2.6" fill="#fff" stroke="' + ART.ink + '" stroke-width="0.8"/>' +
+    '<path d="M46 47 V55 M54 47 V55" stroke="' + ART.ink + '" stroke-width="1"/>',
+  diceCollector: () => // a shelf of dice, one with a carved face, and a chisel
+    '<path d="M6 56 H94" stroke="' + ART.hi + '" stroke-width="4"/><path d="M14 58 V66 M86 58 V66" stroke="' + ART.hi + '" stroke-width="3"/>' +
+    artDie(10, 32, 22, [4], { red: 4 }) + artDie(39, 32, 22, [0, 2, 3, 5, 6, 8]) + artDie(68, 32, 22, [0, 4, 8], { fill: ART.gold }) +
+    '<path d="M60 6 L80 26" stroke="' + ART.ink + '" stroke-width="7" stroke-linecap="round"/><path d="M60 6 L72 18" stroke="' + ART.hi + '" stroke-width="4" stroke-linecap="round"/>' +
+    '<path d="M72 18 L82 28" stroke="#9a9a9a" stroke-width="4" stroke-linecap="square"/>',
+  chainLink: () => // the Spare Link: one glowing gold link between two rusty broken ones
+    '<ellipse cx="50" cy="36" rx="30" ry="28" fill="' + ART.gold + '" opacity="0.12"/>' +
+    [[18, 50], [82, 22]].map(([x, y]) => '<g transform="rotate(60 ' + x + " " + y + ')"><path d="M' + (x - 7) + " " + (y - 2) + " V" + (y - 8) + " Q" + (x - 7) + " " + (y - 16) + " " + x + " " + (y - 16) + " Q" + (x + 7) + " " + (y - 16) + " " + (x + 7) + " " + (y - 8) + " V" + (y - 2) + '" fill="none" stroke="#6f6a66" stroke-width="5" stroke-linecap="round"/></g>').join("") +
+    '<g transform="rotate(-30 50 36)"><rect x="38" y="12" width="24" height="48" rx="12" fill="none" stroke="' + ART.ink + '" stroke-width="11"/>' +
+    '<rect x="38" y="12" width="24" height="48" rx="12" fill="none" stroke="' + ART.gold + '" stroke-width="6.5"/>' +
+    '<path d="M42 18 Q44 14 50 14" fill="none" stroke="#fff3c4" stroke-width="2.2" stroke-linecap="round"/></g>' +
+    [[22, 14], [84, 52], [74, 10]].map(([x, y]) => '<path d="M' + x + " " + (y - 5) + " L" + (x + 1.5) + " " + (y - 1.5) + " L" + (x + 5) + " " + y + " L" + (x + 1.5) + " " + (y + 1.5) + " L" + x + " " + (y + 5) + " L" + (x - 1.5) + " " + (y + 1.5) + " L" + (x - 5) + " " + y + " L" + (x - 1.5) + " " + (y - 1.5) + ' Z" fill="#fff3c4"/>').join(""),
 };
 
 // A card's art as an SVG string. cls: the CSS class ("card-art", "hand-art"...).
