@@ -344,11 +344,25 @@ const CARD_ART = {
 let cardArtCount = 0;
 function cardArt(id, cls) {
   const card = CARDS[id] || {};
-  const tint = CARD_ART_TINT[card.theme] || CARD_ART_TINT.none;
-  const gid = "cart" + cardArtCount++; // each picture needs its own gradient id
   const symbol = CARD_ART[id] ? CARD_ART[id]() : artDie(36, 21, 28, [0, 4, 8], { red: 4, rotate: -8 });
-  // Hand tiles show a short strip from the middle of the picture.
-  const fit = cls === "hand-art" ? ' preserveAspectRatio="xMidYMid slice"' : "";
+  return artPanel(symbol, CARD_ART_TINT[card.theme] || CARD_ART_TINT.none, cls);
+}
+
+// A comp's art (steel-blue panel, like the comp cards).
+function compArt(id, cls) {
+  return artPanel(COMP_ART[id] ? COMP_ART[id]() : artDie(36, 21, 28, [4], { red: 4 }), "#2f5d7a", cls);
+}
+
+// A Pit Boss phone perk's art (purple panel, like the phone). id like "plus8", "minusSeven".
+function perkArt(id, cls) {
+  const symbol = id.startsWith("plus") ? PERK_ART.plus(Number(id.slice(4))) : PERK_ART[id] ? PERK_ART[id]() : artBigText(50, 50, 40, "☎");
+  return artPanel(symbol, "#5b2d6e", cls);
+}
+
+// The lamp-lit panel every picture sits in. cls: "card-art" (full) or "hand-art" (a strip on phones).
+function artPanel(symbol, tint, cls) {
+  const gid = "cart" + cardArtCount++; // each picture needs its own gradient id
+  const fit = cls === "hand-art" ? ' preserveAspectRatio="xMidYMid slice"' : ""; // hand tiles show a strip from the middle
   return '<svg class="' + (cls || "card-art") + '" viewBox="0 0 100 70"' + fit + ' xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
     '<defs><radialGradient id="' + gid + '" cx="0.5" cy="0" r="1"><stop offset="0" stop-color="' + tint + '"/><stop offset="1" stop-color="#0b0807"/></radialGradient></defs>' +
     '<rect width="100" height="70" fill="url(#' + gid + ')"/><rect width="100" height="70" fill="#000" opacity="0.25"/>' + symbol +
@@ -363,3 +377,82 @@ function lockedCardArt(cls) {
     '<rect x="34" y="32" width="32" height="24" rx="4" fill="#2a2018" stroke="#4a3a2c" stroke-width="2.4"/><circle cx="50" cy="42" r="3" fill="#0f0b09"/><path d="M50 44 V50" stroke="#0f0b09" stroke-width="2.4"/>' +
     '<rect x="1" y="1" width="98" height="68" fill="none" stroke="#2a2018" stroke-width="2" rx="4"/></svg>';
 }
+
+// ---------- Comps (one-use items) ----------
+const COMP_ART = {
+  noSevens: () => // a 7, forbidden
+    artBigText(50, 56, 48, "7", ART.bone) +
+    '<circle cx="50" cy="38" r="26" fill="none" stroke="' + ART.red + '" stroke-width="6"/><path d="M32 20 L68 56" stroke="' + ART.red + '" stroke-width="6" stroke-linecap="round"/>',
+  doubleDown: () => // a stack of chips, doubled
+    artChipStack(34, 62, 4, "#b8322a") + artChipStack(58, 62, 8, "#b8322a") + artBigText(82, 30, 18, "x2", ART.gold),
+  luckyPair: () => // a pair of 5s with sparkles
+    artDie(18, 22, 28, [0, 2, 4, 6, 8], { red: 4, rotate: -8 }) + artDie(54, 22, 28, [0, 2, 4, 6, 8], { red: 4, rotate: 8 }) +
+    [[48, 12], [84, 14], [12, 58]].map(([x, y]) => '<path d="M' + x + " " + (y - 5) + " L" + (x + 1.5) + " " + (y - 1.5) + " L" + (x + 5) + " " + y + " L" + (x + 1.5) + " " + (y + 1.5) + " L" + x + " " + (y + 5) + " L" + (x - 1.5) + " " + (y + 1.5) + " L" + (x - 5) + " " + y + " L" + (x - 1.5) + " " + (y - 1.5) + ' Z" fill="' + ART.gold + '"/>').join(""),
+  loadedShot: () => // a die in the crosshairs: you pick its face
+    artDie(32, 14, 36, [0, 2, 3, 5, 6, 8], { rotate: -6 }) +
+    '<circle cx="50" cy="32" r="24" fill="none" stroke="' + ART.red + '" stroke-width="2.4"/>' +
+    '<path d="M50 2 V16 M50 48 V62 M20 32 H34 M66 32 H80" stroke="' + ART.red + '" stroke-width="2.4" stroke-linecap="round"/>',
+  insurance: () => // a shield over your line bet
+    '<path d="M50 6 L78 16 V34 Q78 54 50 66 Q22 54 22 34 V16 Z" fill="' + ART.bone + '" stroke="' + ART.ink + '" stroke-width="' + ART.w + '"/>' +
+    '<path d="M50 12 L72 20 V34 Q72 50 50 60 Z" fill="' + ART.bone2 + '"/>' + artChip(50, 36, 12, "#b8322a", "$"),
+  hotSeat: () => // a chair on fire
+    artFlame(30, 64, 30, 14) + artFlame(70, 64, 30, 14) +
+    '<path d="M34 8 H66 V36 H34 Z" fill="' + ART.hi + '" stroke="' + ART.ink + '" stroke-width="' + ART.w + '"/>' +
+    '<path d="M28 36 H72 V44 H28 Z" fill="' + ART.bone2 + '" stroke="' + ART.ink + '" stroke-width="' + ART.w + '"/>' +
+    '<path d="M32 44 V64 M68 44 V64" stroke="' + ART.ink + '" stroke-width="5" stroke-linecap="round"/><path d="M32 44 V64 M68 44 V64" stroke="' + ART.hi + '" stroke-width="2.4" stroke-linecap="round"/>' +
+    artFlame(50, 36, 22, 10),
+  seatSwap: () => // two seats trading places
+    [[26, "#7a4a2a"], [74, "#4b3b5c"]].map(([x, c]) => '<path d="M' + (x - 12) + " 30 H" + (x + 12) + " V48 H" + (x - 12) + ' Z" fill="' + c + '" stroke="' + ART.bone + '" stroke-width="1.8"/>' +
+      '<path d="M' + (x - 14) + " 48 H" + (x + 14) + '" stroke="' + ART.bone + '" stroke-width="4" stroke-linecap="round"/><path d="M' + (x - 11) + " 50 V64 M" + (x + 11) + ' 50 V64" stroke="' + ART.bone + '" stroke-width="3"/>').join("") +
+    '<path d="M30 20 Q50 4 70 20" fill="none" stroke="' + ART.gold + '" stroke-width="3" stroke-linecap="round"/><path d="M64 12 L71 21 L60 22" fill="none" stroke="' + ART.gold + '" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>' +
+    '<path d="M70 58 Q50 70 30 58" fill="none" stroke="' + ART.gold + '" stroke-width="3" stroke-linecap="round"/><path d="M36 66 L29 57 L40 56" fill="none" stroke="' + ART.gold + '" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>',
+  cashAdvance: () => // a loan: banknotes on a chain
+    '<g transform="rotate(-8 50 34)"><rect x="18" y="18" width="64" height="32" rx="3" fill="#5f9a6a" stroke="' + ART.ink + '" stroke-width="' + ART.w + '"/>' +
+    '<rect x="23" y="23" width="54" height="22" rx="2" fill="none" stroke="#cfe9c0" stroke-width="1.4"/><circle cx="50" cy="34" r="8" fill="#cfe9c0"/>' +
+    '<text x="50" y="38" text-anchor="middle" font-family="Georgia,serif" font-weight="bold" font-size="11" fill="#2f5a3a">$</text></g>' +
+    '<ellipse cx="86" cy="54" rx="6" ry="9" fill="none" stroke="#6f6a66" stroke-width="3.4"/><ellipse cx="80" cy="44" rx="4" ry="6" fill="none" stroke="#6f6a66" stroke-width="3"/>' +
+    artBigText(26, 64, 13, "IOU", ART.red),
+  nudge: () => // a face pushed up or down by one
+    artDie(30, 16, 40, [0, 4, 8], { red: 4 }) +
+    '<path d="M84 30 V10 M78 16 L84 10 L90 16" fill="none" stroke="' + ART.gold + '" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>' +
+    '<path d="M16 40 V60 M10 54 L16 60 L22 54" fill="none" stroke="' + ART.gold + '" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>',
+  copycat: () => // one face copied onto another
+    artDie(10, 20, 30, [0, 2, 3, 5, 6, 8], { rotate: -6 }) +
+    '<g opacity="0.85">' + artDie(60, 20, 30, [0, 2, 3, 5, 6, 8], { rotate: 6 }) + "</g>" +
+    '<path d="M42 34 H58 M52 28 L58 34 L52 40" fill="none" stroke="' + ART.gold + '" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>',
+  chisel: () => // a hammer and chisel carving a die
+    artDie(14, 28, 34, [0, 4, 8], { red: 4, rotate: -6 }) +
+    '<path d="M52 40 L72 18" stroke="' + ART.ink + '" stroke-width="7" stroke-linecap="round"/><path d="M60 31 L72 18" stroke="' + ART.hi + '" stroke-width="4" stroke-linecap="round"/><path d="M52 40 L58 34" stroke="#9a9a9a" stroke-width="4"/>' +
+    '<g transform="rotate(30 80 14)"><rect x="70" y="6" width="22" height="10" rx="2" fill="#6f6a66" stroke="' + ART.ink + '" stroke-width="1.6"/><rect x="79" y="16" width="4" height="22" fill="' + ART.hi + '" stroke="' + ART.ink + '" stroke-width="1.2"/></g>' +
+    '<path d="M48 44 L44 50 M50 46 L50 54" stroke="' + ART.bone + '" stroke-width="1.6" stroke-linecap="round"/>',
+};
+
+// ---------- Pit Boss phone perks ----------
+const PERK_ART = {
+  plus: (total) => // a number getting one more way to come up
+    artBigText(44, 54, 44, String(total), ART.bone) +
+    '<circle cx="80" cy="20" r="12" fill="' + (total === 7 ? ART.red : ART.gold) + '" stroke="' + ART.ink + '" stroke-width="1.6"/>' +
+    '<text x="80" y="24.5" text-anchor="middle" font-family="Georgia,serif" font-weight="bold" font-size="12" fill="' + ART.ink + '">+1</text>',
+  minusSeven: () => // a 7 shrinking away
+    artBigText(44, 56, 48, "7", ART.red) +
+    '<circle cx="80" cy="20" r="12" fill="' + ART.gold + '" stroke="' + ART.ink + '" stroke-width="1.6"/>' +
+    '<text x="80" y="24.5" text-anchor="middle" font-family="Georgia,serif" font-weight="bold" font-size="12" fill="' + ART.ink + '">-1</text>' +
+    '<path d="M80 38 V56 M74 50 L80 56 L86 50" fill="none" stroke="' + ART.gold + '" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>',
+  removeCharacter: () => // the trapdoor opens under a seat, free
+    '<rect x="16" y="46" width="68" height="18" fill="' + ART.black + '"/>' +
+    '<path d="M16 46 L8 64 M84 46 L92 64" stroke="#7a4a2a" stroke-width="5" stroke-linecap="round"/>' +
+    '<path d="M6 46 H16 M84 46 H94" stroke="' + ART.hi + '" stroke-width="3"/>' +
+    '<g transform="rotate(20 50 40)"><path d="M38 34 H62" stroke="' + ART.bone + '" stroke-width="3.4" stroke-linecap="round"/><path d="M42 34 V22 Q50 18 58 22 V34 Z" fill="#1a1212" stroke="' + ART.bone + '" stroke-width="1.6"/></g>' +
+    '<path d="M42 10 Q46 4 52 8" fill="none" stroke="' + ART.gold + '" stroke-width="2" stroke-linecap="round"/>' + artBigText(78, 24, 11, "FREE", ART.gold),
+  freeComps: () => // two comp tickets, on the house
+    [[-10, 30, 20], [8, 66, 40]].map(([a, x, y]) => '<g transform="rotate(' + a + " " + x + " " + y + ')"><path d="M' + (x - 22) + " " + (y - 12) + " H" + (x + 22) + " V" + (y - 4) + " A4 4 0 0 0 " + (x + 22) + " " + (y + 4) + " V" + (y + 12) + " H" + (x - 22) + " V" + (y + 4) + " A4 4 0 0 0 " + (x - 22) + " " + (y - 4) + ' Z" fill="#cfdbe0" stroke="' + ART.ink + '" stroke-width="1.8"/>' +
+      '<path d="M' + (x - 12) + " " + (y - 12) + " V" + (y + 12) + '" stroke="' + ART.ink + '" stroke-width="1" stroke-dasharray="2 2"/>' +
+      '<text x="' + (x + 5) + '" y="' + (y + 4) + '" text-anchor="middle" font-family="Georgia,serif" font-weight="bold" font-size="7.5" fill="#2f5d7a">COMP</text></g>').join("") +
+    artBigText(22, 62, 12, "FREE", ART.gold),
+  freeItems: () => // two cards with a gift bow
+    '<g transform="rotate(-12 38 36)"><rect x="24" y="14" width="28" height="40" rx="3" fill="' + ART.bone + '" stroke="' + ART.ink + '" stroke-width="1.8"/></g>' +
+    '<g transform="rotate(10 60 36)"><rect x="46" y="14" width="28" height="40" rx="3" fill="' + ART.bone + '" stroke="' + ART.ink + '" stroke-width="1.8"/>' +
+    '<path d="M60 14 V54 M46 34 H74" stroke="' + ART.red + '" stroke-width="3.4"/>' +
+    '<path d="M60 34 Q52 24 54 22 Q58 22 60 34 Q62 22 66 22 Q68 24 60 34" fill="' + ART.red + '" stroke="#7a1410" stroke-width="1"/></g>' +
+    artBigText(82, 64, 12, "FREE", ART.gold),
+};

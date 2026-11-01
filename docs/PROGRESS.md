@@ -2,6 +2,14 @@
 
 Dated session log. Newest at the top.
 
+## 2026-11-01: Comp and perk art
+
+**Done**
+- 11 comps drawn (steel-blue panels): shop comp cards, hand tiles, Collection. 5 phone perk drawings (purple panels; "+1 way to roll N" shows N): the phone's offer cards. Tests 461 passing, 5 sizes fit, autoplay clean.
+
+**Exact next step**
+- Act on friend feedback, or pick from docs/IDEAS.md (card upgrades, a crew theme, the Android roadmap).
+
 ## 2026-11-01: Small polish (keyboard and press-and-hold)
 
 **Done**

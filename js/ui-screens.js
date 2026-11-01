@@ -563,8 +563,8 @@ function reputationHtml() {
 // The Collection: everything unlocked, and locked things as mysteries (no hints).
 function renderCollection() {
   const tile = (id, title, text, rarity) => isUnlocked(id)
-    ? '<div class="collection-tile ' + (rarity || "") + '">' + (CARDS[id] ? cardArt(id, "card-art") : "") + "<strong>" + title + "</strong><br>" + text + (UNLOCKS[id] ? '<div class="unlock-reason">' + unlockReason(id) + "</div>" : "") + "</div>"
-    : '<div class="collection-tile locked">' + (CARDS[id] ? lockedCardArt("card-art") : "") + "<strong>???</strong><br>🔒 Locked</div>";
+    ? '<div class="collection-tile ' + (rarity || "") + '">' + (CARDS[id] ? cardArt(id, "card-art") : COMPS[id] ? compArt(id, "card-art") : "") + "<strong>" + title + "</strong><br>" + text + (UNLOCKS[id] ? '<div class="unlock-reason">' + unlockReason(id) + "</div>" : "") + "</div>"
+    : '<div class="collection-tile locked">' + (CARDS[id] || COMPS[id] ? lockedCardArt("card-art") : "") + "<strong>???</strong><br>🔒 Locked</div>";
   // Found things first (common first), then the mysteries, so a mystery's place gives nothing away.
   const order = (ids) => ids.filter(isUnlocked).concat(ids.filter((id) => !isUnlocked(id)));
   const cards = order(Object.keys(CARDS).sort((a, b) => RARITY_ORDER.indexOf(CONFIG.cardRarity[b]) - RARITY_ORDER.indexOf(CONFIG.cardRarity[a])));

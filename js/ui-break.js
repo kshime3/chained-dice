@@ -214,7 +214,7 @@ function compBox(id, buttonText, onClick, disabled) {
   const c = COMPS[id];
   const box = document.createElement("div");
   box.className = "card comp";
-  box.innerHTML = '<div class="card-name">🎟 ' + c.name + '</div><div class="card-rarity comp-when">' +
+  box.innerHTML = compArt(id, "card-art") + '<div class="card-name">🎟 ' + c.name + '</div><div class="card-rarity comp-when">' +
     { roll: "next roll", now: "use any time", break: "at a Break" }[c.when] + '</div><div class="card-text">' + c.text + "</div>";
   const button = document.createElement("button");
   button.textContent = buttonText;
@@ -333,7 +333,7 @@ function showPhone(state, offer, onPick) {
     const info = perkInfo(id);
     const card = document.createElement("div");
     card.className = "card perk-card " + info.rarity;
-    card.innerHTML = '<div class="card-name">☎ ' + info.name + '</div><div class="card-rarity">' + info.rarity + "</div>" +
+    card.innerHTML = perkArt(id, "card-art") + '<div class="card-name">☎ ' + info.name + '</div><div class="card-rarity">' + info.rarity + "</div>" +
       (info.risky ? '<div class="risky">RISKY</div>' : "") + '<div class="card-text">' + info.text + "</div>";
     const button = document.createElement("button");
     button.textContent = "Take it";
@@ -397,7 +397,7 @@ function renderHand(state, handlers) {
     const tile = document.createElement("div");
     tile.className = "hand-comp";
     tile.title = COMPS[id].text;
-    tile.innerHTML = "<strong>🎟 " + COMPS[id].name + '</strong><div class="hand-text">' + COMPS[id].text + "</div>";
+    tile.innerHTML = compArt(id, "hand-art") + "<strong>🎟 " + COMPS[id].name + '</strong><div class="hand-text">' + COMPS[id].text + "</div>";
     const use = document.createElement("button");
     use.textContent = blocked ? "Not now" : "Use";
     use.title = blocked || "Use it now";

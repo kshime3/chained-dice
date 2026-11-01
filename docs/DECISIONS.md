@@ -345,3 +345,6 @@ Dated log of every decision and why. Newest at the bottom.
 
 ## 2026-11-01: Controls polish
 - Owner picked all four key groups (Space, 1-3, bet keys, tab keys) and press-and-hold help everywhere. Space never chooses Double or nothing for you (that stays a click).
+
+## 2026-11-01: Comp and perk art
+- Same style E: comps on a steel-blue panel (like their cards), phone perks on purple (like the phone). Perk badges in the hand stay text-only (small).
