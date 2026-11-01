@@ -79,7 +79,7 @@ Tested with the simulator (`docs/BALANCE.md`).
 - **Broke:** on a come-out, your cash plus money on the table can't cover the $5 minimum Pass Line bet.
 - **Short:** you leave the final Dealer Break still owing.
 - A seven-out that leaves you broke (and unable to pay off the debt) is an instant fall, with no Dealer Break.
-- [Built 2026-11-01] The fall scene: a dark drawn room with the lamp over the table and your actual crew seated behind it. The dealer says a last line; the trapdoor doors bang open, the lamp swings and flickers, the table and then each crew member drop into the red-lit pit; "Out of chips." or "The debt went unpaid." and THE FLOOR OPENS. Then the stats screen. Music fades out (back on the next run); richer built-in sound (creak, hinge bang, chains, rumble). About 5 seconds (`CONFIG.fallMs`), tap to skip; `?fast` skips it.
+- [Built 2026-11-01] The fall scene: a dark drawn room with the lamp over the table and your actual crew seated behind it. The dealer says a last line; the trapdoor doors bang open, the lamp swings and flickers, the table and then each crew member drop into the red-lit pit; "Out of chips." or "The debt went unpaid." and THE FLOOR OPENS. Then the stats screen. Music fades out (back on the next run); richer built-in sound (creak, hinge bang, chains, rumble). About 10 seconds (`CONFIG.fallMs`; owner asked for 5 more, 2026-11-01), tap to skip; `?fast` skips it.
 
 ## Craps Rules  [Built]
 

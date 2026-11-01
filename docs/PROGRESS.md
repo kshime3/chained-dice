@@ -5,7 +5,7 @@ Dated session log. Newest at the top.
 ## 2026-11-01: The fall scene
 
 **Done**
-- New fall scene (display only): dealer's last words, trapdoor bangs open, your real crew drops into the pit, "Out of chips." / "The debt went unpaid.", THE FLOOR OPENS. Music fades out and returns next run; new fall sound. Tap to skip.
+- New fall scene (display only, about 10 seconds after the owner asked for 5 more): dealer's last words, trapdoor bangs open, your real crew drops into the pit, "Out of chips." / "The debt went unpaid.", THE FLOOR OPENS. Music fades out and returns next run; new fall sound. Tap to skip.
 - Checks: tests.html 450 passing, 5 screen sizes fit, autoplay 25 runs no errors, music fade tested. No simulator run (display only).
 
 **Waiting on the owner**
