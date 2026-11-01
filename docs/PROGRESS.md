@@ -2,6 +2,18 @@
 
 Dated session log. Newest at the top.
 
+## 2026-11-01: Android plan
+
+**Done**
+- docs/ANDROID.md: the plan for a paid Android app (Capacitor wrapper, Play Console steps, the 12-tester 14-day closed test, store listing, signing, launch). Checked current Play rules (closed test, paid-app testers must buy, target API 36).
+- Card upgrades dropped from the ideas list (owner).
+
+**Waiting on the owner**
+- Decisions D1-D6 in docs/ANDROID.md (or accept the recommendations).
+
+**Exact next step**
+- Phase A (Claude: app-ready game) and Phase B (owner: Play Console account and PC tools) in parallel.
+
 ## 2026-11-01: Dark side late game (Body Count)
 
 **Done**

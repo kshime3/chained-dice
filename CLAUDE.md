@@ -33,6 +33,7 @@ docs/PROGRESS.md   dated session log and next step
 docs/IDEAS.md      parked ideas and later features
 docs/BALANCE.md    simulator results and balance recommendations
 docs/WORDING.md    approved game wording (Break the Chain theme)
+docs/ANDROID.md    the Android app plan: decisions, phases, checklist
 index.html         the game page (open this to play)
 tests.html         rule checks: open to see green/red results
 css/style.css      colors and layout

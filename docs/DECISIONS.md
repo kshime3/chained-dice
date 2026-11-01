@@ -361,3 +361,7 @@ Dated log of every decision and why. Newest at the bottom.
 
 ## 2026-11-01: Dark side late game
 - Owner picked a new card with mult that never resets (Body Count) over a stronger Graveyard Shift. Tuned to +0.1x per seven-out (0.25 made dark escapes 8x more likely).
+
+## 2026-11-01: Android plan started; card upgrades dropped
+- Owner removed card upgrades (Hot Hand II, editions) as a milestone.
+- Android: one-time price (no ads), Windows PC, no Play account yet. Plan in docs/ANDROID.md with decisions D1-D6 waiting on the owner (wrapper tool, price, the free website, promo codes for the closed test, app ID, age rating).
