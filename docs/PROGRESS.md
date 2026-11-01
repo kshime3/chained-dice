@@ -2,6 +2,17 @@
 
 Dated session log. Newest at the top.
 
+## 2026-11-01: Small polish (keyboard and press-and-hold)
+
+**Done**
+- js/controls.js: keyboard shortcuts (list in Settings) and press-and-hold help bubbles on phones (bets, cards, comps, crew seats, buttons). Main bets got help text. Tests 450+11 = 461 passing, 5 sizes fit, coach flow fine, autoplay clean; keys and holds tested in a browser.
+
+**Waiting on the owner**
+- Trying the keys and holds; friend feedback.
+
+**Exact next step**
+- The agreed list (fall, card art, playtest note, huge numbers, polish) is done. Next: act on friend feedback, or pick from docs/IDEAS.md (comp/perk art, card upgrades, a crew theme, the Android roadmap).
+
 ## 2026-11-01: Huge numbers (endless mode)
 
 **Done**

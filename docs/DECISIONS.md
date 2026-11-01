@@ -342,3 +342,6 @@ Dated log of every decision and why. Newest at the bottom.
 - Owner: endless only; growing chips, x-mult cards and compounding interest (not card upgrades); a saved high score. Built as drafted (5 x-mult cards).
 - Added after simulating (balance lever, not in the draft): in endless the house adds +1 way to roll 7 every 2 endless shifts, because stacked "-1 way to roll 7" perks made some endless runs never end. Interest carry set to 50%.
 - ?endless testing shortcut never saves (it fakes the escape and money).
+
+## 2026-11-01: Controls polish
+- Owner picked all four key groups (Space, 1-3, bet keys, tab keys) and press-and-hold help everywhere. Space never chooses Double or nothing for you (that stays a click).

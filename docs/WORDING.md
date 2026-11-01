@@ -146,3 +146,11 @@ Unchanged for shifts 1-5. Shifts 6-8 follow the existing x1.5 growth: $1,800, $2
 - Endless cards (theme label "♾️ Endless"): Snowball, Sweet Spot, Avalanche, Deep Pockets, Full House; each text starts "Endless only."
 - Dealer Break interest in endless: "(5% of the $X you've paid this shift, plus 50% of the $Y paid in earlier endless shifts)".
 - High scores: "🏆 Best endless shift: N · Biggest single win: $X" (end-of-run screen and Collection).
+
+## Help text on the main bets (hover on computers, press-and-hold on phones)
+- Field: "Field: a one-roll bet. Wins on 2, 3, 4, 9, 10, 11 or 12 (2 pays double, 12 pays triple). Loses on 5, 6, 7 or 8."
+- Pass Line: "Pass Line: bet the shooter wins. First roll: 7 or 11 wins, 2, 3 or 12 loses, anything else becomes the point. Then the point again before a 7 wins."
+- Odds: "Odds: extra money behind your Pass Line once there's a point. Pays true odds (2:1 on 4 and 10, 3:2 on 5 and 9, 6:5 on 6 and 8) if the point comes before a 7."
+- Don't Pass: "Don't Pass: bet against the shooter. First roll: 2 or 3 wins, 7 or 11 loses, 12 is a tie. Then a 7 before the point wins."
+- Lay Odds: "Lay Odds: extra money behind your Don't Pass once there's a point. Wins if a 7 comes before the point (pays less than you bet, because a 7 is more likely)."
+- Settings > "Keyboard shortcuts" lists every key (js/controls.js KEY_HELP).

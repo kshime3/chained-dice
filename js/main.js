@@ -629,6 +629,7 @@ document.getElementById("music-toggle").onclick = () => {
 document.getElementById("music-volume").oninput = (e) => setMusicVolume(Number(e.target.value));
 armMusic(() => state);
 
+document.getElementById("key-help").innerHTML = keyHelpHtml();
 document.getElementById("settings-button").onclick = () => {
   renderMusicSettings();
   document.getElementById("settings-message").textContent = "";
