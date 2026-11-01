@@ -10,7 +10,7 @@ function perkInfo(id) {
     return {
       name: "+1 way to roll " + total,
       text: total === 7
-        ? "Risky: more 7s means more come-out wins, but more seven-outs too. Everyone's dice, for the rest of the run."
+        ? "For the dark side: everyone rolls 7s a little more often (+1 way out of 36), and every seven-out your Don't Pass wins pays a bonus of " + Math.round(CONFIG.plusSevenBonusPct * 100) + "% of the debt. Risky on the Pass Line. For the rest of the run."
         : "Every shooter rolls a " + total + " a little more often (+1 way out of 36), for the rest of the run.",
       rarity: "common",
       risky: total === 7,
@@ -31,6 +31,7 @@ function countPerk(state, id) {
 
 // How likely each perk is to be offered right now (0 = never).
 function perkWeight(state, id) {
+  if (id === "plus7" && themeCount(state, "dark") === 0) return 0; // a dark-side piece: only offered once you own a Dark side card
   if (id.startsWith("plus")) return CONFIG.perkWeights.plusTotal / PERK_TOTALS.length;
   if (id === "minusSeven") {
     // Gets rarer every time it's taken; stops once normal dice would be at the floor.

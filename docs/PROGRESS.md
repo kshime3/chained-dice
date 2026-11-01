@@ -2,6 +2,14 @@
 
 Dated session log. Newest at the top.
 
+## 2026-11-01: "+1 way to roll 7" fix
+
+**Done**
+- The phone only offers "+1 way to roll 7" with a Dark side card; each copy pays 2% of the debt on every seven-out your Don't Pass wins. Don't Pass bots learned to take it. Tests 476 passing, autoplay clean.
+
+**Exact next step**
+- Dark side late-game scaling (last open item from the balance question), friend feedback, card upgrades, or the Android roadmap.
+
 ## 2026-11-01: Trapdoor payoff
 
 **Done**

@@ -139,7 +139,9 @@ function playShift(s, carry) {
   if (carry && !s.noPhone) {
     // The phone: take -1 way to roll 7 if offered, else free items, else the first offer.
     const offer = phoneOffer(state);
-    const pick = ["minusSeven", "freeItems"].find((id) => offer.includes(id)) || offer.find((id) => id !== "removeCharacter" && id !== "plus7") || offer[0];
+    // Don't Pass bots take "+1 way to roll 7" first (it pays them on seven-outs); others never do.
+    const wants = s.side === "dont" ? ["plus7", "freeItems"] : ["minusSeven", "freeItems"];
+    const pick = wants.find((id) => offer.includes(id)) || offer.find((id) => id !== "removeCharacter" && id !== "plus7" && (s.side !== "dont" || id !== "minusSeven")) || offer[0];
     takePerk(state, pick, state.crew.find((n) => n === "Jinx") || state.crew[0]);
   }
   if (s.startCards && !carry) { state.cards = s.startCards.slice(); state.stock = newStock(state); }

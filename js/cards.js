@@ -367,6 +367,13 @@ function applyCardsAfterRoll(state, results, total, pointBefore, sevenOut) {
     state.cash += bonus;
     notes.push("Undertaker: +" + money(bonus) + " for the seven-out.");
   }
+  // "+1 way to roll 7" phone perk (dark side): seven-outs pay you.
+  const plusSevens = state.perks.filter((id) => id === "plus7").length;
+  if (plusSevens > 0 && sevenOut && dontWon) {
+    const bonus = roundTo5(CONFIG.plusSevenBonusPct * plusSevens * state.debt);
+    state.cash += bonus;
+    notes.push("+1 way to roll 7: +" + money(bonus) + " for the seven-out.");
+  }
   if (pointBefore !== null && total === pointBefore) state.turnPointsMade = (state.turnPointsMade || 0) + 1; // Heater
 
   // Cold Read: a Don't Pass win on a seven-out warms up the next shooter.

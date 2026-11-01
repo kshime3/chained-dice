@@ -389,3 +389,17 @@ Pass Line bot (13), 6,000 runs, survive shift 2 / walk out free (normal play 22.
 
 - 0.5: dropping a bad shooter (Jinx) is now a real win, dropping an average one is about break-even: a choice, not a trap. At 1+ dropping anyone is always right.
 - Bots don't drop crew by default, so new-player and career numbers are unchanged. Watch for a "hire cheap, then drop" loop (Snake costs 10% of the debt to hire, the Trapdoor 25%): +0.5x for 35% of the debt each time.
+
+## 2026-11-01: "+1 way to roll 7" becomes a dark-side piece
+Only offered once you own a Dark side card; each copy makes every seven-out your Don't Pass wins pay 2% of the debt (`plusSevenBonusPct`). Don't Pass bots now take it from the phone first.
+
+6,000 runs, survive shift 1 / shift 2 / walk out free:
+
+| | Result |
+| --- | --- |
+| Don't Pass bot, normal (now takes the perk when offered) | 36.5% / 26.1% / 0.5% (was 0.3%) |
+| ...starting with one copy | 43.0% / 30.9% / 0.7% |
+| ...starting with two copies | 48.9% / 37.0% / 1.3% |
+| Pass Line bot starting with one copy (it won't be offered without a Dark side card) | 48.0% / 17.6% / 0.4% vs 53.3% / 23.1% / 0.9% normal |
+
+- Now a real build piece for the dark side and no longer a wasted choice for Pass Line players. Pass Line bots never take it, so career numbers are unchanged.

@@ -355,3 +355,6 @@ Dated log of every decision and why. Newest at the bottom.
 ## 2026-11-01: Trapdoor payoff
 - Owner asked whether dropping crew and "+1 way to roll 7" are useful; the simulator said dropping crew was a trap. Owner chose a "hotter table" payoff (+mult for everyone left, whole run, stacking) over a debt cut, and the Free Trapdoor perk gets it too. Set to +0.5x per drop.
 - Still open: making "+1 way to roll 7" a dark-side piece (offer it only with a Dark side card, add a payoff), and more late-game scaling for dark builds.
+
+## 2026-11-01: "+1 way to roll 7" fix
+- Owner chose the seven-out bonus (2% of the debt per copy when your Don't Pass wins on a seven-out), and the perk is only offered with a Dark side card.

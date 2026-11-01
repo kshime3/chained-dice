@@ -160,3 +160,6 @@ Unchanged for shifts 1-5. Shifts 6-8 follow the existing x1.5 growth: $1,800, $2
 - Mult line note: "Trapdoor: +0.5x (one less mouth to feed)".
 - Free Trapdoor perk text ends: "...They're gone for the rest of the run, and everyone left gets +0.5x mult for the rest of the run."
 - Trapdoor tutorial adds: "One less mouth to feed: everyone left gets +0.5x mult for the rest of the run (it stacks with every drop)."
+
+## "+1 way to roll 7" perk text (2026-11-01)
+"For the dark side: everyone rolls 7s a little more often (+1 way out of 36), and every seven-out your Don't Pass wins pays a bonus of 2% of the debt. Risky on the Pass Line. For the rest of the run." Roll message: "+1 way to roll 7: +$X for the seven-out."

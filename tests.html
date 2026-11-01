@@ -1048,6 +1048,19 @@
     check("Early Bird: paying off before the last shooter gives back 10% ($20); not at the final Break", [eb.status, eb.cash, eb2.status, eb2.cash], ["won", 320, "won", 300]);
     }
 
+    // "+1 way to roll 7" is a dark-side piece (2026-11-01)
+    {
+    const nd = newShiftState(); nd.cards = ["hotHand"];
+    const dk = newShiftState(); dk.cards = ["wrongWay"];
+    check("+1 way to roll 7 is only offered with a Dark side card", [perkWeight(nd, "plus7"), perkWeight(dk, "plus7") > 0, perkWeight(nd, "plus8") > 0], [0, true, true]);
+    const p7 = newShiftState(); p7.debt = 2000; p7.cash = 100; p7.perks = ["plus7", "plus7"];
+    applyCardsAfterRoll(p7, [{ bet: "dont", amount: 10, outcome: "win", winnings: 10 }], 7, 6, true);
+    check("Two copies: a seven-out your Don't Pass wins pays 2 x 2% of $2,000", p7.cash, 100 + 2 * roundTo5(CONFIG.plusSevenBonusPct * 2000));
+    const p7b = newShiftState(); p7b.debt = 2000; p7b.cash = 100; p7b.perks = ["plus7"];
+    applyCardsAfterRoll(p7b, [{ bet: "pass", amount: 10, outcome: "lose", winnings: 0 }], 7, 6, true);
+    check("...no bonus when you were on the Pass Line", p7b.cash, 100);
+    }
+
     // Trapdoor payoff (2026-11-01): everyone left heats up for the rest of the run
     {
     const td = newShiftState(); td.roster = ["Lefty", "Jinx", "Ghost", "You"]; td.crew = td.roster.slice(); td.shooterIndex = 1; td.onBreak = true; td.cash = 5000;

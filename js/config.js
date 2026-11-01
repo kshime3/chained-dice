@@ -291,6 +291,7 @@ const CONFIG = {
   minusSevenRarer: 0.5, // each time you take "-1 way to roll 7", its chance is multiplied by this
   minSevenWays: 2,      // a 7 never drops below this many ways out of 36
   freeItemsCount: 2,    // "2 free items": your next this-many shop cards are free
+  plusSevenBonusPct: 0.02, // "+1 way to roll 7" (dark side only): each seven-out your Don't Pass wins pays this share of the debt, per copy
 
   // Comps: one-use items. Slots you can hold, how many the shop offers, and prices (share of the debt).
   compSlots: 2,
