@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Card Art Styles</title>
+  <style>
+    :root { --bg: #120d0b; --muted: #a8977f; --parchment: #efe4cc; --ink: #2a1d14; }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 16px; background: var(--bg); color: #f0e6d2; font-family: system-ui, sans-serif; }
+    h1 { margin: 0 0 4px; font-size: 1.5rem; font-family: Georgia, serif; }
+    h2 { font-family: Georgia, serif; margin: 26px 0 2px; }
+    .intro, .note { color: var(--muted); margin: 0 0 12px; max-width: 900px; }
+    .row { display: flex; flex-wrap: wrap; gap: 14px; }
+    .card { width: 170px; background: var(--parchment); color: var(--ink); border-radius: 10px; border: 2px solid #7f8c8d; padding: 8px; display: flex; flex-direction: column; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6); }
+    .card.uncommon { border-color: #27ae60; } .card.rare { border-color: #2980b9; } .card.common { border-color: #7f8c8d; }
+    .art { width: 100%; aspect-ratio: 10 / 7; border-radius: 6px; overflow: hidden; margin-bottom: 6px; display: block; }
+    .name { font-weight: bold; font-family: Georgia, serif; }
+    .pill { display: inline-block; font-size: 0.65rem; font-weight: bold; text-transform: uppercase; color: #fff; background: #7f8c8d; border-radius: 999px; padding: 1px 6px; margin: 2px 4px 2px 0; }
+    .uncommon .pill.r { background: #27ae60; } .rare .pill.r { background: #2980b9; }
+    .pill.t { background: #3a2618; color: #f3e3c3; text-transform: none; }
+    .text { font-size: 0.8rem; margin-top: 4px; }
+    .hand { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+    .tile { width: 150px; background: var(--parchment); color: var(--ink); border-radius: 6px; padding: 5px; display: flex; gap: 6px; align-items: center; font-size: 0.8rem; font-weight: bold; }
+    .tile svg { width: 44px; height: 31px; border-radius: 4px; flex: none; }
+    .label { color: var(--muted); font-size: 0.8rem; margin: 6px 0 0; }
+  </style>
+</head>
+<body>
+  <h1>Card art: three styles</h1>
+  <p class="intro">Four sample cards (one per theme), drawn in each style. Each style also shows how the small art looks on a hand tile. Pick one style (or mix: "A, but with C's boldness").</p>
+
+  <h2>A. Dark engraved</h2>
+  <p class="note">Same look as the logo and crew portraits: dark panel, lamp-lit edges, rust, bone and a little blood red.</p>
+  <div class="row" id="row-a"></div>
+  <div class="hand" id="hand-a"></div>
+
+  <h2>B. Old tarot card</h2>
+  <p class="note">Aged parchment, a thin ornate frame and a roman numeral, drawn in sepia ink. Feels like a collectible deck.</p>
+  <div class="row" id="row-b"></div>
+  <div class="hand" id="hand-b"></div>
+
+  <h2>C. Bold flat icon</h2>
+  <p class="note">One big high-contrast symbol on the theme's color. Easiest to read at small sizes on phones.</p>
+  <div class="row" id="row-c"></div>
+  <div class="hand" id="hand-c"></div>
+
+  <p class="label">Preview page only, not part of the game.</p>
+
+<script>
+// Each card: its subject drawn three ways. viewBox 0 0 100 70.
+const CARDS = [
+  { name: "Undertaker", rarity: "rare", theme: "🌑 Dark side", text: "Every seven-out your Don't Pass wins pays a bonus of 3% of the debt.", n: "XIII", color: "#4b3b5c" },
+  { name: "Mirror Dice", rarity: "uncommon", theme: "🎲 Pairs", text: "Every pair rolled adds +0.25x mult for the turn, for every Pairs card you own.", n: "II", color: "#2c6e8f" },
+  { name: "Hot Hand", rarity: "common", theme: "🔥 Hot streak", text: "+0.25x mult for every winning roll in a row.", n: "VII", color: "#b8461f" },
+  { name: "Loan Shark", rarity: "rare", theme: "💰 Money", text: "The dealer's cut drops: you keep 75% of your leftover money.", n: "IX", color: "#2f7a4a" },
+];
+
+// The subjects, as shapes. ink = main line colour, fill = solid colour, hi = highlight, red = blood/accent, bg = ground.
+const SUBJECT = {
+  "Undertaker": (c) =>
+    `<path d="M14 62 Q50 40 86 62 Z" fill="${c.fill2}" stroke="${c.ink}" stroke-width="${c.w}"/>` +
+    `<path d="M56 50 V22 Q56 14 64 14 Q72 14 72 22 V50 Z" fill="${c.fill}" stroke="${c.ink}" stroke-width="${c.w}"/>` +
+    `<text x="64" y="38" text-anchor="middle" font-family="Georgia,serif" font-weight="bold" font-size="13" fill="${c.red}">7</text>` +
+    `<path d="M26 58 L40 18" stroke="${c.ink}" stroke-width="${c.w + 1.5}" stroke-linecap="round"/>` +
+    `<path d="M36 14 L46 18 L42 28 L32 24 Z" fill="${c.hi}" stroke="${c.ink}" stroke-width="${c.w}"/>` +
+    `<path d="M22 54 L32 58" stroke="${c.ink}" stroke-width="${c.w + 1}" stroke-linecap="round"/>`,
+  "Mirror Dice": (c) =>
+    `<line x1="50" y1="8" x2="50" y2="62" stroke="${c.hi}" stroke-width="${c.w}" stroke-dasharray="3 3"/>` +
+    `<g transform="rotate(-10 30 35)"><rect x="16" y="21" width="28" height="28" rx="6" fill="${c.fill}" stroke="${c.ink}" stroke-width="${c.w}"/>` +
+    `<circle cx="24" cy="29" r="3" fill="${c.pip}"/><circle cx="36" cy="41" r="3" fill="${c.pip}"/><circle cx="30" cy="35" r="3" fill="${c.red}"/></g>` +
+    `<g transform="rotate(10 70 35)" opacity="0.6"><rect x="56" y="21" width="28" height="28" rx="6" fill="${c.fill}" stroke="${c.ink}" stroke-width="${c.w}"/>` +
+    `<circle cx="76" cy="29" r="3" fill="${c.pip}"/><circle cx="64" cy="41" r="3" fill="${c.pip}"/><circle cx="70" cy="35" r="3" fill="${c.red}"/></g>`,
+  "Hot Hand": (c) =>
+    `<path d="M50 6 C62 20 70 26 66 40 C72 36 74 30 74 26 C82 38 80 52 70 60 L30 60 C20 52 18 38 26 26 C26 32 28 36 34 40 C30 26 40 18 50 6 Z" fill="${c.red}" opacity="0.85"/>` +
+    `<path d="M36 64 L36 40 Q36 36 39.5 36 Q43 36 43 40 L43 24 Q43 20 46.5 20 Q50 20 50 24 L50 22 Q50 18 53.5 18 Q57 18 57 22 L57 26 Q57 22 60.5 22 Q64 22 64 26 L64 50 Q64 66 52 66 L42 66 Q36 66 36 64 Z" fill="${c.fill}" stroke="${c.ink}" stroke-width="${c.w}"/>` +
+    `<path d="M36 50 Q30 44 26 40 Q24 36 28 35 Q32 35 38 42" fill="${c.fill}" stroke="${c.ink}" stroke-width="${c.w}"/>` +
+    `<path d="M43 40 V30 M50 38 V26 M57 40 V30" stroke="${c.ink}" stroke-width="${c.w * 0.6}" opacity="0.5"/>`,
+  "Loan Shark": (c) =>
+    `<path d="M6 50 Q20 44 34 50 T62 50 T94 50" fill="none" stroke="${c.hi}" stroke-width="${c.w}"/>` +
+    `<path d="M30 50 Q44 12 62 8 Q58 28 66 50 Z" fill="${c.fill}" stroke="${c.ink}" stroke-width="${c.w}"/>` +
+    `<ellipse cx="74" cy="60" rx="10" ry="4" fill="${c.gold}" stroke="${c.ink}" stroke-width="${c.w * 0.7}"/><ellipse cx="74" cy="56" rx="10" ry="4" fill="${c.gold}" stroke="${c.ink}" stroke-width="${c.w * 0.7}"/>` +
+    `<ellipse cx="22" cy="62" rx="9" ry="3.5" fill="${c.gold}" stroke="${c.ink}" stroke-width="${c.w * 0.7}"/>` +
+    `<path d="M14 30 L22 22 M22 30 L14 22" stroke="${c.red}" stroke-width="${c.w}" stroke-linecap="round" opacity="0.8"/>`,
+};
+
+// Style A: dark engraved panel with a lamp glow from above.
+function styleA(card) {
+  const c = { ink: "#c9a57a", fill: "#2a1d17", fill2: "#1c1410", hi: "#6a4630", red: "#b3221a", pip: "#120d0b", gold: "#8a6a2e", w: 2 };
+  if (card.name === "Mirror Dice") Object.assign(c, { fill: "#e9e1cf", ink: "#a99e86" });
+  return `<svg class="art" viewBox="0 0 100 70"><defs><radialGradient id="glow-${card.n}" cx="0.5" cy="0" r="0.9"><stop offset="0" stop-color="#4a3424"/><stop offset="1" stop-color="#0d0907"/></radialGradient></defs>` +
+    `<rect width="100" height="70" fill="url(#glow-${card.n})"/>` + SUBJECT[card.name](c) +
+    `<rect x="1" y="1" width="98" height="68" fill="none" stroke="#5c4a3a" stroke-width="2" rx="4"/></svg>`;
+}
+
+// Style B: tarot, sepia ink on aged parchment, ornate frame and numeral.
+function styleB(card) {
+  const c = { ink: "#5a3a22", fill: "#e8d6ae", fill2: "#d9c294", hi: "#9b7a52", red: "#8e2a1c", pip: "#5a3a22", gold: "#d6b46a", w: 1.6 };
+  return `<svg class="art" viewBox="0 0 100 70"><rect width="100" height="70" fill="#f2e3bf"/>` +
+    `<rect x="3" y="3" width="94" height="64" fill="none" stroke="#8a6640" stroke-width="1.2"/><rect x="6" y="6" width="88" height="58" fill="none" stroke="#8a6640" stroke-width="0.6"/>` +
+    [[6, 6], [94, 6], [6, 64], [94, 64]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="2.4" fill="#f2e3bf" stroke="#8a6640" stroke-width="0.8"/>`).join("") +
+    `<g transform="translate(10 8) scale(0.8)">` + SUBJECT[card.name](c) + `</g>` +
+    `<text x="50" y="13" text-anchor="middle" font-family="Georgia,serif" font-size="7" fill="#8a6640" letter-spacing="1">${card.n}</text></svg>`;
+}
+
+// Style C: one bold symbol in white on the theme colour.
+function styleC(card) {
+  const c = { ink: "#fff", fill: "#fff", fill2: "rgba(255,255,255,0.35)", hi: "rgba(255,255,255,0.6)", red: "#ffd84d", pip: card.color, gold: "#ffd84d", w: 2.4 };
+  if (card.name === "Hot Hand") Object.assign(c, { fill: "#fff", red: "#ffd84d" });
+  return `<svg class="art" viewBox="0 0 100 70"><rect width="100" height="70" fill="${card.color}"/>` +
+    `<circle cx="50" cy="35" r="34" fill="rgba(0,0,0,0.12)"/>` + SUBJECT[card.name](c) + `</svg>`;
+}
+
+for (const [key, style] of [["a", styleA], ["b", styleB], ["c", styleC]]) {
+  document.getElementById("row-" + key).innerHTML = CARDS.map((card) =>
+    `<div class="card ${card.rarity}">${style(card)}<div class="name">${card.name}</div><div><span class="pill r">${card.rarity}</span><span class="pill t">${card.theme}</span></div><div class="text">${card.text}</div></div>`).join("");
+  document.getElementById("hand-" + key).innerHTML = CARDS.map((card) =>
+    `<div class="tile">${style(card).replace('class="art"', "")}${card.name}</div>`).join("");
+}
+</script>
+</body>
+</html>
