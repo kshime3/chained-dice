@@ -154,3 +154,9 @@ Unchanged for shifts 1-5. Shifts 6-8 follow the existing x1.5 growth: $1,800, $2
 - Don't Pass: "Don't Pass: bet against the shooter. First roll: 2 or 3 wins, 7 or 11 loses, 12 is a tie. Then a 7 before the point wins."
 - Lay Odds: "Lay Odds: extra money behind your Don't Pass once there's a point. Wins if a 7 comes before the point (pays less than you bet, because a 7 is more likely)."
 - Settings > "Keyboard shortcuts" lists every key (js/controls.js KEY_HELP).
+
+## Trapdoor payoff (2026-11-01)
+- Trapdoor button help: "Drop {name} for the rest of the run. One less mouth to feed: everyone left gets +0.5x mult for the rest of the run."
+- Mult line note: "Trapdoor: +0.5x (one less mouth to feed)".
+- Free Trapdoor perk text ends: "...They're gone for the rest of the run, and everyone left gets +0.5x mult for the rest of the run."
+- Trapdoor tutorial adds: "One less mouth to feed: everyone left gets +0.5x mult for the rest of the run (it stacks with every drop)."

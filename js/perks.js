@@ -18,7 +18,7 @@ function perkInfo(id) {
   }
   const perks = {
     minusSeven: { name: "-1 way to roll 7", text: "Every shooter rolls 7s a little less often (-1 way out of 36), for the rest of the run. A 7 never drops below " + CONFIG.minSevenWays + " ways.", rarity: "rare" },
-    removeCharacter: { name: "Free Trapdoor", text: "Pick a crew member (not you). The dealer opens the trapdoor under their seat, free. They're gone for the rest of the run.", rarity: "uncommon" },
+    removeCharacter: { name: "Free Trapdoor", text: "Pick a crew member (not you). The dealer opens the trapdoor under their seat, free. They're gone for the rest of the run, and everyone left gets +" + CONFIG.trapdoorMult + "x mult for the rest of the run.", rarity: "uncommon" },
     freeComps: { name: CONFIG.freeCompsPerk + " free comps", text: "The dealer slips you " + CONFIG.freeCompsPerk + " random comps (as many as fit in your slots).", rarity: "uncommon" },
     freeItems: { name: CONFIG.freeItemsCount + " free items", text: "Your next " + CONFIG.freeItemsCount + " cards from the shop are free.", rarity: "uncommon" },
   };

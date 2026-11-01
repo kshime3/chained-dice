@@ -113,3 +113,7 @@ If the owner feels good after art, music and a wider playtest: wrap with Capacit
 ## Art ideas (2026-11-01)
 - [Built 2026-11-01] Art for comps and Pit Boss phone perks in style E.
 - New cards need a drawing in js/card-art.js (otherwise they show the plain die).
+
+## Open from the 2026-11-01 balance question
+- "+1 way to roll 7" perk: only offer it when you own a Dark side card, and give it a payoff (e.g. a bonus when Don't Pass wins on a seven-out). Today it's a trap for Pass Line players.
+- Dark side late game: more scaling (stronger Graveyard Shift, or a dark card that grows with the debt); dark builds escape less often (0.3% vs 0.8%).

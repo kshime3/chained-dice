@@ -106,6 +106,7 @@ function shopPages() {
     {
       title: "Trapdoor",
       body: "Don't like a shooter? For <strong>" + Math.round(CONFIG.cutChainPct * 100) + "% of the debt</strong>, the dealer will pull the lever under their seat at a Dealer Break. They drop away and are gone <strong>for the rest of the run</strong>.<br><br>" +
+        "One less mouth to feed: <strong>everyone left gets +" + CONFIG.trapdoorMult + "x mult for the rest of the run</strong> (it stacks with every drop).<br><br>" +
         "You can only drop crew who haven't shot yet this shift, and never yourself. Fewer shooters means fewer rolls to make your money, and the seats close up, so synergies change.",
     },
   ];

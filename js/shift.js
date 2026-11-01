@@ -119,6 +119,7 @@ function newShiftState() {
     shiftDontWins: 0, // Don't Pass bets won this shift (unlock goal)
     darkSevens: 0, // seven-outs in a row your Don't Pass won (unlock goal)
     earlyBirdBonus: 0, // Early Bird's payback this shift (shown when you win)
+    trapdoorMult: 0, // + mult for every shooter, from crew dropped through a Trapdoor (whole run)
   };
   applyLegacy(state); // Reputation bonuses (starting cash, cards, slots...)
   state.stock = newStock(state);
@@ -392,8 +393,11 @@ function removeCrew(state, name) {
   state.crew = state.crew.filter((n) => n !== name);
   if (!state.dropped.includes(name)) state.dropped.push(name);
   trackDropped(name);
-  // If the next shooter was removed, the seat after them steps up (synergies included).
-  if (wasNext && !isFinalBreak(state)) {
+  state.trapdoorMult = (state.trapdoorMult || 0) + CONFIG.trapdoorMult; // one less mouth to feed: the rest heat up
+  // The next shooter gets set up again: a new person if the next shooter was removed, and the boost either way.
+  if (state.onBreak && !isFinalBreak(state) && state.status === "playing") {
+    setupTurn(state, state.crew[state.shooterIndex - 1] || null, state.prevShooterMult);
+  } else if (wasNext && !isFinalBreak(state)) {
     setupTurn(state, state.crew[state.shooterIndex - 1] || null, state.prevShooterMult);
   }
 }
@@ -418,6 +422,7 @@ function nextShift(old) {
   state.savedBets = old.savedBets ? Object.assign({}, old.savedBets) : null;
   state.interestRate = old.interestRate;
   state.darkSevens = old.darkSevens || 0;
+  state.trapdoorMult = old.trapdoorMult || 0; // the Trapdoor's boost lasts the whole run
   state.endlessPaid = old.endless ? (old.endlessPaid || 0) + old.deposited : 0; // everything paid since endless began
   state.stats = old.stats;
   state.perks = old.perks.slice();

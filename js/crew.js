@@ -82,6 +82,11 @@ function setupTurn(state, prevName, prevMult) {
       state.multNotes.push(CARDS[card].name + ": +" + extra + "x");
     }
   }
+  // Trapdoor: every crew member dropped this run warms up everyone left.
+  if (state.trapdoorMult > 0) {
+    state.mult += state.trapdoorMult;
+    state.multNotes.push("Trapdoor: +" + state.trapdoorMult + "x (one less mouth to feed)");
+  }
   // Roll Call: every shooter starts warmer for each Crew card you own.
   if (hasCard(state, "rollCall")) {
     const extra = CONFIG.rollCallPerCard * themeCount(state, "crew");

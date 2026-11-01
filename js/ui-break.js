@@ -145,6 +145,7 @@ function renderShop(state, handlers) {
     const button = document.createElement("button");
     button.textContent = "Trapdoor: " + name + " (" + money(cutChainPrice(state)) + ")";
     button.disabled = !canSpend(state, cutChainPrice(state));
+    button.title = "Drop " + name + " for the rest of the run. One less mouth to feed: everyone left gets +" + CONFIG.trapdoorMult + "x mult for the rest of the run.";
     button.onclick = () => handlers.cut(name);
     cutRow.appendChild(button);
   }

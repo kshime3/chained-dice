@@ -1048,6 +1048,21 @@
     check("Early Bird: paying off before the last shooter gives back 10% ($20); not at the final Break", [eb.status, eb.cash, eb2.status, eb2.cash], ["won", 320, "won", 300]);
     }
 
+    // Trapdoor payoff (2026-11-01): everyone left heats up for the rest of the run
+    {
+    const td = newShiftState(); td.roster = ["Lefty", "Jinx", "Ghost", "You"]; td.crew = td.roster.slice(); td.shooterIndex = 1; td.onBreak = true; td.cash = 5000;
+    setupTurn(td, "Lefty", 1);
+    const before = td.mult;
+    cutChain(td, "Ghost");
+    check("Trapdoor: the next shooter gets +" + CONFIG.trapdoorMult + "x right away", Math.round((td.mult - before) * 100) / 100, CONFIG.trapdoorMult);
+    td.status = "won";
+    const tdNext = nextShift(td);
+    check("...and it lasts the whole run (next shift's shooters too)", [tdNext.trapdoorMult, tdNext.multNotes.some((n) => n.startsWith("Trapdoor"))], [CONFIG.trapdoorMult, true]);
+    const tp = newShiftState(); tp.roster = ["Lefty", "Jinx", "You"]; tp.crew = tp.roster.slice();
+    removeCrew(tp, "Lefty"); removeCrew(tp, "Jinx");
+    check("Two drops stack (Free Trapdoor uses the same rule)", tp.trapdoorMult, 2 * CONFIG.trapdoorMult);
+    }
+
     // Crew theme (2026-11-01)
     {
     const C = (cards, roster) => { const st = newShiftState(); st.cards = cards; st.debt = 2000; if (roster) { st.roster = roster.slice(); st.crew = roster.slice(); } return st; };

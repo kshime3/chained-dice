@@ -374,3 +374,18 @@ Simulator switches added: `START_PERKS=plus7,minusSeven` (start with phone perks
 - +1 way to roll 7 is a trap for Pass Line players and only a small boost for dark side. Idea: offer it only with a Dark side card, and give it a payoff.
 - Dark side matches the Pass Line early but escapes less often (0.3% vs 0.8%). Idea: more late-game scaling for dark builds.
 No rules changed yet (waiting on the owner).
+
+## 2026-11-01: Trapdoor payoff
+Owner picked "hotter table": every drop (Trapdoor or Free Trapdoor) gives everyone left +mult for the rest of the run, stacking (`trapdoorMult`).
+
+Pass Line bot (13), 6,000 runs, survive shift 2 / walk out free (normal play 22.7% / 0.8%):
+
+| trapdoorMult | Drop Jinx | Drop Lefty |
+| --- | --- | --- |
+| 0 (before) | 18.4% / 0.5% | 20.4% / 0.7% |
+| **0.5 (chosen)** | 23.8% / 1.3% | 23.2% / 0.8% |
+| 1 | 27.2% / 2.0% | 23.1% / 1.3% |
+| 1.5 | 28.9% / 2.7% | 24.5% / 1.7% |
+
+- 0.5: dropping a bad shooter (Jinx) is now a real win, dropping an average one is about break-even: a choice, not a trap. At 1+ dropping anyone is always right.
+- Bots don't drop crew by default, so new-player and career numbers are unchanged. Watch for a "hire cheap, then drop" loop (Snake costs 10% of the debt to hire, the Trapdoor 25%): +0.5x for 35% of the debt each time.

@@ -317,6 +317,7 @@ const CONFIG = {
 
   // Trapdoor: a Dealer Break option once the shop is open (drops a crew member for the run).
   cutChainPct: 0.25, // costs this share of the debt
+  trapdoorMult: 0.5, // every drop (Trapdoor or Free Trapdoor): everyone left gets + this mult for the rest of the run (stacks)
 
   // Interest: at every Dealer Break after a seven-out, this share of the money
   // you've paid the dealer so far is added to your cash (rounded down).

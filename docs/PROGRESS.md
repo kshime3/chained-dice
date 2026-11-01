@@ -2,6 +2,14 @@
 
 Dated session log. Newest at the top.
 
+## 2026-11-01: Trapdoor payoff
+
+**Done**
+- Simulator showed dropping crew was always a loss and "+1 way to roll 7" a trap for Pass Line players (BALANCE.md). Trapdoor and Free Trapdoor now give everyone left +0.5x mult for the rest of the run (stacking); tutorial, button help and perk text updated. Tests 473 passing, autoplay clean.
+
+**Exact next step**
+- Owner's choice: the "+1 way to roll 7" dark-side fix, dark side late-game scaling, friend feedback, card upgrades, or the Android roadmap.
+
 ## 2026-11-01: Crew theme
 
 **Done**

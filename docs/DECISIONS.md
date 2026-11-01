@@ -351,3 +351,7 @@ Dated log of every decision and why. Newest at the bottom.
 
 ## 2026-11-01: Crew theme
 - Owner chose "both": the existing crew cards join a Crew theme, the 4 crew without a card get one, plus whole-table cards; all locked. Built as drafted, then tuned in the simulator (harder goals; Crew Captain and Roll Call toned down) to keep the first escape near run 30.
+
+## 2026-11-01: Trapdoor payoff
+- Owner asked whether dropping crew and "+1 way to roll 7" are useful; the simulator said dropping crew was a trap. Owner chose a "hotter table" payoff (+mult for everyone left, whole run, stacking) over a debt cut, and the Free Trapdoor perk gets it too. Set to +0.5x per drop.
+- Still open: making "+1 way to roll 7" a dark-side piece (offer it only with a Dark side card, add a payoff), and more late-game scaling for dark builds.
