@@ -879,3 +879,16 @@ button:not(:disabled):hover { filter: brightness(1.15); }
 .hand-card .theme-name { display: none; } /* narrow side column: just the theme's icon */
 @media (max-width: 760px) { .hand-card .theme-name { display: inline; } }
 @media (max-width: 760px) { .hand-art { display: block; width: 100%; height: 44px; border-radius: 4px; margin: 0 0 4px; } }
+
+/* Playtest feedback note on the end screen */
+.feedback-open { display: block; margin: 10px auto 0; }
+.feedback { margin: 10px auto 0; max-width: 460px; text-align: left; background: rgba(0, 0, 0, 0.3); border: 1px solid #5c4a3a; border-radius: 10px; padding: 10px 12px; }
+.feedback.hidden, .feedback-open.hidden, .feedback-text.hidden { display: none; }
+.feedback-intro { font-size: 0.85rem; margin: 0 0 8px; }
+.feedback-q { font-weight: bold; font-size: 0.9rem; margin: 8px 0 4px; }
+.feedback-choices { display: flex; gap: 6px; flex-wrap: wrap; }
+.feedback-choices button { min-width: 44px; padding: 6px 10px; }
+.feedback-choices button.chosen { background: #ffd84d; color: #222; box-shadow: 0 0 0 2px #fff3c4; }
+.feedback textarea { width: 100%; box-sizing: border-box; font: inherit; font-size: 0.9rem; border-radius: 6px; padding: 6px; background: #f3e9d2; color: #222; border: 1px solid #8a6640; }
+.feedback #feedback-copy { display: block; margin: 10px auto 4px; }
+.feedback-status { font-size: 0.85rem; text-align: center; margin: 4px 0; color: #e2c89a; min-height: 1em; }

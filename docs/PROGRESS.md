@@ -2,6 +2,17 @@
 
 Dated session log. Newest at the top.
 
+## 2026-11-01: Playtest feedback note
+
+**Done**
+- "💬 Send feedback" on every end-of-run screen: fun 1-5, play again, what confused you; "Copy feedback" copies answers plus a run summary to paste in a message. Falls back to selected text if the browser blocks copying. Tests 450 passing, 5 sizes fit, autoplay clean.
+
+**Waiting on the owner**
+- Sharing the link with friends and collecting pasted feedback (paste it here and I'll sort it into fixes and ideas).
+
+**Exact next step**
+- While feedback comes in: 4. huge numbers (endless scaling), then 5. small polish.
+
 ## 2026-11-01: Card art, batch 5 (no theme): all cards drawn
 
 **Done**

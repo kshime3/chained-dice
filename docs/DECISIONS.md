@@ -334,3 +334,6 @@ Dated log of every decision and why. Newest at the bottom.
 - Owner saw A (dark engraved), B (tarot), C (bold flat) and two A+C mixes; picked **E** (theme-tinted dark panel, bold bone symbol). Shown on shop cards, hand tiles and the Collection.
 - Locked cards in the Collection show a padlock, not a silhouette (keeps unlocks fully hidden, as decided in Milestone 12).
 - Hand tiles: a small icon beside the name on wide screens (a full strip pushed the laptop layout 82px too tall), a strip on phones.
+
+## 2026-11-01: Playtest feedback note
+- Owner chose a copy button (no server, no Google Form), three questions (fun 1-5, play again, what confused you), and a small button on every end-of-run screen (not a pop-up). Not shown between shifts.

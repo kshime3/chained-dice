@@ -4,12 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Chained Dice</title>
-  <link rel="icon" type="image/svg+xml" href="img/logo.svg?v=20261101h">
-  <link rel="icon" type="image/png" sizes="32x32" href="img/icon-32.png?v=20261101h">
-  <link rel="apple-touch-icon" href="img/icon-180.png?v=20261101h">
+  <link rel="icon" type="image/svg+xml" href="img/logo.svg?v=20261101i">
+  <link rel="icon" type="image/png" sizes="32x32" href="img/icon-32.png?v=20261101i">
+  <link rel="apple-touch-icon" href="img/icon-180.png?v=20261101i">
   <link rel="manifest" href="manifest.webmanifest">
   <meta name="theme-color" content="#0d2a1a">
-  <link rel="stylesheet" href="css/style.css?v=20261101h">
+  <link rel="stylesheet" href="css/style.css?v=20261101i">
 </head>
 <body>
   <!-- Opening animation: a die rolls in leaving a blood trail, the chain snaps, the title appears, then it all fades. -->
@@ -60,7 +60,7 @@
 
   <header class="top">
     <div class="title-row">
-      <h1><img src="img/logo.svg?v=20261101h" class="title-logo" alt="">Chained Dice</h1>
+      <h1><img src="img/logo.svg?v=20261101i" class="title-logo" alt="">Chained Dice</h1>
       <div class="title-buttons">
         <button id="settings-button" class="mute-button" title="Settings">⚙</button>
         <button id="collection-button" class="how-to-play" title="Collection: everything you've unlocked">📖<span class="hide-mobile"> Collection</span></button>
@@ -360,33 +360,47 @@
       <div id="run-stats" class="run-stats"></div>
       <button id="second-button" class="hidden"></button>
       <button id="play-again" class="big-button">Play again</button>
+      <!-- Playtest feedback: shown when a run is over. Copies a summary to paste in a message. -->
+      <button id="feedback-open" class="link-button feedback-open hidden">💬 Send feedback</button>
+      <div id="feedback" class="feedback hidden">
+        <p class="feedback-intro">Playtesting? Thank you! Answer what you like, tap <strong>Copy</strong>, then paste it in a message to whoever sent you the link.</p>
+        <div class="feedback-q">How fun was that run?</div>
+        <div class="feedback-choices" data-answer="fun"><button>1</button><button>2</button><button>3</button><button>4</button><button>5</button></div>
+        <div class="feedback-q">Would you play another run?</div>
+        <div class="feedback-choices" data-answer="again"><button>Yes</button><button>Maybe</button><button>No</button></div>
+        <div class="feedback-q">What confused you?</div>
+        <textarea id="feedback-confused" rows="3" placeholder="Anything: rules, buttons, cards, the dealer..."></textarea>
+        <button id="feedback-copy" class="big-button">Copy feedback</button>
+        <p id="feedback-status" class="feedback-status"></p>
+        <textarea id="feedback-text" class="feedback-text hidden" rows="8" readonly></textarea>
+      </div>
     </div>
   </div>
 
   <!-- Load order matters: config first, then logic, then display, then main. -->
-  <script src="js/config.js?v=20261101h"></script>
-  <script src="js/dice.js?v=20261101h"></script>
-  <script src="js/bets.js?v=20261101h"></script>
-  <script src="js/crew.js?v=20261101h"></script>
-  <script src="js/cards.js?v=20261101h"></script>
-  <script src="js/shop.js?v=20261101h"></script>
-  <script src="js/stats.js?v=20261101h"></script>
-  <script src="js/perks.js?v=20261101h"></script>
-  <script src="js/crafting.js?v=20261101h"></script>
-  <script src="js/comps.js?v=20261101h"></script>
-  <script src="js/unlocks.js?v=20261101h"></script>
-  <script src="js/rules.js?v=20261101h"></script>
-  <script src="js/save.js?v=20261101h"></script>
-  <script src="js/shift.js?v=20261101h"></script>
-  <script src="js/sound.js?v=20261101h"></script>
-  <script src="js/music.js?v=20261101h"></script>
-  <script src="js/art.js?v=20261101h"></script>
-  <script src="js/card-art.js?v=20261101h"></script>
-  <script src="js/ui.js?v=20261101h"></script>
-  <script src="js/ui-break.js?v=20261101h"></script>
-  <script src="js/ui-screens.js?v=20261101h"></script>
-  <script src="js/tutorials.js?v=20261101h"></script>
-  <script src="js/coach.js?v=20261101h"></script>
-  <script src="js/main.js?v=20261101h"></script>
+  <script src="js/config.js?v=20261101i"></script>
+  <script src="js/dice.js?v=20261101i"></script>
+  <script src="js/bets.js?v=20261101i"></script>
+  <script src="js/crew.js?v=20261101i"></script>
+  <script src="js/cards.js?v=20261101i"></script>
+  <script src="js/shop.js?v=20261101i"></script>
+  <script src="js/stats.js?v=20261101i"></script>
+  <script src="js/perks.js?v=20261101i"></script>
+  <script src="js/crafting.js?v=20261101i"></script>
+  <script src="js/comps.js?v=20261101i"></script>
+  <script src="js/unlocks.js?v=20261101i"></script>
+  <script src="js/rules.js?v=20261101i"></script>
+  <script src="js/save.js?v=20261101i"></script>
+  <script src="js/shift.js?v=20261101i"></script>
+  <script src="js/sound.js?v=20261101i"></script>
+  <script src="js/music.js?v=20261101i"></script>
+  <script src="js/art.js?v=20261101i"></script>
+  <script src="js/card-art.js?v=20261101i"></script>
+  <script src="js/ui.js?v=20261101i"></script>
+  <script src="js/ui-break.js?v=20261101i"></script>
+  <script src="js/ui-screens.js?v=20261101i"></script>
+  <script src="js/tutorials.js?v=20261101i"></script>
+  <script src="js/coach.js?v=20261101i"></script>
+  <script src="js/main.js?v=20261101i"></script>
 </body>
 </html>

@@ -133,3 +133,9 @@ Unchanged for shifts 1-5. Shifts 6-8 follow the existing x1.5 growth: $1,800, $2
 - Roll headlines: "✅ 7 on the first roll: your Pass Line wins!", "❌ Craps! 3 on the first roll loses the Pass Line.", "🎯 8 is the point. Roll 8 again before a 7 to win.", "🎉 Point hit! 8 came again: your Pass Line wins!", "💀 A 7 came before the 8: seven out. Your Pass Line loses and the dice move on.", "Rolled 6: no decision for your line bet. Still rolling for 8 (a 7 ends it)." (Don't Pass versions reversed.)
 - Intro page 2 "Never played craps?": "Craps is simpler than it looks: bet that the shooter wins, then watch the dice. We'll walk you through your first shooter step by step..."
 - Coach bubbles: see js/coach.js (Dealer Break, Pass Line, roll, point, Odds, keep rolling, point hit, seven out).
+
+## Playtest feedback note (end of a run)
+- Button: **"💬 Send feedback"** (under Play again, only when a run is over).
+- Intro: "Playtesting? Thank you! Answer what you like, tap **Copy**, then paste it in a message to whoever sent you the link."
+- Questions: "How fun was that run?" (1-5) · "Would you play another run?" (Yes / Maybe / No) · "What confused you?" (placeholder "Anything: rules, buttons, cards, the dealer...").
+- Button: **"Copy feedback"**. Then: "Copied! Paste it in a message to whoever sent you the link." If copying is blocked: "Couldn't copy automatically: the text is selected below. Copy it and paste it in a message."

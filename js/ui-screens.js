@@ -86,6 +86,7 @@ function renderEndScreen(state, handlers) {
   document.getElementById("end-title").textContent = title;
   document.getElementById("end-body").innerHTML = body;
   document.getElementById("run-stats").innerHTML = showStats ? runStatsHtml(state) : "";
+  renderFeedback(state, showStats);
   const first = document.getElementById("play-again");
   first.textContent = primary;
   first.onclick = handlers.primary;
@@ -108,6 +109,89 @@ function renderEndScreen(state, handlers) {
   }
   chainShownFor = key;
   screen.className = "overlay " + mood;
+}
+
+// ---------- Playtest feedback (end of a run) ----------
+// No server: the player answers a few questions and copies a summary to paste in a message.
+
+let feedbackFor = null; // which run the open note belongs to (answers reset for a new one)
+let feedbackAnswers = {};
+
+function renderFeedback(state, runOver) {
+  const open = document.getElementById("feedback-open");
+  const box = document.getElementById("feedback");
+  open.classList.toggle("hidden", !runOver);
+  if (!runOver) {
+    box.classList.add("hidden");
+    return;
+  }
+  const key = state.stats.rolls + ":" + state.shift + ":" + state.status + ":" + state.walkedAway;
+  if (feedbackFor !== key) { // a new run ended: start a fresh note, closed
+    feedbackFor = key;
+    feedbackAnswers = {};
+    box.classList.add("hidden");
+    document.getElementById("feedback-confused").value = "";
+    document.getElementById("feedback-status").textContent = "";
+    document.getElementById("feedback-text").classList.add("hidden");
+  }
+  open.onclick = () => box.classList.toggle("hidden");
+  box.querySelectorAll(".feedback-choices").forEach((row) => {
+    row.querySelectorAll("button").forEach((b) => {
+      b.classList.toggle("chosen", feedbackAnswers[row.dataset.answer] === b.textContent);
+      b.onclick = () => {
+        feedbackAnswers[row.dataset.answer] = b.textContent;
+        row.querySelectorAll("button").forEach((x) => x.classList.toggle("chosen", x === b));
+      };
+    });
+  });
+  document.getElementById("feedback-copy").onclick = () => copyFeedback(feedbackSummary(state));
+}
+
+// The text that gets copied: answers first, then what happened in the run.
+function feedbackSummary(state) {
+  const s = state.stats;
+  const result = state.walkedAway ? "Walked out free"
+    : hasEscaped(state) ? "Escaped (chose Double or nothing next)"
+    : state.endless ? "Fell in endless mode, shift " + state.shift
+    : "Fell on shift " + state.shift + (state.status === "fell-broke" ? " (out of chips)" : " (debt unpaid)");
+  const runs = profile().counts.falls + profile().counts.escapes;
+  return [
+    "Chained Dice feedback",
+    "Fun (1-5): " + (feedbackAnswers.fun || "-"),
+    "Play again: " + (feedbackAnswers.again || "-"),
+    "Confusing: " + (document.getElementById("feedback-confused").value.trim() || "-"),
+    "",
+    "Run: " + result + ". Links broken " + linksBroken(state) + " of " + totalLinks(state) + ". Rolls " + s.rolls + ".",
+    "Crew: " + (state.roster.join(", ") || "-"),
+    "Cards: " + (state.cards.map((id) => CARDS[id].name).join(", ") || "none"),
+    "Runs played: " + runs + " · unlocks " + profile().unlocked.length + " · screen " + window.innerWidth + "x" + window.innerHeight,
+  ].join("\n");
+}
+
+// Copy to the clipboard; if the browser won't, show the text to copy by hand.
+function copyFeedback(text) {
+  const status = document.getElementById("feedback-status");
+  const area = document.getElementById("feedback-text");
+  const done = () => { status.textContent = "Copied! Paste it in a message to whoever sent you the link."; };
+  const manual = () => {
+    area.value = text;
+    area.classList.remove("hidden");
+    area.focus();
+    area.select();
+    status.textContent = "Couldn't copy automatically: the text is selected below. Copy it and paste it in a message.";
+  };
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(done, manual);
+      return;
+    }
+    area.value = text;
+    area.classList.remove("hidden");
+    area.select();
+    if (document.execCommand("copy")) done(); else manual();
+  } catch (e) {
+    manual();
+  }
 }
 
 // ---------- End-of-run stats screen ----------
