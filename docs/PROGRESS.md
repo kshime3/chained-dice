@@ -2,6 +2,14 @@
 
 Dated session log. Newest at the top.
 
+## 2026-11-01: Card art, batch 4 (Money)
+
+**Done**
+- Drew the 5 Money cards (Loan Shark, Green Dice, Compound, Stash, Early Bird). Tests 450 passing, autoplay clean.
+
+**Exact next step**
+- Card art batch 5 (last): the 16 cards with no theme (Lucky Seven, Red Dice, Odds Addict, Pit Boss's Pity, Muggsy, Loaded Die, Reroll, Dealer's Bargain, Lefty's Glove, Dee's Ledger, Ghost Story, Encore, High Roller, Front of the Line, Sleight of Hand, Steady Hand, Dice Collector, Spare Link).
+
 ## 2026-11-01: Card art, batch 3 (Hot streak)
 
 **Done**

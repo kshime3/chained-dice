@@ -26,6 +26,18 @@ function artFlame(x, y, h, w) {
   return drop(h, w || h * 0.55, "#e0501f") + drop(h * 0.62, (w || h * 0.55) * 0.6, ART.gold);
 }
 
+// A coin seen from the side (an ellipse), for stacks.
+function artCoin(x, y, rx) {
+  const r = rx || 10;
+  return '<ellipse cx="' + x + '" cy="' + (y + 2.5) + '" rx="' + r + '" ry="' + r * 0.4 + '" fill="#a07a2e" stroke="' + ART.ink + '" stroke-width="1.4"/>' +
+    '<ellipse cx="' + x + '" cy="' + y + '" rx="' + r + '" ry="' + r * 0.4 + '" fill="' + ART.gold + '" stroke="' + ART.ink + '" stroke-width="1.4"/>';
+}
+function artStack(x, bottom, count, rx) {
+  let out = "";
+  for (let i = 0; i < count; i++) out += artCoin(x, bottom - i * 4.5, rx);
+  return out;
+}
+
 // The drawings, by card id.
 const CARD_ART = {
   // ---------- Dark side ----------
@@ -150,6 +162,36 @@ const CARD_ART = {
     '<path d="M22 64 L44 28" stroke="' + ART.ink + '" stroke-width="8" stroke-linecap="round"/><path d="M22 64 L44 28" stroke="' + ART.hi + '" stroke-width="4.5" stroke-linecap="round"/>' +
     '<path d="M38 32 L50 39 L54 31 L42 24 Z" fill="' + ART.bone2 + '" stroke="' + ART.ink + '" stroke-width="' + ART.w + '" stroke-linejoin="round"/>' +
     artFlame(48, 28, 26, 13),
+  // ---------- Money ----------
+  loanShark: () => // a shark fin circling a pile of coins
+    '<path d="M6 50 Q20 44 34 50 T62 50 T94 50" fill="none" stroke="' + ART.hi + '" stroke-width="2.4"/>' +
+    '<path d="M30 50 Q44 12 62 8 Q58 28 66 50 Z" fill="' + ART.bone + '" stroke="' + ART.ink + '" stroke-width="' + ART.w + '"/>' +
+    artStack(76, 62, 3, 9) + artStack(20, 62, 2, 8) +
+    '<path d="M74 18 L82 26 M82 18 L74 26" stroke="' + ART.red + '" stroke-width="3" stroke-linecap="round"/>',
+  greenDice: () => // green dice showing 12, interest going up
+    artDie(14, 26, 28, [0, 2, 3, 5, 6, 8], { fill: "#5fb07a", rotate: -8 }) + artDie(44, 26, 28, [0, 2, 3, 5, 6, 8], { fill: "#5fb07a", rotate: 8 }) +
+    '<text x="86" y="34" text-anchor="middle" font-family="Georgia,serif" font-weight="bold" font-size="20" fill="' + ART.gold + '" stroke="' + ART.ink + '" stroke-width="1">%</text>' +
+    '<path d="M86 60 V42 M80 48 L86 42 L92 48" fill="none" stroke="' + ART.gold + '" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>',
+  compound: () => // coin stacks that keep growing
+    artStack(24, 62, 2) + artStack(46, 62, 4) + artStack(68, 62, 7) +
+    '<path d="M14 40 Q40 38 58 22 Q66 15 76 10" fill="none" stroke="' + ART.ink + '" stroke-width="6" stroke-linecap="round"/>' +
+    '<path d="M14 40 Q40 38 58 22 Q66 15 76 10" fill="none" stroke="' + ART.bone + '" stroke-width="3" stroke-linecap="round"/>' +
+    '<path d="M70 6 L80 8 L76 18" fill="none" stroke="' + ART.bone + '" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>',
+  stash: () => // a jar of coins hidden away
+    '<path d="M32 22 Q30 26 30 32 V58 Q30 64 36 64 H64 Q70 64 70 58 V32 Q70 26 68 22 Z" fill="' + ART.bone + '" fill-opacity="0.25" stroke="' + ART.bone + '" stroke-width="' + ART.w + '"/>' +
+    artStack(42, 60, 4, 7) + artStack(58, 60, 3, 7) + artCoin(50, 46, 7) +
+    '<rect x="34" y="14" width="32" height="9" rx="2" fill="' + ART.hi + '" stroke="' + ART.ink + '" stroke-width="' + ART.w + '"/>' +
+    '<path d="M38 34 Q36 44 38 54" fill="none" stroke="#fff" stroke-width="2" opacity="0.5" stroke-linecap="round"/>',
+  earlyBird: () => // a bird at sunrise with a coin in its beak
+    '<path d="M10 52 A40 40 0 0 1 90 52 Z" fill="' + ART.gold + '" opacity="0.25"/><path d="M26 52 A24 24 0 0 1 74 52 Z" fill="' + ART.gold + '" opacity="0.55"/>' +
+    '<path d="M4 52 H96" stroke="' + ART.hi + '" stroke-width="2"/>' +
+    '<ellipse cx="44" cy="40" rx="14" ry="9" fill="' + ART.black + '" stroke="' + ART.bone + '" stroke-width="1.6"/>' +
+    '<path d="M34 36 Q40 26 50 34" fill="#1a1212" stroke="' + ART.bone + '" stroke-width="1.6"/>' +
+    '<path d="M31 40 L20 36 L30 46 Z" fill="' + ART.black + '" stroke="' + ART.bone + '" stroke-width="1.6" stroke-linejoin="round"/>' +
+    '<circle cx="57" cy="32" r="7" fill="' + ART.black + '" stroke="' + ART.bone + '" stroke-width="1.6"/><circle cx="59" cy="30.5" r="1.4" fill="' + ART.bone + '"/>' +
+    '<path d="M63 32 L70 34 L63 36 Z" fill="' + ART.hi + '"/>' +
+    '<circle cx="74" cy="35" r="6" fill="' + ART.gold + '" stroke="' + ART.ink + '" stroke-width="1.6"/><text x="74" y="38.5" text-anchor="middle" font-family="Georgia,serif" font-weight="bold" font-size="8" fill="' + ART.ink + '">$</text>' +
+    '<path d="M42 49 V54 M48 49 V54" stroke="' + ART.hi + '" stroke-width="1.6"/>',
 };
 
 // A card's art as an SVG string. cls: the CSS class ("card-art", "hand-art"...).
