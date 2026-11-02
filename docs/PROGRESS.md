@@ -2,6 +2,17 @@
 
 Dated session log. Newest at the top.
 
+## 2026-11-02: Android Phase D, store listing draft
+
+**Done**
+- store/LISTING.md: app name, short description (76/80), full description (2,043/4,000), release notes, category advice (Strategy), content rating and Data safety answers, Play wording rules. Facts checked against the game (58 cards, 11 comps, 9 crew, 55 unlocks).
+
+**Waiting on the owner**
+- Review the text; pick the category and the public contact email. Play Console ID check.
+
+**Exact next step**
+- Phase E: create the upload key, build the signed release (.aab), internal testing.
+
 ## 2026-11-02: Android Phase A part 2 (icon and store art)
 
 **Done**

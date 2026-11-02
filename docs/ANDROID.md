@@ -69,7 +69,7 @@ Each phase ends with a short check-in, like our milestones. **Who** says who doe
 - [ ] Fix what's different in the app: sound unlock on first tap, back button, status bar colour, text sizes.
 
 ### Phase D: store listing (together, 2 sessions)
-- [ ] Claude drafts: app name, short description (80 characters), full description, "what's new" text.
+- [x] Claude drafts: app name, short description (80 characters), full description, "what's new" text: in `store/LISTING.md` (2026-11-02), with category, content rating and Data safety answers. *Waiting on the owner's review.*
 - [ ] Upload the store art from Phase A.
 - [ ] Content rating questionnaire, target audience (18+), Data safety form ("no data collected or shared"), ads: no, privacy policy link.
 
