@@ -78,7 +78,7 @@ Each phase ends with a short check-in, like our milestones. **Who** says who doe
 - [ ] Build the release bundle (`.aab`) and upload it to the **internal testing** track (up to 100 testers, installs free even for paid apps, no review wait). Quick check on friends' Android phones.
 
 ### Phase F: closed test, 12 testers x 14 days (calendar: about 2-3 weeks)
-- [ ] Recruit **12 or more** friends with Android phones and Google accounts (aim for 15: invites don't count, only testers who opt in and keep it installed).
+- [ ] Recruit **12 or more** friends with Android phones and Google accounts (aim for 15: invites don't count, only testers who opt in and keep it installed). Invites and a tracker are in `store/INVITE.md`; if short, swap testing in tester-exchange communities (not paid tester services: Google can reject inactive testers).
 - [ ] Each gets a promo code (D4), opts in, installs, and keeps it installed for **14 days in a row**.
 - [ ] Collect feedback with the in-game note; ship fixes as test updates.
 
