@@ -46,7 +46,7 @@ Each phase ends with a short check-in, like our milestones. **Who** says who doe
 
 **Owner: run it on the PC (first time, about an hour, mostly downloads)**
 1. Install **GitHub Desktop** (desktop.github.com), sign in with your GitHub account, then *File > Clone repository > kshime3/chained-dice*. It goes into `Documents\GitHub\chained-dice`.
-2. In GitHub Desktop: *Repository > Open in Command Prompt* (or PowerShell). Type these, one at a time, pressing Enter after each:
+2. In GitHub Desktop: *Repository > Open in Command Prompt* (or PowerShell). If it says "Unable to locate Git", click **Open without Git**: our steps don't need Git. (Or: *Repository > Show in Explorer*, click the address bar, type `cmd`, Enter.) Type these, one at a time, pressing Enter after each:
    - `npm install` (downloads Capacitor into the folder, about a minute)
    - `npm run sync` (copies the game into the Android project)
 3. Open **Android Studio** > *Open* > pick the `android` folder inside `chained-dice`. Wait for "Gradle sync" to finish at the bottom (the first time it downloads a lot: 5-15 minutes). If it offers to install an SDK platform or tools, say yes.
