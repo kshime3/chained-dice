@@ -55,6 +55,13 @@ Each phase ends with a short check-in, like our milestones. **Who** says who doe
 6. Try: tap to start the music, play a shooter, press the emulator's **back** button with a popup open (it should close), then with nothing open (it should ask to leave). Turn the emulator sideways: the game should stay upright.
 7. Tell Claude what happened (a screenshot of any red error text helps).
 
+**Status 2026-11-02:** the app builds and runs in the emulator (after: Node not found -> fresh Command Prompt; Gradle on Java 8 -> new Android Studio with Gradle JDK 21; emulator WHPX error -> BIOS OC > Advanced CPU Configuration > SVM Mode Enabled on the MSI B350M board, plus Windows features "Windows Hypervisor Platform" and "Virtual Machine Platform"). The emulator is laggy on this PC; real phones are faster.
+
+**Getting logs to Claude**
+- *Game errors (best):* with the app running, open Chrome on the PC at `chrome://inspect/#devices`, click **inspect** under Chained Dice, open the **Console** tab; red lines are errors (right-click > Save as, or copy, or screenshot).
+- *App crashes:* Android Studio > View > Tool Windows > **Logcat**, filter `package:com.kshime3.chaineddice level:error`, copy the red lines.
+- *Faster emulator:* Device Manager > edit the Pixel 8 > Show Advanced Settings > Graphics: Hardware, RAM: 4096 MB.
+
 **Later updates** (after Claude changes the game): GitHub Desktop *Fetch / Pull*, then `npm run sync`, then Run ▶ again.
 
 - [x] Claude adds the Capacitor setup to the repo (done 2026-11-02, see above).

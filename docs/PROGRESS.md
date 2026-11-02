@@ -2,6 +2,17 @@
 
 Dated session log. Newest at the top.
 
+## 2026-11-02: The app runs in the Android emulator
+
+**Done**
+- Owner: cloned with GitHub Desktop, npm install / npm run sync, new Android Studio (Gradle JDK 21), enabled SVM in the BIOS and Windows Hypervisor Platform; the game runs in a Pixel 8 / API 36 emulator (a bit laggy on this PC). Log instructions in docs/ANDROID.md.
+
+**Waiting on the owner**
+- Emulator checks (music, back button, rotation) and any logs; Play Console ID check.
+
+**Exact next step**
+- Fix anything the emulator shows; then Phase A part 2 (app icon and store art).
+
 ## 2026-11-02: Android Phase C, repo side
 
 **Done**
