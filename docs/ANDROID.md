@@ -49,7 +49,7 @@ Each phase ends with a short check-in, like our milestones. **Who** says who doe
 2. In GitHub Desktop: *Repository > Open in Command Prompt* (or PowerShell). If it says "Unable to locate Git", click **Open without Git**: our steps don't need Git. (Or: *Repository > Show in Explorer*, click the address bar, type `cmd`, Enter.) Type these, one at a time, pressing Enter after each:
    - `npm install` (downloads Capacitor into the folder, about a minute)
    - `npm run sync` (copies the game into the Android project)
-3. Open **Android Studio** > *Open* > pick the `android` folder inside `chained-dice`. Wait for "Gradle sync" to finish at the bottom (the first time it downloads a lot: 5-15 minutes). If it offers to install an SDK platform or tools, say yes.
+3. Open **Android Studio** > *Open* > pick the `android` folder inside `chained-dice`. Wait for "Gradle sync" to finish at the bottom (the first time it downloads a lot: 5-15 minutes). If it offers to install an SDK platform or tools, say yes. If it fails with "requires at least JVM runtime version 11. This build uses a Java 8 JVM": *File > Settings > Build, Execution, Deployment > Build Tools > Gradle > Gradle JDK* = **jbr-21** (Android Studio's own Java; or *Download JDK* version 21), OK, then *File > Sync Project with Gradle Files*.
 4. *Tools > Device Manager > Create device*: pick **Pixel 8**, then a system image with **API 36** (download it), Finish.
 5. Press the green **Run ▶** button at the top. The emulator starts and the game opens in it.
 6. Try: tap to start the music, play a shooter, press the emulator's **back** button with a popup open (it should close), then with nothing open (it should ask to leave). Turn the emulator sideways: the game should stay upright.
