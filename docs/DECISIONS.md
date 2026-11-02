@@ -374,3 +374,7 @@ Dated log of every decision and why. Newest at the bottom.
 - Capacitor 8.6.0 (exact versions in package.json), targeting Android 16 / API 36. The android/ folder is committed so the owner only clones and opens it; copied game files (www/, android assets) and node_modules are not committed.
 - No bundler: tools/copy-web.js adds Capacitor's core script only to the app's copy of index.html, and controls.js registers the App plugin by name for the back button.
 - Owner gets the repo onto the PC with GitHub Desktop.
+
+## 2026-11-02: App icon and store art
+- The adaptive icon splits the logo: its green/pit background fills the shape, the die and chain sit in the safe zone (Android cuts icons into circles, squircles etc.). Splash: icon on #0a0807.
+- Store screenshots are taken from the real game in app mode at 1080 x 1920 by a script, so they can be remade after changes.

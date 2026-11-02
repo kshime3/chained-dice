@@ -2,6 +2,19 @@
 
 Dated session log. Newest at the top.
 
+## 2026-11-02: Android Phase A part 2 (icon and store art)
+
+**Done**
+- Owner: the app runs in the emulator; music, back button and portrait all work.
+- App icon from the Blood Pip logo (adaptive, round, legacy, monochrome) and a dark splash screen, replacing Capacitor's placeholders. Store art in store/: 512 icon, 1024 x 500 feature graphic, five 1080 x 1920 screenshots. Generators: tools/make-icons.js, tools/make-store-art.js.
+- Phase A is complete.
+
+**Waiting on the owner**
+- Pull, `npm run sync`, Run, and check the home-screen icon and the splash. Play Console ID check.
+
+**Exact next step**
+- Phase D: store listing text (Claude drafts), then Phase E: the signed release build and internal testing.
+
 ## 2026-11-02: The app runs in the Android emulator
 
 **Done**

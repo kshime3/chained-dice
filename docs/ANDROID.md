@@ -33,8 +33,8 @@ Each phase ends with a short check-in, like our milestones. **Who** says who doe
 - [x] App mode (`CONFIG.inApp`; `?app` previews it in a browser): the feedback note points to a Play review and the developer email. Testing shortcuts need address extras, which the app never has.
 - [x] Version number in Settings > Credits (`CONFIG.appVersion`, now 1.0.0).
 - [x] **Privacy policy** page (`privacy.html`, linked in Settings > Credits): no data collected, saves stay on your device. It will be at https://kshime3.github.io/chained-dice/privacy.html for the Play listing.
-- [ ] App icons: Android adaptive icon (foreground + background layers) from the logo.
-- [ ] Store art made by Claude: phone screenshots (1080 x 1920), the 1024 x 500 feature graphic, the 512 x 512 icon.
+- [x] App icons: adaptive icon (background + art layers, plus a monochrome layer for themed icons), round and legacy icons at every density, made from the logo by `tools/make-icons.js`. The splash screen is the icon on the game's dark background (Android 12+) and a dark logo image on older Androids.
+- [x] Store art in `store/` (by `tools/make-store-art.js`): `icon-512.png`, `feature-graphic.png` (1024 x 500), five phone screenshots (1080 x 1920: table, shop, hand, the fall, endless).
 
 ### Phase B: accounts and tools (owner, 1-2 sessions plus waiting)
 - [ ] Create a **Google Play Console** account: personal account, $25 one-time fee, ID verification (can take a few days). *Account created 2026-11-02; ID still to submit.*
