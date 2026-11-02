@@ -90,6 +90,12 @@ Each phase ends with a short check-in, like our milestones. **Who** says who doe
 - [ ] How to ship an update: change the game, bump the version, build, upload (Claude writes a checklist).
 - [ ] Watch reviews and crash reports in the Play Console.
 
+## Copyright check (2026-11-02)
+- Code, art and text are original; craps terms are public; music is CC BY 4.0 (selling allowed with the credits, which are in Settings).
+- No other game called "Chained Dice" found. Never name Balatro or Clover Pit in the listing, graphics or ads (trademarks).
+- The premise echoes Clover Pit (debt deadlines, phone perks, the pit): ideas aren't protected, but reviews may compare. The owner chose to keep the phone as is.
+- `licenses.html` (Settings > Credits > Open-source licenses) shows the MIT and Apache 2.0 notices for Capacitor, AndroidX and Cordova. Update it if new plugins are added.
+
 ## Money and rules to know
 - Google keeps **15%** of each sale (for a developer's first $1M a year); taxes depend on the country.
 - **Music:** Kevin MacLeod tracks are CC BY 4.0, which allows selling the game as long as the credits stay in (they're in Settings > Credits).

@@ -378,3 +378,7 @@ Dated log of every decision and why. Newest at the bottom.
 ## 2026-11-02: App icon and store art
 - The adaptive icon splits the logo: its green/pit background fills the shape, the die and chain sit in the safe zone (Android cuts icons into circles, squircles etc.). Splash: icon on #0a0807.
 - Store screenshots are taken from the real game in app mode at 1080 x 1920 by a script, so they can be remade after changes.
+
+## 2026-11-02: Copyright check; licenses page
+- Owner asked about copyright and similarity to Balatro / Clover Pit. Mechanics and genres aren't protected; all assets are original or licensed. Owner keeps the phone perk moment as is.
+- Added licenses.html (linked in Settings > Credits) for Capacitor (MIT), AndroidX and Cordova (Apache 2.0), and the music (CC BY).

@@ -37,6 +37,7 @@ docs/ANDROID.md    the Android app plan: decisions, phases, checklist
 index.html         the game page (open this to play)
 tests.html         rule checks: open to see green/red results
 privacy.html       privacy policy (linked in Settings; the Play listing needs it)
+licenses.html      open-source licenses the Android app needs to show (Capacitor MIT, AndroidX/Cordova Apache 2.0, music CC BY)
 css/style.css      colors and layout
 img/logo.svg       the logo (C3 "Blood Pip"); img/icon-*.png are renders of it for tabs and home screens
 manifest.webmanifest  name and icons for "add to home screen"

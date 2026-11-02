@@ -2,6 +2,17 @@
 
 Dated session log. Newest at the top.
 
+## 2026-11-02: Licenses page
+
+**Done**
+- Copyright check (notes in docs/ANDROID.md). licenses.html with the MIT / Apache 2.0 notices the app needs, linked in Settings > Credits and copied into the app.
+
+**Waiting on the owner**
+- Store text review, category, contact email; Play Console ID check.
+
+**Exact next step**
+- Phase E: upload key, signed release build, internal testing (after the ID check).
+
 ## 2026-11-02: Android Phase D, store listing draft
 
 **Done**
