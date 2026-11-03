@@ -6,7 +6,7 @@
 
 - **Model:** a one-time price (owner's choice). No ads.
 - **Computer:** Windows PC. The owner's phone is an iPhone, so Android testing happens on the PC's Android emulator and on friends' Android phones.
-- **Google Play:** developer account created 2026-11-02 (ID verification still to submit). Node.js and Android Studio installed on the PC.
+- **Google Play:** developer account created 2026-11-02, ID verified 2026-11-03. Node.js and Android Studio installed on the PC.
 - **The game is ready to wrap:** plain HTML/CSS/JS, no internet needed (no outside fonts or files), about 16 MB with music, saves stay on the device, touch controls and press-and-hold help already done.
 
 Rough total: **6 to 10 weeks of calendar time**, much of it waiting (account checks, the 14-day test, Google's review). Hands-on work fits the one-hour-a-day pace.
@@ -74,6 +74,12 @@ Each phase ends with a short check-in, like our milestones. **Who** says who doe
 - [ ] Content rating questionnaire, target audience (18+), Data safety form ("no data collected or shared"), ads: no, privacy policy link.
 
 ### Phase E: first signed build + internal test (owner with Claude's steps, 1-2 sessions)
+**Steps (2026-11-03):**
+1. *Play Console > Create app*: name Chained Dice, English (United States), **Game**, **Paid** (paid can later become free, never the other way), accept the declarations.
+2. *Android Studio > Build > Generate Signed App Bundle or APK > Android App Bundle > Create new...* key store **outside** the chained-dice folder (e.g. `Documents\ChainedDiceKeys\chained-dice-upload.jks`), alias `upload`, strong passwords, validity 25+ years. Back the file and both passwords up (USB stick / password manager). Then *release* > Create: the bundle is `android\app\release\app-release.aab`.
+3. *Play Console > Test and release > Testing > Internal testing*: Testers tab (email list with Android friends' Gmails, copy the join link), then Releases > Create new release: use Google's Play App Signing, upload the .aab, release notes "First test build", Next > Save > publish to internal testers.
+4. Testers open the join link on their Android phone, accept, install from the Play Store (free for internal testers).
+
 - [ ] Create the **upload key** in Android Studio. **Keep it and its password safe**: losing it makes updates painful. Back it up off the PC.
 - [ ] Build the release bundle (`.aab`) and upload it to the **internal testing** track (up to 100 testers, installs free even for paid apps, no review wait). Quick check on friends' Android phones.
 

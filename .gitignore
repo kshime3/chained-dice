@@ -1,3 +1,8 @@
 # Android app (Capacitor): installed packages and the copied game are rebuilt with "npm install" and "npm run sync"
 node_modules/
 www/
+# Android signing keys: NEVER commit these (keep them backed up somewhere safe instead)
+*.jks
+*.keystore
+keystore.properties
+android/app/release/
