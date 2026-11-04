@@ -6,3 +6,5 @@ www/
 *.keystore
 keystore.properties
 android/app/release/
+# Android Studio's own settings for each person's PC
+android/.idea/
