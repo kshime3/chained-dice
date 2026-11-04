@@ -382,3 +382,6 @@ Dated log of every decision and why. Newest at the bottom.
 ## 2026-11-02: Copyright check; licenses page
 - Owner asked about copyright and similarity to Balatro / Clover Pit. Mechanics and genres aren't protected; all assets are original or licensed. Owner keeps the phone perk moment as is.
 - Added licenses.html (linked in Settings > Credits) for Capacitor (MIT), AndroidX and Cordova (Apache 2.0), and the music (CC BY).
+
+## 2026-11-04: No tablet screenshots for now
+- Tablet screenshots are optional on Google Play; the owner skipped them because the game leaves empty space on tall tablet screens. Tablet layout fix parked in IDEAS.md.

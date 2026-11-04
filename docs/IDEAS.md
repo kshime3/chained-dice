@@ -118,3 +118,6 @@ If the owner feels good after art, music and a wider playtest: wrap with Capacit
 ## Open from the 2026-11-01 balance question
 - [Built 2026-11-01] "+1 way to roll 7" is now a dark-side piece (gated, with a seven-out bonus).
 - [Built 2026-11-01] Dark side late game: Body Count. Still possible later: a stronger Graveyard Shift.
+
+## Tablet layout (2026-11-04)
+- On tall tablet screens (7- and 10-inch, portrait) the game fills only the top half; the rest is empty background (see store/tablet7-*.png, tablet10-*.png). Fix: scale the layout up to fill tall screens (layout only, no gameplay change), then remake the tablet screenshots with `node tools/make-store-art.js` and upload them. Owner chose to skip tablet screenshots for launch.
