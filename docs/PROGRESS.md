@@ -2,6 +2,18 @@
 
 Dated session log. Newest at the top.
 
+## 2026-11-04: Android Phase E, internal testing live
+
+**Done**
+- Owner: Play account verified; app created (Paid); upload key made and backed up; signed .aab built in Android Studio; internal testing release live and installed from Google Play on the owner's Android phone.
+- Claude: Git ignores signing keys and android/.idea.
+
+**Waiting on the owner**
+- Play the Play Store build on the phone (speed, music, back button, saves). Finish the store listing and app-content forms (answers in store/LISTING.md).
+
+**Exact next step**
+- Phase F: closed testing track, promo codes, invites (store/INVITE.md), 12+ testers for 14 days.
+
 ## 2026-11-02: Licenses page
 
 **Done**

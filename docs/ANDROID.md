@@ -80,8 +80,8 @@ Each phase ends with a short check-in, like our milestones. **Who** says who doe
 3. *Play Console > Test and release > Testing > Internal testing*: Testers tab (email list with Android friends' Gmails, copy the join link), then Releases > Create new release: use Google's Play App Signing, upload the .aab, release notes "First test build", Next > Save > publish to internal testers.
 4. Testers open the join link on their Android phone, accept, install from the Play Store (free for internal testers).
 
-- [ ] Create the **upload key** in Android Studio. **Keep it and its password safe**: losing it makes updates painful. Back it up off the PC.
-- [ ] Build the release bundle (`.aab`) and upload it to the **internal testing** track (up to 100 testers, installs free even for paid apps, no review wait). Quick check on friends' Android phones.
+- [x] Create the **upload key** in Android Studio (done 2026-11-03, backed up off the PC). **Keep it and its password safe**: losing it makes updates painful. Back it up off the PC.
+- [x] Build the release bundle (`.aab`) and upload it to the **internal testing** track (done 2026-11-04: installed from Google Play on the owner's Android phone; the first release took a while to appear: "Item not found" until Google finished) (up to 100 testers, installs free even for paid apps, no review wait). Quick check on friends' Android phones.
 
 ### Phase F: closed test, 12 testers x 14 days (calendar: about 2-3 weeks)
 - [ ] Recruit **12 or more** friends with Android phones and Google accounts (aim for 15: invites don't count, only testers who opt in and keep it installed). Invites and a tracker are in `store/INVITE.md`; if short, swap testing in tester-exchange communities (not paid tester services: Google can reject inactive testers).
