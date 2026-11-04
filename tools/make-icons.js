@@ -56,7 +56,8 @@ const DENSITIES = { mdpi: 1, hdpi: 1.5, xhdpi: 2, xxhdpi: 3, xxxhdpi: 4 };
 
   // Store icon for Google Play: 512 x 512.
   fs.mkdirSync(path.join(root, "store"), { recursive: true });
-  await render(svg(background + safeArt(0.85), 512, 512), 512, 512, path.join(root, "store", "icon-512.png"), false);
+  // Play wants a 32-bit PNG (with an alpha channel) for the store icon, so it is rendered with transparency on (it fills the square anyway).
+  await render(svg(background + safeArt(0.85), 512, 512), 512, 512, path.join(root, "store", "icon-512.png"), true);
 
   await browser.close();
   console.log("Icons, splash screens and store/icon-512.png made.");
