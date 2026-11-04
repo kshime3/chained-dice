@@ -28,9 +28,16 @@ fs.mkdirSync(out, { recursive: true });
     </div></body></html>`);
   await banner.screenshot({ path: path.join(out, "feature-graphic.png") });
 
-  // ---------- Phone screenshots: 360 x 640 at 3x = 1080 x 1920 ----------
+  // ---------- Screenshots: phone 1080 x 1920, 7-inch tablet 1200 x 1920, 10-inch tablet 1600 x 2560 ----------
+  // (The 10-inch tablet is wide enough for the game's wide layout: your hand sits beside the table.)
+  const DEVICES = [
+    { prefix: "screenshot-", width: 360, height: 640, scale: 3 },
+    { prefix: "tablet7-", width: 600, height: 960, scale: 2 },
+    { prefix: "tablet10-", width: 800, height: 1280, scale: 2 },
+  ];
+  let device = DEVICES[0];
   const shot = async (name, query, setup) => {
-    const ctx = await browser.newContext({ viewport: { width: 360, height: 640 }, deviceScaleFactor: 3, isMobile: true, hasTouch: true });
+    const ctx = await browser.newContext({ viewport: { width: device.width, height: device.height }, deviceScaleFactor: device.scale, isMobile: true, hasTouch: true });
     const page = await ctx.newPage();
     await page.addInitScript(() => { for (const k of ["intro", "shop", "comps", "phone", "guided", "bets"]) localStorage.setItem("chainedDice.seen." + k, "yes"); });
     await page.goto(game + "?fast&unlockAll&app" + (query || ""));
@@ -39,10 +46,11 @@ fs.mkdirSync(out, { recursive: true });
     await page.waitForTimeout(700);
     await page.evaluate(() => { const t = document.getElementById("tutorial-skip"); if (t && t.offsetParent) t.click(); });
     await page.waitForTimeout(300);
-    await page.screenshot({ path: path.join(out, "screenshot-" + name + ".png") });
+    await page.screenshot({ path: path.join(out, device.prefix + name + ".png") });
     await ctx.close();
   };
 
+  for (device of DEVICES) {
   // 1. The table mid-shooter: a point is on, bets down, a warm mult.
   await shot("1-table", "&cards=hotHand,mirrorDice,twinSouls,doubleUp", () => {
     document.getElementById("leave-break").click();
@@ -72,6 +80,7 @@ fs.mkdirSync(out, { recursive: true });
     state.point = 6; state.bets.pass = state.minBet; state.bets.odds = state.minBet * 5; state.turnPointsMade = 3; state.hotStreak = 4; renderAll();
     showMessage("Point hit! +" + money(state.debt * 0.37) + ". The house is still counting.", false);
   });
+  }
 
   await browser.close();
   console.log("Store art made in store/.");
