@@ -385,3 +385,7 @@ Dated log of every decision and why. Newest at the bottom.
 
 ## 2026-11-04: No tablet screenshots for now
 - Tablet screenshots are optional on Google Play; the owner skipped them because the game leaves empty space on tall tablet screens. Tablet layout fix parked in IDEAS.md.
+
+## 2026-11-05: Take-back chip and odds pop-up (friend feedback)
+- A friend couldn't remove single bets or chips. Owner chose: take back one chip at a time and one bet at a time. Added a ✖ take-back chip (tap = one chip off, double-tap = whole bet), sharing Clear bets' rules about what may come down.
+- The friend found the odds pop-up confusing. Owner approved a redesign: a plain question as the title, a colour key, and a single "what happens next" bar instead of the old list of numbers.

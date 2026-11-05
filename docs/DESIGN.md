@@ -90,7 +90,7 @@ Tested with the simulator (`docs/BALANCE.md`).
 - **Lay Odds [Built]:** behind Don't Pass while a point is on. Pays 1:2 on 4/10, 2:3 on 5/9, 5:6 on 6/8 (rounded down). You can lay enough to win up to 3-4-5x your Don't Pass bet (6x the bet on every point). Can be taken back.
 - **Odds:** only while a point is on, up to 3x the Pass Line on 4/10, 4x on 5/9, 5x on 6/8. Pays true odds (2:1, 3:2, 6:5), rounded down. Can be taken back at any time. A winning Odds bet returns to your cash.
 - **Field:** one-roll bet. 3, 4, 9, 10, 11 pay even money; 2 pays double; 12 pays triple; 5, 6, 7, 8 lose.
-- Winning Pass Line and Field bets are paid and stay on the table. "Clear bets" takes back everything that isn't locked.
+- Winning Pass Line and Field bets are paid and stay on the table. "Clear bets" takes back everything that isn't locked. The ✖ take-back chip takes one chip off a bet per tap (double-tap: the whole bet), under the same rules.
 - **Chips:** $5, $25, $100. No maximum bet.
 - **[Planned, after v1]** A "More bets" milestone: Place bets, Hard Ways, Come with its own Odds (some as phone unlocks). Phone unlocks: Fire Bet, Different Doubles. The base game is finished first.
 

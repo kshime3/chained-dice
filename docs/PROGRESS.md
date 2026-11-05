@@ -2,6 +2,19 @@
 
 Dated session log. Newest at the top.
 
+## 2026-11-05: Friend feedback: take back single chips; clearer odds pop-up
+
+**Done**
+- New ✖ take-back chip next to the chips (key X): tap a bet to take one chip of the last size off it, double-tap to take the whole bet. Bets that can come down get a dashed red outline; the rest dim. Same rules as Clear bets (line bets stay once a point is on; the Fire Bet stays once the shooter rolls).
+- Odds pop-up redesigned: "What could the next roll be?", a colour key, and one plain bar for what matters right now (come-out: 7/11 win, 2/3/12 lose, 4-10 sets the point; with a point: "Which comes first, the 8 or a 7?").
+- 6 new rule checks (485 pass). Fits all 5 test screens; autoplay 25 runs, no errors.
+
+**Waiting on the owner**
+- Try it in the browser. Testers on the app need a new build (version 1.0.1, versionCode 2) to see it.
+
+**Exact next step**
+- Bump the app version and build/upload a new .aab for the closed test.
+
 ## 2026-11-04: Android Phase E, internal testing live
 
 **Done**

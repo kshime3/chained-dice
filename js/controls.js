@@ -10,7 +10,7 @@ const KEY_HELP = [
   ["Space", "roll, or continue (next shooter, close a popup)"],
   ["1 2 3", "pick the small, middle or big chip"],
   ["P", "Pass Line"], ["D", "Don't Pass"], ["O", "Odds (or Lay Odds)"], ["F", "Field"],
-  ["C", "clear your bets"], ["S", "same bets as saved"],
+  ["C", "clear your bets"], ["X", "take-back chip: tap a bet to take a chip off"], ["S", "same bets as saved"],
   ["H / T", "your Hand / the Table (on narrow screens)"], ["K", "Collection"], ["Esc", "close what's open"],
 ];
 
@@ -73,6 +73,7 @@ document.addEventListener("keydown", (e) => {
     else if (key === "o") handled = press(state.bets.dont > 0 ? "#lay" : "#odds");
     else if (key === "f") handled = press("#field");
     else if (key === "c") handled = press("#clear-button");
+    else if (key === "x") handled = press("#chips .chip-take-back");
     else if (key === "s") handled = press("#same-bets");
     else if (key === "h") { showTab("hand"); handled = true; }
     else if (key === "t") { showTab("table"); handled = true; }

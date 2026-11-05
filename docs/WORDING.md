@@ -119,12 +119,13 @@ Unchanged for shifts 1-5. Shifts 6-8 follow the existing x1.5 growth: $1,800, $2
 - Unlock screen: "New bet (find it under ➕ More bets)". Tutorial pages per bet use the Collection text.
 
 ## Added 2026-10-30: polish pass
+- Take-back chip ✖: "Take back: tap a bet to take one $5 chip off it, double-tap to take the whole bet. Pick a chip to bet again." / "Took back $5 from the Pass Line (now $10)." / "Nothing on the Field to take back." / "The Fire Bet is locked in once the shooter has rolled."
 - Buttons: "💾 Save bets", "↻ Same bets". Messages: "Saved: Pass Line $5, Odds $15. Press ↻ Same bets to put them back." / "Placed Pass Line $5. Odds wait for a point: press again once it's set." / "Not enough cash for Odds." / "No saved bets yet. Put chips down, then press 💾 Save bets."
 - Settings: "Sound", "Quick dice (no tumbling animation)", "Tutorials: Show them again", "Unlocks and Reputation: Reset all progress".
 - Unlock reason (unlock screen and Collection tile): "Unlocked by surviving shift 3." / "Unlocked by winning $2,000 on Odds bets (all runs)." / "Unlocked by seeing 100 seven-outs (all runs)." Starters show no line.
 - Paying: "Pay the dealer: the drop box", button "Drop a plaque ($20)", message "Dropped a $20 plaque in the box. $140 to go." / "Not enough cash: a plaque can't take your cash below $5." How to play: "drop plaques into the dealer's drop box. Each plaque is 10% of the debt (the last one pays exactly what's left), or pay it all at once."
 - Mult pop: "+0.5x mult".
-- Locked bet tile: "PLACE 6 🔒"; tapping it: "Place Bets are locked. Keep playing to unlock them." Odds pop-up: "📊 The odds right now". New-bet tutorial title: "New bet: Hard Ways".
+- Locked bet tile: "PLACE 6 🔒"; tapping it: "Place Bets are locked. Keep playing to unlock them." Odds pop-up: "📊 What could the next roll be?", subtitle "How likely each total is on X's next roll."; come-out bar labels "7 or 11: Pass Line wins", "2, 3 or 12: Pass Line loses", "4-10: becomes the point"; with a point: "Which comes first, the 8 or a 7?", "8 first: Pass Line wins", "7 first: Don't Pass wins". New-bet tutorial title: "New bet: Hard Ways".
 - Opening: "CHAINED DICE", "tap to skip".
 
 ## Added 2026-10-31: teaching craps

@@ -17,7 +17,7 @@ function showChips() {
   if (!values.includes(selectedChip)) selectedChip = values[0];
   // A chip you can't afford is no use: switch to the biggest one you can.
   if (selectedChip > state.cash && values.some((v) => v <= state.cash)) selectedChip = values.filter((v) => v <= state.cash).pop();
-  renderChips(values, selectedChip, pickChip);
+  renderChips(values, takeBackMode ? null : selectedChip, pickChip, takeBackMode, toggleTakeBack);
 }
 let rolling = false; // true while the dice animation plays
 
@@ -28,12 +28,43 @@ function busy() {
 
 function pickChip(value) {
   selectedChip = value;
+  takeBackMode = false;
   showChips();
+  renderState(state);
+}
+
+// The take-back chip (✖): tap a bet to take one chip back, double-tap to take the whole bet.
+function toggleTakeBack() {
+  takeBackMode = !takeBackMode;
+  showChips();
+  renderState(state);
+  if (takeBackMode) showMessage("Take back: tap a bet to take one " + money(selectedChip) + " chip off it, double-tap to take the whole bet. Pick a chip to bet again.");
+}
+
+let lastTakeBackTap = { bet: null, time: 0 };
+function takeBackBet(betName) {
+  const now = Date.now();
+  const doubleTap = lastTakeBackTap.bet === betName && now - lastTakeBackTap.time < 400;
+  lastTakeBackTap = { bet: betName, time: now };
+  if (!(state.bets[betName] > 0)) {
+    showMessage("Nothing on the " + BET_NAMES[betName] + " to take back.");
+    return;
+  }
+  const back = takeBack(state, betName, doubleTap ? Infinity : selectedChip);
+  if (!back) {
+    showMessage(betName === "fire" ? "The Fire Bet is locked in once the shooter has rolled."
+      : "The " + BET_NAMES[betName] + " can't come down while the point is on. It stays until the point or a 7.");
+    return;
+  }
+  playSound("chip");
+  showMessage("Took back " + money(back) + " from the " + BET_NAMES[betName] + (state.bets[betName] > 0 ? " (now " + money(state.bets[betName]) + ")." : ". It's empty now."));
+  renderState(state);
 }
 
 // Move chips from your cash onto a bet.
 function placeBet(betName) {
   if (busy() || state.status !== "playing" || state.onBreak) return;
+  if (takeBackMode) return takeBackBet(betName);
   let amount = selectedChip;
 
   // The new bets (More bets board).
@@ -126,13 +157,7 @@ function placeBet(betName) {
 // Take bets back into your cash. A locked Pass Line or Don't Pass stays put.
 function clearBets() {
   if (busy() || state.status !== "playing" || state.onBreak) return;
-  const b = state.bets;
-  let loose = state.point === null ? ["pass", "dont"].concat(looseBets()) : looseBets();
-  if (state.turnRolls === 0) loose = loose.concat("fire"); // the Fire Bet locks in at the first roll
-  for (const bet of loose) {
-    state.cash += b[bet];
-    b[bet] = 0;
-  }
+  for (const bet of removableBets(state)) takeBack(state, bet, Infinity);
   playSound("chip");
   showMessage(state.point === null
     ? "Bets returned to you. Remember: a Pass Line or Don't Pass bet is needed to roll."

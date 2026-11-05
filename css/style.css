@@ -909,3 +909,23 @@ button:not(:disabled):hover { filter: brightness(1.15); }
 /* Android app: keep the header clear of a notch if the app draws under the status bar
    (env() is 0 when it doesn't). The tab bar already keeps clear of the gesture bar. */
 body.in-app .top { padding-top: env(safe-area-inset-top); }
+
+/* Take-back chip (✖): tap a bet to take a chip off, double-tap for the whole bet */
+.chip.chip-take-back { background: #3a2618; border-color: #e2c89a; color: #f3e3c3; font-size: 1.2rem; }
+body.taking-back .bet-area:not(.can-take) { opacity: 0.45; }
+body.taking-back .bet-area.can-take { outline: 3px dashed #ff6b5b; outline-offset: -3px; cursor: pointer; }
+
+/* Odds popup: color key and the "race" bar */
+.odds-sub { margin: 0 0 8px; font-size: 0.9rem; color: #e2c89a; }
+.odds-key { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 14px; margin: 8px 0 12px; font-size: 0.8rem; }
+.odds-key .key { display: inline-flex; align-items: center; gap: 5px; }
+.odds-key .sw { display: inline-block; width: 12px; height: 12px; border-radius: 3px; background: #4a90d9; }
+.odds-key .sw.point { background: #ffd84d; } .odds-key .sw.seven { background: #c0392b; }
+.race-title { font-weight: bold; margin: 4px 0 6px; }
+.race { display: flex; height: 30px; border-radius: 8px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.25); }
+.race .seg { display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.9rem; color: #111; min-width: 0; overflow: hidden; white-space: nowrap; }
+.race .seg.point { background: #ffd84d; } .race .seg.seven { background: #c0392b; color: #fff; }
+.race .seg.win { background: #2ecc71; } .race .seg.lose { background: #c0392b; color: #fff; } .race .seg.setpoint { background: #4a90d9; color: #fff; }
+.race-labels { display: flex; justify-content: space-between; gap: 10px; margin: 5px 0 10px; font-size: 0.8rem; text-align: left; }
+.race-labels span:last-child { text-align: right; }
+.race-labels.three span { flex: 1; text-align: center; }

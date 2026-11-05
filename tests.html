@@ -1227,6 +1227,19 @@
     check("playRoll: a 7 with a point on is a seven-out, next shooter, Dealer Break", [r4.sevenOut, pr.shooterIndex, pr.onBreak], [true, 1, true]);
     }
 
+    // Take-back chip: one chip at a time, only bets that are allowed to come down
+    {
+    const tb = newShiftState(); tb.onBreak = false; tb.bets.pass = 15; tb.bets.field = 10; tb.cash -= 25;
+    check("Take back: $5 off the Pass Line before a point", [takeBack(tb, "pass", 5), tb.bets.pass, tb.cash], [5, 10, 180]);
+    check("Take back: never more than the bet", [takeBack(tb, "field", 25), tb.bets.field, tb.cash], [10, 0, 190]);
+    check("Take back: nothing on the bet gives back nothing", takeBack(tb, "field", 5), 0);
+    tb.point = 6; tb.turnRolls = 1;
+    check("Take back: the Pass Line is locked once a point is on", [takeBack(tb, "pass", 5), tb.bets.pass], [0, 10]);
+    check("Take back: the Fire Bet is locked once the shooter rolls", removableBets(tb).includes("fire"), false);
+    tb.turnRolls = 0; tb.point = null;
+    check("Take back: before the first roll, Pass, Don't Pass and Fire can come down", ["pass", "dont", "fire"].every((b) => removableBets(tb).includes(b)), true);
+    }
+
     // Dice: 10,000 rolls stay in range, and 7 is the most common total
     const counts = {};
     let inRange = true;

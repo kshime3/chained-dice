@@ -229,6 +229,23 @@ function rebet(state) {
   return out;
 }
 
+// Bets you may take back right now: everything loose, the line bet before a point is set,
+// and the Fire Bet before the shooter's first roll. (Clear bets and the take-back chip both use this.)
+function removableBets(state) {
+  let list = state.point === null ? ["pass", "dont"].concat(looseBets()) : looseBets();
+  if (state.turnRolls === 0) list = list.concat("fire");
+  return list;
+}
+
+// Take up to amount back from one bet into your cash. Returns how much came back (0 if it can't).
+function takeBack(state, bet, amount) {
+  if (!removableBets(state).includes(bet) || !(state.bets[bet] > 0)) return 0;
+  const back = Math.min(amount, state.bets[bet]);
+  state.bets[bet] -= back;
+  state.cash += back;
+  return back;
+}
+
 // How much of your leftover money you keep into the next shift (the rest is the dealer's cut).
 function carryShare(state) {
   return hasCard(state, "loanShark") ? CONFIG.loanSharkCarry : CONFIG.carryOverShare;

@@ -126,7 +126,10 @@ function sevenChance(name, state) {
   return diceOdds(Object.assign({}, dice, { extraWays: now.extraWays, totalWays: now.totalWays }))[7];
 }
 
-function renderChips(values, selectedChip, onPick) {
+// The take-back chip is on: tapping a bet takes chips off it (main.js toggles this).
+let takeBackMode = false;
+
+function renderChips(values, selectedChip, onPick, takingBack, onTakeBack) {
   const box = document.getElementById("chips");
   box.innerHTML = "";
   values.forEach((value, tier) => {
@@ -137,6 +140,27 @@ function renderChips(values, selectedChip, onPick) {
     chip.onclick = () => onPick(value);
     box.appendChild(chip);
   });
+  if (onTakeBack) {
+    const back = document.createElement("button");
+    back.className = "chip chip-take-back" + (takingBack ? " selected" : "");
+    back.textContent = "✖";
+    back.title = "Take back: tap a bet to take one chip off it, double-tap to take the whole bet";
+    back.setAttribute("aria-label", "Take back chips");
+    back.onclick = onTakeBack;
+    box.appendChild(back);
+  }
+}
+
+// In take-back mode, mark the bets that have chips you're allowed to take back.
+function markTakeBack(state) {
+  document.body.classList.toggle("taking-back", takeBackMode);
+  const ids = { "pass-line": "pass", "dont-pass": "dont", odds: "odds", lay: "lay", field: "field" };
+  const can = (bet) => takeBackMode && state.bets[bet] > 0 && removableBets(state).includes(bet);
+  for (const [id, bet] of Object.entries(ids)) {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle("can-take", can(bet));
+  }
+  document.querySelectorAll("#extra-board [data-bet]").forEach((el) => el.classList.toggle("can-take", can(el.dataset.bet)));
 }
 
 function renderState(state) {
@@ -157,6 +181,7 @@ function renderState(state) {
   renderChallenge(state);
   document.getElementById("on-table").textContent = money(betsTotal(b));
   renderExtraBoard(state);
+  markTakeBack(state);
   document.getElementById("table-min").textContent = "Table min " + money(tableMin(state));
   document.getElementById("pass-amount").textContent = money(b.pass);
   document.getElementById("dont-amount").textContent = money(b.dont);
@@ -287,7 +312,8 @@ function renderMult(state) {
   if (gain) popMult(box, gain);
 }
 
-// Bar chart of the current shooter's chance of each total.
+// The odds popup: the chance of each total on the next roll, a color key, and a "race" bar
+// that answers what players actually want to know (who wins, Pass Line or Don't Pass).
 function renderOddsPanel(state) {
   const panel = document.getElementById("odds-panel");
   const name = state.crew[state.shooterIndex];
@@ -297,6 +323,7 @@ function renderOddsPanel(state) {
   }
   const charm = nextRollPairs(state);
   const odds = diceOdds(currentDice(state), charm);
+  const pct = (x) => Math.round(x * 100) + "%";
   let bars = "";
   for (let t = 2; t <= 12; t++) {
     const share = Math.min(1, odds[t] / 0.25); // 25% fills the bar (height set in CSS)
@@ -304,19 +331,32 @@ function renderOddsPanel(state) {
     if (t === 7) cls += " seven";
     if (t === state.point) cls += " point";
     if (odds[t] === 0) cls += " impossible";
-    bars += '<div class="' + cls + '"><span class="pct">' + Math.round(odds[t] * 100) + '%</span>' +
+    bars += '<div class="' + cls + '"><span class="pct">' + pct(odds[t]) + '</span>' +
       '<div class="fill" style="height: calc(var(--bar-max) * ' + share + ')"></div><span class="num">' + t + "</span></div>";
   }
-  let summary = whose(name) + " dice: current chance of a 7 is <strong>" + percent(odds[7]) + "</strong><span class=\"hide-mobile\"> (normal: 16.7%)</span>.";
+  const sub = '<p class="odds-sub">How likely each total is on <strong>' + (name === "You" ? "your" : name + "'s") + "</strong> next roll.</p>";
+  let key, race;
   if (state.point !== null) {
     const hit = pointBeforeSeven(odds, state.point);
-    summary += " The " + state.point + " before a 7: <strong>" + percent(hit) + "</strong> (Pass) · 7 first: <strong>" + percent(1 - hit) + "</strong> (Don't).";
+    key = '<span class="key"><i class="sw point"></i>your point (' + state.point + ")</span>" +
+      '<span class="key"><i class="sw seven"></i>7 (ends the turn)</span><span class="key"><i class="sw other"></i>anything else: nothing happens</span>';
+    race = '<div class="race-title">Which comes first, the ' + state.point + " or a 7?</div>" +
+      '<div class="race"><div class="seg point" style="width:' + hit * 100 + '%">' + pct(hit) + '</div><div class="seg seven" style="width:' + (1 - hit) * 100 + '%">' + pct(1 - hit) + "</div></div>" +
+      '<div class="race-labels"><span>' + state.point + " first: <strong>Pass Line wins</strong></span><span>7 first: <strong>Don't Pass wins</strong></span></div>";
+  } else {
+    const win = odds[7] + odds[11], lose = odds[2] + odds[3] + odds[12], pointSet = Math.max(0, 1 - win - lose);
+    key = '<span class="key"><i class="sw seven"></i>7</span><span class="key"><i class="sw other"></i>other totals</span>';
+    race = '<div class="race-title">This is a first roll (come-out)</div>' +
+      '<div class="race"><div class="seg win" style="width:' + win * 100 + '%">' + pct(win) + '</div><div class="seg lose" style="width:' + lose * 100 + '%">' + pct(lose) +
+      '</div><div class="seg setpoint" style="width:' + pointSet * 100 + '%">' + pct(pointSet) + "</div></div>" +
+      '<div class="race-labels three"><span><strong>7 or 11</strong>: Pass Line wins</span><span><strong>2, 3 or 12</strong>: Pass Line loses</span><span><strong>4-10</strong>: becomes the point</span></div>';
   }
-  if (state.dice.note) summary += " " + state.dice.note;
-  if (pairDue(state)) summary += " <strong>Doubles Charm: next roll is a pair!</strong>";
+  let notes = "Chance of a 7: <strong>" + percent(odds[7]) + "</strong> (normal dice: 16.7%).";
+  if (state.dice.note) notes += " " + state.dice.note;
+  if (pairDue(state)) notes += " <strong>Doubles Charm: next roll is a pair!</strong>";
   const armed = Object.keys(state.armed).map((id) => COMPS[id].name + (id === "loadedShot" ? " (left die " + state.armed[id] + ")" : ""));
-  if (armed.length) summary += ' <strong class="armed-text">Armed: ' + armed.join(", ") + ".</strong>";
-  panel.innerHTML = '<div class="bars">' + bars + '</div><div class="odds-summary">' + summary + "</div>";
+  if (armed.length) notes += ' <strong class="armed-text">Armed: ' + armed.join(", ") + ".</strong>";
+  panel.innerHTML = sub + '<div class="bars">' + bars + '</div><div class="odds-key">' + key + "</div>" + race + '<div class="odds-summary">' + notes + "</div>";
 }
 
 // Show the win or fall screen when the shift is over.
