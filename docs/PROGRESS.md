@@ -15,8 +15,10 @@ Dated session log. Newest at the top.
 - Pay off debt asks first: "Pay off the whole debt?" says the shift ends now, how many shooters won't roll, how much you keep (and the dealer's cut), and what you'll start the next shift with. Its buttons ignore taps for 0.6s, so rapid tapping can't confirm by accident. The pay buttons now sit in fixed halves and never move. Esc / Android back cancels.
 - Seat Swap text says what it's for. IDEAS: release 2.0 section (growing-odds card, 3-use Seat Swap); 1.0.x is QoL only.
 
+- Chain style A built into the game (top bar and the end-of-shift snap): interlocking links, broken ones grey and snapped open; the snapping link glows red-hot and flies apart.
+
 **Waiting on the owner**
-- Pick a chain style.
+- Pick the new Hot Hand picture (1: open hand in flames, 2: hot dice with fire trails).
 
 **Exact next step**
 - Build the chosen chain, bump to 1.0.2 (versionCode 3), owner builds and uploads.

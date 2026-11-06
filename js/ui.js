@@ -360,15 +360,31 @@ function renderOddsPanel(state) {
 }
 
 // Show the win or fall screen when the shift is over.
+// One link of the chain (style A, owner's pick 2026-11-07): a real chain seen from the side,
+// flat oval links alternating with edge-on links. Broken links are grey and snapped open.
+// Each link is a 22 x 20 drawing; neighbours overlap so the chain interlocks.
+function chainLinkSvg(flat, broken) {
+  const grey = "#4a4a4a";
+  let body;
+  if (flat && broken) body = '<ellipse cx="11" cy="11" rx="8.6" ry="6.4" fill="none" stroke="' + grey + '" stroke-width="2.4" stroke-dasharray="36 10" transform="rotate(10 11 11)"/>';
+  else if (flat) body = '<ellipse class="metal-dark" cx="11" cy="10" rx="8.6" ry="6.6" fill="none" stroke="#5d6570" stroke-width="4.4"/><ellipse class="metal" cx="11" cy="10" rx="8.6" ry="6.6" fill="none" stroke="#c9c9c9" stroke-width="2.4"/>';
+  else if (broken) body = '<rect x="1" y="9" width="8" height="4" rx="2" fill="' + grey + '"/><rect x="13" y="10" width="8" height="4" rx="2" fill="' + grey + '"/>';
+  else body = '<rect class="metal-fill" x="1" y="7.5" width="20" height="5" rx="2.5" fill="#c9c9c9" stroke="#5d6570" stroke-width="1.5"/>';
+  return '<svg viewBox="0 0 22 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' + body + "</svg>";
+}
+
 // A chain of links as HTML. broken: how many are already open. breaking: the index
 // of the link that snaps now (-1 for none). big: the large end-of-shift version.
+// Each link is split into two halves (each shows half the drawing) so a snapping link can fly apart.
 function chainHtml(broken, breaking, big, total) {
   let html = '<div class="chain' + (big ? " big" : "") + '">';
   for (let i = 0; i < total; i++) {
-    let cls = "link";
+    const flat = i % 2 === 0;
+    let cls = "link " + (flat ? "flat" : "edge");
     if (i < broken) cls += " broken";
     if (i === breaking) cls += " breaking";
-    html += '<span class="' + cls + '"><span class="half l"></span><span class="half r"></span>';
+    const svg = chainLinkSvg(flat, i < broken && i !== breaking);
+    html += '<span class="' + cls + '"><span class="half l">' + svg + '</span><span class="half r">' + svg + "</span>";
     if (i === breaking) {
       for (let k = 0; k < 7; k++) {
         html += '<span class="spark" style="--dx:' + (Math.random() * 120 - 60).toFixed(0) + "px;--dy:" + (Math.random() * -70 - 10).toFixed(0) + 'px"></span>';
