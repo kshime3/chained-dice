@@ -389,3 +389,7 @@ Dated log of every decision and why. Newest at the bottom.
 ## 2026-11-05: Take-back chip and odds pop-up (friend feedback)
 - A friend couldn't remove single bets or chips. Owner chose: take back one chip at a time and one bet at a time. Added a ✖ take-back chip (tap = one chip off, double-tap = whole bet), sharing Clear bets' rules about what may come down.
 - The friend found the odds pop-up confusing. Owner approved a redesign: a plain question as the title, a colour key, and a single "what happens next" bar instead of the old list of numbers.
+
+## 2026-11-07: Release 1.0.2 polish
+- Owner's list: hide keyboard shortcuts in the app, "Show again", highlight Shift, make the mult stand out, show the shooter's picture, new chain art.
+- Choices: shooter's face beside "Now shooting" (not on the felt); shortcuts hidden in the app and on touch-only devices; Shift and Mult as boxed badges; three chain styles previewed before building.

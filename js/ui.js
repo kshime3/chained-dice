@@ -254,8 +254,8 @@ function renderCrew(state) {
     box.appendChild(seat);
   });
   const shooter = state.crew[state.shooterIndex];
-  document.getElementById("shooter").textContent = shooter
-    ? "Now shooting: " + shooter + " (shooter " + (state.shooterIndex + 1) + " of " + state.crew.length + ")"
+  document.getElementById("shooter").innerHTML = shooter
+    ? '<span class="shooter-face">' + crewPortrait(shooter).replace('viewBox="0 0 200 240"', 'viewBox="48 38 104 104"') + "</span><span><span class=\"hide-mobile\">Now shooting: </span><strong>" + shooter + "</strong> (<span class=\"hide-mobile\">shooter </span>" + (state.shooterIndex + 1) + " of " + state.crew.length + ")</span>"
     : "Every shooter has had a turn.";
 }
 
@@ -307,7 +307,7 @@ function renderMult(state) {
   const gain = multShown !== null && mult > multShown + 1e-9 ? mult - multShown : 0;
   multShown = mult;
   const notes = multReasons(state);
-  box.innerHTML = "Mult: <strong>" + multText(mult) + "</strong>" + (notes.length ? " · " + notes.join(" · ") : "");
+  box.innerHTML = '<span class="mult-pill">Mult <strong>' + multText(mult) + "</strong></span>" + (notes.length ? '<span class="mult-notes">' + notes.join(" · ") + "</span>" : "");
   box.className = "mult" + (mult > 1 ? " hot" : mult < 1 ? " cold" : "");
   if (gain) popMult(box, gain);
 }

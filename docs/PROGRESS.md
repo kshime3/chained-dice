@@ -2,6 +2,22 @@
 
 Dated session log. Newest at the top.
 
+## 2026-11-07: Release 1.0.2 polish (part 1)
+
+**Done**
+- Keyboard shortcuts list hidden in the Android app and on touch-only devices (computers still see it).
+- Settings: "Show them again" is now "Show again".
+- Shift number in a gold badge next to Cash and Still owed.
+- Mult in its own pill (orange glow when hot, blue when cold).
+- The shooter's face (cropped crew portrait) beside "Now shooting"; on phones the line is shortened to "Lefty (1 of 3)" with the mult pill beside it, so the table still fits.
+- Chain preview: demos/chain-options.html (A real chain, B heavy chain and padlock, C ring counter).
+
+**Waiting on the owner**
+- Pick a chain style.
+
+**Exact next step**
+- Build the chosen chain, bump to 1.0.2 (versionCode 3), owner builds and uploads.
+
 ## 2026-11-05: Friend feedback: take back single chips; clearer odds pop-up
 
 **Done**

@@ -655,6 +655,9 @@ document.getElementById("music-volume").oninput = (e) => setMusicVolume(Number(e
 armMusic(() => state);
 
 document.getElementById("key-help").innerHTML = keyHelpHtml();
+// No keyboard in the app or on touch-only phones and tablets: hide the shortcut list there.
+const noKeyboard = window.matchMedia && window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+if (CONFIG.inApp || noKeyboard) document.getElementById("key-help-box").classList.add("hidden");
 document.getElementById("app-version").textContent = "Version " + CONFIG.appVersion;
 if (CONFIG.inApp) {
   document.body.classList.add("in-app");
