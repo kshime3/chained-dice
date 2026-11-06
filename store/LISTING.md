@@ -56,6 +56,13 @@ Simulated gambling only: no real money, nothing to buy inside the game, no ads, 
 
 ## What's new (release notes, max 500)
 
+**1.0.1** (closed test update):
+```
+- New ✖ take-back chip: tap a bet to take one chip off, double-tap to take the whole bet.
+- Clearer odds screen: what the next roll could be, and what happens next.
+```
+
+**1.0.0:**
 ```
 First release. Break the chain.
 ```

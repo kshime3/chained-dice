@@ -31,7 +31,7 @@ Each phase ends with a short check-in, like our milestones. **Who** says who doe
 - [x] Android **back button**: closes the open popup (same as Esc), and asks "Leave Chained Dice? Your run is saved." before leaving. (Uses the Capacitor App plugin, added in Phase C.)
 - [x] Pause sound when the app goes to the background (music pauses; sound effects suspend).
 - [x] App mode (`CONFIG.inApp`; `?app` previews it in a browser): the feedback note points to a Play review and the developer email. Testing shortcuts need address extras, which the app never has.
-- [x] Version number in Settings > Credits (`CONFIG.appVersion`, now 1.0.0).
+- [x] Version number in Settings > Credits (`CONFIG.appVersion`, now 1.0.1; versionCode 2 in android/app/build.gradle).
 - [x] **Privacy policy** page (`privacy.html`, linked in Settings > Credits): no data collected, saves stay on your device. It will be at https://kshime3.github.io/chained-dice/privacy.html for the Play listing.
 - [x] App icons: adaptive icon (background + art layers, plus a monochrome layer for themed icons), round and legacy icons at every density, made from the logo by `tools/make-icons.js`. The splash screen is the icon on the game's dark background (Android 12+) and a dark logo image on older Androids.
 - [x] Store art in `store/` (by `tools/make-store-art.js`): `icon-512.png`, `feature-graphic.png` (1024 x 500), five phone screenshots (1080 x 1920: table, shop, hand, the fall, endless).

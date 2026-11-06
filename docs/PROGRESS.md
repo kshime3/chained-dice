@@ -13,7 +13,7 @@ Dated session log. Newest at the top.
 - Try it in the browser. Testers on the app need a new build (version 1.0.1, versionCode 2) to see it.
 
 **Exact next step**
-- Bump the app version and build/upload a new .aab for the closed test.
+- Version bumped to 1.0.1 (versionCode 2) on 2026-11-06. Owner: pull, npm run sync, build the signed .aab, upload to the closed test track.
 
 ## 2026-11-04: Android Phase E, internal testing live
 
