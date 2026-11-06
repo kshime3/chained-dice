@@ -12,6 +12,9 @@ Dated session log. Newest at the top.
 - The shooter's face (cropped crew portrait) beside "Now shooting"; on phones the line is shortened to "Lefty (1 of 3)" with the mult pill beside it, so the table still fits.
 - Chain preview: demos/chain-options.html (A real chain, B heavy chain and padlock, C ring counter).
 
+- Pay off debt asks first: "Pay off the whole debt?" says the shift ends now, how many shooters won't roll, how much you keep (and the dealer's cut), and what you'll start the next shift with. Its buttons ignore taps for 0.6s, so rapid tapping can't confirm by accident. The pay buttons now sit in fixed halves and never move. Esc / Android back cancels.
+- Seat Swap text says what it's for. IDEAS: release 2.0 section (growing-odds card, 3-use Seat Swap); 1.0.x is QoL only.
+
 **Waiting on the owner**
 - Pick a chain style.
 

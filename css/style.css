@@ -954,3 +954,9 @@ body.taking-back .bet-area.can-take { outline: 3px dashed #ff6b5b; outline-offse
   .mult-pill strong { font-size: 1rem; line-height: 1.1; }
   .mult-notes { font-size: 0.7rem; }
 }
+
+/* Pay buttons side by side in fixed halves, so changing amounts never move them */
+.pay-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; max-width: 460px; margin: 0 auto; }
+.pay-buttons button { margin: 0; min-height: 44px; }
+#pay-off { background: #2a1c10; border: 2px solid #ff9f43; color: #ffcf9b; }
+#pay-off:disabled { border-color: #554433; color: #8a7a6a; }

@@ -393,3 +393,5 @@ Dated log of every decision and why. Newest at the bottom.
 ## 2026-11-07: Release 1.0.2 polish
 - Owner's list: hide keyboard shortcuts in the app, "Show again", highlight Shift, make the mult stand out, show the shooter's picture, new chain art.
 - Choices: shooter's face beside "Now shooting" (not on the felt); shortcuts hidden in the app and on touch-only devices; Shift and Mult as boxed badges; three chain styles previewed before building.
+- Owner tapped Drop a plaque quickly and hit Pay off debt by accident. Claude's call (owner deferred): both fixes. The pay buttons sit in fixed halves so they never move, and Pay off asks "Are you sure?" with what you'd start the next shift with; the box's buttons wait 0.6s before they work.
+- Owner: 1.0.x stays QoL; major cards and mechanics go to release 2.0 (IDEAS.md). Seat Swap 3 uses parked there; for now its text explains when it helps.

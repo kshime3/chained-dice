@@ -2,6 +2,12 @@
 
 Parked ideas and later features. Not in v1 unless moved into the design.
 
+**Release plan (owner, 2026-11-07):** 1.0.x updates are quality-of-life only (clarity, controls, looks, bug fixes). Major card additions and new mechanics wait for **release 2.0**.
+
+## Release 2.0
+- **Card idea (owner): odds that grow.** Max Odds drops to 1x, but every point you make raises your max Odds by 1x (for the run or the shift: to decide). Needs a balance run.
+- **Seat Swap with 3 uses (owner).** Today it's one use and only matters in niche cases (Hot Rod's Mentor, Torch Pass, Jinx's Cold Table, Muggsy, Cold Read, Comeback Kid, Early Bird). Making comps multi-use is a new mechanic, so it waits for 2.0 and a balance run. 1.0.2 only makes its text say what it's for.
+
 ## Later shifts
 - After shift 1, each shift target doubles ($2,000, $4,000, $8,000, ...).
 - The run has no final shift. Keep going until you fall.

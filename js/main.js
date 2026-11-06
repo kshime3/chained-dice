@@ -594,7 +594,17 @@ document.getElementById("house-rule").onclick = () => showMessage(HOUSE_RULES[st
 document.getElementById("dice").onclick = roll; // tapping the dice rolls too
 document.getElementById("clear-button").onclick = clearBets;
 document.getElementById("drop-plaque").onclick = payPlaque;
-document.getElementById("pay-off").onclick = () => payDealer(amountOwed(state));
+// Pay off ends the shift at once, so it asks first (and says what you'll start the next shift with).
+document.getElementById("pay-off").onclick = () => {
+  const p = payOffPreview(state);
+  const skip = p.shootersLeft > 0 ? (p.shootersLeft === 1 ? "1 shooter still to come won't roll. " : p.shootersLeft + " shooters still to come won't roll. ") : "";
+  showChoice("Pay off the whole debt?",
+    "You pay " + money(p.owed) + " and the shift ends now. " + skip +
+    "Of the " + money(p.leftover) + " left, you keep " + p.keepPct + "% (" + money(p.kept) + "), the dealer takes the rest, and you start shift " + (state.shift + 1) + " with about " + money(p.nextCash) + ".",
+    [{ label: "Pay " + money(p.owed), value: true }],
+    (yes) => { if (yes) payDealer(amountOwed(state)); },
+    { holdMs: 600 });
+};
 document.getElementById("leave-break").onclick = leaveBreak;
 document.getElementById("shuffle").onclick = shuffle;
 document.getElementById("ghost-evens").onclick = () => pickGhost("evens");

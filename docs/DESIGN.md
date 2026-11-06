@@ -181,7 +181,7 @@ One-use items ("comps", casino slang for the house's freebies). Hold up to **2**
 | Loaded Shot | Next roll | You pick the left die's face | 7% |
 | Insurance | Next roll | If it loses your line bet, you get it back | 4% |
 | Hot Seat | Any time (not at a Break) | +1x mult for the rest of the turn | 5% |
-| Seat Swap | At a Break | Swap the next two shooters | 4% |
+| Seat Swap | At a Break | Swap the next two shooters (best shooter sooner; who follows Jinx or Hot Rod) | 4% |
 | Cash Advance | At a Break (after the first shooter) | +25% of the debt now; the debt grows by 1.5x that | 3% |
 
 - Your comps sit in the cards row as blue 🎟 buttons; click to use. Armed comps glow ⚡ and the odds chart shows their effect.

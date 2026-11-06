@@ -2,7 +2,7 @@
 // stats, the fall, tutorials, the Collection and the opening. No game rules here.
 
 // A small pick-one screen. options: [{ label, value }]. onChoose(value) or onChoose(null) for Cancel.
-// opts.cancel: false hides the Cancel button (the player must pick).
+// opts.cancel: false hides the Cancel button (the player must pick). opts.holdMs: buttons wait that long before they work.
 function showChoice(title, text, options, onChoose, opts = {}) {
   const box = document.getElementById("choice");
   document.getElementById("choice-title").textContent = title;
@@ -23,10 +23,16 @@ function showChoice(title, text, options, onChoose, opts = {}) {
   if (opts.cancel !== false) {
     const cancel = document.createElement("button");
     cancel.textContent = "Cancel";
+    cancel.className = "choice-cancel";
     cancel.onclick = () => done(null);
     buttons.appendChild(cancel);
   }
   box.classList.remove("hidden");
+  if (opts.holdMs) { // a moment before the buttons work, so fast tapping doesn't press one by accident
+    const all = buttons.querySelectorAll("button");
+    all.forEach((b) => { b.disabled = true; });
+    setTimeout(() => all.forEach((b) => { b.disabled = false; }), opts.holdMs);
+  }
 }
 
 // The end of a shift (won), the escape, or the fall.

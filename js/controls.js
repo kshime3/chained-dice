@@ -47,6 +47,7 @@ function keyContinue() {
 }
 
 function keyEscape() {
+  if (shown("choice") && press("#choice-buttons .choice-cancel")) return true;
   if (shown("odds-popup")) return press("#odds-close");
   if (shown("workshop")) return press("#workshop-cancel");
   if (shown("collection")) return press("#collection-close");

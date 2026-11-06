@@ -70,7 +70,7 @@
     if (visible("tutorial")) return click("#tutorial-skip");
     if (visible("coach")) return click("#coach-skip");
     if (visible("phone")) return click("#phone button");
-    if (visible("choice")) return click("#choice-buttons button");
+    if (visible("choice")) { document.querySelectorAll("#choice-buttons button").forEach((b) => { b.disabled = false; }); return click("#choice-buttons button"); } // the bot skips the short wait
     if (visible("reroll-prompt")) return click("#reroll-buttons button");
     if (visible("workshop")) return click("#workshop-cancel");
     if (visible("end-screen")) {

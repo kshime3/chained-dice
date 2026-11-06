@@ -297,6 +297,23 @@ function deposit(state, amount) {
   return paid;
 }
 
+// What paying off the whole debt right now would mean: the shift ends, shooters still to come
+// don't roll, and you keep a share of what's left (plus next shift's cash). For the "Are you sure?" box.
+function payOffPreview(state) {
+  const owed = amountOwed(state);
+  const early = hasCard(state, "earlyBird") && !isFinalBreak(state) ? roundTo5(CONFIG.earlyBirdPct * state.debt) : 0;
+  const leftover = totalMoney(state) - owed + early;
+  const kept = Math.floor(leftover * carryShare(state));
+  return {
+    owed: owed,
+    shootersLeft: isFinalBreak(state) ? 0 : state.crew.length - state.shooterIndex,
+    leftover: leftover,
+    kept: kept,
+    keepPct: Math.round(carryShare(state) * 100),
+    nextCash: kept + shiftScale(state.shift + 1).cash,
+  };
+}
+
 // Plaques: you pay the dealer by dropping plaques in the drop box, each worth
 // CONFIG.plaquePct of the debt. The last one pays exactly what's left.
 function plaqueValue(state) {

@@ -8,7 +8,7 @@ const COMPS = {
   loadedShot:  { name: "Loaded Shot",  when: "roll",  text: "Pick the left die's face for your next roll." },
   insurance:   { name: "Insurance",    when: "roll",  text: "If your next roll loses your line bet, you get it back." },
   hotSeat:     { name: "Hot Seat",     when: "now",   text: "+1x mult for the rest of this shooter's turn." },
-  seatSwap:    { name: "Seat Swap",    when: "break", text: "Swap the next two shooters." },
+  seatSwap:    { name: "Seat Swap",    when: "break", text: "Swap the next two shooters: get your best shooter up sooner, or pick who follows Jinx or Hot Rod." },
   cashAdvance: { name: "Cash Advance", when: "break", text: "The dealer lends you 25% of the debt right now, but your debt grows by 1.5x what he lent." },
   nudge:       { name: "Nudge",        when: "break", edit: true, text: "Dice edit: move one face on your dice up or down by 1 (6 wraps to 1, 1 wraps to 6)." },
   copycat:     { name: "Copycat",      when: "break", edit: true, text: "Dice edit: copy one face of your die over another face on the same die." },
