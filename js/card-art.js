@@ -148,11 +148,17 @@ const CARD_ART = {
     artDie(36, 50, 13, [0, 8], { rotate: -10 }) + artDie(51, 50, 13, [0, 8], { rotate: 10 }) +
     '<path d="M47 36 Q50 32 53 36" fill="none" stroke="' + ART.red + '" stroke-width="2" stroke-linecap="round"/>',
   // ---------- Hot streak ----------
-  hotHand: () => // an open palm in flames
-    artFlame(30, 64, 44, 22) + artFlame(70, 64, 44, 22) + artFlame(50, 60, 58, 30) +
-    '<path d="M36 64 L36 40 Q36 36 39.5 36 Q43 36 43 40 L43 24 Q43 20 46.5 20 Q50 20 50 24 L50 22 Q50 18 53.5 18 Q57 18 57 22 L57 26 Q57 22 60.5 22 Q64 22 64 26 L64 50 Q64 66 52 66 L42 66 Q36 66 36 64 Z" fill="' + ART.bone + '" stroke="' + ART.ink + '" stroke-width="' + ART.w + '"/>' +
-    '<path d="M36 50 Q30 44 26 40 Q24 36 28 35 Q32 35 38 42" fill="' + ART.bone + '" stroke="' + ART.ink + '" stroke-width="' + ART.w + '"/>' +
-    '<path d="M43 40 V30 M50 38 V26 M57 40 V30" stroke="' + ART.ink + '" stroke-width="1.4" opacity="0.5"/>',
+  hotHand: () => { // an open hand (fingers apart, thumb out) raised in flames
+    const st = '" fill="' + ART.bone + '" stroke="' + ART.ink + '" stroke-width="' + ART.w + '"';
+    const f = (x, top, h) => '<rect x="' + x + '" y="' + top + '" width="6.6" height="' + h + '" rx="3.3' + st + "/>";
+    return artFlame(27, 66, 40, 20) + artFlame(73, 66, 40, 20) + artFlame(50, 64, 60, 32) +
+      '<rect x="34.2" y="36" width="7.4" height="24" rx="3.7" transform="rotate(-34 38 58)' + st + "/>" +
+      f(37.4, 21, 26) + f(44.6, 14, 33) + f(51.8, 16, 31) + f(59, 24, 23) +
+      '<path d="M37.4 40 H65.6 V54 Q65.6 64 56 64 H46 Q37.4 64 37.4 55 Z" fill="' + ART.bone + '"/>' +
+      '<path d="M37.4 39 V55 Q37.4 64 46 64 H56 Q65.6 64 65.6 54 V39" fill="none" stroke="' + ART.ink + '" stroke-width="' + ART.w + '"/>' +
+      '<rect x="44" y="63" width="15" height="8"' + st.slice(1) + "/>" +
+      '<path d="M44.5 42 V38 M51.7 42 V36 M58.9 42 V37" stroke="' + ART.ink + '" stroke-width="1.2" opacity="0.45"/>';
+  },
   pointCollector: () => // the ON puck and a row of points collected
     '<circle cx="30" cy="30" r="17" fill="' + ART.bone + '" stroke="' + ART.ink + '" stroke-width="' + ART.w + '"/>' +
     '<text x="30" y="35.5" text-anchor="middle" font-family="Georgia,serif" font-weight="bold" font-size="14" fill="' + ART.black + '">ON</text>' +

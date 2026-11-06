@@ -56,6 +56,15 @@ Simulated gambling only: no real money, nothing to buy inside the game, no ads, 
 
 ## What's new (release notes, max 500)
 
+**1.0.2** (closed test update):
+```
+- New chain art, and the shooter's face next to their name.
+- Shift number and mult stand out more.
+- Pay off debt now asks first and shows what you'll start the next shift with.
+- At the last Break, if you can pay, the button pays instead of facing the pit boss.
+- New Hot Hand picture. Keyboard shortcut list hidden on phones.
+```
+
 **1.0.1** (closed test update):
 ```
 - New ✖ take-back chip: tap a bet to take one chip off, double-tap to take the whole bet.

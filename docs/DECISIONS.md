@@ -396,3 +396,4 @@ Dated log of every decision and why. Newest at the bottom.
 - Owner tapped Drop a plaque quickly and hit Pay off debt by accident. Claude's call (owner deferred): both fixes. The pay buttons sit in fixed halves so they never move, and Pay off asks "Are you sure?" with what you'd start the next shift with; the box's buttons wait 0.6s before they work.
 - Owner: 1.0.x stays QoL; major cards and mechanics go to release 2.0 (IDEAS.md). Seat Swap 3 uses parked there; for now its text explains when it helps.
 - Chain style: owner picked A (real interlocking chain). Hot Hand art read as a glove; redraw offered as two options.
+- Hot Hand: owner picked the open hand in flames. Owner: "Face the pit boss" shouldn't show when you can pay; at the last Break the button now pays instead.

@@ -17,8 +17,12 @@ Dated session log. Newest at the top.
 
 - Chain style A built into the game (top bar and the end-of-shift snap): interlocking links, broken ones grey and snapped open; the snapping link glows red-hot and flies apart.
 
+- Hot Hand art redrawn: an open hand (separate fingers, thumb out) in flames (owner's pick).
+- Last Break: if you have the cash, the leave button reads "Pay $X and break the link" and pays, instead of "Face the pit boss" (which meant the fall). 2 new rule checks (487).
+- Version 1.0.2 (versionCode 3).
+
 **Waiting on the owner**
-- Pick the new Hot Hand picture (1: open hand in flames, 2: hot dice with fire trails).
+- Pull, npm run sync, build the signed .aab, upload to the closed test track with the 1.0.2 notes in store/LISTING.md.
 
 **Exact next step**
 - Build the chosen chain, bump to 1.0.2 (versionCode 3), owner builds and uploads.

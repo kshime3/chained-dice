@@ -56,11 +56,12 @@ function renderBreak(state) {
   document.getElementById("pay-closed").textContent = payOpen ? "" :
     "The dealer won't take payment until the first shooter has rolled. Shop first, then pay at the next Break.";
   const payOff = document.getElementById("pay-off");
-  payOff.disabled = !payOpen || state.cash < amountOwed(state);
+  payOff.disabled = !canPayOff(state);
   payOff.textContent = "Pay off debt (" + money(amountOwed(state)) + ")";
   payOff.title = payOff.disabled ? "You need the full amount in cash to pay off the debt." : "";
+  // Last Break: if you can pay, the button pays (leaving unpaid here means the fall).
   document.getElementById("leave-break").textContent = isFinalBreak(state)
-    ? "Face the pit boss"
+    ? (canPayOff(state) ? "Pay " + money(amountOwed(state)) + " and break the link" : "Face the pit boss")
     : "Next shooter: " + state.crew[state.shooterIndex];
 
   const warn = !isFinalBreak(state) && totalMoney(state) < tableMin(state);

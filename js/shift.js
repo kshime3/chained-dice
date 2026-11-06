@@ -143,6 +143,11 @@ function isFinalBreak(state) {
   return state.shooterIndex >= state.crew.length;
 }
 
+// Can you pay the whole debt in one go right now?
+function canPayOff(state) {
+  return canPay(state) && state.status === "playing" && state.cash >= amountOwed(state);
+}
+
 // Dark Side Only (a house rule): no Pass Line this shift.
 // Can you put a chip on one of the new bets right now? Returns "ok" or a reason:
 // "locked", "noPoint" (Come bets need a point), "fireLate" (the shooter already rolled), "fireMax".

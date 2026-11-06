@@ -409,6 +409,7 @@ function shuffle() {
 }
 
 function leaveBreak() {
+  if (isFinalBreak(state) && canPayOff(state)) return payDealer(amountOwed(state)); // the last Break never lets you fall with the money in hand
   endBreak(state);
   showBreakMessage("");
   if (state.status === "playing") {
