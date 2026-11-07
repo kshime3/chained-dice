@@ -14,6 +14,7 @@ The owner is a beginner coder working about an hour a day.
 - Game logic (dice, bets, crew, shop) lives in separate JS files from display code.
 - Every tunable number (buy-in, target, payouts, prices, rarity) lives in `js/config.js`.
 - Explain things in plain language. Ask before big decisions.
+- **Full addresses (owner, 2026-11-10):** when giving the owner a testing shortcut, always write the entire URL, e.g. https://kshime3.github.io/chained-dice/?unlockAll (never just `?unlockAll`).
 - **Phone layouts only (owner, 2026-11-09):** design, test and screenshot for phone screens (portrait, about 360-430px wide). The computer layout is no longer a goal; don't spend effort on it.
 - **Balance retest only when gameplay changes** (cards, comps, crew, bets, payouts, prices, debts, rules, shop, unlocks, or anything else that affects how the game plays): run `tools/simulate.js` (teach the bots any new mechanic first), compare per-shift survival with the last entry in `docs/BALANCE.md`, retune `CONFIG.shifts` if the curve drifts, and record the results there. Skip it for display, art, sound, music, wording, layout or docs changes (owner's call, 2026-10-31). The game should take many playthroughs to beat.
 - **Cache-busting:** index.html loads every CSS/JS file with `?v=YYYYMMDDx`. When committing a change to css/ or js/, bump that tag everywhere in index.html (one sed), so players' browsers fetch the new files together instead of mixing old and new.
