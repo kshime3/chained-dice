@@ -39,7 +39,7 @@ Dated session log. Newest at the top.
 **Done (J5)**
 - ON puck: when a point is set, a white "ON" puck slides from the POINT pill onto that number's Place tile (sitting on its top edge so the number stays readable); it fades away when the point ends.
 - A new shooter's face and name slide in from the right.
-- Roll pulses with a gold glow whenever a roll is possible, and presses down when tapped. Reduce motion: no slide or pulse (a steady glow instead).
+- Roll pulses with a bright green glow (owner: the first gold glow wasn't noticeable on the gold button) whenever a roll is possible, and presses down when tapped. Reduce motion: no slide or pulse (a steady glow instead).
 
 **Exact next step**
 - Owner tests J5, then "build J6" (Break touches: shop cards flip in, bought cards fly to Inventory, reroll shuffle, plaque take-back in reverse, unlock celebration).
