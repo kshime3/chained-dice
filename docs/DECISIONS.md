@@ -411,3 +411,4 @@ Dated log of every decision and why. Newest at the bottom.
 - Owner: split 1.0.4 into milestones A-F with a code polish at the end; build one at a time on "build X".
 - The chips' "shade" was the room vignette (body::after) drawn over the chip row; the row now sits above it.
 - 1.0.4 B: Roll fixed above the tab bar on phones (owner picked this over changing the tabs); active tab restyled so it no longer looks like Roll; small buttons moved onto the chip row as icons to make room.
+- Owner (2026-11-09): from now on only phone layouts matter; the computer layout is no longer a goal (rule added to CLAUDE.md).
