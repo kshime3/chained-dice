@@ -128,7 +128,7 @@ document.addEventListener("pointerdown", (e) => {
   const chip = e.target.closest && e.target.closest("#chips .chip:not(.chip-take-back)");
   if (chip) {
     const value = Number(chip.dataset.value);
-    if (value) drag = { kind: "chip", value: value, label: chip.textContent, x: e.clientX, y: e.clientY };
+    if (value) drag = { kind: "chip", value: value, label: chip.textContent, colour: getComputedStyle(chip).backgroundColor, x: e.clientX, y: e.clientY };
     return;
   }
   const bet = betAt(e.target);
@@ -144,6 +144,7 @@ document.addEventListener("pointermove", (e) => {
     drag.ghost = document.createElement("div");
     drag.ghost.className = "chip-ghost" + (drag.kind === "bet" ? " taking" : "");
     drag.ghost.textContent = drag.label;
+    if (drag.colour) drag.ghost.style.background = drag.colour; // the same colour as the chip you picked up
     document.body.appendChild(drag.ghost);
     document.body.classList.add("dragging-" + drag.kind);
   }

@@ -12,6 +12,7 @@ Dated session log. Newest at the top.
 - Shift 1's opening Break for returning players (finished a shift or fallen before): just "Shift 1. You owe the dealer $200." + the lock line + Next shooter.
 - End screen: the ⚙ / 📖 / How to play buttons are hidden so they don't cover the chain.
 - 2 new rule checks (489). Version 1.0.3 (versionCode 4).
+- Fix (owner found): a dragged chip always looked like the green $25; it now takes the colour of the chip you picked up.
 
 **Waiting on the owner**
 - Test in the browser, then pull, npm run sync, build, upload 1.0.3 to the closed test.
