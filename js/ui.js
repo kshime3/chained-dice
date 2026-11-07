@@ -207,6 +207,7 @@ function renderState(state) {
   markTakeBack(state);
   if (typeof betPattern === "function") renderPatterns(state, selectedChip, betPattern); // main.js owns the chip and the action
   renderStacks(state); // chip stacks on the bets (juice.js)
+  renderTableTouches(state); // ON puck, shooter slide-in, Roll ready pulse (juice.js)
   document.getElementById("table-min").textContent = "Table min " + money(tableMin(state));
   document.getElementById("pass-amount").textContent = money(b.pass);
   document.getElementById("dont-amount").textContent = money(b.dont);

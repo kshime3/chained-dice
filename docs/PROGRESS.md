@@ -34,8 +34,15 @@ Dated session log. Newest at the top.
 - Big-win banners, style B "gold slam" (owner's pick) with each level bigger and more intense: BIG (4x what was on the table), HUGE (10x), MONSTER (25x+) (CONFIG.bigWinX). Bigger letters, more ray layers (MONSTER darkens the room, red-gold), more chips (12 / 30 / 60 in up to three waves), white flashes on HUGE and MONSTER, stronger and longer screen shake, and a stronger vibration pattern per level. Not on a seven-out. Reduce motion: the words fade in and out, nothing else.
 - The shake moves the top bar, shooter area and table only (shaking their parent knocked the pinned Roll button out of place).
 
+- Testing shortcut https://kshime3.github.io/chained-dice/?showWins plays BIG, HUGE and MONSTER once (owner confirmed J4 works).
+
+**Done (J5)**
+- ON puck: when a point is set, a white "ON" puck slides from the POINT pill onto that number's Place tile (sitting on its top edge so the number stays readable); it fades away when the point ends.
+- A new shooter's face and name slide in from the right.
+- Roll pulses with a gold glow whenever a roll is possible, and presses down when tapped. Reduce motion: no slide or pulse (a steady glow instead).
+
 **Exact next step**
-- Owner tests J4, then "build J5" (table touches: ON puck slides, shooter face slides in, Roll pulses/presses).
+- Owner tests J5, then "build J6" (Break touches: shop cards flip in, bought cards fly to Inventory, reroll shuffle, plaque take-back in reverse, unlock celebration).
 
 ## 2026-11-09: Release 1.0.4, milestone A (quick fixes)
 

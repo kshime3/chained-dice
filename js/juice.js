@@ -4,6 +4,7 @@
 // J3: money that counts to its new value (Cash, Still owed, On table); Interest pulses when it pays;
 //     card pops (style C, owner's pick): a card's icon zips from Inventory into the mult, "+0.25x" floats off it.
 // J4: big-win banners (style B "gold slam", owner's pick, each level bigger and more intense) with screen shake.
+// J5: the ON puck slides onto the point's number, a new shooter slides in, Roll pulses when you can roll.
 // Everything that moves checks Reduce motion (body.reduce-motion): stacks still show, nothing flies.
 
 // Chip colours, matching the chip tray (red, green, black; endless chips by size order).
@@ -343,4 +344,56 @@ function chipBurst(n, level) {
       { transform: "translate(calc(-50% + " + Math.cos(a) * d + "px), calc(-50% + " + (Math.sin(a) * d + 140) + "px)) rotate(" + (300 + Math.random() * 400) + "deg) scale(1)", opacity: 0 }],
       { duration: 1100 + Math.random() * 500, easing: "cubic-bezier(0.2, 0.8, 0.4, 1)" }).onfinish = () => c.remove();
   }
+}
+
+// ---------- Table touches (J5) ----------
+
+let puckPoint = null; // the point the ON puck is sitting on
+let shownShooter = null;
+
+function renderTableTouches(state) {
+  // The ON puck: sits on the Place tile of the point's number, like a real table's marker.
+  const point = state.status === "playing" ? state.point : null;
+  if (point !== puckPoint) {
+    const old = document.querySelector(".on-puck");
+    if (old) old.animate([{ opacity: 1, transform: "scale(1)" }, { opacity: 0, transform: "scale(0.4)" }], { duration: motionOff() ? 0 : 250, fill: "both" }).onfinish = () => old.remove();
+    puckPoint = point;
+    if (point !== null) {
+      const tile = document.querySelector('#extra-board [data-bet="place' + point + '"]');
+      const from = document.getElementById("puck");
+      if (tile) {
+        const puck = document.createElement("div");
+        puck.className = "on-puck";
+        puck.textContent = "ON";
+        tile.appendChild(puck);
+        if (!motionOff() && from && from.offsetParent) {
+          const a = from.getBoundingClientRect(), b = puck.getBoundingClientRect();
+          puck.animate([
+            { transform: "translate(" + (a.left + 20 - b.left) + "px, " + (a.top - b.top) + "px) scale(1.3)", opacity: 0.4 },
+            { transform: "translate(0, -14px) scale(1.15)", opacity: 1, offset: 0.75 },
+            { transform: "translate(0, 0) scale(1)", opacity: 1 },
+          ], { duration: 650, easing: "cubic-bezier(0.3, 0.7, 0.4, 1)" });
+        }
+      }
+    }
+  } else if (point !== null && !document.querySelector(".on-puck")) {
+    puckPoint = null; // the board was redrawn: put the puck back without the slide
+    renderTableTouches(state);
+  }
+
+  // A new shooter slides in from the right.
+  const name = state.crew[state.shooterIndex] || null;
+  if (name !== shownShooter) {
+    const first = shownShooter === null;
+    shownShooter = name;
+    const box = document.getElementById("shooter");
+    if (!first && name && !motionOff() && box.offsetParent) {
+      box.animate([{ transform: "translateX(60px)", opacity: 0 }, { transform: "translateX(-6px)", opacity: 1, offset: 0.7 }, { transform: "translateX(0)", opacity: 1 }],
+        { duration: 450, easing: "ease-out" });
+    }
+  }
+
+  // Roll pulses gently when a roll is possible right now.
+  const ready = state.status === "playing" && !state.onBreak && canRoll(state) && !(typeof busy === "function" && busy());
+  document.getElementById("roll-button").classList.toggle("ready", ready);
 }

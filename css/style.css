@@ -1124,3 +1124,12 @@ body.reduce-motion .fall-scene.fs-playing .fs-light { animation: none; }
 .big-win.level-1 .bw-amount { font-size: 2.2rem; } .big-win.level-2 .bw-amount { font-size: 2.6rem; }
 .bw-flash { position: fixed; inset: 0; z-index: 47; background: #fff8dc; pointer-events: none; }
 .bw-chip { position: fixed; z-index: 49; width: 20px; height: 20px; border-radius: 50%; border: 3px dashed #fff; box-sizing: border-box; pointer-events: none; }
+
+/* 1.0.5 J5: the ON puck on the point's Place tile; Roll pulses when ready and presses down */
+.on-puck { position: absolute; top: -15px; right: -5px; z-index: 3; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  background: radial-gradient(circle at 40% 35%, #ffffff, #dcdcdc 70%); color: #111; font: 900 0.52rem system-ui, sans-serif; letter-spacing: 0.5px;
+  border: 2px solid #222; box-shadow: 0 3px 6px rgba(0, 0, 0, 0.6); pointer-events: none; }
+#roll-button.ready { animation: roll-ready 1.6s ease-in-out infinite; }
+@keyframes roll-ready { 0%, 100% { box-shadow: 0 3px 8px rgba(0, 0, 0, 0.55); } 50% { box-shadow: 0 0 0 3px rgba(255, 216, 77, 0.45), 0 0 22px rgba(255, 216, 77, 0.65); } }
+#roll-button:active { transform: translateY(2px) scale(0.98); filter: brightness(0.92); }
+body.reduce-motion #roll-button.ready { animation: none; box-shadow: 0 0 0 2px rgba(255, 216, 77, 0.5); }
