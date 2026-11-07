@@ -41,8 +41,12 @@ Dated session log. Newest at the top.
 - A new shooter's face and name slide in from the right.
 - Roll pulses with a bright green glow (owner: the first gold glow wasn't noticeable on the gold button) whenever a roll is possible, and presses down when tapped. Reduce motion: no slide or pulse (a steady glow instead).
 
+**Done (J6, segment 1)**
+- Taking back a plaque plays the drop in reverse (it lifts out of its slot and fades).
+- Owner asked for options on the flip-in and fly-in too: demos/break-anim-options.html has 3 each for (1) shop cards arriving (A dealt, B flip over, C pop up; reroll reuses it), (2) a bought card going to Your cards (A arc and shrink, B spin in, C SOLD stamp) and (3) the unlock celebration (A padlock bursts, B flip with confetti, C the chain snaps).
+
 **Exact next step**
-- Owner tests J5, then "build J6" (Break touches: shop cards flip in, bought cards fly to Inventory, reroll shuffle, plaque take-back in reverse, unlock celebration).
+- Owner picks one per part (e.g. "1B, 2A, 3C"), then J6 segment 2 builds them.
 
 ## 2026-11-09: Release 1.0.4, milestone A (quick fixes)
 

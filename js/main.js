@@ -567,6 +567,7 @@ function playAgain() {
 
 let fallPlayed = false; // the fall animation plays once per run
 let plaqueJustDropped = false; // the drop box animates the newest plaque
+let plaqueJustTaken = false; // ...or the one you took back, lifting out (the drop in reverse)
 
 function renderAll() {
   showChips();
@@ -665,6 +666,7 @@ document.getElementById("patterns-button").onclick = choosePattern;
 for (const b of document.querySelectorAll("#break-tabs button")) b.onclick = () => showBreakTab(b.dataset.btab);
 document.getElementById("take-back-plaque").onclick = () => {
   const back = takeBackPlaque(state);
+  if (back) plaqueJustTaken = true;
   showBreakMessage(back ? "Took back a " + money(back) + " plaque. " + money(amountOwed(state)) + " to go." : "No plaques from this Break to take back.");
   renderAll();
 };

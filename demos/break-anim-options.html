@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Break Animation Options</title>
+<!-- Preview only (not part of the game): 3 options each for shop cards arriving, a bought card flying to Your cards,
+     and the unlock celebration. Each preview loops. -->
+<style>
+  body { margin: 0; padding: 12px; background: #0a0807; color: #e9e1cf; font-family: system-ui, sans-serif; }
+  h1 { font-family: Georgia, serif; font-size: 1.3rem; margin: 0 0 4px; }
+  h2.part { font-family: Georgia, serif; font-size: 1.15rem; color: #ffd84d; margin: 26px 0 6px; border-top: 1px solid #3a2a1c; padding-top: 14px; }
+  p.lead { color: #bbb; margin: 0 0 6px; font-size: 0.85rem; }
+  .option { margin-bottom: 16px; }
+  .option h3 { margin: 0 0 2px; font-size: 1rem; color: #ffcf9b; }
+  .option .why { color: #bbb; font-size: 0.78rem; margin: 0 0 6px; }
+  .stage { position: relative; height: 230px; overflow: hidden; border-radius: 14px; background: linear-gradient(180deg, #2b1e15, #1b130d); border: 2px solid #6b4a2a; perspective: 700px; }
+  .label { position: absolute; left: 12px; font: bold 0.8rem Georgia, serif; color: #e9d38a; }
+  .row { position: absolute; left: 10px; right: 10px; display: flex; gap: 8px; justify-content: center; }
+  .card { width: 84px; height: 118px; border-radius: 8px; background: #efe4cc; color: #2a1c10; border: 2px solid #7f8c8d; box-sizing: border-box; padding: 4px; box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+    display: flex; flex-direction: column; align-items: center; transform-style: preserve-3d; backface-visibility: hidden; position: relative; }
+  .card .thumb { width: 100%; height: 52px; border-radius: 4px; overflow: hidden; }
+  .card .thumb svg { width: 100%; height: 100%; display: block; }
+  .card b { font: bold 0.68rem Georgia, serif; margin-top: 3px; text-align: center; }
+  .card .buy { margin-top: auto; font: bold 0.62rem system-ui; background: linear-gradient(180deg, #ffe58a, #c9a227); border-radius: 5px; padding: 2px 8px; }
+  .card.small { width: 44px; height: 62px; padding: 2px; }
+  .card.small .thumb { height: 26px; } .card.small b { font-size: 0.42rem; } .card.small .buy { display: none; }
+  .back { position: absolute; inset: 0; border-radius: 6px; background: repeating-linear-gradient(45deg, #5a1208 0 6px, #3a0a05 6px 12px); border: 3px solid #d6b46a; transform: rotateY(180deg); backface-visibility: hidden; }
+  .back::after { content: "⛓"; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: #d6b46a; }
+  .stamp { position: absolute; top: 40px; left: 50%; font: 900 1rem system-ui; color: #c0281c; border: 3px solid #c0281c; border-radius: 6px; padding: 0 6px; transform: translateX(-50%) rotate(-14deg); opacity: 0; background: rgba(255,255,255,0.6); }
+  .center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .unlock-title { font: bold 1.3rem Georgia, serif; color: #ffd84d; letter-spacing: 2px; margin-bottom: 8px; opacity: 0; }
+  .lock { position: absolute; font-size: 3rem; }
+  .rays { position: absolute; width: 360px; height: 360px; border-radius: 50%; background: repeating-conic-gradient(rgba(255,216,77,0.35) 0 10deg, transparent 10deg 20deg); -webkit-mask: radial-gradient(circle, #000 15%, transparent 60%); mask: radial-gradient(circle, #000 15%, transparent 60%); opacity: 0; }
+  .confetti, .spark { position: absolute; width: 7px; height: 7px; border-radius: 2px; }
+  .spark { border-radius: 50%; background: #ffd84d; box-shadow: 0 0 6px #ff9f43; }
+  .wrap-chain { position: absolute; font-size: 1.4rem; letter-spacing: -4px; color: #c9c9c9; white-space: nowrap; }
+</style>
+<script src="../js/config.js"></script>
+<script src="../js/numbers.js"></script>
+<script src="../js/dice.js"></script>
+<script src="../js/bets.js"></script>
+<script src="../js/crew.js"></script>
+<script src="../js/cards.js"></script>
+<script src="../js/card-art.js"></script>
+</head>
+<body>
+<h1>Pick the Break animations</h1>
+<p class="lead">Three parts, three options each. Each preview loops. Pick one per part (e.g. "1B, 2A, 3C").</p>
+<div id="all"></div>
+
+<script>
+const IDS = ["hotHand", "twinSouls", "oddsAddict"];
+const card = (id, cls) => '<div class="card ' + (cls || "") + '"><div class="thumb">' + cardArt(id) + "</div><b>" + CARDS[id].name + '</b><div class="buy">Buy $30</div><div class="back"></div></div>';
+const shop = (extra) => '<div class="label" style="top:8px">Tip the dealer (shop)</div><div class="row shop" style="top:28px">' + IDS.map((id) => card(id)).join("") + "</div>" +
+  '<div class="label" style="top:156px">Your cards</div><div class="row owned" style="top:174px;justify-content:flex-start;padding-left:4px">' + card("redDice", "small") + "</div>" + (extra || "");
+
+const PARTS = [
+  ["1. Shop cards arrive", "When a Break opens (and when you reroll, after the old cards leave the same way).", [
+    ["A", "Dealt from the deck", "Cards slide in from the right one at a time, turning slightly, like a dealer dealing them.", shop()],
+    ["B", "Flip over", "Cards appear face-down (a chain-pattern back) and flip over one after another.", shop()],
+    ["C", "Pop up", "Cards rise from below and pop to full size with a small bounce, one after another.", shop()],
+  ]],
+  ["2. A bought card goes to Your cards", "Right after you tap Buy.", [
+    ["A", "Arc and shrink", "The card lifts, arcs down into the Your cards row and shrinks into its spot; the row nudges to make room.", shop()],
+    ["B", "Spin in", "The card spins and zooms down into Your cards, leaving a short gold sparkle trail.", shop()],
+    ["C", "SOLD stamp", "A red SOLD stamp thumps onto the card, then it slides down into Your cards.", shop('<div class="stamp">SOLD</div>')],
+  ]],
+  ["3. Unlocking something new", "The \"UNLOCKED!\" screen when you earn a new card.", [
+    ["A", "Padlock bursts open", "A padlock shakes, its shackle pops open and it drops away, revealing the card with light rays behind it.",
+      '<div class="center"><div class="rays"></div><div class="unlock-title">UNLOCKED!</div>' + card("oddsAddict") + '<div class="lock">🔒</div></div>'],
+    ["B", "Flip with confetti", "The card flips over from its back while confetti in the card's theme colours bursts out.",
+      '<div class="center"><div class="unlock-title">UNLOCKED!</div>' + card("oddsAddict") + "</div>"],
+    ["C", "The chain snaps", "A chain wrapped across the card glows red-hot and snaps with sparks, like breaking a link, freeing the card.",
+      '<div class="center"><div class="unlock-title">UNLOCKED!</div>' + card("oddsAddict") + '<div class="wrap-chain">⛓⛓⛓⛓⛓⛓</div></div>'],
+  ]],
+];
+document.getElementById("all").innerHTML = PARTS.map(([title, why, opts], pi) => '<h2 class="part">' + title + '</h2><p class="lead">' + why + "</p>" +
+  opts.map(([k, name, text, html]) => '<div class="option"><h3>' + (pi + 1) + k + ". " + name + '</h3><p class="why">' + text + '</p><div class="stage" id="p' + (pi + 1) + k + '">' + html + "</div></div>").join("")).join("");
+
+const $ = (id, sel) => document.querySelector("#" + id + " " + sel);
+const $$ = (id, sel) => [...document.querySelectorAll("#" + id + " " + sel)];
+const D = 2400;
+
+const PLAY = {
+  "1A": () => $$("p1A", ".shop .card").forEach((c, i) => c.animate([{ transform: "translateX(320px) rotate(14deg)", opacity: 0 }, { transform: "translateX(0) rotate(0)", opacity: 1 }], { duration: 420, delay: i * 180, easing: "cubic-bezier(0.2, 0.8, 0.3, 1)", fill: "backwards" })),
+  "1B": () => $$("p1B", ".shop .card").forEach((c, i) => c.animate([{ transform: "rotateY(180deg)" }, { transform: "rotateY(180deg)", offset: 0.3 }, { transform: "rotateY(0)" }], { duration: 700, delay: i * 220, easing: "ease-in-out", fill: "backwards" })),
+  "1C": () => $$("p1C", ".shop .card").forEach((c, i) => c.animate([{ transform: "translateY(120px) scale(0.5)", opacity: 0 }, { transform: "translateY(-8px) scale(1.06)", opacity: 1, offset: 0.7 }, { transform: "translateY(0) scale(1)", opacity: 1 }], { duration: 480, delay: i * 160, easing: "ease-out", fill: "backwards" })),
+  "2A": () => {
+    const c = $$("p2A", ".shop .card")[1];
+    c.animate([{ transform: "translate(0,0) scale(1)" }, { transform: "translate(-20px,-24px) scale(1.05)", offset: 0.25 }, { transform: "translate(-62px,120px) scale(0.5)", offset: 0.8 }, { transform: "translate(-62px,120px) scale(0.5)", opacity: 0 }], { duration: 1100, delay: 300, easing: "ease-in-out", fill: "both" });
+    $("p2A", ".owned").animate([{ transform: "translateX(0)" }, { transform: "translateX(0)", offset: 0.7 }, { transform: "translateX(-6px)", offset: 0.8 }, { transform: "translateX(0)" }], { duration: 1300 });
+  },
+  "2B": () => {
+    const c = $$("p2B", ".shop .card")[1];
+    c.animate([{ transform: "translate(0,0) rotate(0) scale(1)", filter: "drop-shadow(0 0 0 #ffd84d)" }, { transform: "translate(-62px,120px) rotate(720deg) scale(0.4)", filter: "drop-shadow(0 0 10px #ffd84d)", offset: 0.85 }, { transform: "translate(-62px,120px) rotate(720deg) scale(0.4)", opacity: 0 }], { duration: 1000, delay: 300, easing: "ease-in", fill: "both" });
+    for (let i = 0; i < 8; i++) {
+      const s = document.createElement("i"); s.className = "spark"; s.style.left = 170 - i * 8 + "px"; s.style.top = 70 + i * 15 + "px"; document.getElementById("p2B").appendChild(s);
+      s.animate([{ opacity: 0 }, { opacity: 1, offset: 0.3 }, { opacity: 0, transform: "scale(0.2)" }], { duration: 600, delay: 350 + i * 70, fill: "both" }).onfinish = () => s.remove();
+    }
+  },
+  "2C": () => {
+    const st = $("p2C", ".stamp");
+    st.animate([{ opacity: 0, transform: "translateX(-50%) rotate(-14deg) scale(2.2)" }, { opacity: 1, transform: "translateX(-50%) rotate(-14deg) scale(0.95)", offset: 0.12 }, { opacity: 1, transform: "translateX(-50%) rotate(-14deg) scale(1)", offset: 0.2 },
+      { opacity: 1, transform: "translateX(-50%) rotate(-14deg) scale(1)", offset: 0.45 }, { opacity: 0, transform: "translate(-112px, 110px) rotate(-14deg) scale(0.4)", offset: 0.85 }, { opacity: 0 }], { duration: 1600, delay: 200, fill: "both" });
+    $$("p2C", ".shop .card")[1].animate([{ transform: "none" }, { transform: "scale(0.96)", offset: 0.12 }, { transform: "none", offset: 0.2 }, { transform: "none", offset: 0.45 },
+      { transform: "translate(-62px,120px) scale(0.5)", offset: 0.85 }, { transform: "translate(-62px,120px) scale(0.5)", opacity: 0 }], { duration: 1600, delay: 200, easing: "ease-in-out", fill: "both" });
+  },
+  "3A": () => {
+    const lock = $("p3A", ".lock");
+    lock.animate([{ transform: "translateX(0)", opacity: 1 }, { transform: "translateX(-4px) rotate(-8deg)", offset: 0.1 }, { transform: "translateX(4px) rotate(8deg)", offset: 0.2 }, { transform: "translateX(-4px) rotate(-8deg)", offset: 0.3 },
+      { transform: "translate(0,0) scale(1.3)", opacity: 1, offset: 0.4 }, { transform: "translate(30px, 120px) rotate(60deg) scale(0.8)", opacity: 0, offset: 0.7 }, { opacity: 0 }], { duration: D, fill: "both" });
+    setTimeout(() => { lock.textContent = "🔓"; }, D * 0.38); setTimeout(() => { lock.textContent = "🔒"; }, D);
+    $("p3A", ".card").animate([{ opacity: 0.15, transform: "scale(0.9)" }, { opacity: 0.15, offset: 0.38 }, { opacity: 1, transform: "scale(1.08)", offset: 0.5 }, { opacity: 1, transform: "scale(1)" }], { duration: D, fill: "both" });
+    $("p3A", ".rays").animate([{ opacity: 0, transform: "rotate(0)" }, { opacity: 0, offset: 0.4 }, { opacity: 1, offset: 0.5 }, { opacity: 1, transform: "rotate(60deg)" }], { duration: D, fill: "both" });
+    $("p3A", ".unlock-title").animate([{ opacity: 0 }, { opacity: 0, offset: 0.45 }, { opacity: 1, offset: 0.55 }, { opacity: 1 }], { duration: D, fill: "both" });
+  },
+  "3B": () => {
+    $("p3B", ".card").animate([{ transform: "rotateY(180deg) scale(0.8)" }, { transform: "rotateY(180deg) scale(0.8)", offset: 0.2 }, { transform: "rotateY(0) scale(1.1)", offset: 0.5 }, { transform: "rotateY(0) scale(1)" }], { duration: D, easing: "ease-in-out", fill: "both" });
+    $("p3B", ".unlock-title").animate([{ opacity: 0 }, { opacity: 0, offset: 0.45 }, { opacity: 1, offset: 0.55 }, { opacity: 1 }], { duration: D, fill: "both" });
+    const st = document.getElementById("p3B");
+    for (let i = 0; i < 26; i++) {
+      const c = document.createElement("i"); c.className = "confetti"; c.style.background = ["#2f7a4a", "#ffd84d", "#efe4cc", "#c0281c"][i % 4]; c.style.left = "50%"; c.style.top = "50%"; st.appendChild(c);
+      const a = Math.random() * Math.PI * 2, d = 80 + Math.random() * 90;
+      c.animate([{ transform: "translate(0,0) rotate(0)", opacity: 0 }, { opacity: 1, offset: 0.1 }, { transform: "translate(" + Math.cos(a) * d + "px," + (Math.sin(a) * d + 40) + "px) rotate(" + Math.random() * 720 + "deg)", opacity: 0 }],
+        { duration: 1200, delay: D * 0.48, easing: "cubic-bezier(0.2, 0.8, 0.4, 1)", fill: "both" }).onfinish = () => c.remove();
+    }
+  },
+  "3C": () => {
+    const ch = $("p3C", ".wrap-chain");
+    ch.animate([{ color: "#c9c9c9", transform: "rotate(-20deg)" }, { color: "#ff6a2b", textShadow: "0 0 10px #ff3b30", transform: "rotate(-20deg)", offset: 0.35 },
+      { transform: "rotate(-20deg) translateX(-3px)", offset: 0.38 }, { transform: "rotate(-20deg) translateX(3px)", offset: 0.41 }, { opacity: 1, transform: "rotate(-20deg)", offset: 0.44 },
+      { opacity: 0, transform: "rotate(-20deg) translateY(90px) scale(1.2)", offset: 0.65 }, { opacity: 0 }], { duration: D, fill: "both" });
+    $("p3C", ".card").animate([{ filter: "brightness(0.5)" }, { filter: "brightness(0.5)", offset: 0.44 }, { filter: "brightness(1.2)", transform: "scale(1.08)", offset: 0.52 }, { filter: "brightness(1)", transform: "scale(1)" }], { duration: D, fill: "both" });
+    $("p3C", ".unlock-title").animate([{ opacity: 0 }, { opacity: 0, offset: 0.45 }, { opacity: 1, offset: 0.55 }, { opacity: 1 }], { duration: D, fill: "both" });
+    const st = document.getElementById("p3C");
+    for (let i = 0; i < 14; i++) {
+      const s = document.createElement("i"); s.className = "spark"; s.style.left = "50%"; s.style.top = "50%"; st.appendChild(s);
+      const a = Math.random() * Math.PI * 2, d = 40 + Math.random() * 70;
+      s.animate([{ transform: "translate(0,0)", opacity: 0 }, { opacity: 1, offset: 0.1 }, { transform: "translate(" + Math.cos(a) * d + "px," + Math.sin(a) * d + "px)", opacity: 0 }], { duration: 600, delay: D * 0.42, fill: "both" }).onfinish = () => s.remove();
+    }
+  },
+};
+function loop() { for (const k of Object.keys(PLAY)) PLAY[k](); }
+loop();
+setInterval(loop, D + 600);
+</script>
+</body>
+</html>

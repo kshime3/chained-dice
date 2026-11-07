@@ -425,3 +425,4 @@ Dated log of every decision and why. Newest at the bottom.
 - Chip stacks: owner picked B (top-down pile, value on the top chip, largest on the bottom). New rule: 3 options for every major new image, animation or music addition.
 - Card pops: owner picked C (zip into the mult).
 - Big wins: owner picked B (gold slam), each level bigger and more intense; thresholds 4x / 10x / 25x the stake on the table (CONFIG.bigWinX).
+- J6: owner wants 3 options for the shop flip-in and the fly-in as well as the unlock celebration; done in segments.

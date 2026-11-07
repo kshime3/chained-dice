@@ -123,10 +123,12 @@ function renderDropBox(state) {
   for (let i = 0; i < slots; i++) {
     const fill = Math.max(0, Math.min(1, full - i));
     const newest = plaqueJustDropped && fill > 0 && i === Math.ceil(full) - 1;
-    html += '<div class="slot"><div class="plaque' + (newest ? " dropping" : "") + '" style="width:' + Math.round(fill * 100) + '%"></div></div>';
+    const lifted = plaqueJustTaken && fill === 0 && i === Math.ceil(full); // the slot just emptied: its plaque lifts out
+    html += '<div class="slot"><div class="plaque' + (newest ? " dropping" : lifted ? " lifting" : "") + '" style="width:' + (lifted ? 100 : Math.round(fill * 100)) + '%"></div></div>';
   }
   box.innerHTML = html + '<div class="drop-label">' + money(state.deposited) + " of " + money(state.debt) + "</div>";
   plaqueJustDropped = false;
+  plaqueJustTaken = false;
 }
 
 // One card as a box: name, rarity, what it does, plus an optional button.

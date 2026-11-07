@@ -628,6 +628,10 @@ body.quake .layout, body.quake .top { animation: quake 0.09s linear infinite; }
 .drop-box .plaque { height: 100%; background: linear-gradient(180deg, #ffe58a, #c9a227); border-radius: 3px; box-shadow: inset 0 0 0 1px #fff3 ; }
 .drop-box .plaque.dropping { animation: plaque-drop 0.45s cubic-bezier(0.3, 1.4, 0.5, 1); }
 @keyframes plaque-drop { 0% { transform: translateY(-30px) scale(1.3); opacity: 0; } 60% { opacity: 1; } 100% { transform: translateY(0) scale(1); } }
+/* Taking a plaque back plays the drop in reverse: it lifts out and fades */
+.drop-box .plaque.lifting { animation: plaque-lift 0.45s cubic-bezier(0.5, 0, 0.7, -0.4) forwards; }
+@keyframes plaque-lift { 0% { transform: translateY(0) scale(1); opacity: 1; } 100% { transform: translateY(-30px) scale(1.3); opacity: 0; } }
+body.reduce-motion .drop-box .plaque.lifting { animation: none; opacity: 0; }
 .drop-label { width: 100%; font-size: 0.8rem; color: #ccc; }
 .plaque-button { background: linear-gradient(180deg, #ffe58a, #c9a227); font-weight: bold; }
 @media (max-width: 760px) { .drop-box .slot { width: 24px; height: 16px; } }
