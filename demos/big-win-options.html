@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Big Win Options</title>
+<!-- Preview only (not part of the game): three looks for big-win banners. Each cycles BIG -> HUGE -> MONSTER, with a bigger shake each time. -->
+<style>
+  body { margin: 0; padding: 12px; background: #0a0807; color: #e9e1cf; font-family: system-ui, sans-serif; }
+  h1 { font-family: Georgia, serif; font-size: 1.3rem; margin: 0 0 4px; }
+  p.lead { color: #bbb; margin: 0 0 14px; font-size: 0.85rem; }
+  .option { margin-bottom: 20px; }
+  .option h2 { margin: 0 0 2px; font-size: 1.05rem; color: #ffd84d; }
+  .option .why { color: #bbb; font-size: 0.8rem; margin: 0 0 8px; }
+  .stage { position: relative; height: 260px; overflow: hidden; border-radius: 14px; background: #120c09; border: 1px solid #3a2a1c; }
+  .shaker { position: absolute; inset: 0; }
+  .felt { position: absolute; left: 10px; right: 10px; top: 14px; bottom: 14px; border-radius: 12px; background: radial-gradient(ellipse at 50% 0%, #2f7a4a, #134a2b 70%); border: 5px solid #4a2c18; }
+  .felt span { position: absolute; left: 50%; bottom: 18px; transform: translateX(-50%); color: #f3e3c3; font-family: Georgia, serif; font-size: 0.85rem; white-space: nowrap; }
+  .layer { position: absolute; inset: 0; pointer-events: none; display: flex; align-items: center; justify-content: center; flex-direction: column; }
+  .amount { font-weight: 900; font-size: 1.4rem; color: #7dff9b; text-shadow: 0 2px 6px #000; }
+
+  /* A: a casino sign with chasing bulbs flicks on */
+  .a-sign { position: relative; padding: 10px 22px; border-radius: 12px; background: #2a0d0a; border: 4px solid #ffd84d; text-align: center;
+    box-shadow: 0 0 22px rgba(255, 216, 77, 0.7), inset 0 0 18px rgba(255, 90, 40, 0.5); }
+  .a-sign b { display: block; font-family: Georgia, serif; font-size: 2rem; letter-spacing: 3px; color: #fff3c4; text-shadow: 0 0 6px #ffb347, 0 0 16px #ff6a2b; }
+  .a-bulbs { position: absolute; inset: -9px; border-radius: 16px; border: 5px dotted #fff3b0; filter: drop-shadow(0 0 4px #ffd84d); animation: chase 0.45s steps(1) infinite; }
+  @keyframes chase { 50% { border-color: #ff9f43; } }
+
+  /* B: gold letters slam in with turning rays and a burst of chips */
+  .b-rays { position: absolute; width: 380px; height: 380px; border-radius: 50%;
+    background: repeating-conic-gradient(rgba(255, 216, 77, 0.35) 0 10deg, transparent 10deg 20deg); mask: radial-gradient(circle, #000 20%, transparent 65%); -webkit-mask: radial-gradient(circle, #000 20%, transparent 65%); }
+  .b-text { font-family: Georgia, serif; font-weight: bold; font-size: 2.3rem; letter-spacing: 2px; color: #ffd84d; -webkit-text-stroke: 1.5px #7a4a10; text-shadow: 0 4px 0 #7a4a10, 0 8px 16px #000; }
+  .b-chip { position: absolute; width: 18px; height: 18px; border-radius: 50%; border: 3px dashed #fff; box-sizing: border-box; }
+
+  /* C: a ribbon sweeps across, chips rain down */
+  .c-ribbon { position: relative; width: 120%; padding: 8px 0; text-align: center; background: linear-gradient(180deg, #c0281c, #7e1510); border-top: 3px solid #ffd84d; border-bottom: 3px solid #ffd84d;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6); transform: rotate(-6deg); }
+  .c-ribbon b { font-family: Georgia, serif; font-size: 1.8rem; letter-spacing: 4px; color: #fff3c4; text-shadow: 0 2px 0 #4a0a06; }
+  .c-chip { position: absolute; top: -20px; width: 16px; height: 16px; border-radius: 50%; border: 3px dashed #fff; box-sizing: border-box; }
+  .tier { position: absolute; top: 6px; right: 10px; font-size: 0.7rem; color: #bbb; z-index: 5; }
+</style>
+</head>
+<body>
+<h1>Pick a big-win look</h1>
+<p class="lead">Shown when a roll wins a lot compared with your bet: BIG, then HUGE, then MONSTER (each shakes a little harder). Each preview cycles through all three.</p>
+<div id="options"></div>
+
+<script>
+const TIERS = [["BIG WIN", "+$120", 3], ["HUGE WIN", "+$640", 6], ["MONSTER WIN", "+$4,800", 10]];
+const CHIPS = ["#d2372a", "#22a65b", "#262626"];
+const WHY = {
+  A: ["A. Casino sign", "A lit casino sign with chasing bulbs flicks on over the table, with the amount underneath. Classic Vegas."],
+  B: ["B. Gold slam", "Big gold letters slam down from the sky, with turning light rays behind them and chips bursting out. The loudest, most Balatro-like."],
+  C: ["C. Ribbon and chip rain", "A red-and-gold ribbon sweeps across the screen while chips rain down from the top. Bigger wins, more chips."],
+};
+document.getElementById("options").innerHTML = ["A", "B", "C"].map((k) => '<div class="option"><h2>' + WHY[k][0] + '</h2><p class="why">' + WHY[k][1] +
+  '</p><div class="stage" id="s' + k + '"><div class="shaker"><div class="felt"><span>Rolled 6 the hard way!</span></div></div><div class="layer"></div><div class="tier"></div></div></div>').join("");
+
+function shake(stage, px) {
+  const frames = [];
+  for (let i = 0; i < 10; i++) frames.push({ transform: "translate(" + (Math.random() * 2 - 1) * px + "px, " + (Math.random() * 2 - 1) * px + "px)" });
+  frames.push({ transform: "none" });
+  stage.querySelector(".shaker").animate(frames, { duration: 420 });
+}
+
+const SHOW = {
+  A: (layer, [word, amount]) => {
+    layer.innerHTML = '<div class="a-sign"><div class="a-bulbs"></div><b>' + word + '</b><div class="amount">' + amount + "</div></div>";
+    layer.firstChild.animate([{ opacity: 0 }, { opacity: 1, offset: 0.06 }, { opacity: 0.2, offset: 0.1 }, { opacity: 1, offset: 0.14 }, { opacity: 0.4, offset: 0.17 }, { opacity: 1, offset: 0.2 },
+      { opacity: 1, offset: 0.85 }, { opacity: 0 }], { duration: 2100 });
+  },
+  B: (layer, [word, amount, n]) => {
+    let chips = "";
+    for (let i = 0; i < n * 3; i++) chips += '<i class="b-chip" style="background:' + CHIPS[i % 3] + '"></i>';
+    layer.innerHTML = '<div class="b-rays"></div><div class="b-text">' + word + '</div><div class="amount">' + amount + "</div>" + chips;
+    layer.querySelector(".b-rays").animate([{ transform: "rotate(0) scale(0.6)", opacity: 0 }, { opacity: 1, offset: 0.15 }, { opacity: 1, offset: 0.8 }, { transform: "rotate(90deg) scale(1.1)", opacity: 0 }], { duration: 2100 });
+    layer.querySelector(".b-text").animate([{ transform: "scale(3)", opacity: 0 }, { transform: "scale(0.9)", opacity: 1, offset: 0.12 }, { transform: "scale(1)", offset: 0.2 }, { transform: "scale(1)", opacity: 1, offset: 0.85 }, { opacity: 0 }], { duration: 2100 });
+    layer.querySelector(".amount").animate([{ opacity: 0 }, { opacity: 0, offset: 0.15 }, { opacity: 1, offset: 0.25 }, { opacity: 1, offset: 0.85 }, { opacity: 0 }], { duration: 2100 });
+    layer.querySelectorAll(".b-chip").forEach((c) => {
+      const a = Math.random() * Math.PI * 2, d = 90 + Math.random() * 90;
+      c.animate([{ transform: "translate(0,0)", opacity: 0 }, { opacity: 1, offset: 0.12 }, { transform: "translate(" + Math.cos(a) * d + "px," + (Math.sin(a) * d + 60) + "px) rotate(400deg)", opacity: 0 }],
+        { duration: 1300, delay: 200, easing: "cubic-bezier(0.2, 0.8, 0.4, 1)", fill: "both" });
+    });
+  },
+  C: (layer, [word, amount, n]) => {
+    let chips = "";
+    for (let i = 0; i < n * 4; i++) chips += '<i class="c-chip" style="left:' + Math.random() * 95 + "%;background:" + CHIPS[i % 3] + '"></i>';
+    layer.innerHTML = '<div class="c-ribbon"><b>' + word + '</b></div><div class="amount" style="margin-top:12px">' + amount + "</div>" + chips;
+    layer.querySelector(".c-ribbon").animate([{ transform: "translateX(-120%) rotate(-6deg)" }, { transform: "translateX(0) rotate(-6deg)", offset: 0.18 }, { transform: "translateX(0) rotate(-6deg)", offset: 0.82 }, { transform: "translateX(120%) rotate(-6deg)" }], { duration: 2100, easing: "ease-in-out" });
+    layer.querySelector(".amount").animate([{ opacity: 0 }, { opacity: 0, offset: 0.18 }, { opacity: 1, offset: 0.28 }, { opacity: 1, offset: 0.8 }, { opacity: 0 }], { duration: 2100 });
+    layer.querySelectorAll(".c-chip").forEach((c) => c.animate([{ transform: "translateY(0) rotate(0)" }, { transform: "translateY(300px) rotate(540deg)" }],
+      { duration: 1100 + Math.random() * 600, delay: Math.random() * 700, easing: "ease-in", fill: "both" }));
+  },
+};
+
+let t = 0;
+function round() {
+  const tier = TIERS[t % 3];
+  for (const k of ["A", "B", "C"]) {
+    const stage = document.getElementById("s" + k);
+    stage.querySelector(".tier").textContent = tier[0].split(" ")[0] + " (shake " + tier[2] + ")";
+    SHOW[k](stage.querySelector(".layer"), tier);
+    setTimeout(() => shake(stage, tier[2]), k === "B" ? 230 : 150);
+  }
+  t++;
+}
+round();
+setInterval(round, 2600);
+</script>
+</body>
+</html>

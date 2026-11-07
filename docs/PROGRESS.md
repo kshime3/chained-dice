@@ -28,8 +28,10 @@ Dated session log. Newest at the top.
 **Done (J3, part 2)**
 - Card pops, style C (owner's pick): when your card adds mult (found by comparing each card's part of the mult before and after the roll) or does something else (its note in the roll message), its art zips from the Inventory tab into the mult pill, the mult bumps with a ding, "+0.25x" floats up above the pill with the card's name under it. Up to 4 per roll, one after another. The plain "+0.5x mult" pop is skipped when cards explain the gain. Reduce motion: just the name and bonus fade in.
 
+- J4: 3 big-win looks in demos/big-win-options.html (A casino sign with chasing bulbs, B gold slam with rays and a chip burst, C ribbon sweep with chip rain); each cycles BIG/HUGE/MONSTER with growing shake.
+
 **Exact next step**
-- Owner tests J3, then "build J4" (big-win banners + screen shake: 3 options first).
+- Owner picks a big-win look (A/B/C), then build J4.
 
 ## 2026-11-09: Release 1.0.4, milestone A (quick fixes)
 
