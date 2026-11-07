@@ -1,6 +1,7 @@
 // Display: "juice", the feel of the game (release 1.0.5). No game rules here.
 // J2: chip stacks on every bet, and chips that fly: tray -> bet when you bet, bet -> tray when you
 //     take chips back, losing bets swept off toward the dealer, winnings flying to your Cash.
+// J3: money that counts to its new value (Cash, Still owed, On table); Interest pulses when it pays.
 // Everything that moves checks Reduce motion (body.reduce-motion): stacks still show, nothing flies.
 
 // Chip colours, matching the chip tray (red, green, black; endless chips by size order).
@@ -131,5 +132,40 @@ function settleChips(state, results) {
     } else if (r.outcome === "win" && r.winnings > 0) {
       chipsIn(r.winnings, values, 4).forEach((v) => flyChip(spot, cash, chipPaintFor(v, values), { delay: 350 + n++ * 70, ms: 600, lift: 70 }));
     }
+  }
+}
+
+// ---------- Money that counts ----------
+
+// Show a money amount; if it changed, count from the old value to the new one (quick: ~0.5s).
+function countTo(el, value) {
+  const from = el.dataset.value === undefined ? value : Number(el.dataset.value);
+  el.dataset.value = value;
+  if (el._count) cancelAnimationFrame(el._count);
+  if (from === value || motionOff() || !el.offsetParent) {
+    el.textContent = money(value);
+    return;
+  }
+  el.classList.toggle("counting-up", value > from);
+  el.classList.toggle("counting-down", value < from);
+  const start = performance.now(), ms = Math.min(700, 300 + Math.abs(value - from) / 4);
+  const step = (now) => {
+    const t = Math.min(1, (now - start) / ms);
+    const eased = 1 - Math.pow(1 - t, 3);
+    el.textContent = money(Math.round(from + (value - from) * eased));
+    if (t < 1) el._count = requestAnimationFrame(step);
+    else { el.textContent = money(value); el.classList.remove("counting-up", "counting-down"); }
+  };
+  el._count = requestAnimationFrame(step);
+}
+
+// Interest was just paid at a Break: the Interest box (and your Cash) pulse.
+function pulseInterest() {
+  if (motionOff()) return;
+  for (const el of [document.querySelector(".interest-box"), document.getElementById("break-cash-box"), document.getElementById("break-interest")]) {
+    if (!el) continue;
+    el.classList.remove("pulse");
+    void el.offsetWidth; // restart the animation
+    el.classList.add("pulse");
   }
 }

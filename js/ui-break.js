@@ -19,6 +19,7 @@ function renderBreak(state) {
   }
   const opening = screen.classList.contains("hidden");
   screen.classList.remove("hidden");
+  if (opening && state.lastInterest > 0) setTimeout(pulseInterest, 300); // interest just landed in your cash
   if (opening) { // a new Break: start at the top (a hidden screen can't be scrolled, so this comes after showing it)
     breakTab = canPay(state) || !isShopOpen(state) ? "pay" : "shop";
     screen.querySelector(".end-box").scrollTop = 0;

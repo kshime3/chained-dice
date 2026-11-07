@@ -1094,3 +1094,11 @@ body.reduce-motion .fall-scene.fs-playing .fs-light { animation: none; }
 .extra-tile .chip-stack { left: 2px; bottom: 2px; transform: scale(0.65); transform-origin: left bottom; }
 .fly-chip { position: fixed; z-index: 40; width: 26px; height: 26px; border-radius: 50%; pointer-events: none; transform: translate(-50%, -50%);
   border: 3px dashed rgba(255, 255, 255, 0.9); box-shadow: 0 3px 6px rgba(0, 0, 0, 0.6); box-sizing: border-box; }
+
+/* 1.0.5 J3: counting money flashes green going up, red going down; Interest and Cash pulse when interest pays */
+.counting-up { color: #b6ffcb !important; }
+.counting-down { color: #ffb3a8 !important; }
+.money-main.pulse { animation: box-pulse 0.9s ease-out 2; }
+@keyframes box-pulse { 0% { transform: scale(1); } 30% { transform: scale(1.12); box-shadow: 0 0 18px rgba(143, 211, 255, 0.9); } 100% { transform: scale(1); } }
+#break-interest.pulse { animation: line-glow 0.9s ease-out 2; }
+@keyframes line-glow { 30% { color: #8fd3ff; text-shadow: 0 0 10px rgba(143, 211, 255, 0.8); } }

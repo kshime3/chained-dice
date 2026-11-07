@@ -189,9 +189,9 @@ function markTakeBack(state) {
 function renderState(state) {
   const b = state.bets;
   document.getElementById("shift-number").textContent = state.shift;
-  document.getElementById("cash").textContent = money(state.cash);
+  countTo(document.getElementById("cash"), state.cash); // counts up or down (juice.js)
   document.getElementById("interest").textContent = Math.round(interestRate(state) * 1000) / 10 + "%";
-  document.getElementById("owed").textContent = money(amountOwed(state));
+  countTo(document.getElementById("owed"), amountOwed(state));
   document.getElementById("debt-of").textContent = "of " + money(state.debt);
   document.querySelector(".owed-box").classList.toggle("paid-off", amountOwed(state) <= 0);
   const progress = Math.min(100, (state.deposited / state.debt) * 100);
@@ -202,7 +202,7 @@ function renderState(state) {
   renderMult(state);
   renderHouseRule(state);
   renderChallenge(state);
-  document.getElementById("on-table").textContent = money(betsTotal(b));
+  countTo(document.getElementById("on-table"), betsTotal(b));
   renderExtraBoard(state);
   markTakeBack(state);
   if (typeof betPattern === "function") renderPatterns(state, selectedChip, betPattern); // main.js owns the chip and the action
