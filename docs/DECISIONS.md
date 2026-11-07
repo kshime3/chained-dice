@@ -421,3 +421,4 @@ Dated log of every decision and why. Newest at the bottom.
 ## 2026-11-10: 1.0.5 J1
 - Vibration uses the browser's vibrate (works in the Android app with the VIBRATE permission; no new plugin). Buzzes are tied to the existing sounds so they always match. Reduce motion defaults to the phone's own setting.
 - 1.0.5 J2: chip stacks + flying chips in js/juice.js; vibration lengthened (owner has a Pixel 9 Pro: noted in CLAUDE.md).
+- Owner (2026-11-11): not satisfied with the J2 chip stacks; three new looks previewed in demos/stack-options.html. Rule: the largest chip is always on the bottom of a stack. J3 waits until the stack look is chosen.

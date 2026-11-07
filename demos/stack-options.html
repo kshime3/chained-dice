@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chip Stack Options</title>
+<!-- Preview only (not part of the game): three looks for the chip stacks on bets. Largest chip on the bottom. -->
+<style>
+  body { margin: 0; padding: 12px; background: #0a0807; color: #e9e1cf; font-family: system-ui, sans-serif; }
+  h1 { font-family: Georgia, serif; font-size: 1.3rem; margin: 0 0 4px; }
+  p.lead { color: #bbb; margin: 0 0 14px; font-size: 0.85rem; }
+  .option { margin-bottom: 18px; }
+  .option h2 { margin: 0 0 2px; font-size: 1.05rem; color: #ffd84d; }
+  .option .why { color: #bbb; font-size: 0.8rem; margin: 0 0 8px; }
+  .felt { background: radial-gradient(ellipse at 50% 0%, #2f7a4a, #134a2b 70%); border: 6px solid #4a2c18; border-radius: 16px; padding: 8px; }
+  .row { display: flex; gap: 6px; margin-bottom: 6px; }
+  .bet { position: relative; flex: 1; min-height: 64px; border: 2px solid #ffd84d; border-radius: 10px; color: #f3e3c3; text-align: center; padding: 6px 4px; box-sizing: border-box; }
+  .bet b { font-family: Georgia, serif; font-size: 0.95rem; letter-spacing: 0.5px; }
+  .bet b span { color: #ffd84d; margin-left: 4px; }
+  .bet small { display: block; font-size: 0.66rem; color: #9fd6b0; margin-top: 2px; }
+  .tile { flex: 1; min-height: 46px; padding: 4px 2px; }
+  .tile b { font-size: 0.7rem; }
+  .spot { position: absolute; }
+
+  /* A: 3D chips (a cylinder edge with a lit top face), stacked straight up */
+  .a-chip { position: absolute; left: 0; width: 30px; height: 17px; filter: drop-shadow(0 1px 1px rgba(0,0,0,0.6)); }
+  .a-chip .side { position: absolute; left: 0; right: 0; top: 6px; height: 11px; border-radius: 0 0 50% 50% / 0 0 45% 45%;
+    background-image: repeating-linear-gradient(90deg, rgba(255,255,255,0.9) 0 3px, transparent 3px 8px); box-shadow: inset 0 -2px 2px rgba(0,0,0,0.4); }
+  .a-chip .top { position: absolute; left: 0; right: 0; top: 0; height: 12px; border-radius: 50%; box-shadow: inset 0 0 0 2px rgba(255,255,255,0.75), inset 0 0 0 4px rgba(0,0,0,0.2); }
+
+  /* B: chips seen from above, each a little up-and-right of the one below; the top chip shows its value */
+  .b-chip { position: absolute; width: 24px; height: 24px; border-radius: 50%; box-sizing: border-box; border: 3px dashed rgba(255,255,255,0.9);
+    box-shadow: 0 2px 3px rgba(0,0,0,0.55); display: flex; align-items: center; justify-content: center; font: bold 8px system-ui; color: #fff; text-shadow: 0 1px 1px #000; }
+
+  /* C: a short row of chips fanned out like they were tossed down, with a count badge */
+  .c-chip { position: absolute; width: 20px; height: 20px; border-radius: 50%; box-sizing: border-box; border: 2.5px dashed rgba(255,255,255,0.9); box-shadow: 0 2px 3px rgba(0,0,0,0.55); }
+  .c-badge { position: absolute; font: bold 9px system-ui; color: #ffd84d; background: rgba(0,0,0,0.6); border-radius: 6px; padding: 1px 4px; }
+</style>
+</head>
+<body>
+<h1>Pick a chip stack</h1>
+<p class="lead">Same bets in each: Pass Line $35, Odds $175, Field $10, Place 6 $5, Hard 8 $30. Biggest chip always on the bottom.</p>
+<div id="options"></div>
+
+<script>
+const PAINT = { 5: "radial-gradient(circle at 50% 30%, #f05a48, #d2372a 60%)", 25: "radial-gradient(circle at 50% 30%, #3fd67e, #22a65b 60%)", 100: "radial-gradient(circle at 50% 30%, #5a5a5a, #262626 60%)" };
+const SIDE = { 5: "#b02a1f", 25: "#1c8a4b", 100: "#1c1c1c" };
+const LABEL = { 5: "5", 25: "25", 100: "100" };
+// Biggest first = bottom of the stack.
+function chipsIn(amount, max) {
+  const out = []; let left = amount;
+  for (const v of [100, 25, 5]) while (left >= v && out.length < max) { out.push(v); left -= v; }
+  return out;
+}
+
+const STYLES = {
+  A: (amount, small) => {
+    const chips = chipsIn(amount, 6), k = small ? 0.6 : 1;
+    let html = '<div class="spot" style="left:' + (small ? 3 : 8) + "px;bottom:" + (small ? 3 : 5) + "px;width:30px;height:" + (chips.length * 6 + 17) + "px;transform:scale(" + k + ');transform-origin:left bottom">';
+    chips.forEach((v, i) => {
+      html += '<div class="a-chip" style="bottom:' + i * 6 + "px;z-index:" + i + '"><div class="side" style="background-color:' + SIDE[v] + '"></div><div class="top" style="background:' + PAINT[v] + '"></div></div>';
+    });
+    return html + "</div>";
+  },
+  B: (amount, small) => {
+    const chips = chipsIn(amount, 5), k = small ? 0.7 : 1;
+    let html = '<div class="spot" style="left:' + (small ? 2 : 6) + "px;bottom:" + (small ? 2 : 5) + "px;width:40px;height:40px;transform:scale(" + k + ');transform-origin:left bottom">';
+    chips.forEach((v, i) => {
+      html += '<div class="b-chip" style="left:' + i * 3 + "px;bottom:" + i * 3 + "px;background:" + PAINT[v] + '">' + (i === chips.length - 1 ? LABEL[v] : "") + "</div>";
+    });
+    return html + "</div>";
+  },
+  C: (amount, small) => {
+    const all = chipsIn(amount, 99), chips = all.slice(0, 4), k = small ? 0.7 : 1;
+    let html = '<div class="spot" style="right:' + (small ? 2 : 6) + "px;bottom:" + (small ? 2 : 5) + "px;width:64px;height:28px;transform:scale(" + k + ');transform-origin:right bottom">';
+    chips.forEach((v, i) => {
+      const rot = [-12, 8, -4, 14][i];
+      html += '<div class="c-chip" style="right:' + (chips.length - 1 - i) * 11 + "px;bottom:" + (i % 2) * 4 + "px;transform:rotate(" + rot + "deg);background:" + PAINT[v] + '"></div>';
+    });
+    if (all.length > 4) html += '<div class="c-badge" style="right:0;top:-6px">+' + (all.length - 4) + "</div>";
+    return html + "</div>";
+  },
+};
+const WHY = {
+  A: ["A. Real 3D stack", "Chips with a striped edge and a lit top, stacked straight up like on a real table. Tall stacks read as big bets at a glance."],
+  B: ["B. Top-down pile", "Chips seen from above, each nudged up and right of the one below. The top chip shows its value, like the chip tray."],
+  C: ["C. Tossed chips", "Up to four chips scattered in a short row in the corner, with a \"+3\" badge when there are more. Lightest on the table text."],
+};
+
+let html = "";
+for (const key of ["A", "B", "C"]) {
+  const s = STYLES[key];
+  const bet = (name, amount, hint, cls) => '<div class="bet ' + (cls || "") + '"><b>' + name + (amount ? "<span>$" + amount + "</span>" : "") + "</b>" + (hint ? "<small>" + hint + "</small>" : "") + (amount ? s(amount, cls === "tile") : "") + "</div>";
+  html += '<div class="option"><h2>' + WHY[key][0] + '</h2><p class="why">' + WHY[key][1] + '</p><div class="felt">' +
+    '<div class="row">' + bet("FIELD", 10, "Wins: 2 3 4 9 10 11 12") + "</div>" +
+    '<div class="row">' + bet("PASS LINE", 35, "Wins: 6 · Loses: 7") + bet("ODDS", 175, "pays 6:5") + "</div>" +
+    '<div class="row">' + bet("PLACE 4", 0, "", "tile") + bet("PLACE 6", 5, "", "tile") + bet("HARD 8", 30, "", "tile") + bet("COME", 0, "", "tile") + "</div></div></div>";
+}
+document.getElementById("options").innerHTML = html;
+</script>
+</body>
+</html>
