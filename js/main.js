@@ -511,6 +511,11 @@ function giveTestShift(st) {
   return st;
 }
 
+// Testing shortcut: ?showWins plays the BIG, HUGE and MONSTER WIN banners once, a few seconds apart.
+if (new URLSearchParams(location.search).has("showWins")) {
+  [[4, 1500], [10, 5000], [25, 8800]].forEach(([x, ms]) => setTimeout(() => bigWinBanner(x * tableMin(state), tableMin(state)), ms));
+}
+
 // Testing shortcut: ?rule=houseDie forces that house rule every shift.
 function giveTestRule(st) {
   const wanted = new URLSearchParams(location.search).get("rule");
