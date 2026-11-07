@@ -88,12 +88,12 @@ const PLAY = {
   "1C": () => $$("p1C", ".shop .card").forEach((c, i) => c.animate([{ transform: "translateY(120px) scale(0.5)", opacity: 0 }, { transform: "translateY(-8px) scale(1.06)", opacity: 1, offset: 0.7 }, { transform: "translateY(0) scale(1)", opacity: 1 }], { duration: 480, delay: i * 160, easing: "ease-out", fill: "backwards" })),
   "2A": () => {
     const c = $$("p2A", ".shop .card")[1];
-    c.animate([{ transform: "translate(0,0) scale(1)" }, { transform: "translate(-20px,-24px) scale(1.05)", offset: 0.25 }, { transform: "translate(-62px,120px) scale(0.5)", offset: 0.8 }, { transform: "translate(-62px,120px) scale(0.5)", opacity: 0 }], { duration: 1100, delay: 300, easing: "ease-in-out", fill: "both" });
+    c.animate([{ transform: "translate(0,0) scale(1)", opacity: 1 }, { transform: "translate(-14px,-10px) scale(1.08)", opacity: 1, offset: 0.25 }, { transform: "translate(-62px,120px) scale(0.5)", opacity: 1, offset: 0.9 }, { transform: "translate(-62px,120px) scale(0.5)", opacity: 0 }], { duration: 1100, delay: 300, easing: "ease-in-out", fill: "both" });
     $("p2A", ".owned").animate([{ transform: "translateX(0)" }, { transform: "translateX(0)", offset: 0.7 }, { transform: "translateX(-6px)", offset: 0.8 }, { transform: "translateX(0)" }], { duration: 1300 });
   },
   "2B": () => {
     const c = $$("p2B", ".shop .card")[1];
-    c.animate([{ transform: "translate(0,0) rotate(0) scale(1)", filter: "drop-shadow(0 0 0 #ffd84d)" }, { transform: "translate(-62px,120px) rotate(720deg) scale(0.4)", filter: "drop-shadow(0 0 10px #ffd84d)", offset: 0.85 }, { transform: "translate(-62px,120px) rotate(720deg) scale(0.4)", opacity: 0 }], { duration: 1000, delay: 300, easing: "ease-in", fill: "both" });
+    c.animate([{ transform: "translate(0,0) rotate(0) scale(1)", filter: "drop-shadow(0 0 0 #ffd84d)", opacity: 1 }, { transform: "translate(-62px,120px) rotate(720deg) scale(0.4)", filter: "drop-shadow(0 0 10px #ffd84d)", opacity: 1, offset: 0.9 }, { transform: "translate(-62px,120px) rotate(720deg) scale(0.4)", opacity: 0 }], { duration: 1000, delay: 300, easing: "ease-in", fill: "both" });
     for (let i = 0; i < 8; i++) {
       const s = document.createElement("i"); s.className = "spark"; s.style.left = 170 - i * 8 + "px"; s.style.top = 70 + i * 15 + "px"; document.getElementById("p2B").appendChild(s);
       s.animate([{ opacity: 0 }, { opacity: 1, offset: 0.3 }, { opacity: 0, transform: "scale(0.2)" }], { duration: 600, delay: 350 + i * 70, fill: "both" }).onfinish = () => s.remove();
@@ -103,8 +103,8 @@ const PLAY = {
     const st = $("p2C", ".stamp");
     st.animate([{ opacity: 0, transform: "translateX(-50%) rotate(-14deg) scale(2.2)" }, { opacity: 1, transform: "translateX(-50%) rotate(-14deg) scale(0.95)", offset: 0.12 }, { opacity: 1, transform: "translateX(-50%) rotate(-14deg) scale(1)", offset: 0.2 },
       { opacity: 1, transform: "translateX(-50%) rotate(-14deg) scale(1)", offset: 0.45 }, { opacity: 0, transform: "translate(-112px, 110px) rotate(-14deg) scale(0.4)", offset: 0.85 }, { opacity: 0 }], { duration: 1600, delay: 200, fill: "both" });
-    $$("p2C", ".shop .card")[1].animate([{ transform: "none" }, { transform: "scale(0.96)", offset: 0.12 }, { transform: "none", offset: 0.2 }, { transform: "none", offset: 0.45 },
-      { transform: "translate(-62px,120px) scale(0.5)", offset: 0.85 }, { transform: "translate(-62px,120px) scale(0.5)", opacity: 0 }], { duration: 1600, delay: 200, easing: "ease-in-out", fill: "both" });
+    $$("p2C", ".shop .card")[1].animate([{ transform: "none", opacity: 1 }, { transform: "scale(0.96)", opacity: 1, offset: 0.12 }, { transform: "none", opacity: 1, offset: 0.2 }, { transform: "none", opacity: 1, offset: 0.45 },
+      { transform: "translate(-62px,120px) scale(0.5)", opacity: 1, offset: 0.9 }, { transform: "translate(-62px,120px) scale(0.5)", opacity: 0 }], { duration: 1600, delay: 200, easing: "ease-in-out", fill: "both" });
   },
   "3A": () => {
     const lock = $("p3A", ".lock");
@@ -141,7 +141,19 @@ const PLAY = {
     }
   },
 };
-function loop() { for (const k of Object.keys(PLAY)) PLAY[k](); }
+// The bought card appears in Your cards when it lands (and leaves again before the next loop).
+function landInOwned(id, at) {
+  setTimeout(() => {
+    const row = document.querySelector("#" + id + " .owned");
+    const tmp = document.createElement("div");
+    tmp.innerHTML = card("twinSouls", "small");
+    const c = tmp.firstChild;
+    row.appendChild(c);
+    c.animate([{ transform: "scale(0.6)", opacity: 0 }, { transform: "scale(1.1)", opacity: 1, offset: 0.6 }, { transform: "scale(1)", opacity: 1 }], { duration: 300 });
+    setTimeout(() => c.remove(), D + 600 - at - 100);
+  }, at);
+}
+function loop() { for (const k of Object.keys(PLAY)) PLAY[k](); landInOwned("p2A", 300 + 1100 * 0.9); landInOwned("p2B", 300 + 1000 * 0.9); landInOwned("p2C", 200 + 1600 * 0.9); }
 loop();
 setInterval(loop, D + 600);
 </script>
