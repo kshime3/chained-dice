@@ -170,6 +170,35 @@ function placeBet(betName, max) {
   renderState(state);
 }
 
+// Betting patterns (🎯): put the chosen chip on a whole set of bets at once.
+function betPattern(id) {
+  if (busy() || state.status !== "playing" || state.onBreak) return;
+  const p = BET_PATTERNS[id];
+  const why = patternCheck(state, id, selectedChip);
+  if (why !== "ok") {
+    showMessage(why === "noPoint" ? p.name + " uses Place bets and Hard Ways, which open once a point is set."
+      : why === "money" ? "Not enough cash: " + p.name + " needs " + money(selectedChip * p.bets.length) + " (" + money(selectedChip) + " on each of " + p.bets.length + " bets)."
+      : p.name + " needs bets you haven't unlocked yet.");
+    return;
+  }
+  const cost = placePattern(state, id, selectedChip);
+  playSound("chip");
+  showMessage(p.name + ": " + money(selectedChip) + " on " + p.what.replace(/: .*/, "") + " (" + money(cost) + ").");
+  renderState(state);
+}
+
+function choosePattern() {
+  if (busy() || state.status !== "playing" || state.onBreak) return;
+  const ids = Object.keys(BET_PATTERNS).filter((id) => patternCheck(state, id, selectedChip) === "ok");
+  if (!ids.length) {
+    showMessage(state.point === null ? "Patterns use Place bets and Hard Ways, which open once a point is set." : "Not enough cash for a pattern with your " + money(selectedChip) + " chip.");
+    return;
+  }
+  showChoice("🎯 Betting patterns", "Puts your " + money(selectedChip) + " chip on every bet in the set.",
+    ids.map((id) => ({ label: BET_PATTERNS[id].name + " · " + money(selectedChip * BET_PATTERNS[id].bets.length), value: id })),
+    (id) => { if (id) betPattern(id); });
+}
+
 // Take bets back into your cash. A locked Pass Line or Don't Pass stays put.
 function clearBets() {
   if (busy() || state.status !== "playing" || state.onBreak) return;
@@ -609,6 +638,7 @@ document.getElementById("house-rule").onclick = () => showMessage(HOUSE_RULES[st
 document.getElementById("dice").onclick = roll; // tapping the dice rolls too
 document.getElementById("clear-button").onclick = clearBets;
 document.getElementById("drop-plaque").onclick = payPlaque;
+document.getElementById("patterns-button").onclick = choosePattern;
 for (const b of document.querySelectorAll("#break-tabs button")) b.onclick = () => showBreakTab(b.dataset.btab);
 document.getElementById("take-back-plaque").onclick = () => {
   const back = takeBackPlaque(state);

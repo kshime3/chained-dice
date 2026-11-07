@@ -30,8 +30,12 @@ Dated session log. Newest at the top.
 
 - Owner feedback: Still owed and Your cash were easy to miss while shopping. They're now the same coloured boxes as the top bar, pinned with the tabs; Your cash turns red and pulses with "Low! Keep $X to bet" under 3 table minimums (CONFIG.lowCashMins).
 
+**Done (E)**
+- Betting patterns: Across, Inside, Outside, Iron Cross, All the Hardways. One tap puts your chosen chip on every bet in the set (once a point is on; only patterns whose bets you've unlocked show). Tall phones (800px+) get a row of pattern buttons in the empty space under the chips; shorter phones get a 🎯 Patterns button on the chip row that opens a pick list. 3-Point Molly left out: it's built over several rolls, so it can't be one tap.
+- Logic in shift.js (BET_PATTERNS, patternCheck, placePattern); 3 new rule checks (492); the autoplay bot uses patterns too.
+
 **Exact next step**
-- Owner tests D, then E (betting patterns).
+- Owner tests E, then "build F" (code polish + version 1.0.4).
 
 ## 2026-11-08: Release 1.0.3 (QoL, built from the owner's list)
 

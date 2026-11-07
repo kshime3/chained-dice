@@ -1259,6 +1259,15 @@
     check("Plaque take-back: plaques from an earlier Break are locked in", [takeBackPlaque(tp), tp.deposited], [0, each]);
     }
 
+    // Betting patterns: one chip on every bet in the set, only once a point is on
+    {
+    const bp = newShiftState(); bp.onBreak = false; bp.cash = 100;
+    check("Patterns: Iron Cross waits for a point", patternCheck(bp, "ironCross", 5), "noPoint");
+    bp.point = 6;
+    check("Patterns: Iron Cross puts $5 on Field and Place 5, 6, 8", [placePattern(bp, "ironCross", 5), bp.bets.field, bp.bets.place5, bp.bets.place6, bp.bets.place8, bp.cash], [20, 5, 5, 5, 5, 80]);
+    check("Patterns: not enough cash places nothing", [placePattern(bp, "across", 25), bp.cash], [0, 80]);
+    }
+
     // Dice: 10,000 rolls stay in range, and 7 is the most common total
     const counts = {};
     let inRange = true;

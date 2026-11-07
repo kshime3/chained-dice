@@ -160,6 +160,37 @@ function extraBetCheck(state, bet) {
   return "ok";
 }
 
+// Betting patterns: one tap puts your chip on every bet in the set (what real players call these).
+const BET_PATTERNS = {
+  across:    { name: "Across", bets: ["place4", "place5", "place6", "place8", "place9", "place10"], what: "Place 4, 5, 6, 8, 9 and 10" },
+  inside:    { name: "Inside", bets: ["place5", "place6", "place8", "place9"], what: "Place 5, 6, 8 and 9" },
+  outside:   { name: "Outside", bets: ["place4", "place5", "place9", "place10"], what: "Place 4, 5, 9 and 10" },
+  ironCross: { name: "Iron Cross", bets: ["field", "place5", "place6", "place8"], what: "Field + Place 5, 6 and 8: every total but 7 wins" },
+  hardways:  { name: "All the Hardways", bets: ["hard4", "hard6", "hard8", "hard10"], what: "Hard 4, 6, 8 and 10" },
+};
+
+// Can this pattern go down now with this chip? "ok", "locked" (its bets aren't unlocked yet),
+// "noPoint" (Place bets and Hard Ways wait for a point) or "money".
+function patternCheck(state, id, chip) {
+  const p = BET_PATTERNS[id];
+  for (const bet of p.bets) {
+    if (bet === "field") continue;
+    const why = extraBetCheck(state, bet);
+    if (why !== "ok") return why;
+  }
+  return state.cash >= chip * p.bets.length ? "ok" : "money";
+}
+
+// Put one chip on every bet in the pattern. Returns what it cost (0 if it can't go down).
+function placePattern(state, id, chip) {
+  if (patternCheck(state, id, chip) !== "ok") return 0;
+  for (const bet of BET_PATTERNS[id].bets) {
+    state.bets[bet] += chip;
+    state.cash -= chip;
+  }
+  return chip * BET_PATTERNS[id].bets.length;
+}
+
 // Can a chip go on this bet right now? (The table highlights these and greys out the rest.)
 function betOpen(state, bet) {
   if (state.status !== "playing" || state.onBreak) return false;

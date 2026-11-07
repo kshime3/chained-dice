@@ -152,6 +152,26 @@ function renderChips(values, selectedChip, onPick, takingBack, onTakeBack) {
   }
 }
 
+// Betting patterns you've unlocked: a row of buttons on tall phones, a 🎯 button (a pick list) on short ones.
+// handlers: { onPattern(id) }
+function renderPatterns(state, chip, onPattern) {
+  const unlocked = Object.keys(BET_PATTERNS).filter((id) => patternCheck(state, id, chip) !== "locked");
+  document.getElementById("patterns-button").classList.toggle("hidden", !unlocked.length);
+  const row = document.getElementById("pattern-row");
+  row.classList.toggle("hidden", !unlocked.length);
+  row.innerHTML = "";
+  for (const id of unlocked) {
+    const p = BET_PATTERNS[id];
+    const b = document.createElement("button");
+    b.className = "pattern-chip";
+    b.innerHTML = p.name + " <small>" + money(chip * p.bets.length) + "</small>";
+    b.title = p.what + " (" + money(chip) + " each)";
+    b.disabled = patternCheck(state, id, chip) !== "ok" || state.onBreak || state.status !== "playing";
+    b.onclick = () => onPattern(id);
+    row.appendChild(b);
+  }
+}
+
 // In take-back mode, mark the bets that have chips you're allowed to take back.
 function markTakeBack(state) {
   document.body.classList.toggle("taking-back", takeBackMode);
@@ -183,6 +203,7 @@ function renderState(state) {
   document.getElementById("on-table").textContent = money(betsTotal(b));
   renderExtraBoard(state);
   markTakeBack(state);
+  if (typeof betPattern === "function") renderPatterns(state, selectedChip, betPattern); // main.js owns the chip and the action
   document.getElementById("table-min").textContent = "Table min " + money(tableMin(state));
   document.getElementById("pass-amount").textContent = money(b.pass);
   document.getElementById("dont-amount").textContent = money(b.dont);

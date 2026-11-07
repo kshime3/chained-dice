@@ -1065,3 +1065,13 @@ body[data-tab="hand"] .side > #inventory-odds { display: block; }
 .cash-box.low { background: #3b1010; border-color: #ff5a4a; color: #ffb3a8; animation: low-cash 1.2s ease-in-out infinite; }
 .cash-box.low strong { color: #ff7b6b; }
 @keyframes low-cash { 50% { box-shadow: 0 0 12px rgba(255, 90, 74, 0.7); } }
+
+/* 1.0.4 E: betting patterns. Tall phones get a row of pattern buttons in the empty space; short ones a 🎯 button */
+.pattern-row { display: none; }
+@media (max-width: 760px) and (min-height: 800px) {
+  .pattern-row:not(.hidden) { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin: 8px 0 2px; }
+  #patterns-button { display: none; }
+}
+.pattern-chip { margin: 0; padding: 6px 10px; font-size: 0.8rem; border-radius: 999px; background: #2a1e14; border: 1px solid #c9a227; color: #f3e3c3; }
+.pattern-chip small { color: #ffd84d; font-weight: bold; margin-left: 2px; }
+#patterns-button.hidden { display: none; }

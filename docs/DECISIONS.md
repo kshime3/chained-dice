@@ -415,3 +415,4 @@ Dated log of every decision and why. Newest at the bottom.
 - 1.0.4 C: Hand renamed Inventory, odds chart always at its top, Odds button removed. 1.0.5 is a "juice" release (chips moving + stacks, counting money, win tiers + shake, cards firing, vibration, small animations, reduce motion). Screen shake and chip stacks moved there from 1.1.
 - 1.0.4 D: the Break opens at the top every time; split into Pay / Shop / Comps / Crew tabs with Next shooter pinned at the bottom; two cards per row on phones. 1.0.5 split into milestones J1-J7.
 - Break money: Still owed / Your cash boxes pinned above the Break tabs; low-cash warning under CONFIG.lowCashMins (3) table minimums.
+- 1.0.4 E: five pattern buttons (row on tall phones, 🎯 pick list on short ones); 3-Point Molly left out because it builds over several rolls.

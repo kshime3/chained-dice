@@ -109,6 +109,7 @@
     if (chance(0.3)) placeBet("field");
     if (state.point !== null && chance(0.5)) placeBet(state.bets.pass ? "odds" : "lay");
     if (chance(0.2)) placeBet(["place6", "place8", "hard8", "come", "dontCome", "fire"][Math.floor(Math.random() * 6)]);
+    if (chance(0.05)) betPattern(Object.keys(BET_PATTERNS)[Math.floor(Math.random() * Object.keys(BET_PATTERNS).length)]);
     if (chance(0.1)) click(".hand-comp button:not([disabled])");
     if (chance(0.05)) click("#save-bets");
     if (chance(0.05)) click("#same-bets");
