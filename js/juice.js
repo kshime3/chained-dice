@@ -62,8 +62,11 @@ function renderStacks(state) {
     }
     if (stack.dataset.amount === String(amount)) continue;
     stack.dataset.amount = amount;
-    stack.innerHTML = chipsIn(amount, values, 6).reverse()
-      .map((v, i) => '<i style="background:' + chipPaintFor(v, values) + ";bottom:" + i * 3 + 'px"></i>').join("");
+    // Style B (owner's pick): chips seen from above, each nudged up and right of the one below.
+    // Biggest chip on the bottom (chipsIn lists biggest first); the top chip shows its value.
+    const chips = chipsIn(amount, values, 5);
+    stack.innerHTML = chips.map((v, i) => '<i style="background:' + chipPaintFor(v, values) + ";left:" + i * 3 + "px;bottom:" + i * 3 + 'px">' +
+      (i === chips.length - 1 ? shortMoney(v).replace("$", "") : "") + "</i>").join("");
   }
 }
 

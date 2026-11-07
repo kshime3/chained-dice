@@ -18,8 +18,11 @@ Dated session log. Newest at the top.
 - Flying chips: tray → bet when you bet (tap, MAX, patterns); bet → tray when you take chips back or Clear bets; after a roll, losing bets are swept off the top of the table toward the dealer and winnings fly to the Cash box. A dragged chip doesn't get a second flying chip. Reduce motion keeps the stacks, nothing flies.
 - Vibration made stronger (roll tick 35ms instead of 12ms, longer win buzzes): the short ones were likely too short to feel on the owner's Pixel 9 Pro.
 
+- Chip stack look changed to the owner's pick, **B: top-down pile** (from demos/stack-options.html): chips seen from above, each nudged up and right, largest chip on the bottom, the top chip shows its value.
+- New rule in CLAUDE.md: major new images, animations or music always come with 3 options first.
+
 **Exact next step**
-- Owner tests J2, then "build J3" (counting numbers, Interest pulse, cards firing).
+- Owner tests the new stacks, then "build J3" (counting numbers, Interest pulse, cards firing). J3's card pops and J4's banners are new animations: show 3 options first.
 
 ## 2026-11-09: Release 1.0.4, milestone A (quick fixes)
 
