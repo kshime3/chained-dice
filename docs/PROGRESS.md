@@ -10,6 +10,8 @@ Dated session log. Newest at the top.
 - Reduce motion turns off: screen shake (the fall), lamp flicker, falling dust, the link rattle, pulsing (low cash, coach highlight, mult bump), the fall's light flicker. Later juice checks body.reduce-motion.
 - Android app: VIBRATE permission added to AndroidManifest.xml (takes effect in the next app build).
 
+- Fix (owner found): on wider phones (~448px) the dice spilled onto the Field when "Table min" sat beside the point; the dice now reserve room for their 3D tilt.
+
 **Exact next step**
 - Owner tests J1, then "build J2" (chips that move + stacks).
 

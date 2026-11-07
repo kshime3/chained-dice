@@ -1082,3 +1082,6 @@ body.reduce-motion .cash-box.low { animation: none; box-shadow: 0 0 10px rgba(25
 body.reduce-motion .coach-target { animation: none; box-shadow: 0 0 0 4px #ffd84d; }
 body.reduce-motion .mult.bump strong { animation: none; }
 body.reduce-motion .fall-scene.fs-playing .fs-light { animation: none; }
+/* The 3D dice look taller than their box (the tilt): reserve that room, so they never spill onto the Field
+   when the text beside them is short (wider phones put "Table min" on the same line as the point). */
+.dice { min-height: calc(var(--die) + 16px); align-items: flex-start; }
