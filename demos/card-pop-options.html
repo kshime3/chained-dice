@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Card Pop Options</title>
+<!-- Preview only (not part of the game): three ways to show a card firing (it adds mult or money). Each loops. -->
+<style>
+  body { margin: 0; padding: 12px; background: #0a0807; color: #e9e1cf; font-family: system-ui, sans-serif; }
+  h1 { font-family: Georgia, serif; font-size: 1.3rem; margin: 0 0 4px; }
+  p.lead { color: #bbb; margin: 0 0 14px; font-size: 0.85rem; }
+  .option { margin-bottom: 20px; }
+  .option h2 { margin: 0 0 2px; font-size: 1.05rem; color: #ffd84d; }
+  .option .why { color: #bbb; font-size: 0.8rem; margin: 0 0 8px; }
+  .stage { position: relative; height: 250px; overflow: hidden; border-radius: 14px; background: #120c09; border: 1px solid #3a2a1c; }
+  .top { position: absolute; top: 12px; left: 0; right: 0; display: flex; justify-content: center; align-items: center; gap: 12px; font-size: 0.9rem; }
+  .top b { color: #ffd84d; }
+  .mult { padding: 2px 12px; border-radius: 999px; border: 2px solid #ff9f43; background: #3a2410; box-shadow: 0 0 10px rgba(255,159,67,0.5); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px; }
+  .mult strong { font-size: 1.2rem; color: #ff9f43; text-transform: none; margin-left: 2px; display: inline-block; }
+  .felt { position: absolute; left: 10px; right: 10px; top: 52px; bottom: 54px; border-radius: 12px; background: radial-gradient(ellipse at 50% 0%, #2f7a4a, #134a2b 70%); border: 5px solid #4a2c18; }
+  .felt span { position: absolute; left: 50%; top: 40%; transform: translateX(-50%); color: #f3e3c3; font-family: Georgia, serif; }
+  .tabs { position: absolute; left: 0; right: 0; bottom: 0; height: 46px; display: flex; gap: 6px; padding: 4px 6px; box-sizing: border-box; background: #120c08; }
+  .tabs div { flex: 1; border-radius: 10px; border: 1px solid #4a3424; background: #2a1e14; font-size: 0.7rem; display: flex; align-items: center; justify-content: center; }
+  .tabs .inv { position: relative; }
+  .art { width: 100%; height: 100%; display: block; }
+
+  /* A: a small pill slides in under the mult and fades */
+  .a-pill { position: absolute; left: 50%; top: 44px; transform: translateX(-50%); display: flex; align-items: center; gap: 6px; padding: 3px 10px 3px 3px;
+    border-radius: 999px; background: #1d140e; border: 1px solid #ffd84d; font-size: 0.8rem; white-space: nowrap; z-index: 3; opacity: 0; }
+  .a-pill .thumb { width: 30px; height: 21px; border-radius: 5px; overflow: hidden; }
+  .a-pill b { color: #ff9f43; }
+
+  /* B: the card itself pops up over the table, wiggles, then shrinks into Inventory */
+  .b-card { position: absolute; left: 50%; top: 60px; width: 110px; padding: 5px; border-radius: 10px; background: #efe4cc; color: #2a1c10; border: 2px solid #b8461f;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.7); text-align: center; z-index: 3; opacity: 0; transform-origin: center; }
+  .b-card .thumb { width: 100%; height: 66px; border-radius: 6px; overflow: hidden; }
+  .b-card b { display: block; font-family: Georgia, serif; font-size: 0.85rem; margin-top: 3px; }
+  .b-card em { display: block; font-style: normal; font-weight: bold; color: #b8461f; font-size: 0.95rem; }
+
+  /* C: a small card icon zips from Inventory up into the mult, which bumps, and "+0.25x" rises off it */
+  .c-icon { position: absolute; width: 34px; height: 24px; border-radius: 5px; overflow: hidden; z-index: 3; opacity: 0; box-shadow: 0 0 10px rgba(255,159,67,0.8); }
+  .c-gain { position: absolute; left: 50%; top: 10px; color: #ff9f43; font-weight: 900; font-size: 1rem; z-index: 3; opacity: 0; white-space: nowrap; text-shadow: 0 2px 4px #000; }
+  .c-name { position: absolute; left: 50%; top: 40px; transform: translateX(-50%); font-size: 0.72rem; color: #ffd84d; opacity: 0; white-space: nowrap; }
+</style>
+<script src="../js/config.js"></script>
+<script src="../js/numbers.js"></script>
+<script src="../js/dice.js"></script>
+<script src="../js/bets.js"></script>
+<script src="../js/crew.js"></script>
+<script src="../js/cards.js"></script>
+<script src="../js/card-art.js"></script>
+</head>
+<body>
+<h1>Pick a card pop</h1>
+<p class="lead">When a card fires (here Hot Hand adds +0.25x after a win), how should the game show it? Each preview loops.</p>
+<div id="options"></div>
+
+<script>
+const art = () => cardArt("hotHand", "art");
+const stage = (key, extra) => '<div class="stage" id="s' + key + '"><div class="top">🎲 <b>Hot Rod</b> (1 of 3) <span class="mult">Mult <strong>2.25x</strong></span></div>' +
+  '<div class="felt"><span>Rolled 8: Field wins!</span></div><div class="tabs"><div>🎲 Table</div><div class="inv">🎒 Inventory</div><div>⛓ Crew</div></div>' + extra + "</div>";
+const OPTIONS = [
+  ["A", "A. Pill under the mult", "A small pill with the card's picture slides down under the mult pill and fades away. Several cards that fire together stack up. Quiet, never covers the table.",
+    '<div class="a-pill"><div class="thumb">' + art() + '</div>🔥 Hot Hand <b>+0.25x</b></div>'],
+  ["B", "B. The card jumps out", "The card itself pops up over the table, gives a little wiggle with its bonus, then shrinks down into the Inventory tab where it lives. The most Balatro-like and the easiest to notice.",
+    '<div class="b-card"><div class="thumb">' + art() + '</div><b>Hot Hand</b><em>+0.25x mult</em></div>'],
+  ["C", "C. Zip into the mult", "A small card icon zips from the Inventory tab up into the mult pill; the mult bumps and \"+0.25x\" floats off it, with the card's name underneath. Shows exactly where the bonus went.",
+    '<div class="c-icon">' + art() + '</div><div class="c-gain">+0.25x</div><div class="c-name">🔥 Hot Hand</div>'],
+];
+document.getElementById("options").innerHTML = OPTIONS.map(([k, t, why, extra]) => '<div class="option"><h2>' + t + '</h2><p class="why">' + why + "</p>" + stage(k, extra) + "</div>").join("");
+
+function play() {
+  // A
+  document.querySelector("#sA .a-pill").animate([
+    { opacity: 0, transform: "translate(-50%, -14px)" }, { opacity: 1, transform: "translate(-50%, 0)", offset: 0.15 },
+    { opacity: 1, transform: "translate(-50%, 0)", offset: 0.8 }, { opacity: 0, transform: "translate(-50%, 6px)" }], { duration: 1800, easing: "ease-out" });
+  // B
+  const inv = document.querySelector("#sB .inv").getBoundingClientRect(), sb = document.getElementById("sB").getBoundingClientRect();
+  const dx = inv.left + inv.width / 2 - (sb.left + sb.width / 2), dy = inv.top - (sb.top + 60);
+  document.querySelector("#sB .b-card").animate([
+    { opacity: 0, transform: "translateX(-50%) scale(0.3) rotate(-8deg)" },
+    { opacity: 1, transform: "translateX(-50%) scale(1.1) rotate(4deg)", offset: 0.15 },
+    { opacity: 1, transform: "translateX(-50%) scale(1) rotate(-4deg)", offset: 0.25 },
+    { opacity: 1, transform: "translateX(-50%) scale(1) rotate(3deg)", offset: 0.35 },
+    { opacity: 1, transform: "translateX(-50%) scale(1) rotate(0deg)", offset: 0.65 },
+    { opacity: 0.2, transform: "translate(calc(-50% + " + dx + "px), " + dy + "px) scale(0.15)" }], { duration: 2000, easing: "ease-in-out" });
+  // C
+  const sc = document.getElementById("sC").getBoundingClientRect(), invC = document.querySelector("#sC .inv").getBoundingClientRect(), m = document.querySelector("#sC .mult").getBoundingClientRect();
+  const icon = document.querySelector("#sC .c-icon");
+  icon.style.left = invC.left - sc.left + invC.width / 2 - 17 + "px"; icon.style.top = invC.top - sc.top + "px";
+  icon.animate([{ opacity: 0, transform: "scale(0.6)" }, { opacity: 1, transform: "scale(1)", offset: 0.15 },
+    { opacity: 1, transform: "translate(" + (m.left + m.width / 2 - invC.left - invC.width / 2) + "px, " + (m.top - invC.top) + "px) scale(0.6)", offset: 0.5 },
+    { opacity: 0, transform: "translate(" + (m.left + m.width / 2 - invC.left - invC.width / 2) + "px, " + (m.top - invC.top) + "px) scale(0.3)", offset: 0.55 }, { opacity: 0 }], { duration: 1800, easing: "ease-in" });
+  document.querySelector("#sC .mult strong").animate([{ transform: "scale(1)" }, { transform: "scale(1)", offset: 0.5 }, { transform: "scale(1.5)", offset: 0.6 }, { transform: "scale(1)", offset: 0.75 }, { transform: "scale(1)" }], { duration: 1800 });
+  document.querySelector("#sC .c-gain").animate([{ opacity: 0, transform: "translate(40px, 0)" }, { opacity: 0, transform: "translate(40px, 0)", offset: 0.52 },
+    { opacity: 1, transform: "translate(40px, -6px)", offset: 0.6 }, { opacity: 0, transform: "translate(40px, -24px)" }], { duration: 1800 });
+  document.querySelector("#sC .c-name").animate([{ opacity: 0 }, { opacity: 0, offset: 0.52 }, { opacity: 1, offset: 0.6 }, { opacity: 1, offset: 0.85 }, { opacity: 0 }], { duration: 1800 });
+}
+play();
+setInterval(play, 2600);
+</script>
+</body>
+</html>

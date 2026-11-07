@@ -81,6 +81,7 @@ demos/music-options.html  preview: darker shift-1 music candidates (not part of 
 demos/card-art.html  preview: card art styles (A, B, C and mixes D, E) to choose from (not part of the game)
 demos/chain-options.html  preview: three chain styles for the link bar (not part of the game)
 demos/stack-options.html  preview: three chip-stack looks for bets (not part of the game)
+demos/card-pop-options.html  preview: three ways to show a card firing (not part of the game)
 tools/simulate.js  balance simulator (Node.js, not part of the game): node tools/simulate.js 20000
 tools/copy-web.js  Android: copies the game into www/ for the app (npm run sync)
 tools/make-icons.js  Android: app icons and splash screens from img/logo.svg (needs Playwright)

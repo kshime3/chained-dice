@@ -21,8 +21,12 @@ Dated session log. Newest at the top.
 - Chip stack look changed to the owner's pick, **B: top-down pile** (from demos/stack-options.html): chips seen from above, each nudged up and right, largest chip on the bottom, the top chip shows its value.
 - New rule in CLAUDE.md: major new images, animations or music always come with 3 options first.
 
+**Done (J3, part 1)**
+- Cash, Still owed and On table count to their new value (~0.3-0.7s; green going up, red going down); Interest box, the Break's cash box and its interest line pulse when interest pays. Reduce motion: numbers just change.
+- Card pops: 3 options in demos/card-pop-options.html (A pill under the mult, B the card jumps out then shrinks into Inventory, C a card icon zips into the mult).
+
 **Exact next step**
-- Owner tests the new stacks, then "build J3" (counting numbers, Interest pulse, cards firing). J3's card pops and J4's banners are new animations: show 3 options first.
+- Owner picks a card pop (A/B/C), then build it to finish J3.
 
 ## 2026-11-09: Release 1.0.4, milestone A (quick fixes)
 
