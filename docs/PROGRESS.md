@@ -45,8 +45,14 @@ Dated session log. Newest at the top.
 - Taking back a plaque plays the drop in reverse (it lifts out of its slot and fades).
 - Owner asked for options on the flip-in and fly-in too: demos/break-anim-options.html has 3 each for (1) shop cards arriving (A dealt, B flip over, C pop up; reroll reuses it), (2) a bought card going to Your cards (A arc and shrink, B spin in, C SOLD stamp) and (3) the unlock celebration (A padlock bursts, B flip with confetti, C the chain snaps).
 
+**Done (J6, segment 2)** owner picked 1A, 2B, 3A:
+- 1A: new shop cards are dealt in from the right one at a time (when the Shop tab shows a new row); rerolling slides the old cards off to the left first. Buying a card doesn't re-deal the row.
+- 2B: a bought card spins (two turns) and shrinks into its spot in Your cards with a gold glow and a sparkle trail; Your cards scrolls into view first so the flight is visible.
+- 3A: the UNLOCKED! screen shows the new card (or comp / crew portrait) dark behind a padlock that shakes, turns open and drops away, then the picture lights up with turning rays.
+- Reduce motion: no deal, spin or padlock (the picture just shows).
+
 **Exact next step**
-- Owner picks one per part (e.g. "1B, 2A, 3C"), then J6 segment 2 builds them.
+- Owner tests J6, then "build J7" (polish + ship 1.0.5).
 
 ## 2026-11-09: Release 1.0.4, milestone A (quick fixes)
 

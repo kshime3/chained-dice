@@ -357,6 +357,9 @@ function payPlaque() {
 // Shop buttons
 function buy(slot) {
   const id = state.stock[slot];
+  const from = document.querySelectorAll("#stock > .card")[slot]; // for the spin into Your cards (juice.js)
+  const fromRect = from ? from.getBoundingClientRect() : null;
+  const fromHtml = from ? from.outerHTML : "";
   const outcome = buyCard(state, slot);
   const texts = {
     ok: id && CARDS[id].instant ? CARDS[id].name + ": done. " + (id === "bargain" ? "Your chain now has " + totalLinks(state) + " links, and 7s are a little rarer." : "") : "Bought " + (id && CARDS[id].name) + ".",
@@ -367,6 +370,7 @@ function buy(slot) {
   if (outcome === "ok") playSound("buy");
   showBreakMessage(texts[outcome]);
   renderAll();
+  if (outcome === "ok" && id && !CARDS[id].instant) spinIntoOwned(fromHtml, fromRect, id);
 }
 
 function sell(id) {
@@ -463,7 +467,12 @@ function cut(name) {
   showSplash(cutSplash(name), "bad", CONFIG.cutSplashMs, announceUnlocks);
 }
 
+// Reroll the shop: the old cards slide away first (juice.js), then the new ones are dealt in.
 function shuffle() {
+  if (shuffleCost(state) > 0 && !canSpend(state, shuffleCost(state))) return shuffleNow();
+  dealShopOut(shuffleNow);
+}
+function shuffleNow() {
   const cost = shuffleCost(state);
   showBreakMessage(shuffleStock(state)
     ? (cost > 0 ? "Shuffled for " + money(cost) + "." : "Free shuffle from the pit boss.") + " New cards on the table."

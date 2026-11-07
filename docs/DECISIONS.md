@@ -426,3 +426,4 @@ Dated log of every decision and why. Newest at the bottom.
 - Card pops: owner picked C (zip into the mult).
 - Big wins: owner picked B (gold slam), each level bigger and more intense; thresholds 4x / 10x / 25x the stake on the table (CONFIG.bigWinX).
 - J6: owner wants 3 options for the shop flip-in and the fly-in as well as the unlock celebration; done in segments.
+- J6 picks: 1A dealt from the deck, 2B spin in, 3A padlock bursts open.

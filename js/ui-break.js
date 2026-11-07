@@ -71,6 +71,7 @@ function renderBreak(state) {
     : "Next shooter: " + state.crew[state.shooterIndex];
 
   renderBreakTabs(state);
+  if (breakTab === "shop") dealShopIfNew(state); // 1.0.5: new shop cards are dealt in (juice.js)
 
   const warn = !isFinalBreak(state) && totalMoney(state) < tableMin(state);
   document.getElementById("break-warning").textContent = warn

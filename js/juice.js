@@ -5,6 +5,7 @@
 //     card pops (style C, owner's pick): a card's icon zips from Inventory into the mult, "+0.25x" floats off it.
 // J4: big-win banners (style B "gold slam", owner's pick, each level bigger and more intense) with screen shake.
 // J5: the ON puck slides onto the point's number, a new shooter slides in, Roll pulses when you can roll.
+// J6: shop cards are dealt in (style 1A), a bought card spins into Your cards (2B); unlock padlock (3A) is CSS.
 // Everything that moves checks Reduce motion (body.reduce-motion): stacks still show, nothing flies.
 
 // Chip colours, matching the chip tray (red, green, black; endless chips by size order).
@@ -396,4 +397,76 @@ function renderTableTouches(state) {
   // Roll pulses gently when a roll is possible right now.
   const ready = state.status === "playing" && !state.onBreak && canRoll(state) && !(typeof busy === "function" && busy());
   document.getElementById("roll-button").classList.toggle("ready", ready);
+}
+
+// ---------- The Break (J6) ----------
+
+let dealtShop = { at: "", stock: [] }; // the shop row last dealt in (buying one only empties a slot: not a new row)
+
+// New shop cards slide in from the right one at a time, like a dealer dealing them (style 1A).
+function dealShopIfNew(state) {
+  const at = state.shift + ":" + state.shooterIndex;
+  const isNew = at !== dealtShop.at || state.stock.some((id, i) => id && id !== dealtShop.stock[i]);
+  if (!isNew) return;
+  dealtShop = { at: at, stock: state.stock.slice() };
+  if (motionOff()) return;
+  document.querySelectorAll("#stock > .card").forEach((c, i) => c.animate(
+    [{ transform: "translateX(110vw) rotate(14deg)", opacity: 0 }, { transform: "translateX(0) rotate(0)", opacity: 1 }],
+    { duration: 420, delay: i * 160, easing: "cubic-bezier(0.2, 0.8, 0.3, 1)", fill: "backwards" }));
+}
+
+// Rerolling: the old cards slide off to the left, then `then()` deals the new ones.
+function dealShopOut(then) {
+  const cards = [...document.querySelectorAll("#stock > .card")];
+  if (motionOff() || !cards.length || !cards[0].offsetParent) return then();
+  cards.forEach((c, i) => c.animate([{ transform: "none", opacity: 1 }, { transform: "translateX(-110vw) rotate(-14deg)", opacity: 0 }],
+    { duration: 300, delay: i * 70, easing: "ease-in", fill: "forwards" }));
+  setTimeout(then, 300 + (cards.length - 1) * 70);
+}
+
+// A bought card spins and zooms down into Your cards with a gold sparkle trail (style 2B).
+function spinIntoOwned(html, fromRect, id) {
+  const owned = document.querySelectorAll("#owned > .card");
+  const target = owned[owned.length - 1];
+  if (!target || !fromRect || motionOff() || !target.offsetParent) return;
+  // Bring Your cards into view first (it's often below the shop), moving the start point with the scroll.
+  const scroller = document.querySelector("#break-screen .end-box");
+  const before = scroller.scrollTop;
+  const row = document.getElementById("owned");
+  const footer = document.querySelector(".break-footer");
+  const limit = (footer ? footer.getBoundingClientRect().top : window.innerHeight) - 10;
+  const r0 = row.getBoundingClientRect();
+  if (r0.bottom > limit) scroller.scrollTop += r0.bottom - limit;
+  fromRect = { left: fromRect.left, top: fromRect.top - (scroller.scrollTop - before), width: fromRect.width, height: fromRect.height };
+  const to = target.getBoundingClientRect();
+  const fly = document.createElement("div");
+  fly.innerHTML = html;
+  const card = fly.firstElementChild;
+  card.classList.add("spin-card");
+  card.style.left = fromRect.left + "px";
+  card.style.top = fromRect.top + "px";
+  card.style.width = fromRect.width + "px";
+  card.style.height = fromRect.height + "px";
+  document.body.appendChild(card);
+  target.style.opacity = "0"; // revealed when the flying card lands
+  const dx = to.left + to.width / 2 - (fromRect.left + fromRect.width / 2), dy = to.top + to.height / 2 - (fromRect.top + fromRect.height / 2);
+  const k = Math.min(to.width / fromRect.width, 1);
+  card.animate([
+    { transform: "translate(0, 0) rotate(0) scale(1)", filter: "drop-shadow(0 0 0 #ffd84d)" },
+    { transform: "translate(" + dx + "px, " + dy + "px) rotate(720deg) scale(" + k + ")", filter: "drop-shadow(0 0 12px #ffd84d)" },
+  ], { duration: 650, easing: "cubic-bezier(0.4, 0, 0.6, 1)" }).onfinish = () => {
+    card.remove();
+    target.style.opacity = "";
+    target.animate([{ transform: "scale(0.8)" }, { transform: "scale(1.08)", offset: 0.6 }, { transform: "scale(1)" }], { duration: 300 });
+  };
+  for (let i = 0; i < 10; i++) { // the sparkle trail along the way
+    const t = (i + 1) / 11;
+    const s = document.createElement("i");
+    s.className = "spin-spark";
+    s.style.left = fromRect.left + fromRect.width / 2 + dx * t + "px";
+    s.style.top = fromRect.top + fromRect.height / 2 + dy * t + "px";
+    document.body.appendChild(s);
+    s.animate([{ opacity: 0, transform: "translate(-50%, -50%) scale(1)" }, { opacity: 1, offset: 0.25 }, { opacity: 0, transform: "translate(-50%, -50%) scale(0.2)" }],
+      { duration: 500, delay: 650 * t, fill: "both" }).onfinish = () => s.remove();
+  }
 }

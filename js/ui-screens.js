@@ -544,11 +544,18 @@ function tutorialOpen() {
   return !document.getElementById("tutorial").classList.contains("hidden");
 }
 
+// The new thing's picture behind a padlock that shakes, bursts open and drops away (CSS animation, 1.0.5 style A).
+function unlockReveal(id) {
+  const art = CARDS[id] ? cardArt(id, "unlock-art") : COMPS[id] ? compArt(id, "unlock-art") : CREW_INFO[id] ? crewPortrait(id) : cardArt(id, "unlock-art");
+  return '<div class="unlock-reveal"><div class="unlock-rays"></div><div class="unlock-pic">' + art +
+    '</div><div class="unlock-lock"><span class="shut">🔒</span><span class="open">🔓</span></div></div>';
+}
+
 function unlockSplash(ids, perks, systems = []) {
   const kind = { card: "card", comp: "comp", crew: "crew member you can hire", bet: "bet (find it under ➕ More bets)" };
   const perkText = (id) => CONFIG.reputation.find((r) => r.id === id).text;
   return '<div class="splash-title">🔓 UNLOCKED!</div>' +
-    ids.map((id) => '<p class="splash-big">' + unlockName(id) + '</p><p class="hint">New ' + kind[UNLOCKS[id].kind] + "</p><p>" + unlockReason(id) + "</p>").join("") +
+    ids.map((id) => unlockReveal(id) + '<p class="splash-big">' + unlockName(id) + '</p><p class="hint">New ' + kind[UNLOCKS[id].kind] + "</p><p>" + unlockReason(id) + "</p>").join("") +
     (ids.length ? "<p>It can show up from your <strong>next run</strong>. See it in the 📖 Collection.</p>" : "") +
     perks.map((id) => '<p class="boost">⭐ Reputation up! From your next run: <strong>' + perkText(id) + "</strong></p>").join("") +
     systems.map((id) => '<p class="boost">🆕 New from your next run: <strong>' + SYSTEMS[id].name + "</strong>. " + SYSTEMS[id].text + "</p>").join("") +
