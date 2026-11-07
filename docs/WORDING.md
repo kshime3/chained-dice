@@ -175,3 +175,4 @@ Unchanged for shifts 1-5. Shifts 6-8 follow the existing x1.5 growth: $1,800, $2
 - Phone tabs: "Table", "🎒 Inventory" (was "Hand"), "Crew". Tutorials point to 🎒 Inventory for the odds.
 - Break tabs: "💰 Pay", "🃏 Shop", "🎟 Comps", "⛓ Crew".
 - Patterns: "🎯 Betting patterns" / "Puts your $5 chip on every bet in the set."; message "Iron Cross: $5 on Field + Place 5, 6 and 8 ($20)."; before a point: "Patterns use Place bets and Hard Ways, which open once a point is set."
+- Settings: "Vibration" (On / Off / "Not on this phone"), "Reduce motion (no screen shake, flicker or flashy effects)".

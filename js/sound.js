@@ -1,5 +1,5 @@
-// Sound effects, made in the browser with the Web Audio API (no audio files).
-// Display code: plays sounds, never changes the game.
+// Sound effects, made in the browser with the Web Audio API (no audio files), and phone vibration.
+// Display code: plays sounds and buzzes, never changes the game.
 
 let audio = null; // created on the first sound, after the player has clicked something
 let muted = false;
@@ -99,7 +99,41 @@ const SOUNDS = {
   shiftWon: () => { [392, 523, 659, 784].forEach((f, i) => tone("triangle", f, f, i * 0.12, 0.4, 0.4)); },
 };
 
+// Vibration (phones): a buzz pattern for the big moments, matched to their sounds. Works even with
+// sound effects muted. Android phones and the Android app; iPhone browsers don't allow it.
+const VIBES = {
+  rattle: 12, // the dice leave your hand
+  win1: [18, 40, 18], win2: [30, 50, 30], win3: [40, 40, 40, 40, 90], win4: [60, 40, 60, 40, 160],
+  sevenOut: 320,
+  shiftWon: [50, 60, 50, 60, 140],
+  fall: [300, 90, 520],
+};
+const canVibrate = typeof navigator !== "undefined" && typeof navigator.vibrate === "function";
+let vibrateOn = true;
+try {
+  vibrateOn = localStorage.getItem("chainedDice.vibrate") !== "no";
+} catch (e) {
+  // Storage blocked: vibration stays on.
+}
+function setVibrate(value) {
+  vibrateOn = value;
+  try {
+    localStorage.setItem("chainedDice.vibrate", value ? "yes" : "no");
+  } catch (e) {
+    // Not saved; fine.
+  }
+}
+function buzz(name) {
+  if (!vibrateOn || !canVibrate || !VIBES[name]) return;
+  try {
+    navigator.vibrate(VIBES[name]);
+  } catch (e) {
+    // Some browsers refuse; stay still.
+  }
+}
+
 function playSound(name) {
+  buzz(name);
   if (muted || !SOUNDS[name]) return;
   try {
     SOUNDS[name]();

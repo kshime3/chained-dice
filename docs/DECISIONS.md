@@ -417,3 +417,6 @@ Dated log of every decision and why. Newest at the bottom.
 - Break money: Still owed / Your cash boxes pinned above the Break tabs; low-cash warning under CONFIG.lowCashMins (3) table minimums.
 - 1.0.4 E: five pattern buttons (row on tall phones, 🎯 pick list on short ones); 3-Point Molly left out because it builds over several rolls.
 - 1.0.4 F: code polish (dead styles removed, shared MAIN_BET_IDS and cantAct(), renderPayArea split out); version 1.0.4 (versionCode 5).
+
+## 2026-11-10: 1.0.5 J1
+- Vibration uses the browser's vibrate (works in the Android app with the VIBRATE permission; no new plugin). Buzzes are tied to the existing sounds so they always match. Reduce motion defaults to the phone's own setting.

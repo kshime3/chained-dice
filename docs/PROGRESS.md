@@ -2,6 +2,17 @@
 
 Dated session log. Newest at the top.
 
+## 2026-11-10: Release 1.0.5 "juice", milestone J1 (feel settings + vibration)
+
+**Done (J1)**
+- Settings: **Vibration** (On/Off; "Not on this phone" where the browser can't, e.g. iPhone) and **Reduce motion** (On/Off; starts on if the phone asks apps to reduce motion; remembered).
+- Vibration follows the sounds (sound.js VIBES): a tick on each roll, a double buzz on a win (stronger for bigger win tiers), a long buzz on a seven-out, a pattern on winning a shift, a heavy one on the fall. It works with sound effects muted.
+- Reduce motion turns off: screen shake (the fall), lamp flicker, falling dust, the link rattle, pulsing (low cash, coach highlight, mult bump), the fall's light flicker. Later juice checks body.reduce-motion.
+- Android app: VIBRATE permission added to AndroidManifest.xml (takes effect in the next app build).
+
+**Exact next step**
+- Owner tests J1, then "build J2" (chips that move + stacks).
+
 ## 2026-11-09: Release 1.0.4, milestone A (quick fixes)
 
 1.0.4 plan (owner, QoL only, one milestone at a time): A quick fixes, B big Roll button above the tabs, C Hand becomes Inventory with the odds chart, D Dealer Break layout (scroll / tabs), E betting pattern buttons, F code polish + version 1.0.4.

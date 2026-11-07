@@ -1071,3 +1071,14 @@ body[data-tab="hand"] .side > #inventory-odds { display: block; }
 .pattern-chip { margin: 0; padding: 6px 10px; font-size: 0.8rem; border-radius: 999px; background: #2a1e14; border: 1px solid #c9a227; color: #f3e3c3; }
 .pattern-chip small { color: #ffd84d; font-weight: bold; margin-left: 2px; }
 #patterns-button.hidden { display: none; }
+
+/* 1.0.5 J1: Reduce motion (Settings) turns off shaking, flicker, floating dust and pulsing.
+   Later juice effects check body.reduce-motion too. The dice still roll (Quick dice is its own switch). */
+body.reduce-motion.quake .layout, body.reduce-motion.quake .top { animation: none; }
+body.reduce-motion .lamp, body.reduce-motion .lamp-cone { animation: none; }
+body.reduce-motion .dust { display: none; }
+body.reduce-motion .link.breaking { animation: none; }
+body.reduce-motion .cash-box.low { animation: none; box-shadow: 0 0 10px rgba(255, 90, 74, 0.6); }
+body.reduce-motion .coach-target { animation: none; box-shadow: 0 0 0 4px #ffd84d; }
+body.reduce-motion .mult.bump strong { animation: none; }
+body.reduce-motion .fall-scene.fs-playing .fs-light { animation: none; }

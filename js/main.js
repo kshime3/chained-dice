@@ -683,6 +683,43 @@ document.getElementById("mute").onclick = () => {
   playSound("chip");
 };
 
+// Vibration on or off (the buzzes themselves are in sound.js). iPhone browsers can't vibrate.
+function applyVibrate() {
+  const b = document.getElementById("vibrate-toggle");
+  b.textContent = canVibrate ? (vibrateOn ? "On" : "Off") : "Not on this phone";
+  b.disabled = !canVibrate;
+}
+applyVibrate();
+document.getElementById("vibrate-toggle").onclick = () => {
+  setVibrate(!vibrateOn);
+  applyVibrate();
+  buzz("win1"); // a sample, so you feel it switch on
+};
+
+// Reduce motion: turns off screen shake, flicker and the flashier effects (body class "reduce-motion").
+// Starts on if the phone itself asks apps to reduce motion; the player's choice is remembered.
+let reduceMotion = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+try {
+  const saved = localStorage.getItem("chainedDice.reduceMotion");
+  if (saved) reduceMotion = saved === "yes";
+} catch (e) {
+  // Storage blocked: use the phone's setting.
+}
+function applyReduceMotion() {
+  document.body.classList.toggle("reduce-motion", reduceMotion);
+  document.getElementById("reduce-motion").textContent = reduceMotion ? "On" : "Off";
+}
+applyReduceMotion();
+document.getElementById("reduce-motion").onclick = () => {
+  reduceMotion = !reduceMotion;
+  try {
+    localStorage.setItem("chainedDice.reduceMotion", reduceMotion ? "yes" : "no");
+  } catch (e) {
+    // Not saved; lasts until the page closes.
+  }
+  applyReduceMotion();
+};
+
 // Quick dice: skip the tumbling animation (remembered in this browser).
 const normalDiceMs = CONFIG.diceRollMs;
 let quickDice = false;
