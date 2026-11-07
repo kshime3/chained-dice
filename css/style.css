@@ -963,3 +963,26 @@ body.taking-back .bet-area.can-take { outline: 3px dashed #ff6b5b; outline-offse
 .pay-buttons button { margin: 0; min-height: 44px; }
 #pay-off { background: #2a1c10; border: 2px solid #ff9f43; color: #ffcf9b; }
 #pay-off:disabled { border-color: #554433; color: #8a7a6a; }
+
+/* 1.0.3: the lock line before paying opens; take back a plaque; the short opening Break */
+.pay-closed { margin: 6px 0; color: #e2c89a; font-size: 0.95rem; }
+.pay-closed:empty { display: none; }
+#take-back-plaque { display: block; margin: 6px auto 0; font-size: 0.85rem; }
+#take-back-plaque.hidden { display: none; }
+#pay-section.hidden { display: none; }
+.quick-break #break-money, .quick-break #break-interest { display: none; }
+body.end-open .title-buttons { visibility: hidden; }
+.bet-area { position: relative; }
+.max-odds { position: absolute; top: -9px; right: 8px; z-index: 2; margin: 0; padding: 2px 8px; font-size: 0.7rem; font-weight: bold; letter-spacing: 0.5px;
+  background: #ffd84d; color: #2a1c10; border: none; border-radius: 999px; box-shadow: 0 1px 4px rgba(0,0,0,0.5); }
+.max-odds.hidden { display: none; }
+@media (max-width: 760px) { .max-odds { top: -8px; right: 6px; padding: 1px 7px; font-size: 0.62rem; } }
+
+/* Dragging chips (1.0.3) */
+.chip, .bet-area { touch-action: none; }
+.chip-ghost { position: fixed; z-index: 50; transform: translate(-50%, -60%); pointer-events: none; width: 52px; height: 52px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.85rem; color: #fff;
+  background: radial-gradient(circle, #2e8b57 55%, #1b5e3a 56%); border: 4px dashed #e9e1cf; box-shadow: 0 6px 16px rgba(0,0,0,0.6); opacity: 0.92; }
+.chip-ghost.taking { background: radial-gradient(circle, #8e1f18 55%, #5a120e 56%); }
+.drop-here { outline: 3px solid #ffd84d !important; outline-offset: -3px; box-shadow: 0 0 14px rgba(255, 216, 77, 0.6); }
+#chips.drop-here { border-radius: 999px; }

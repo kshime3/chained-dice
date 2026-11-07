@@ -137,6 +137,7 @@ function renderChips(values, selectedChip, onPick, takingBack, onTakeBack) {
     const tierClass = [5, 25, 100].includes(value) ? "" : " chip-tier-" + tier; // endless chips get colours by size
     chip.className = "chip chip-" + value + tierClass + (value === selectedChip ? " selected" : "");
     chip.textContent = shortMoney(value);
+    chip.dataset.value = value; // dragging a chip needs its value (js/controls.js)
     chip.onclick = () => onPick(value);
     box.appendChild(chip);
   });
@@ -210,6 +211,7 @@ function renderState(state) {
   for (const [bet, line] of [["odds", "pass"], ["lay", "dont"]]) {
     const on = pointOn && b[line] > 0;
     document.getElementById(bet + "-amount").textContent = on ? money(b[bet]) + " / max " + money(backingLimit(state, bet)) : "";
+    document.getElementById(bet + "-max").classList.toggle("hidden", !on || b[bet] >= backingLimit(state, bet) || state.cash <= 0);
   }
 
   // What the next roll does for each bet, in plain words.

@@ -56,6 +56,14 @@ Simulated gambling only: no real money, nothing to buy inside the game, no ads, 
 
 ## What's new (release notes, max 500)
 
+**1.0.3** (closed test update):
+```
+- Drag chips onto bets, and drag a bet back to the chips to take some off.
+- MAX button fills your Odds in one tap.
+- Dropped one plaque too many? Take it back before the next shooter.
+- Cleaner Dealer Break before the first roll, and a cleaner end screen.
+```
+
 **1.0.2** (closed test update):
 ```
 - New chain art, and the shooter's face next to their name.

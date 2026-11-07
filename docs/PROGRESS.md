@@ -2,6 +2,23 @@
 
 Dated session log. Newest at the top.
 
+## 2026-11-08: Release 1.0.3 (QoL, built from the owner's list)
+
+**Done**
+- Take back plaques: "↩ Take back a plaque ($20)" under the pay buttons returns the newest plaque dropped at this Break; leaving the Break locks them in (a plaque that pays the debt off ends the shift, so it can't come back).
+- MAX button on the Odds and Lay Odds tiles (key M): fills to the max for this point, or as much as your cash allows.
+- Drag chips: drag a chip onto any bet to place it; drag a bet back onto the chips to take one table minimum off it. Tapping still works. Mouse and touch.
+- Opening Break of every shift: while paying isn't open, the drop box and pay buttons are replaced by "🔒 The drop box opens after Jinx rolls." (the wrong "Shop first" line is gone).
+- Shift 1's opening Break for returning players (finished a shift or fallen before): just "Shift 1. You owe the dealer $200." + the lock line + Next shooter.
+- End screen: the ⚙ / 📖 / How to play buttons are hidden so they don't cover the chain.
+- 2 new rule checks (489). Version 1.0.3 (versionCode 4).
+
+**Waiting on the owner**
+- Test in the browser, then pull, npm run sync, build, upload 1.0.3 to the closed test.
+
+**Exact next step**
+- Closed test running; next work is release 2.0 (list in docs/IDEAS.md).
+
 ## 2026-11-07: Release 1.0.2 polish (part 1)
 
 **Done**

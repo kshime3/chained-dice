@@ -4,12 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Chained Dice</title>
-  <link rel="icon" type="image/svg+xml" href="img/logo.svg?v=20261107d">
-  <link rel="icon" type="image/png" sizes="32x32" href="img/icon-32.png?v=20261107d">
-  <link rel="apple-touch-icon" href="img/icon-180.png?v=20261107d">
+  <link rel="icon" type="image/svg+xml" href="img/logo.svg?v=20261108a">
+  <link rel="icon" type="image/png" sizes="32x32" href="img/icon-32.png?v=20261108a">
+  <link rel="apple-touch-icon" href="img/icon-180.png?v=20261108a">
   <link rel="manifest" href="manifest.webmanifest">
   <meta name="theme-color" content="#0d2a1a">
-  <link rel="stylesheet" href="css/style.css?v=20261107d">
+  <link rel="stylesheet" href="css/style.css?v=20261108a">
 </head>
 <body>
   <!-- Opening animation: a die rolls in leaving a blood trail, the chain snaps, the title appears, then it all fades. -->
@@ -62,7 +62,7 @@
 
   <header class="top">
     <div class="title-row">
-      <h1><img src="img/logo.svg?v=20261107d" class="title-logo" alt="">Chained Dice</h1>
+      <h1><img src="img/logo.svg?v=20261108a" class="title-logo" alt="">Chained Dice</h1>
       <div class="title-buttons">
         <button id="settings-button" class="mute-button" title="Settings">⚙</button>
         <button id="collection-button" class="how-to-play" title="Collection: everything you've unlocked">📖<span class="hide-mobile"> Collection</span></button>
@@ -130,6 +130,7 @@
           </div>
           <div class="bet-area" id="odds" title="Odds: extra money behind your Pass Line once there's a point. Pays true odds (2:1 on 4 and 10, 3:2 on 5 and 9, 6:5 on 6 and 8) if the point comes before a 7.">
             <div class="bet-title">ODDS <span class="bet-amount" id="odds-amount"></span></div>
+            <button class="max-odds hidden" id="odds-max" title="Fill your Odds to the max for this point">MAX</button>
             <div class="bet-hint" id="odds-hint"></div>
           </div>
         </div>
@@ -142,6 +143,7 @@
           </div>
           <div class="bet-area dark-side" id="lay" title="Lay Odds: extra money behind your Don't Pass once there's a point. Wins if a 7 comes before the point (pays less than you bet, because a 7 is more likely).">
             <div class="bet-title">LAY ODDS <span class="bet-amount" id="lay-amount"></span></div>
+            <button class="max-odds hidden" id="lay-max" title="Fill your Lay Odds to the max for this point">MAX</button>
             <div class="bet-hint" id="lay-hint"></div>
           </div>
         </div>
@@ -176,16 +178,19 @@
       <div id="seven-out-banner" class="seven-out-banner"></div>
       <h2>Dealer Break</h2>
       <p id="break-intro"></p>
-      <p>Still owed: <strong id="break-owed"></strong> · Your cash: <strong id="break-cash"></strong></p>
+      <p id="break-money">Still owed: <strong id="break-owed"></strong> · Your cash: <strong id="break-cash"></strong></p>
       <p id="break-interest" class="break-interest"></p>
 
-      <h3>Pay the dealer: the drop box</h3>
-      <div id="drop-box" class="drop-box" title="Each plaque pays 10% of the debt"></div>
-      <div class="pay-buttons">
-        <button id="drop-plaque" class="plaque-button"></button>
-        <button id="pay-off">Pay off debt</button>
+      <div id="pay-section">
+        <h3>Pay the dealer: the drop box</h3>
+        <div id="drop-box" class="drop-box" title="Each plaque pays 10% of the debt"></div>
+        <div class="pay-buttons">
+          <button id="drop-plaque" class="plaque-button"></button>
+          <button id="pay-off">Pay off debt</button>
+        </div>
+        <button id="take-back-plaque" class="link-button hidden"></button>
       </div>
-      <p id="pay-closed" class="hint"></p>
+      <p id="pay-closed" class="pay-closed"></p>
 
       <div id="shop-section">
         <h3>Tip the dealer (shop) <button id="shop-help" class="help-button" title="How the shop works">?</button></h3>
@@ -383,31 +388,31 @@
   </div>
 
   <!-- Load order matters: config first, then logic, then display, then main. -->
-  <script src="js/config.js?v=20261107d"></script>
-  <script src="js/numbers.js?v=20261107d"></script>
-  <script src="js/dice.js?v=20261107d"></script>
-  <script src="js/bets.js?v=20261107d"></script>
-  <script src="js/crew.js?v=20261107d"></script>
-  <script src="js/cards.js?v=20261107d"></script>
-  <script src="js/shop.js?v=20261107d"></script>
-  <script src="js/stats.js?v=20261107d"></script>
-  <script src="js/perks.js?v=20261107d"></script>
-  <script src="js/crafting.js?v=20261107d"></script>
-  <script src="js/comps.js?v=20261107d"></script>
-  <script src="js/unlocks.js?v=20261107d"></script>
-  <script src="js/rules.js?v=20261107d"></script>
-  <script src="js/save.js?v=20261107d"></script>
-  <script src="js/shift.js?v=20261107d"></script>
-  <script src="js/sound.js?v=20261107d"></script>
-  <script src="js/music.js?v=20261107d"></script>
-  <script src="js/art.js?v=20261107d"></script>
-  <script src="js/card-art.js?v=20261107d"></script>
-  <script src="js/ui.js?v=20261107d"></script>
-  <script src="js/ui-break.js?v=20261107d"></script>
-  <script src="js/ui-screens.js?v=20261107d"></script>
-  <script src="js/tutorials.js?v=20261107d"></script>
-  <script src="js/coach.js?v=20261107d"></script>
-  <script src="js/controls.js?v=20261107d"></script>
-  <script src="js/main.js?v=20261107d"></script>
+  <script src="js/config.js?v=20261108a"></script>
+  <script src="js/numbers.js?v=20261108a"></script>
+  <script src="js/dice.js?v=20261108a"></script>
+  <script src="js/bets.js?v=20261108a"></script>
+  <script src="js/crew.js?v=20261108a"></script>
+  <script src="js/cards.js?v=20261108a"></script>
+  <script src="js/shop.js?v=20261108a"></script>
+  <script src="js/stats.js?v=20261108a"></script>
+  <script src="js/perks.js?v=20261108a"></script>
+  <script src="js/crafting.js?v=20261108a"></script>
+  <script src="js/comps.js?v=20261108a"></script>
+  <script src="js/unlocks.js?v=20261108a"></script>
+  <script src="js/rules.js?v=20261108a"></script>
+  <script src="js/save.js?v=20261108a"></script>
+  <script src="js/shift.js?v=20261108a"></script>
+  <script src="js/sound.js?v=20261108a"></script>
+  <script src="js/music.js?v=20261108a"></script>
+  <script src="js/art.js?v=20261108a"></script>
+  <script src="js/card-art.js?v=20261108a"></script>
+  <script src="js/ui.js?v=20261108a"></script>
+  <script src="js/ui-break.js?v=20261108a"></script>
+  <script src="js/ui-screens.js?v=20261108a"></script>
+  <script src="js/tutorials.js?v=20261108a"></script>
+  <script src="js/coach.js?v=20261108a"></script>
+  <script src="js/controls.js?v=20261108a"></script>
+  <script src="js/main.js?v=20261108a"></script>
 </body>
 </html>

@@ -50,7 +50,17 @@ function takeBackBet(betName) {
     showMessage("Nothing on the " + BET_NAMES[betName] + " to take back.");
     return;
   }
-  const back = takeBack(state, betName, doubleTap ? Infinity : selectedChip);
+  takeOffBet(betName, doubleTap ? Infinity : selectedChip);
+}
+
+// Take up to amount off one bet (the take-back chip, or dragging a bet back to the chips).
+function takeOffBet(betName, amount) {
+  if (busy() || state.status !== "playing" || state.onBreak) return;
+  if (!(state.bets[betName] > 0)) {
+    showMessage("Nothing on the " + BET_NAMES[betName] + " to take back.");
+    return;
+  }
+  const back = takeBack(state, betName, amount);
   if (!back) {
     showMessage(betName === "fire" ? "The Fire Bet is locked in once the shooter has rolled."
       : "The " + BET_NAMES[betName] + " can't come down while the point is on. It stays until the point or a 7.");
@@ -62,10 +72,11 @@ function takeBackBet(betName) {
 }
 
 // Move chips from your cash onto a bet.
-function placeBet(betName) {
+// max: fill Odds or Lay Odds right up to the limit (the MAX button) instead of one chip.
+function placeBet(betName, max) {
   if (busy() || state.status !== "playing" || state.onBreak) return;
-  if (takeBackMode) return takeBackBet(betName);
-  let amount = selectedChip;
+  if (takeBackMode && !max) return takeBackBet(betName);
+  let amount = max ? Infinity : selectedChip;
 
   // The new bets (More bets board).
   if (betGroup(betName)) {
@@ -141,6 +152,11 @@ function placeBet(betName) {
       return;
     }
     amount = Math.min(amount, room); // cap at the limit
+    if (max) amount = Math.min(amount, state.cash);
+    if (max && amount <= 0) {
+      showMessage("No cash left for " + BET_NAMES[betName] + ".");
+      return;
+    }
   }
   if (amount > state.cash) {
     showMessage("Not enough cash for a " + money(amount) + " bet.");
@@ -557,6 +573,9 @@ document.getElementById("odds").onclick = () => placeBet("odds");
 document.getElementById("field").onclick = () => placeBet("field");
 document.getElementById("dont-pass").onclick = () => placeBet("dont");
 document.getElementById("lay").onclick = () => placeBet("lay");
+for (const bet of ["odds", "lay"]) {
+  document.getElementById(bet + "-max").onclick = (e) => { e.stopPropagation(); placeBet(bet, true); }; // not also a one-chip tap on the tile
+}
 document.getElementById("roll-button").onclick = roll;
 for (const b of document.querySelectorAll("#tabbar button")) b.onclick = () => {
   showTab(b.dataset.tab);
@@ -595,6 +614,11 @@ document.getElementById("house-rule").onclick = () => showMessage(HOUSE_RULES[st
 document.getElementById("dice").onclick = roll; // tapping the dice rolls too
 document.getElementById("clear-button").onclick = clearBets;
 document.getElementById("drop-plaque").onclick = payPlaque;
+document.getElementById("take-back-plaque").onclick = () => {
+  const back = takeBackPlaque(state);
+  showBreakMessage(back ? "Took back a " + money(back) + " plaque. " + money(amountOwed(state)) + " to go." : "No plaques from this Break to take back.");
+  renderAll();
+};
 // Pay off ends the shift at once, so it asks first (and says what you'll start the next shift with).
 document.getElementById("pay-off").onclick = () => {
   const p = payOffPreview(state);

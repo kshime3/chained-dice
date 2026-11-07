@@ -247,6 +247,12 @@ function trackShiftWon(state) {
   checkUnlocks();
 }
 
+// Has this player finished a shift or a run before? (The opening Break gets shorter for them.)
+function isReturningPlayer() {
+  const c = profile().counts;
+  return c.falls > 0 || c.bestShift > 0;
+}
+
 function trackFall() {
   profile().counts.falls += 1;
   checkUnlocks();

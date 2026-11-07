@@ -60,7 +60,7 @@ const CONFIG = {
   recruits: ["Snake", "Big Mo", "The Professor", "Lucky Lou"],
   maxSeats: 6,        // most people at the table, including you
   // Unlocks (js/unlocks.js): progress is saved in the browser.
-  appVersion: "1.0.2",     // shown in Settings; must match the version in the Android app (docs/ANDROID.md)
+  appVersion: "1.0.3",     // shown in Settings; must match the version in the Android app (docs/ANDROID.md)
   saveProgress: true,      // tests.html turns this off so checks never touch your progress
   unlockEverything: false, // testing: ?unlockAll in the address turns this on
   // Hidden unlock goals (what each locked thing needs). Tuned so about half unlock by run 20.

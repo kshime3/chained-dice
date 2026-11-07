@@ -40,6 +40,7 @@ function showChoice(title, text, options, onChoose, opts = {}) {
 let chainShownFor = ""; // so the link only breaks once per win
 function renderEndScreen(state, handlers) {
   const screen = document.getElementById("end-screen");
+  document.body.classList.toggle("end-open", state.status !== "playing"); // the top buttons would cover the chain
   if (state.status === "playing") {
     screen.classList.add("hidden");
     return;

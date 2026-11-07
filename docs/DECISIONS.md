@@ -397,3 +397,12 @@ Dated log of every decision and why. Newest at the bottom.
 - Owner: 1.0.x stays QoL; major cards and mechanics go to release 2.0 (IDEAS.md). Seat Swap 3 uses parked there; for now its text explains when it helps.
 - Chain style: owner picked A (real interlocking chain). Hot Hand art read as a glove; redraw offered as two options.
 - Hot Hand: owner picked the open hand in flames. Owner: "Face the pit boss" shouldn't show when you can pay; at the last Break the button now pays instead.
+
+## 2026-11-08: Release 1.0.3
+- Owner sends notes one by one and says "build" when ready.
+- Plaque take-back: only plaques from the current Break, newest first.
+- Max odds: a MAX badge on the Odds / Lay Odds tile (key M).
+- Drag chips: drag on to place; drag a bet back to the chips takes off one table minimum (owner's pick over chip size or whole bet).
+- Opening Break: the drop box is replaced by one lock line for everyone; shift 1's opening Break is a short version for returning players (owner picked "short" over "skip").
+- End screen hides the top buttons.
+- Moved to 2.0: Come Odds and its cards, the rebalance (Hot Rod, streaks, Heater, Double Up), table minimum on all bets, screen shake, opening bets earlier.

@@ -53,8 +53,22 @@ function renderBreak(state) {
   dropButton.textContent = "Drop a plaque (" + money(plaque) + ")";
   dropButton.disabled = !payOpen || maxDeposit(state) < plaque;
   dropButton.title = dropButton.disabled && payOpen ? "Not enough cash: you keep " + money(tableMin(state)) + " for your line bet." : "";
-  document.getElementById("pay-closed").textContent = payOpen ? "" :
-    "The dealer won't take payment until the first shooter has rolled. Shop first, then pay at the next Break.";
+  // Before the first shooter rolls there's nothing to pay: one line instead of the drop box.
+  const first = state.crew[0] === "You" ? "you roll" : state.crew[0] + " rolls";
+  document.getElementById("pay-section").classList.toggle("hidden", !payOpen);
+  document.getElementById("pay-closed").textContent = payOpen ? "" : "🔒 The drop box opens after " + first + ".";
+  // Dropped one plaque too many? Plaques from this Break can come back until you leave it.
+  const back = document.getElementById("take-back-plaque");
+  const plaques = state.breakPlaques || [];
+  back.classList.toggle("hidden", plaques.length === 0);
+  back.textContent = plaques.length ? "↩ Take back a plaque (" + money(plaques[plaques.length - 1]) + ")" : "";
+  // Shift 1's first Break for players who have played before: just the essentials.
+  const quick = state.shift === 1 && !payOpen && !state.endless && isReturningPlayer();
+  screen.classList.toggle("quick-break", quick);
+  if (quick) {
+    document.getElementById("break-intro").textContent = "Shift 1. You owe the dealer " + money(state.debt) + ".";
+    document.getElementById("pay-closed").textContent = "🔒 The drop box opens after " + first + ".";
+  }
   const payOff = document.getElementById("pay-off");
   payOff.disabled = !canPayOff(state);
   payOff.textContent = "Pay off debt (" + money(amountOwed(state)) + ")";

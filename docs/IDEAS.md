@@ -5,6 +5,11 @@ Parked ideas and later features. Not in v1 unless moved into the design.
 **Release plan (owner, 2026-11-07):** 1.0.x updates are quality-of-life only (clarity, controls, looks, bug fixes). Major card additions and new mechanics wait for **release 2.0**.
 
 ## Release 2.0
+- **Come Odds (owner, 2026-11-07):** odds behind Come bets once they move to a number. Plus new cards that boost Come Odds, and higher-rarity cards that boost Pass Odds and Come Odds together. Odds Addict should cover Come Odds too; Dee's Ledger and Professor's Notes stay Pass Odds only.
+- **Rebalance (owner: "a lot of rebalancing to do"):** a run escaped in 8 shifts with $139K cash on a $12,500 debt and a 21x mult. Main causes: Hot Rod's uncapped +1x per winning roll (+15x), side-bet wins (Hard Ways) counting toward Hot Rod and Hot Hand streaks, Double Up feeding Hard Ways. Also review Heater.
+- **Table minimum on every bet?** Real craps only applies it to line bets; decide during the rebalance.
+- **Screen shake on big wins** (bigger shake for bigger wins), with a setting to turn it off. Display only, so it could come earlier if wanted.
+- **Open more bets earlier** for fun: today Hard Ways need 40 hard pairs, Fire Bet 4 points by one shooter, Come 15 points in one run, Place Bets 150 points (all runs). Options: lower goals, unlock one group per shift in the first run, or start with Hard Ways and Place Bets.
 - **Card idea (owner): odds that grow.** Max Odds drops to 1x, but every point you make raises your max Odds by 1x (for the run or the shift: to decide). Needs a balance run.
 - **Seat Swap with 3 uses (owner).** Today it's one use and only matters in niche cases (Hot Rod's Mentor, Torch Pass, Jinx's Cold Table, Muggsy, Cold Read, Comeback Kid, Early Bird). Making comps multi-use is a new mechanic, so it waits for 2.0 and a balance run. 1.0.2 only makes its text say what it's for.
 

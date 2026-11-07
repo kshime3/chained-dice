@@ -1,7 +1,8 @@
 // Display: extra ways to play.
 // 1. Keyboard shortcuts (computers). Each key presses the same button a player would tap,
 //    so every rule and guard still applies. The list shows in Settings.
-// 2. Press-and-hold help (phones): hold a finger on anything with hover help for half a second
+// 2. Dragging chips onto bets, and bets back onto the chips.
+// 3. Press-and-hold help (phones): hold a finger on anything with hover help for half a second
 //    and a bubble explains it. Holding never presses the thing underneath.
 
 // ---------- Keyboard shortcuts ----------
@@ -9,7 +10,7 @@
 const KEY_HELP = [
   ["Space", "roll, or continue (next shooter, close a popup)"],
   ["1 2 3", "pick the small, middle or big chip"],
-  ["P", "Pass Line"], ["D", "Don't Pass"], ["O", "Odds (or Lay Odds)"], ["F", "Field"],
+  ["P", "Pass Line"], ["D", "Don't Pass"], ["O", "Odds (or Lay Odds)"], ["M", "max Odds (or Lay Odds)"], ["F", "Field"],
   ["C", "clear your bets"], ["X", "take-back chip: tap a bet to take a chip off"], ["S", "same bets as saved"],
   ["H / T", "your Hand / the Table (on narrow screens)"], ["K", "Collection"], ["Esc", "close what's open"],
 ];
@@ -72,6 +73,7 @@ document.addEventListener("keydown", (e) => {
     else if (key === "p") handled = press("#pass-line");
     else if (key === "d") handled = press("#dont-pass");
     else if (key === "o") handled = press(state.bets.dont > 0 ? "#lay" : "#odds");
+    else if (key === "m") handled = press(state.bets.dont > 0 ? "#lay-max" : "#odds-max");
     else if (key === "f") handled = press("#field");
     else if (key === "c") handled = press("#clear-button");
     else if (key === "x") handled = press("#chips .chip-take-back");
@@ -94,6 +96,97 @@ document.addEventListener("keyup", (e) => {
 function keyHelpHtml() {
   return KEY_HELP.map(([k, what]) => "<span class=\"key-row\"><kbd>" + k + "</kbd> " + what + "</span>").join("");
 }
+
+// ---------- Dragging chips ----------
+// Drag a chip onto a bet to place it (same as picking the chip and tapping the bet).
+// Drag a bet back onto the chips to take one table minimum off it. Tapping still works.
+
+const MAIN_BET_IDS = { "pass-line": "pass", "dont-pass": "dont", odds: "odds", lay: "lay", field: "field" };
+let drag = null; // { kind: "chip" | "bet", value, bet, x, y, ghost, over }
+let dragSwallow = false;
+
+// Which bet a screen element belongs to (or null).
+function betAt(el) {
+  const area = el && el.closest && el.closest(".bet-area");
+  if (!area) return null;
+  return MAIN_BET_IDS[area.id] || area.dataset.bet || null;
+}
+
+function dragTarget(x, y, kind) {
+  const el = document.elementFromPoint(x, y);
+  if (!el) return null;
+  if (kind === "chip") {
+    const bet = betAt(el);
+    return bet ? { el: el.closest(".bet-area"), bet: bet } : null;
+  }
+  const tray = el.closest("#chips, .chip-row, .controls");
+  return tray ? { el: document.getElementById("chips") } : null;
+}
+
+document.addEventListener("pointerdown", (e) => {
+  if (e.button > 0 || !e.isPrimary) return;
+  const chip = e.target.closest && e.target.closest("#chips .chip:not(.chip-take-back)");
+  if (chip) {
+    const value = Number(chip.dataset.value);
+    if (value) drag = { kind: "chip", value: value, label: chip.textContent, x: e.clientX, y: e.clientY };
+    return;
+  }
+  const bet = betAt(e.target);
+  if (bet && state.bets[bet] > 0 && !takeBackMode && !e.target.closest(".max-odds")) {
+    drag = { kind: "bet", bet: bet, label: "−" + shortMoney(Math.min(tableMin(state), state.bets[bet])), x: e.clientX, y: e.clientY };
+  }
+});
+
+document.addEventListener("pointermove", (e) => {
+  if (!drag) return;
+  if (!drag.ghost) {
+    if (Math.hypot(e.clientX - drag.x, e.clientY - drag.y) < 12) return;
+    drag.ghost = document.createElement("div");
+    drag.ghost.className = "chip-ghost" + (drag.kind === "bet" ? " taking" : "");
+    drag.ghost.textContent = drag.label;
+    document.body.appendChild(drag.ghost);
+    document.body.classList.add("dragging-" + drag.kind);
+  }
+  drag.ghost.style.left = e.clientX + "px";
+  drag.ghost.style.top = e.clientY + "px";
+  const target = dragTarget(e.clientX, e.clientY, drag.kind);
+  const el = target && target.el;
+  if (drag.over !== el) {
+    if (drag.over) drag.over.classList.remove("drop-here");
+    if (el) el.classList.add("drop-here");
+    drag.over = el;
+  }
+  e.preventDefault();
+}, { passive: false });
+
+function endDrag(e, cancelled) {
+  if (!drag) return;
+  const d = drag;
+  drag = null;
+  if (!d.ghost) return; // it was a tap: the normal click handles it
+  d.ghost.remove();
+  if (d.over) d.over.classList.remove("drop-here");
+  document.body.classList.remove("dragging-chip", "dragging-bet");
+  dragSwallow = true; // the click that follows a drag isn't a tap
+  setTimeout(() => { dragSwallow = false; }, 0);
+  if (cancelled) return;
+  const target = dragTarget(e.clientX, e.clientY, d.kind);
+  if (!target) return;
+  if (d.kind === "chip") {
+    pickChip(d.value);
+    placeBet(target.bet);
+  } else {
+    takeOffBet(d.bet, tableMin(state));
+  }
+}
+document.addEventListener("pointerup", (e) => endDrag(e, false));
+document.addEventListener("pointercancel", (e) => endDrag(e, true));
+document.addEventListener("click", (e) => {
+  if (!dragSwallow) return;
+  dragSwallow = false;
+  e.stopPropagation();
+  e.preventDefault();
+}, true);
 
 // ---------- Press-and-hold help (phones) ----------
 

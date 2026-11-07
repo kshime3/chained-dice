@@ -61,6 +61,7 @@ function newShiftState() {
     cashAdded: shiftScale(1).cash, // cash the pit boss added at the start of this shift
     dealerCut: 0, // leftover money the dealer kept at the start of this shift
     deposited: 0, // paid to the dealer: safe, but out of play
+    breakPlaques: [], // plaques dropped at this Break (newest last): they can come back until you leave the Break
     bets: emptyBets(),
     firePoints: [], // different points the current shooter has made (Fire Bet)
     savedBets: null, // bets remembered by "Save bets" (carry over between shifts)
@@ -332,7 +333,22 @@ function dropPlaque(state) {
   if (!canPay(state)) return { paid: 0, reason: "closed" };
   const amount = Math.min(plaqueValue(state), amountOwed(state));
   if (maxDeposit(state) < amount) return { paid: 0, reason: "money" };
-  return { paid: deposit(state, amount), reason: "ok" };
+  const paid = deposit(state, amount);
+  if (paid > 0 && state.status === "playing") state.breakPlaques = (state.breakPlaques || []).concat(paid);
+  return { paid: paid, reason: "ok" };
+}
+
+// Take back the newest plaque dropped at this Break (dropped one too many).
+// Plaques from earlier Breaks are locked in. Returns the amount (0 if none).
+function takeBackPlaque(state) {
+  const list = state.breakPlaques || [];
+  if (!state.onBreak || state.status !== "playing" || list.length === 0) return 0;
+  const amount = list[list.length - 1];
+  state.breakPlaques = list.slice(0, -1);
+  state.deposited -= amount;
+  state.stats.paid -= amount;
+  state.cash += amount;
+  return amount;
 }
 
 // Put money on a line bet ("pass" or "dont"). If your cash is short, the rest is
@@ -567,6 +583,7 @@ function afterRoll(state, sevenOut) {
 // next shooter steps up, as long as you can still cover the Pass Line.
 function endBreak(state) {
   state.onBreak = false;
+  state.breakPlaques = []; // leaving the Break locks this Break's plaques in
   if (isFinalBreak(state)) {
     fall(state, "fell-short"); // reaching here means the debt isn't paid
   } else if (isBroke(state)) {

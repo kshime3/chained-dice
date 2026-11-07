@@ -168,3 +168,6 @@ Unchanged for shifts 1-5. Shifts 6-8 follow the existing x1.5 growth: $1,800, $2
 - Pay off confirm (1.0.2): title "Pay off the whole debt?"; text "You pay $X and the shift ends now. N shooters still to come won't roll. Of the $Y left, you keep 50% ($Z), the dealer takes the rest, and you start shift N with about $W."; buttons "Pay $X" / "Cancel".
 - Seat Swap: "Swap the next two shooters: get your best shooter up sooner, or pick who follows Jinx or Hot Rod."
 - Last Break leave button: "Pay $X and break the link" when you can pay, otherwise "Face the pit boss".
+- Lock line (before paying opens): "🔒 The drop box opens after Jinx rolls." ("after you roll" on your turn). Short opening Break: "Shift 1. You owe the dealer $200."
+- Take back a plaque: button "↩ Take back a plaque ($20)"; message "Took back a $20 plaque. $160 to go."
+- MAX badge on Odds / Lay Odds; message when out of cash: "No cash left for Odds."

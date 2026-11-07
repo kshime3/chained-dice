@@ -66,7 +66,7 @@ js/ui-break.js     display: the Dealer Break (drop box, shop, comps, dice worksh
 js/ui-screens.js   display: full-screen views (splashes, prompts, end screen and stats, fall, tutorials, Collection, opening)
 js/tutorials.js    display: tutorial pages (intro, shop, comps, phone) and "seen" memory
 js/coach.js        display: the guided first shooter (coach bubble for brand-new players)
-js/controls.js     display: keyboard shortcuts (list in Settings) and press-and-hold help on phones
+js/controls.js     display: keyboard shortcuts (list in Settings), dragging chips on/off bets, press-and-hold help on phones
 js/main.js         wires buttons to logic and display
 js/autoplay.js     testing tool: index.html?autoplay lets a bot play whole runs and report errors (loaded only then)
 demos/dice-3d.html  preview: three 3D dice styles to choose from (not part of the game)
