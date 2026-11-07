@@ -171,3 +171,4 @@ Unchanged for shifts 1-5. Shifts 6-8 follow the existing x1.5 growth: $1,800, $2
 - Lock line (before paying opens): "🔒 The drop box opens after Jinx rolls." ("after you roll" on your turn). Short opening Break: "Shift 1. You owe the dealer $200."
 - Take back a plaque: button "↩ Take back a plaque ($20)"; message "Took back a $20 plaque. $160 to go."
 - MAX badge on Odds / Lay Odds; message when out of cash: "No cash left for Odds."
+- Take-back chip label: "↩ TAKE BACK". Top bar box: "INTEREST 5%".

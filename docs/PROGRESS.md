@@ -2,6 +2,19 @@
 
 Dated session log. Newest at the top.
 
+## 2026-11-09: Release 1.0.4, milestone A (quick fixes)
+
+1.0.4 plan (owner, QoL only, one milestone at a time): A quick fixes, B big Roll button above the tabs, C Hand becomes Inventory with the odds chart, D Dealer Break layout (scroll / tabs), E betting pattern buttons, F code polish + version 1.0.4.
+
+**Done (A)**
+- ⚙ and 📖 close their page when tapped again; opening one closes the other.
+- Interest in its own blue box next to Cash and Still owed.
+- Chips stand out: the room's dark edge shading sat over the chip row (now above it), brighter chip colours with a shine, a light rim (the black $100 shows on the dark table), the picked chip lifts with a gold ring.
+- Take-back chip reads "↩ TAKE BACK" instead of ✖.
+
+**Exact next step**
+- Owner tests A, then "build B".
+
 ## 2026-11-08: Release 1.0.3 (QoL, built from the owner's list)
 
 **Done**

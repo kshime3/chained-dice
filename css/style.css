@@ -914,7 +914,10 @@ button:not(:disabled):hover { filter: brightness(1.15); }
 body.in-app .top { padding-top: env(safe-area-inset-top); }
 
 /* Take-back chip (✖): tap a bet to take a chip off, double-tap for the whole bet */
-.chip.chip-take-back { background: #3a2618; border-color: #e2c89a; color: #f3e3c3; font-size: 1.2rem; }
+.chip.chip-take-back { background: #3a2618; border: 3px solid #e2c89a; color: #f3e3c3; display: inline-flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1; }
+.chip-take-back .tb-icon { font-size: 1.1rem; }
+.chip-take-back .tb-label { font-size: 0.52rem; text-transform: uppercase; letter-spacing: 0.3px; margin-top: 1px; }
+.chip.chip-take-back.selected { background: #7a1d14; border-color: #ffb0a0; }
 body.taking-back .bet-area:not(.can-take) { opacity: 0.45; }
 body.taking-back .bet-area.can-take { outline: 3px dashed #ff6b5b; outline-offset: -3px; cursor: pointer; }
 
@@ -986,3 +989,16 @@ body.end-open .title-buttons { visibility: hidden; }
 .chip-ghost.taking { background: radial-gradient(circle, #8e1f18 55%, #5a120e 56%); }
 .drop-here { outline: 3px solid #ffd84d !important; outline-offset: -3px; box-shadow: 0 0 14px rgba(255, 216, 77, 0.6); }
 #chips.drop-here { border-radius: 999px; }
+
+/* 1.0.4 A: chips that pop (bright colour, light rim, shine on top instead of a dark shade; the picked chip lifts) */
+.chip-5, .chip.chip-tier-0 { background: radial-gradient(circle at 50% 30%, #f05a48, #d2372a 60%); }
+.chip-25, .chip.chip-tier-1 { background: radial-gradient(circle at 50% 30%, #3fd67e, #22a65b 60%); }
+.chip-100, .chip.chip-tier-2 { background: radial-gradient(circle at 50% 30%, #5a5a5a, #262626 60%); }
+.chip { box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.35), 0 4px 8px rgba(0, 0, 0, 0.55); text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6); transition: transform 0.12s; }
+.chip.selected { outline: 3px solid #ffd84d; outline-offset: 2px; transform: translateY(-4px) scale(1.06); box-shadow: 0 0 0 2px #fff, 0 0 14px rgba(255, 216, 77, 0.7), 0 6px 10px rgba(0, 0, 0, 0.6); }
+.chip-ghost { box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.35), 0 6px 16px rgba(0, 0, 0, 0.6); }
+/* Interest gets its own box next to Cash and Still owed */
+.interest-box { background: #10283b; border: 2px solid #6ec1ff; color: #bfe3ff; }
+.interest-box strong { color: #8fd3ff; }
+/* The room's dark edges (body::after) sat over the chips and dimmed them: keep the chip row above it */
+.controls { position: relative; z-index: 2; }

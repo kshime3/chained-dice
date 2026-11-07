@@ -406,3 +406,7 @@ Dated log of every decision and why. Newest at the bottom.
 - Opening Break: the drop box is replaced by one lock line for everyone; shift 1's opening Break is a short version for returning players (owner picked "short" over "skip").
 - End screen hides the top buttons.
 - Moved to 2.0: Come Odds and its cards, the rebalance (Hot Rod, streaks, Heater, Double Up), table minimum on all bets, screen shake, opening bets earlier.
+
+## 2026-11-09: 1.0.4 milestones
+- Owner: split 1.0.4 into milestones A-F with a code polish at the end; build one at a time on "build X".
+- The chips' "shade" was the room vignette (body::after) drawn over the chip row; the row now sits above it.

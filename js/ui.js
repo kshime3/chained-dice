@@ -144,7 +144,7 @@ function renderChips(values, selectedChip, onPick, takingBack, onTakeBack) {
   if (onTakeBack) {
     const back = document.createElement("button");
     back.className = "chip chip-take-back" + (takingBack ? " selected" : "");
-    back.textContent = "✖";
+    back.innerHTML = '<span class="tb-icon">↩</span><span class="tb-label">Take<br>back</span>';
     back.title = "Take back: tap a bet to take one chip off it, double-tap to take the whole bet";
     back.setAttribute("aria-label", "Take back chips");
     back.onclick = onTakeBack;

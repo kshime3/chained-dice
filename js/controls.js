@@ -123,12 +123,18 @@ function dragTarget(x, y, kind) {
   return tray ? { el: document.getElementById("chips") } : null;
 }
 
+// A chip's paint (its gradient, or plain colour) so the dragged copy looks the same.
+function chipPaint(chip) {
+  const cs = getComputedStyle(chip);
+  return cs.backgroundImage && cs.backgroundImage !== "none" ? cs.backgroundImage : cs.backgroundColor;
+}
+
 document.addEventListener("pointerdown", (e) => {
   if (e.button > 0 || !e.isPrimary) return;
   const chip = e.target.closest && e.target.closest("#chips .chip:not(.chip-take-back)");
   if (chip) {
     const value = Number(chip.dataset.value);
-    if (value) drag = { kind: "chip", value: value, label: chip.textContent, colour: getComputedStyle(chip).backgroundColor, x: e.clientX, y: e.clientY };
+    if (value) drag = { kind: "chip", value: value, label: chip.textContent, colour: chipPaint(chip), x: e.clientX, y: e.clientY };
     return;
   }
   const bet = betAt(e.target);

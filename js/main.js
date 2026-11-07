@@ -699,7 +699,11 @@ if (CONFIG.inApp) {
   // In the app, feedback goes to the developer email on the Play Store page, and reviews to the store.
   document.getElementById("feedback-intro").innerHTML = "Enjoying it? A review on Google Play helps a lot. Found a bug or something confusing? Answer below, tap <strong>Copy</strong>, and email it to the developer address on the Play Store page.";
 }
+// The ⚙ and 📖 buttons open their page, or close it if it's already open (and only one shows at a time).
+const pageOpen = (id) => !document.getElementById(id).classList.contains("hidden");
 document.getElementById("settings-button").onclick = () => {
+  if (pageOpen("settings")) return document.getElementById("settings").classList.add("hidden");
+  document.getElementById("collection").classList.add("hidden");
   renderMusicSettings();
   document.getElementById("settings-message").textContent = "";
   document.getElementById("settings").classList.remove("hidden");
@@ -715,7 +719,11 @@ document.getElementById("settings-reset").onclick = () => {
   document.getElementById("settings-message").textContent = "Progress reset. Everything is locked again from your next run.";
 };
 document.getElementById("how-to-play").onclick = () => showTutorial(introPages());
-document.getElementById("collection-button").onclick = showCollection;
+document.getElementById("collection-button").onclick = () => {
+  if (pageOpen("collection")) return document.getElementById("collection").classList.add("hidden");
+  document.getElementById("settings").classList.add("hidden");
+  showCollection();
+};
 document.getElementById("collection-close").onclick = () => document.getElementById("collection").classList.add("hidden");
 document.getElementById("collection-reset").onclick = () => {
   if (!confirm("Lock everything again and erase all unlock progress? Your current run isn't affected.")) return;
