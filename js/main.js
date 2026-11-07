@@ -609,6 +609,7 @@ document.getElementById("house-rule").onclick = () => showMessage(HOUSE_RULES[st
 document.getElementById("dice").onclick = roll; // tapping the dice rolls too
 document.getElementById("clear-button").onclick = clearBets;
 document.getElementById("drop-plaque").onclick = payPlaque;
+for (const b of document.querySelectorAll("#break-tabs button")) b.onclick = () => showBreakTab(b.dataset.btab);
 document.getElementById("take-back-plaque").onclick = () => {
   const back = takeBackPlaque(state);
   showBreakMessage(back ? "Took back a " + money(back) + " plaque. " + money(amountOwed(state)) + " to go." : "No plaques from this Break to take back.");

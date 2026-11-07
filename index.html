@@ -4,12 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Chained Dice</title>
-  <link rel="icon" type="image/svg+xml" href="img/logo.svg?v=20261109e">
-  <link rel="icon" type="image/png" sizes="32x32" href="img/icon-32.png?v=20261109e">
-  <link rel="apple-touch-icon" href="img/icon-180.png?v=20261109e">
+  <link rel="icon" type="image/svg+xml" href="img/logo.svg?v=20261109g">
+  <link rel="icon" type="image/png" sizes="32x32" href="img/icon-32.png?v=20261109g">
+  <link rel="apple-touch-icon" href="img/icon-180.png?v=20261109g">
   <link rel="manifest" href="manifest.webmanifest">
   <meta name="theme-color" content="#0d2a1a">
-  <link rel="stylesheet" href="css/style.css?v=20261109e">
+  <link rel="stylesheet" href="css/style.css?v=20261109g">
 </head>
 <body>
   <!-- Opening animation: a die rolls in leaving a blood trail, the chain snaps, the title appears, then it all fades. -->
@@ -62,7 +62,7 @@
 
   <header class="top">
     <div class="title-row">
-      <h1><img src="img/logo.svg?v=20261109e" class="title-logo" alt="">Chained Dice</h1>
+      <h1><img src="img/logo.svg?v=20261109g" class="title-logo" alt="">Chained Dice</h1>
       <div class="title-buttons">
         <button id="settings-button" class="mute-button" title="Settings">⚙</button>
         <button id="collection-button" class="how-to-play" title="Collection: everything you've unlocked">📖<span class="hide-mobile"> Collection</span></button>
@@ -184,6 +184,14 @@
       <p id="break-money">Still owed: <strong id="break-owed"></strong> · Your cash: <strong id="break-cash"></strong></p>
       <p id="break-interest" class="break-interest"></p>
 
+      <nav id="break-tabs" class="break-tabs">
+        <button data-btab="pay">💰<span>Pay</span></button>
+        <button data-btab="shop">🃏<span>Shop</span></button>
+        <button data-btab="comps">🎟<span>Comps</span></button>
+        <button data-btab="crew">⛓<span>Crew</span><i id="crew-tab-dot" class="tab-dot hidden"></i></button>
+      </nav>
+
+      <div class="bpanel" data-bpanel="pay">
       <div id="pay-section">
         <h3>Pay the dealer: the drop box</h3>
         <div id="drop-box" class="drop-box" title="Each plaque pays 10% of the debt"></div>
@@ -194,8 +202,10 @@
         <button id="take-back-plaque" class="link-button hidden"></button>
       </div>
       <p id="pay-closed" class="pay-closed"></p>
+      </div>
 
       <div id="shop-section">
+        <div class="bpanel" data-bpanel="shop">
         <h3>Tip the dealer (shop) <button id="shop-help" class="help-button" title="How the shop works">?</button></h3>
         <p class="hint">Tips don't count toward your debt.</p>
         <div id="stock" class="card-row"></div>
@@ -203,14 +213,16 @@
 
         <h3>Your cards <span id="slots"></span></h3>
         <div id="owned" class="card-row"></div>
+        </div>
 
-        <div id="comps-section">
+        <div id="comps-section" class="bpanel" data-bpanel="comps">
         <h3>Comps <button id="comps-help" class="help-button" title="How comps work">?</button></h3>
         <p class="hint">One-use items. Hold up to <span id="comp-slots"></span>.</p>
         <div id="comp-stock" class="card-row"></div>
         <div id="comp-owned" class="card-row"></div>
         </div>
 
+        <div class="bpanel" data-bpanel="crew">
         <h3>Trapdoor</h3>
         <p class="hint">Pay the dealer to pull the lever under a crew member's seat. They drop away for the rest of the run. Only crew who haven't shot yet this shift.</p>
         <div id="cut-row" class="cut-row"></div>
@@ -225,11 +237,14 @@
         <h3>Hire</h3>
         <p id="hire-hint" class="hint"></p>
         <div id="hire-row" class="card-row"></div>
+        </div>
       </div>
 
+      <div class="break-footer">
       <p id="break-message" class="break-message"></p>
       <p id="break-warning" class="break-warning"></p>
       <button id="leave-break" class="big-button"></button>
+      </div>
     </div>
   </div>
 
@@ -384,31 +399,31 @@
   </div>
 
   <!-- Load order matters: config first, then logic, then display, then main. -->
-  <script src="js/config.js?v=20261109e"></script>
-  <script src="js/numbers.js?v=20261109e"></script>
-  <script src="js/dice.js?v=20261109e"></script>
-  <script src="js/bets.js?v=20261109e"></script>
-  <script src="js/crew.js?v=20261109e"></script>
-  <script src="js/cards.js?v=20261109e"></script>
-  <script src="js/shop.js?v=20261109e"></script>
-  <script src="js/stats.js?v=20261109e"></script>
-  <script src="js/perks.js?v=20261109e"></script>
-  <script src="js/crafting.js?v=20261109e"></script>
-  <script src="js/comps.js?v=20261109e"></script>
-  <script src="js/unlocks.js?v=20261109e"></script>
-  <script src="js/rules.js?v=20261109e"></script>
-  <script src="js/save.js?v=20261109e"></script>
-  <script src="js/shift.js?v=20261109e"></script>
-  <script src="js/sound.js?v=20261109e"></script>
-  <script src="js/music.js?v=20261109e"></script>
-  <script src="js/art.js?v=20261109e"></script>
-  <script src="js/card-art.js?v=20261109e"></script>
-  <script src="js/ui.js?v=20261109e"></script>
-  <script src="js/ui-break.js?v=20261109e"></script>
-  <script src="js/ui-screens.js?v=20261109e"></script>
-  <script src="js/tutorials.js?v=20261109e"></script>
-  <script src="js/coach.js?v=20261109e"></script>
-  <script src="js/controls.js?v=20261109e"></script>
-  <script src="js/main.js?v=20261109e"></script>
+  <script src="js/config.js?v=20261109g"></script>
+  <script src="js/numbers.js?v=20261109g"></script>
+  <script src="js/dice.js?v=20261109g"></script>
+  <script src="js/bets.js?v=20261109g"></script>
+  <script src="js/crew.js?v=20261109g"></script>
+  <script src="js/cards.js?v=20261109g"></script>
+  <script src="js/shop.js?v=20261109g"></script>
+  <script src="js/stats.js?v=20261109g"></script>
+  <script src="js/perks.js?v=20261109g"></script>
+  <script src="js/crafting.js?v=20261109g"></script>
+  <script src="js/comps.js?v=20261109g"></script>
+  <script src="js/unlocks.js?v=20261109g"></script>
+  <script src="js/rules.js?v=20261109g"></script>
+  <script src="js/save.js?v=20261109g"></script>
+  <script src="js/shift.js?v=20261109g"></script>
+  <script src="js/sound.js?v=20261109g"></script>
+  <script src="js/music.js?v=20261109g"></script>
+  <script src="js/art.js?v=20261109g"></script>
+  <script src="js/card-art.js?v=20261109g"></script>
+  <script src="js/ui.js?v=20261109g"></script>
+  <script src="js/ui-break.js?v=20261109g"></script>
+  <script src="js/ui-screens.js?v=20261109g"></script>
+  <script src="js/tutorials.js?v=20261109g"></script>
+  <script src="js/coach.js?v=20261109g"></script>
+  <script src="js/controls.js?v=20261109g"></script>
+  <script src="js/main.js?v=20261109g"></script>
 </body>
 </html>

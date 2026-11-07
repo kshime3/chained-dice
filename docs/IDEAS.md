@@ -14,6 +14,15 @@ Owner approved 2026-11-09, all of these:
 - **Small ones:** the ON puck slides to the point number; the next shooter's face slides in; shop cards flip in, bought cards fly to Inventory, a shuffle animation on reroll; taking back a plaque plays the drop in reverse; Roll pulses when ready and presses down; a short celebration on the unlock screen.
 - **Reduce motion** setting: turns off shake, big banners and the flashier effects in one switch.
 
+**1.0.5 milestones** (one at a time, owner tests each; app build at the end):
+- **J1 Feel settings + vibration:** Reduce motion and Vibration switches in Settings (the later milestones respect them); buzzes on roll, win, seven-out and the fall.
+- **J2 Chips that move + stacks:** chip stacks on every bet; tapping a bet slides a chip from the tray; losing bets are swept off; winnings slide toward Cash.
+- **J3 Numbers and cards:** Cash, Still owed and Interest count to their new values; Interest pulses when it pays; card "fired" pops near the mult pill.
+- **J4 Big wins:** BIG / HUGE / MONSTER WIN banners sized to the win vs your bet, with screen shake on the bigger ones.
+- **J5 Table touches:** the ON puck slides to the point number, the next shooter's face slides in, Roll pulses when ready and presses down.
+- **J6 Break touches:** shop cards flip in, bought cards fly to Inventory, shuffle animation on reroll, taking back a plaque plays in reverse, unlock-screen celebration.
+- **J7 Polish + ship:** a full pass on phone sizes, Reduce motion check, rule checks and bot runs; version 1.0.5.
+
 
 ## Release 1.1 (was 2.0)
 - **Come Odds (owner, 2026-11-07):** odds behind Come bets once they move to a number. Plus new cards that boost Come Odds, and higher-rarity cards that boost Pass Odds and Come Odds together. Odds Addict should cover Come Odds too; Dee's Ledger and Professor's Notes stay Pass Odds only.

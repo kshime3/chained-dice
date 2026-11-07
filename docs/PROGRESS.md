@@ -21,8 +21,15 @@ Dated session log. Newest at the top.
 - Hand tab renamed 🎒 Inventory; the odds chart ("What could the next roll be?") sits at the top of it, live for the current shooter. The 📊 Odds button and pop-up are gone; tutorials now point to Inventory. Key I (or H) opens it.
 - 1.0.5 "juice" release planned in docs/IDEAS.md (owner approved all, incl. the small ones); 1.1 list updated there.
 
+**Done (D)**
+- Found the scroll bug: the Break remembered its scroll position, so tapping Next shooter at the bottom made the next Break open at the bottom. Every Break now opens at the top.
+- The Break is split into tabs: 💰 Pay · 🃏 Shop (stock + your cards) · 🎟 Comps · ⛓ Crew (Trapdoor, Ghost Story pick, Hire). It opens on Pay when paying is open, otherwise Shop; no tab strip when only paying exists (shift 1's first Break). A dot on Crew when Ghost Story needs a pick.
+- The tab strip sticks to the top while scrolling; the message, warning and Next shooter button stay pinned at the bottom.
+- Cards in the Break are two per row on phones (the shop went from ~3.7 screens tall to ~1.4).
+- 1.0.5 split into milestones J1-J7 in docs/IDEAS.md.
+
 **Exact next step**
-- Owner tests C, then "build D".
+- Owner tests D, then "build E".
 
 ## 2026-11-08: Release 1.0.3 (QoL, built from the owner's list)
 

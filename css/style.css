@@ -1037,3 +1037,20 @@ body.end-open .title-buttons { visibility: hidden; }
 body[data-tab="hand"] .side > #inventory-odds { display: block; }
 .inventory-odds { background: rgba(0, 0, 0, 0.3); border: 1px solid #4a3424; border-radius: 12px; padding: 8px 10px 10px; margin: 4px 0 10px; }
 .inventory-odds h3 { margin: 0 0 4px; font-size: 1rem; }
+
+/* 1.0.4 D: the Dealer Break in tabs (Pay / Shop / Comps / Crew); Next shooter stays at the bottom */
+.bpanel.tab-off { display: none; }
+.break-tabs { display: flex; gap: 6px; margin: 8px 0 4px; position: sticky; top: -16px; z-index: 3; padding: 6px 0; background: #2a1d14; }
+.break-tabs.hidden, .break-tabs button.hidden { display: none; }
+.break-tabs button { flex: 1; position: relative; display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 5px 0; margin: 0; font-size: 1.05rem;
+  background: #2a1e14; color: #d8c8a8; border: 1px solid #4a3424; border-radius: 10px; }
+.break-tabs button span { font-size: 0.7rem; }
+.break-tabs button.active { color: #ffd84d; border-color: #ffd84d; box-shadow: inset 0 3px 0 #ffd84d; font-weight: bold; }
+.bpanel > h3:first-child, .bpanel > div:first-child > h3:first-child { margin-top: 8px; }
+.break-footer { position: sticky; bottom: -16px; z-index: 3; margin: 8px -12px -16px; padding: 8px 12px 12px; background: #1d140e; box-shadow: 0 -8px 12px rgba(0, 0, 0, 0.45); border-top: 1px solid #4a3424; }
+.break-footer .break-message:empty, .break-footer .break-warning:empty { display: none; }
+.break-footer p { margin: 4px 0; }
+.break-footer #leave-break { width: 100%; margin: 4px 0 0; }
+/* Phones: two cards per row in the Break (shop, your cards, comps, hire), so there's far less scrolling */
+#break-screen .card-row .card { width: calc(50% - 4px); box-sizing: border-box; padding: 6px; font-size: 0.85rem; }
+#break-screen .card-row { align-items: stretch; }

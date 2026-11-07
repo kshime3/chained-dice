@@ -173,3 +173,4 @@ Unchanged for shifts 1-5. Shifts 6-8 follow the existing x1.5 growth: $1,800, $2
 - MAX badge on Odds / Lay Odds; message when out of cash: "No cash left for Odds."
 - Take-back chip label: "↩ TAKE BACK". Top bar box: "INTEREST 5%".
 - Phone tabs: "Table", "🎒 Inventory" (was "Hand"), "Crew". Tutorials point to 🎒 Inventory for the odds.
+- Break tabs: "💰 Pay", "🃏 Shop", "🎟 Comps", "⛓ Crew".

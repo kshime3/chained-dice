@@ -1,6 +1,15 @@
 // Display code: the Dealer Break. Paying (drop box), the shop, comps, the dice
 // workshop, hiring, the Pit Boss phone and your hand. No game rules here.
 
+// The Break's tabs (Pay / Shop / Comps / Crew). Each Break opens at the top, on Pay when paying
+// is open (else Shop), instead of wherever the last one was scrolled to.
+let breakTab = "pay";
+function showBreakTab(tab) {
+  breakTab = tab;
+  document.querySelector("#break-screen .end-box").scrollTop = 0;
+  renderAll();
+}
+
 // The Dealer Break: pay toward the debt between shooters.
 function renderBreak(state) {
   const screen = document.getElementById("break-screen");
@@ -8,7 +17,12 @@ function renderBreak(state) {
     screen.classList.add("hidden");
     return;
   }
+  const opening = screen.classList.contains("hidden");
   screen.classList.remove("hidden");
+  if (opening) { // a new Break: start at the top (a hidden screen can't be scrolled, so this comes after showing it)
+    breakTab = canPay(state) || !isShopOpen(state) ? "pay" : "shop";
+    screen.querySelector(".end-box").scrollTop = 0;
+  }
 
   let intro;
   if (state.shooterIndex === 0 && state.lastRoll === null) {
@@ -77,6 +91,8 @@ function renderBreak(state) {
   document.getElementById("leave-break").textContent = isFinalBreak(state)
     ? (canPayOff(state) ? "Pay " + money(amountOwed(state)) + " and break the link" : "Face the pit boss")
     : "Next shooter: " + state.crew[state.shooterIndex];
+
+  renderBreakTabs(state);
 
   const warn = !isFinalBreak(state) && totalMoney(state) < tableMin(state);
   document.getElementById("break-warning").textContent = warn
@@ -193,6 +209,22 @@ function renderShop(state, handlers) {
   document.getElementById("ghost-pick").classList.toggle("hidden", !ghostNext);
   document.getElementById("ghost-evens").classList.toggle("selected-option", state.ghostPick === "evens");
   document.getElementById("ghost-odds").classList.toggle("selected-option", state.ghostPick === "odds");
+}
+
+// Show the chosen tab's panel; hide tabs for things that aren't open yet (no shop before shift 1's first roll).
+function renderBreakTabs(state) {
+  const ghostNext = state.crew[state.shooterIndex] === "Ghost" && hasCard(state, "ghostStory");
+  const shop = isShopOpen(state);
+  const available = { pay: true, shop: shop, comps: shop && systemOn(state, "comps"), crew: shop };
+  if (!available[breakTab]) breakTab = "pay";
+  const tabs = document.getElementById("break-tabs");
+  tabs.classList.toggle("hidden", !shop); // only Pay: no tab strip needed
+  for (const b of tabs.querySelectorAll("button")) {
+    b.classList.toggle("hidden", !available[b.dataset.btab]);
+    b.classList.toggle("active", b.dataset.btab === breakTab);
+  }
+  for (const panel of document.querySelectorAll("#break-screen .bpanel")) panel.classList.toggle("tab-off", panel.dataset.bpanel !== breakTab);
+  document.getElementById("crew-tab-dot").classList.toggle("hidden", !ghostNext || breakTab === "crew"); // Ghost Story needs a pick
 }
 
 // Comps: the shop row and your comps on the Break screen, plus Use buttons on the table.
