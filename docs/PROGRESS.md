@@ -28,8 +28,10 @@ Dated session log. Newest at the top.
 - Cards in the Break are two per row on phones (the shop went from ~3.7 screens tall to ~1.4).
 - 1.0.5 split into milestones J1-J7 in docs/IDEAS.md.
 
+- Owner feedback: Still owed and Your cash were easy to miss while shopping. They're now the same coloured boxes as the top bar, pinned with the tabs; Your cash turns red and pulses with "Low! Keep $X to bet" under 3 table minimums (CONFIG.lowCashMins).
+
 **Exact next step**
-- Owner tests D, then "build E".
+- Owner tests D, then E (betting patterns).
 
 ## 2026-11-08: Release 1.0.3 (QoL, built from the owner's list)
 

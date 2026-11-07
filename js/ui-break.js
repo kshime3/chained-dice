@@ -52,6 +52,10 @@ function renderBreak(state) {
   document.getElementById("shop-section").classList.toggle("hidden", !isShopOpen(state));
   document.getElementById("break-owed").textContent = money(amountOwed(state));
   document.getElementById("break-cash").textContent = money(state.cash);
+  // Running low? Make it impossible to miss before you spend more.
+  const low = state.cash < tableMin(state) * CONFIG.lowCashMins;
+  document.getElementById("break-cash-box").classList.toggle("low", low);
+  document.getElementById("break-cash-note").textContent = low ? "Low! Keep " + money(tableMin(state)) + " to bet" : "";
   const rate = Math.round(interestRate(state) * 1000) / 10 + "%";
   const stashNote = hasCard(state, "stash") ? ", plus " + Math.round(CONFIG.stashRate * 100) + "% of your cash (Stash)" : "";
   document.getElementById("break-interest").innerHTML = state.lastInterest > 0

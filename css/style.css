@@ -1040,7 +1040,8 @@ body[data-tab="hand"] .side > #inventory-odds { display: block; }
 
 /* 1.0.4 D: the Dealer Break in tabs (Pay / Shop / Comps / Crew); Next shooter stays at the bottom */
 .bpanel.tab-off { display: none; }
-.break-tabs { display: flex; gap: 6px; margin: 8px 0 4px; position: sticky; top: -16px; z-index: 3; padding: 6px 0; background: #2a1d14; }
+.break-tabs { display: flex; gap: 6px; margin: 6px 0 0; }
+.break-sticky { position: sticky; top: -16px; z-index: 3; margin: 8px -12px 4px; padding: 8px 12px 6px; background: #2a1d14; box-shadow: 0 8px 10px -6px rgba(0, 0, 0, 0.6); }
 .break-tabs.hidden, .break-tabs button.hidden { display: none; }
 .break-tabs button { flex: 1; position: relative; display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 5px 0; margin: 0; font-size: 1.05rem;
   background: #2a1e14; color: #d8c8a8; border: 1px solid #4a3424; border-radius: 10px; }
@@ -1054,3 +1055,13 @@ body[data-tab="hand"] .side > #inventory-odds { display: block; }
 /* Phones: two cards per row in the Break (shop, your cards, comps, hire), so there's far less scrolling */
 #break-screen .card-row .card { width: calc(50% - 4px); box-sizing: border-box; padding: 6px; font-size: 0.85rem; }
 #break-screen .card-row { align-items: stretch; }
+
+/* The Break's money: the same boxes as the top bar, pinned with the tabs */
+.break-money { display: flex; gap: 8px; justify-content: center; }
+.break-money .money-main { flex: 1; max-width: 180px; padding: 4px 8px; font-size: 0.7rem; }
+.break-money .money-main strong { font-size: 1.5rem; }
+.cash-note { display: block; font-size: 0.65rem; text-transform: none; letter-spacing: 0; font-weight: bold; }
+.cash-note:empty { display: none; }
+.cash-box.low { background: #3b1010; border-color: #ff5a4a; color: #ffb3a8; animation: low-cash 1.2s ease-in-out infinite; }
+.cash-box.low strong { color: #ff7b6b; }
+@keyframes low-cash { 50% { box-shadow: 0 0 12px rgba(255, 90, 74, 0.7); } }
