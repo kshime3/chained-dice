@@ -596,7 +596,7 @@ function showTab(tab) {
   for (const b of document.querySelectorAll("#tabbar button")) b.classList.toggle("active", b.dataset.tab === tab);
 }
 
-// A dot on the Hand tab when a comp is ready to use.
+// A dot on the Inventory tab when a comp is ready to use.
 function renderTabBar(state) {
   const ready = state.comps.some((id) => !compBlocked(state, id));
   document.getElementById("hand-dot").classList.toggle("hidden", !ready || phoneTab === "hand");

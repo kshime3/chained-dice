@@ -373,7 +373,7 @@ function showPhone(state, offer, onPick) {
   box.classList.remove("hidden");
 }
 
-// ---------- Your hand (left column on bigger screens) ----------
+// ---------- Your inventory (the Inventory tab on phones) ----------
 
 // Cards, comps and phone perks as readable tiles. Phones use the compact row instead.
 // handlers: { useComp(index) }

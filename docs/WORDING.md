@@ -125,7 +125,7 @@ Unchanged for shifts 1-5. Shifts 6-8 follow the existing x1.5 growth: $1,800, $2
 - Unlock reason (unlock screen and Collection tile): "Unlocked by surviving shift 3." / "Unlocked by winning $2,000 on Odds bets (all runs)." / "Unlocked by seeing 100 seven-outs (all runs)." Starters show no line.
 - Paying: "Pay the dealer: the drop box", button "Drop a plaque ($20)", message "Dropped a $20 plaque in the box. $140 to go." / "Not enough cash: a plaque can't take your cash below $5." How to play: "drop plaques into the dealer's drop box. Each plaque is 10% of the debt (the last one pays exactly what's left), or pay it all at once."
 - Mult pop: "+0.5x mult".
-- Locked bet tile: "PLACE 6 🔒"; tapping it: "Place Bets are locked. Keep playing to unlock them." Odds pop-up: "📊 What could the next roll be?", subtitle "How likely each total is on X's next roll."; come-out bar labels "7 or 11: Pass Line wins", "2, 3 or 12: Pass Line loses", "4-10: becomes the point"; with a point: "Which comes first, the 8 or a 7?", "8 first: Pass Line wins", "7 first: Don't Pass wins". New-bet tutorial title: "New bet: Hard Ways".
+- Locked bet tile: "PLACE 6 🔒"; tapping it: "Place Bets are locked. Keep playing to unlock them." Odds chart (top of the 🎒 Inventory tab since 1.0.4; was a pop-up): "📊 What could the next roll be?", subtitle "How likely each total is on X's next roll."; come-out bar labels "7 or 11: Pass Line wins", "2, 3 or 12: Pass Line loses", "4-10: becomes the point"; with a point: "Which comes first, the 8 or a 7?", "8 first: Pass Line wins", "7 first: Don't Pass wins". New-bet tutorial title: "New bet: Hard Ways".
 - Opening: "CHAINED DICE", "tap to skip".
 
 ## Added 2026-10-31: teaching craps
@@ -172,3 +172,4 @@ Unchanged for shifts 1-5. Shifts 6-8 follow the existing x1.5 growth: $1,800, $2
 - Take back a plaque: button "↩ Take back a plaque ($20)"; message "Took back a $20 plaque. $160 to go."
 - MAX badge on Odds / Lay Odds; message when out of cash: "No cash left for Odds."
 - Take-back chip label: "↩ TAKE BACK". Top bar box: "INTEREST 5%".
+- Phone tabs: "Table", "🎒 Inventory" (was "Hand"), "Crew". Tutorials point to 🎒 Inventory for the odds.

@@ -2,16 +2,30 @@
 
 Parked ideas and later features. Not in v1 unless moved into the design.
 
-**Release plan (owner, 2026-11-07):** 1.0.x updates are quality-of-life only (clarity, controls, looks, bug fixes). Major card additions and new mechanics wait for **release 2.0**.
+**Release plan (owner, 2026-11-07, renamed 2026-11-08):** 1.0.x updates are quality-of-life only (clarity, controls, looks, bug fixes). Major card additions and new mechanics wait for **release 1.1** (was "2.0"). Phone layouts only.
 
-## Release 2.0
+## Release 1.0.5: "juice" (animation and feel; no rule changes)
+Owner approved 2026-11-09, all of these:
+- **Chips that move + chip stacks:** tapping a bet slides a chip from the tray to it; real-looking stacks sit on bets (amount broken into chips, a few chips max with the total beside); the dealer sweeps losing bets off; winnings slide toward Cash.
+- **Money that counts:** Cash, Still owed and Interest tick to the new amount; Interest pulses when it pays.
+- **Win tiers + screen shake:** BIG / HUGE / MONSTER WIN banner sized to the win vs your bet; the bigger ones shake the screen.
+- **Cards that fire:** when a card adds mult or money, its icon and a short label pop near the mult pill ("🔥 Hot Hand +0.25x").
+- **Vibration (phones):** short buzz on a roll, double on a win, long on a seven-out, heavy on the fall (Android app and Android browsers; iPhone browsers can't), with an off switch.
+- **Small ones:** the ON puck slides to the point number; the next shooter's face slides in; shop cards flip in, bought cards fly to Inventory, a shuffle animation on reroll; taking back a plaque plays the drop in reverse; Roll pulses when ready and presses down; a short celebration on the unlock screen.
+- **Reduce motion** setting: turns off shake, big banners and the flashier effects in one switch.
+
+
+## Release 1.1 (was 2.0)
 - **Come Odds (owner, 2026-11-07):** odds behind Come bets once they move to a number. Plus new cards that boost Come Odds, and higher-rarity cards that boost Pass Odds and Come Odds together. Odds Addict should cover Come Odds too; Dee's Ledger and Professor's Notes stay Pass Odds only.
 - **Rebalance (owner: "a lot of rebalancing to do"):** a run escaped in 8 shifts with $139K cash on a $12,500 debt and a 21x mult. Main causes: Hot Rod's uncapped +1x per winning roll (+15x), side-bet wins (Hard Ways) counting toward Hot Rod and Hot Hand streaks, Double Up feeding Hard Ways. Also review Heater.
 - **Table minimum on every bet?** Real craps only applies it to line bets; decide during the rebalance.
-- **Screen shake on big wins** (bigger shake for bigger wins), with a setting to turn it off. Display only, so it could come earlier if wanted.
 - **Open more bets earlier** for fun: today Hard Ways need 40 hard pairs, Fire Bet 4 points by one shooter, Come 15 points in one run, Place Bets 150 points (all runs). Options: lower goals, unlock one group per shift in the first run, or start with Hard Ways and Place Bets.
 - **Card idea (owner): odds that grow.** Max Odds drops to 1x, but every point you make raises your max Odds by 1x (for the run or the shift: to decide). Needs a balance run.
-- **Seat Swap with 3 uses (owner).** Today it's one use and only matters in niche cases (Hot Rod's Mentor, Torch Pass, Jinx's Cold Table, Muggsy, Cold Read, Comeback Kid, Early Bird). Making comps multi-use is a new mechanic, so it waits for 2.0 and a balance run. 1.0.2 only makes its text say what it's for.
+- **Pit Boss phone:** add more options or remove it; weigh the pros and cons.
+- **Cards for Place bets.** **Mult study:** it should reset much more often, especially Hot Rod. **Carry-over:** probably too much money carries from shift to shift.
+- **Cocktail waitress Easter egg** that results in a card.
+- **Music:** replace the creepy tracks with something up-tempo throughout (free licensed, credits updated).
+- **Seat Swap with 3 uses (owner).** Today it's one use and only matters in niche cases (Hot Rod's Mentor, Torch Pass, Jinx's Cold Table, Muggsy, Cold Read, Comeback Kid, Early Bird). Making comps multi-use is a new mechanic, so it waits for 1.1 and a balance run. 1.0.2 only makes its text say what it's for.
 
 ## Later shifts
 - After shift 1, each shift target doubles ($2,000, $4,000, $8,000, ...).

@@ -12,7 +12,7 @@ const KEY_HELP = [
   ["1 2 3", "pick the small, middle or big chip"],
   ["P", "Pass Line"], ["D", "Don't Pass"], ["O", "Odds (or Lay Odds)"], ["M", "max Odds (or Lay Odds)"], ["F", "Field"],
   ["C", "clear your bets"], ["X", "take-back chip: tap a bet to take a chip off"], ["S", "same bets as saved"],
-  ["H / T", "your Hand / the Table (on narrow screens)"], ["K", "Collection"], ["Esc", "close what's open"],
+  ["I / T", "your Inventory / the Table"], ["K", "Collection"], ["Esc", "close what's open"],
 ];
 
 // Is this element showing? (Pop-ups are fixed-position, so check their style, not offsetParent.)
@@ -32,7 +32,7 @@ function press(selector) {
 
 // Something covers the table (bets and chips keys do nothing then).
 function tableCovered() {
-  return ["splash", "tutorial", "phone", "choice", "reroll-prompt", "workshop", "end-screen", "settings", "collection", "break-screen", "odds-popup", "fall-scene", "opening"].some(shown);
+  return ["splash", "tutorial", "phone", "choice", "reroll-prompt", "workshop", "end-screen", "settings", "collection", "break-screen", "fall-scene", "opening"].some(shown);
 }
 
 // Space: whatever "carry on" means right now.
@@ -41,7 +41,7 @@ function keyContinue() {
   if (shown("splash")) return press(".splash-continue") || press("#splash");
   if (shown("tutorial")) return press("#tutorial-next");
   if (shown("coach") && press("#coach-ok")) return true;
-  if (["phone", "choice", "reroll-prompt", "workshop", "settings", "collection", "odds-popup"].some(shown)) return false; // these need a real choice
+  if (["phone", "choice", "reroll-prompt", "workshop", "settings", "collection"].some(shown)) return false; // these need a real choice
   if (shown("end-screen")) return !hasEscaped(state) && press("#play-again"); // never pick Double or nothing for you
   if (shown("break-screen")) return press("#leave-break");
   return press("#roll-button");
@@ -49,7 +49,6 @@ function keyContinue() {
 
 function keyEscape() {
   if (shown("choice") && press("#choice-buttons .choice-cancel")) return true;
-  if (shown("odds-popup")) return press("#odds-close");
   if (shown("workshop")) return press("#workshop-cancel");
   if (shown("collection")) return press("#collection-close");
   if (shown("settings")) return press("#settings-close");
@@ -78,7 +77,7 @@ document.addEventListener("keydown", (e) => {
     else if (key === "c") handled = press("#clear-button");
     else if (key === "x") handled = press("#chips .chip-take-back");
     else if (key === "s") handled = press("#same-bets");
-    else if (key === "h") { showTab("hand"); handled = true; }
+    else if (key === "i" || key === "h") { showTab("hand"); handled = true; }
     else if (key === "t") { showTab("table"); handled = true; }
   }
   if (handled) {

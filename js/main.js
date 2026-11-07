@@ -605,11 +605,6 @@ document.getElementById("same-bets").onclick = () => {
   showMessage(parts.join(" "));
   renderAll();
 };
-document.getElementById("odds-button").onclick = () => {
-  renderOddsPanel(state);
-  document.getElementById("odds-popup").classList.remove("hidden");
-};
-document.getElementById("odds-close").onclick = () => document.getElementById("odds-popup").classList.add("hidden");
 document.getElementById("house-rule").onclick = () => showMessage(HOUSE_RULES[state.houseRule.id].name + ": " + houseRuleText(state));
 document.getElementById("dice").onclick = roll; // tapping the dice rolls too
 document.getElementById("clear-button").onclick = clearBets;

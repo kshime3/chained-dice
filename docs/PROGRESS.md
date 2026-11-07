@@ -17,8 +17,12 @@ Dated session log. Newest at the top.
 - The open tab is no longer gold-filled (dark with a gold edge), so only Roll looks like the big gold button.
 - To make room, Clear bets / Save bets / Same bets / Odds became compact icon buttons on the chip row (phones); chips are slightly smaller there. A normal turn fits all five test screens; the rare worst case (boss rule + challenge + big SEVEN OUT text) scrolls 10-26px on the two smallest phones, where the Break covers the screen anyway.
 
+**Done (C)**
+- Hand tab renamed 🎒 Inventory; the odds chart ("What could the next roll be?") sits at the top of it, live for the current shooter. The 📊 Odds button and pop-up are gone; tutorials now point to Inventory. Key I (or H) opens it.
+- 1.0.5 "juice" release planned in docs/IDEAS.md (owner approved all, incl. the small ones); 1.1 list updated there.
+
 **Exact next step**
-- Owner tests B, then "build C".
+- Owner tests C, then "build D".
 
 ## 2026-11-08: Release 1.0.3 (QoL, built from the owner's list)
 

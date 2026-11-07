@@ -412,3 +412,4 @@ Dated log of every decision and why. Newest at the bottom.
 - The chips' "shade" was the room vignette (body::after) drawn over the chip row; the row now sits above it.
 - 1.0.4 B: Roll fixed above the tab bar on phones (owner picked this over changing the tabs); active tab restyled so it no longer looks like Roll; small buttons moved onto the chip row as icons to make room.
 - Owner (2026-11-09): from now on only phone layouts matter; the computer layout is no longer a goal (rule added to CLAUDE.md).
+- 1.0.4 C: Hand renamed Inventory, odds chart always at its top, Odds button removed. 1.0.5 is a "juice" release (chips moving + stacks, counting money, win tiers + shake, cards firing, vibration, small animations, reduce motion). Screen shake and chip stacks moved there from 1.1.

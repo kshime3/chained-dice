@@ -1031,3 +1031,9 @@ body.end-open .title-buttons { visibility: hidden; }
   .chip-take-back .tb-icon { font-size: 0.85rem; }
   .chip-take-back .tb-label { font-size: 0.45rem; margin-top: 0; }
 }
+
+/* 1.0.4 C: the Inventory tab (was Hand) shows the odds chart on top; the Table tab doesn't */
+.inventory-odds { display: none; }
+body[data-tab="hand"] .side > #inventory-odds { display: block; }
+.inventory-odds { background: rgba(0, 0, 0, 0.3); border: 1px solid #4a3424; border-radius: 12px; padding: 8px 10px 10px; margin: 4px 0 10px; }
+.inventory-odds h3 { margin: 0 0 4px; font-size: 1rem; }
