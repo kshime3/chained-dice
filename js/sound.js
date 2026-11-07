@@ -107,6 +107,7 @@ const VIBES = {
   sevenOut: 400,
   shiftWon: [80, 70, 80, 70, 200],
   fall: [350, 100, 600],
+  bigWin: [90, 50, 90, 50, 220], hugeWin: [120, 50, 120, 50, 120, 50, 320], monsterWin: [200, 60, 200, 60, 200, 60, 200, 60, 600],
 };
 const canVibrate = typeof navigator !== "undefined" && typeof navigator.vibrate === "function";
 let vibrateOn = true;

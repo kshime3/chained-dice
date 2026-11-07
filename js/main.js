@@ -279,6 +279,7 @@ function offerRerollOrFinish(rolled) {
 function finishRoll(rolled) {
   delete state.pendingRoll;
   const multBefore = multReasons(state); // to see which cards added mult this roll (card pops, juice.js)
+  const stakeBefore = betsTotal(state.bets); // big-win banners compare the win to what was on the table
   const r = playRoll(state, rolled); // all the rules (shift.js)
   queueCardPops(state, multBefore, r.notes);
   const { results, total, pointBefore, sevenOut, pointHit, challengeNote } = r;
@@ -297,6 +298,7 @@ function finishRoll(rolled) {
   const won = results.filter((r) => r.outcome === "win").reduce((sum, r) => sum + r.winnings, 0);
   const tier = 1 + CONFIG.winSoundTiers.filter((share) => won >= share * state.debt).length;
   const winSound = "win" + Math.max(tier, pointHit || challengeNote || (sevenOut && won > 0) ? 2 : 1);
+  if (!sevenOut) bigWinBanner(won, Math.max(stakeBefore, tableMin(state))); // BIG / HUGE / MONSTER (juice.js)
   if (sevenOut && won > 0) playSound(winSound);
   else if (sevenOut) playSound("sevenOut");
   else if (won > 0 || pointHit || challengeNote) playSound(winSound);

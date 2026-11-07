@@ -70,7 +70,7 @@ js/ui-break.js     display: the Dealer Break in tabs (Pay, Shop, Comps, Crew), d
 js/ui-screens.js   display: full-screen views (splashes, prompts, end screen and stats, fall, tutorials, Collection, opening)
 js/tutorials.js    display: tutorial pages (intro, shop, comps, phone) and "seen" memory
 js/coach.js        display: the guided first shooter (coach bubble for brand-new players)
-js/juice.js        display: the game's feel (1.0.5): chip stacks, flying chips; later counting numbers, card pops, big-win banners
+js/juice.js        display: the game's feel (1.0.5): chip stacks, flying chips, counting numbers, card pops, big-win banners and screen shake
 js/controls.js     display: keyboard shortcuts (list in Settings), dragging chips on/off bets, press-and-hold help on phones
 js/main.js         wires buttons to logic and display
 js/autoplay.js     testing tool: index.html?autoplay lets a bot play whole runs and report errors (loaded only then)

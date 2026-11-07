@@ -1109,3 +1109,18 @@ body.reduce-motion .fall-scene.fs-playing .fs-light { animation: none; }
 .card-pop-gain { position: fixed; z-index: 45; color: #ff9f43; font-weight: 900; font-size: 1.15rem; pointer-events: none; white-space: nowrap; text-shadow: 0 2px 4px #000; }
 .card-pop-name { position: fixed; z-index: 45; transform: translateX(-50%); font-size: 0.75rem; font-weight: bold; color: #ffd84d; pointer-events: none; white-space: nowrap;
   background: rgba(20, 14, 10, 0.85); padding: 1px 8px; border-radius: 999px; }
+
+/* 1.0.5 J4: big-win banners (style B, gold slam) */
+.big-win { position: fixed; inset: 0; z-index: 48; pointer-events: none; display: flex; flex-direction: column; align-items: center; justify-content: center; padding-bottom: 12vh; overflow: hidden; }
+.bw-rays { position: absolute; left: 50%; top: 42%; width: 640px; height: 640px; margin: -320px 0 0 -320px; border-radius: 50%;
+  background: repeating-conic-gradient(rgba(255, 216, 77, 0.4) 0 10deg, transparent 10deg 20deg);
+  -webkit-mask: radial-gradient(circle, #000 15%, transparent 62%); mask: radial-gradient(circle, #000 15%, transparent 62%); }
+.bw-rays.two { background: repeating-conic-gradient(rgba(255, 159, 67, 0.3) 0 6deg, transparent 6deg 24deg); }
+.big-win.dark .bw-rays { background: repeating-conic-gradient(rgba(255, 90, 40, 0.5) 0 10deg, transparent 10deg 20deg); }
+.bw-text { position: relative; font-family: Georgia, serif; font-weight: bold; letter-spacing: 2px; line-height: 1; text-align: center; color: #ffd84d;
+  -webkit-text-stroke: 1.5px #7a4a10; text-shadow: 0 4px 0 #7a4a10, 0 10px 22px #000; }
+.big-win.level-2 .bw-text { color: #fff0a8; text-shadow: 0 5px 0 #8e1f18, 0 0 30px rgba(255, 90, 40, 0.9), 0 12px 26px #000; }
+.bw-amount { position: relative; margin-top: 10px; font-weight: 900; font-size: 1.9rem; color: #7dff9b; text-shadow: 0 2px 8px #000, 0 0 16px rgba(46, 204, 113, 0.7); }
+.big-win.level-1 .bw-amount { font-size: 2.2rem; } .big-win.level-2 .bw-amount { font-size: 2.6rem; }
+.bw-flash { position: fixed; inset: 0; z-index: 47; background: #fff8dc; pointer-events: none; }
+.bw-chip { position: fixed; z-index: 49; width: 20px; height: 20px; border-radius: 50%; border: 3px dashed #fff; box-sizing: border-box; pointer-events: none; }

@@ -3,6 +3,7 @@
 //     take chips back, losing bets swept off toward the dealer, winnings flying to your Cash.
 // J3: money that counts to its new value (Cash, Still owed, On table); Interest pulses when it pays;
 //     card pops (style C, owner's pick): a card's icon zips from Inventory into the mult, "+0.25x" floats off it.
+// J4: big-win banners (style B "gold slam", owner's pick, each level bigger and more intense) with screen shake.
 // Everything that moves checks Reduce motion (body.reduce-motion): stacks still show, nothing flies.
 
 // Chip colours, matching the chip tray (red, green, black; endless chips by size order).
@@ -262,4 +263,84 @@ function cardPop(pop) {
     playSound("ding");
     showText(0);
   };
+}
+
+// ---------- Big wins (style B, gold slam: each level bigger and more intense) ----------
+
+const BIG_WIN_LEVELS = [
+  { word: "BIG WIN", size: 2.4, rays: 1, chips: 12, waves: 1, shake: 5, shakeMs: 420, flash: 0, ms: 1900, vibe: "bigWin" },
+  { word: "HUGE WIN", size: 3, rays: 2, chips: 30, waves: 1, shake: 9, shakeMs: 650, flash: 1, ms: 2300, vibe: "hugeWin" },
+  { word: "MONSTER<br>WIN", size: 3.6, rays: 2, chips: 60, waves: 3, shake: 15, shakeMs: 1000, flash: 2, ms: 2900, vibe: "monsterWin", dark: true },
+];
+const BANNER_CHIPS = ["#d2372a", "#22a65b", "#262626", "#d6b46a"];
+
+// The screen shakes (Reduce motion: never).
+function shakeScreen(px, ms) {
+  if (motionOff() || !px) return;
+  const frames = [];
+  const steps = Math.round(ms / 45);
+  for (let i = 0; i < steps; i++) {
+    const k = px * (1 - i / steps); // eases off
+    frames.push({ transform: "translate(" + (Math.random() * 2 - 1) * k + "px, " + (Math.random() * 2 - 1) * k + "px)" });
+  }
+  frames.push({ transform: "none" });
+  // Not the whole page: shaking a parent of the pinned Roll button would knock it out of place.
+  for (const el of document.querySelectorAll(".top, .side, .table")) el.animate(frames, { duration: ms });
+}
+
+// A roll won `won` against `stake` on the table: show BIG / HUGE / MONSTER WIN if it's enough.
+function bigWinBanner(won, stake) {
+  if (!(won > 0) || !(stake > 0)) return;
+  const level = CONFIG.bigWinX.filter((x) => won >= x * stake).length - 1;
+  if (level < 0) return;
+  const L = BIG_WIN_LEVELS[level];
+  setTimeout(() => buzz(L.vibe), 80); // after the roll's own win buzz, so the bigger pattern is the one you feel
+  const box = document.createElement("div");
+  box.className = "big-win level-" + level + (L.dark ? " dark" : "");
+  box.innerHTML = (motionOff() ? "" : '<div class="bw-rays"></div>' + (L.rays > 1 ? '<div class="bw-rays two"></div>' : "")) +
+    '<div class="bw-text" style="font-size:' + L.size + 'rem">' + L.word + '</div><div class="bw-amount">+' + money(won) + "</div>";
+  document.body.appendChild(box);
+  setTimeout(() => box.remove(), L.ms + 100);
+  const text = box.querySelector(".bw-text"), amount = box.querySelector(".bw-amount");
+  if (motionOff()) { // calm version: the words fade in and out
+    for (const el of [box]) el.animate([{ opacity: 0 }, { opacity: 1, offset: 0.12 }, { opacity: 1, offset: 0.85 }, { opacity: 0 }], { duration: L.ms, fill: "both" });
+    return;
+  }
+  box.animate([{ opacity: 1 }, { opacity: 1, offset: 0.85 }, { opacity: 0 }], { duration: L.ms, fill: "both" });
+  if (L.dark) box.animate([{ background: "rgba(0,0,0,0)" }, { background: "rgba(0,0,0,0.7)", offset: 0.1 }, { background: "rgba(0,0,0,0.7)", offset: 0.85 }, { background: "rgba(0,0,0,0)" }], { duration: L.ms, fill: "both" });
+  box.querySelectorAll(".bw-rays").forEach((r, i) => r.animate(
+    [{ transform: "rotate(0) scale(0.5)", opacity: 0 }, { opacity: 1, offset: 0.12 }, { opacity: 1, offset: 0.8 }, { transform: "rotate(" + (i ? -1 : 1) * (60 + level * 60) + "deg) scale(" + (1 + level * 0.25) + ")", opacity: 0 }],
+    { duration: L.ms, easing: "ease-out" }));
+  // The slam: from huge to a little small, then settle (HUGE bounces, MONSTER drops in harder).
+  text.animate([{ transform: "scale(" + (3 + level) + ")", opacity: 0 }, { transform: "scale(0.85)", opacity: 1, offset: 0.1 },
+    { transform: "scale(" + (1.06 + level * 0.04) + ")", offset: 0.16 }, { transform: "scale(1)", offset: 0.22 },
+    level > 0 ? { transform: "scale(" + (1.03 + level * 0.03) + ")", offset: 0.5 } : { transform: "scale(1)", offset: 0.5 }, { transform: "scale(1)" }], { duration: L.ms, easing: "ease-out", fill: "both" });
+  amount.animate([{ opacity: 0, transform: "translateY(10px)" }, { opacity: 0, offset: 0.14 }, { opacity: 1, transform: "translateY(0)", offset: 0.24 }, { opacity: 1 }], { duration: L.ms, fill: "both" });
+  setTimeout(() => shakeScreen(L.shake, L.shakeMs), L.ms * 0.1);
+  for (let f = 0; f < L.flash; f++) setTimeout(() => flashScreen(), L.ms * 0.1 + f * 260);
+  for (let w = 0; w < L.waves; w++) setTimeout(() => chipBurst(Math.round(L.chips / L.waves), level), L.ms * 0.1 + w * 320);
+}
+
+function flashScreen() {
+  const f = document.createElement("div");
+  f.className = "bw-flash";
+  document.body.appendChild(f);
+  f.animate([{ opacity: 0.75 }, { opacity: 0 }], { duration: 260, easing: "ease-out" }).onfinish = () => f.remove();
+}
+
+// Chips burst out from the middle of the screen in every direction.
+function chipBurst(n, level) {
+  const cx = window.innerWidth / 2, cy = window.innerHeight * 0.42;
+  for (let i = 0; i < n; i++) {
+    const c = document.createElement("i");
+    c.className = "bw-chip";
+    c.style.background = BANNER_CHIPS[i % BANNER_CHIPS.length];
+    c.style.left = cx + "px";
+    c.style.top = cy + "px";
+    document.body.appendChild(c);
+    const a = Math.random() * Math.PI * 2, d = (110 + Math.random() * 120) * (1 + level * 0.35);
+    c.animate([{ transform: "translate(-50%, -50%) scale(0.4)", opacity: 0 }, { opacity: 1, offset: 0.1 },
+      { transform: "translate(calc(-50% + " + Math.cos(a) * d + "px), calc(-50% + " + (Math.sin(a) * d + 140) + "px)) rotate(" + (300 + Math.random() * 400) + "deg) scale(1)", opacity: 0 }],
+      { duration: 1100 + Math.random() * 500, easing: "cubic-bezier(0.2, 0.8, 0.4, 1)" }).onfinish = () => c.remove();
+  }
 }

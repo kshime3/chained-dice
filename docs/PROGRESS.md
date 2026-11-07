@@ -30,8 +30,12 @@ Dated session log. Newest at the top.
 
 - J4: 3 big-win looks in demos/big-win-options.html (A casino sign with chasing bulbs, B gold slam with rays and a chip burst, C ribbon sweep with chip rain); each cycles BIG/HUGE/MONSTER with growing shake.
 
+**Done (J4)**
+- Big-win banners, style B "gold slam" (owner's pick) with each level bigger and more intense: BIG (4x what was on the table), HUGE (10x), MONSTER (25x+) (CONFIG.bigWinX). Bigger letters, more ray layers (MONSTER darkens the room, red-gold), more chips (12 / 30 / 60 in up to three waves), white flashes on HUGE and MONSTER, stronger and longer screen shake, and a stronger vibration pattern per level. Not on a seven-out. Reduce motion: the words fade in and out, nothing else.
+- The shake moves the top bar, shooter area and table only (shaking their parent knocked the pinned Roll button out of place).
+
 **Exact next step**
-- Owner picks a big-win look (A/B/C), then build J4.
+- Owner tests J4, then "build J5" (table touches: ON puck slides, shooter face slides in, Roll pulses/presses).
 
 ## 2026-11-09: Release 1.0.4, milestone A (quick fixes)
 

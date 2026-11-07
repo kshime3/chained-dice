@@ -62,6 +62,7 @@ const CONFIG = {
   // Unlocks (js/unlocks.js): progress is saved in the browser.
   appVersion: "1.0.4",     // shown in Settings; must match the version in the Android app (docs/ANDROID.md)
   lowCashMins: 3, // the Break shows your cash in red when it's under this many table minimums
+  bigWinX: [4, 10, 25], // big-win banners (1.0.5): BIG / HUGE / MONSTER when a roll wins this many times what was on the table
   saveProgress: true,      // tests.html turns this off so checks never touch your progress
   unlockEverything: false, // testing: ?unlockAll in the address turns this on
   // Hidden unlock goals (what each locked thing needs). Tuned so about half unlock by run 20.
