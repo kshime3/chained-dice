@@ -25,8 +25,11 @@ Dated session log. Newest at the top.
 - Cash, Still owed and On table count to their new value (~0.3-0.7s; green going up, red going down); Interest box, the Break's cash box and its interest line pulse when interest pays. Reduce motion: numbers just change.
 - Card pops: 3 options in demos/card-pop-options.html (A pill under the mult, B the card jumps out then shrinks into Inventory, C a card icon zips into the mult).
 
+**Done (J3, part 2)**
+- Card pops, style C (owner's pick): when your card adds mult (found by comparing each card's part of the mult before and after the roll) or does something else (its note in the roll message), its art zips from the Inventory tab into the mult pill, the mult bumps with a ding, "+0.25x" floats up above the pill with the card's name under it. Up to 4 per roll, one after another. The plain "+0.5x mult" pop is skipped when cards explain the gain. Reduce motion: just the name and bonus fade in.
+
 **Exact next step**
-- Owner picks a card pop (A/B/C), then build it to finish J3.
+- Owner tests J3, then "build J4" (big-win banners + screen shake: 3 options first).
 
 ## 2026-11-09: Release 1.0.4, milestone A (quick fixes)
 

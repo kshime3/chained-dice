@@ -1102,3 +1102,10 @@ body.reduce-motion .fall-scene.fs-playing .fs-light { animation: none; }
 @keyframes box-pulse { 0% { transform: scale(1); } 30% { transform: scale(1.12); box-shadow: 0 0 18px rgba(143, 211, 255, 0.9); } 100% { transform: scale(1); } }
 #break-interest.pulse { animation: line-glow 0.9s ease-out 2; }
 @keyframes line-glow { 30% { color: #8fd3ff; text-shadow: 0 0 10px rgba(143, 211, 255, 0.8); } }
+
+/* 1.0.5 J3: card pops (style C) */
+.card-pop-icon { position: fixed; z-index: 45; width: 40px; height: 28px; border-radius: 6px; overflow: hidden; pointer-events: none; box-shadow: 0 0 12px rgba(255, 159, 67, 0.85); }
+.card-pop-icon .art { width: 100%; height: 100%; display: block; }
+.card-pop-gain { position: fixed; z-index: 45; color: #ff9f43; font-weight: 900; font-size: 1.15rem; pointer-events: none; white-space: nowrap; text-shadow: 0 2px 4px #000; }
+.card-pop-name { position: fixed; z-index: 45; transform: translateX(-50%); font-size: 0.75rem; font-weight: bold; color: #ffd84d; pointer-events: none; white-space: nowrap;
+  background: rgba(20, 14, 10, 0.85); padding: 1px 8px; border-radius: 999px; }

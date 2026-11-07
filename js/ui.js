@@ -335,7 +335,7 @@ function renderMult(state) {
   const notes = multReasons(state);
   box.innerHTML = '<span class="mult-pill">Mult <strong>' + multText(mult) + "</strong></span>" + (notes.length ? '<span class="mult-notes">' + notes.join(" · ") + "</span>" : "");
   box.className = "mult" + (mult > 1 ? " hot" : mult < 1 ? " cold" : "");
-  if (gain) popMult(box, gain);
+  if (gain && !cardPopsExplain()) popMult(box, gain); // card pops show where the mult came from instead
 }
 
 // The odds chart (top of the Inventory tab): the chance of each total on the next roll, a color key, and a "race" bar

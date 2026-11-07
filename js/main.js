@@ -278,7 +278,9 @@ function offerRerollOrFinish(rolled) {
 // Settle every bet once the dice land.
 function finishRoll(rolled) {
   delete state.pendingRoll;
+  const multBefore = multReasons(state); // to see which cards added mult this roll (card pops, juice.js)
   const r = playRoll(state, rolled); // all the rules (shift.js)
+  queueCardPops(state, multBefore, r.notes);
   const { results, total, pointBefore, sevenOut, pointHit, challengeNote } = r;
   const boosts = [];
   if (r.multUsed !== 1) boosts.push("Mult " + r.multUsed + "x" + (r.multWhy.length ? " (" + r.multWhy.join(", ") + ")" : ""));

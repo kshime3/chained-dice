@@ -1,7 +1,8 @@
 // Display: "juice", the feel of the game (release 1.0.5). No game rules here.
 // J2: chip stacks on every bet, and chips that fly: tray -> bet when you bet, bet -> tray when you
 //     take chips back, losing bets swept off toward the dealer, winnings flying to your Cash.
-// J3: money that counts to its new value (Cash, Still owed, On table); Interest pulses when it pays.
+// J3: money that counts to its new value (Cash, Still owed, On table); Interest pulses when it pays;
+//     card pops (style C, owner's pick): a card's icon zips from Inventory into the mult, "+0.25x" floats off it.
 // Everything that moves checks Reduce motion (body.reduce-motion): stacks still show, nothing flies.
 
 // Chip colours, matching the chip tray (red, green, black; endless chips by size order).
@@ -168,4 +169,97 @@ function pulseInterest() {
     void el.offsetWidth; // restart the animation
     el.classList.add("pulse");
   }
+}
+
+// ---------- Cards that fire (style C: zip into the mult) ----------
+
+// "Hot Hand: +0.75x" -> { name: "Hot Hand", add: 0.75 } (or times: 2 for "x2" parts).
+function parseReason(text) {
+  const m = /^(.+?): ([+x])([\d.]+)x?$/.exec(text);
+  return m ? { name: m[1], kind: m[2], value: Number(m[3]) } : null;
+}
+function ownedCardNamed(state, name) {
+  return state.cards.find((id) => CARDS[id] && CARDS[id].name === name) || null;
+}
+
+let cardPopQueue = [];
+let cardPopsCoverMult = false;
+
+// After a roll: which of your cards did something? Mult cards by how much their part grew;
+// other cards by the note they left ("Twin Souls: the point came as a pair! x2.").
+function queueCardPops(state, multBefore, notes) {
+  const before = new Map(multBefore.map(parseReason).filter(Boolean).map((p) => [p.name, p]));
+  const pops = [];
+  for (const p of multReasons(state).map(parseReason).filter(Boolean)) {
+    const id = ownedCardNamed(state, p.name);
+    if (!id) continue;
+    const old = before.get(p.name);
+    if (p.kind === "+" && p.value > (old ? old.value : 0) + 1e-9) pops.push({ id: id, text: "+" + multText(p.value - (old ? old.value : 0)) });
+    if (p.kind === "x" && (!old || p.value > old.value + 1e-9)) pops.push({ id: id, text: "x" + bigNumber(p.value) });
+  }
+  cardPopsCoverMult = pops.length > 0;
+  for (const note of notes || []) {
+    const name = note.split(":")[0];
+    const id = ownedCardNamed(state, name);
+    if (!id || pops.some((p) => p.id === id)) continue;
+    const amount = /(x[\d.]+|\+\$[\d,.]+[KMB]?|\+[\d.]+x)/.exec(note);
+    pops.push({ id: id, text: amount ? amount[1] : "✓" });
+  }
+  cardPopQueue = pops.slice(0, 4);
+  cardPopQueue.forEach((pop, i) => setTimeout(() => cardPop(pop), 450 + i * 520));
+}
+
+// Did card pops already account for this mult gain? (Then the plain "+0.5x mult" pop is skipped.)
+function cardPopsExplain() {
+  const yes = cardPopsCoverMult;
+  cardPopsCoverMult = false;
+  return yes;
+}
+
+function cardPop(pop) {
+  const pill = document.querySelector("#mult .mult-pill");
+  if (!pill || !pill.offsetParent) return;
+  const target = pill.getBoundingClientRect();
+  const theme = CARDS[pop.id].theme;
+  const label = (theme ? THEMES[theme].icon + " " : "") + CARDS[pop.id].name;
+  // The gain floats up off the mult, the card's name underneath it.
+  const gain = document.createElement("div");
+  gain.className = "card-pop-gain";
+  gain.textContent = pop.text;
+  gain.style.left = target.left + target.width / 2 + "px";
+  gain.style.top = target.top - 22 + "px"; // just above the pill, so the mult number stays readable
+  const name = document.createElement("div");
+  name.className = "card-pop-name";
+  name.textContent = label;
+  name.style.left = target.left + target.width / 2 + "px";
+  name.style.top = target.bottom + 3 + "px";
+  const showText = (delay) => {
+    document.body.append(gain, name);
+    gain.animate([{ opacity: 0, transform: "translate(-50%, 0)" }, { opacity: 1, transform: "translate(-50%, -8px)", offset: 0.2 }, { opacity: 0, transform: "translate(-50%, -30px)" }],
+      { duration: 1200, delay: delay, fill: "both" }).onfinish = () => gain.remove();
+    name.animate([{ opacity: 0 }, { opacity: 1, offset: 0.15 }, { opacity: 1, offset: 0.75 }, { opacity: 0 }],
+      { duration: 1300, delay: delay, fill: "both" }).onfinish = () => name.remove();
+  };
+  if (motionOff()) return showText(0); // Reduce motion: just the words, no zip or bump
+  // The card's icon zips from the Inventory tab up into the mult.
+  const from = (document.querySelector('.tabbar [data-tab="hand"]') || pill).getBoundingClientRect();
+  const icon = document.createElement("div");
+  icon.className = "card-pop-icon";
+  icon.innerHTML = cardArt(pop.id, "art");
+  icon.style.left = from.left + from.width / 2 + "px";
+  icon.style.top = from.top + from.height / 2 + "px";
+  document.body.appendChild(icon);
+  const dx = target.left + target.width / 2 - (from.left + from.width / 2), dy = target.top + target.height / 2 - (from.top + from.height / 2);
+  icon.animate([
+    { opacity: 0, transform: "translate(-50%, -50%) scale(0.6)" },
+    { opacity: 1, transform: "translate(-50%, -50%) scale(1.1)", offset: 0.2 },
+    { opacity: 1, transform: "translate(calc(-50% + " + dx + "px), calc(-50% + " + dy + "px)) scale(0.55)", offset: 0.9 },
+    { opacity: 0, transform: "translate(calc(-50% + " + dx + "px), calc(-50% + " + dy + "px)) scale(0.3)" },
+  ], { duration: 560, easing: "cubic-bezier(0.5, 0, 0.6, 1)" }).onfinish = () => {
+    icon.remove();
+    const strong = pill.querySelector("strong");
+    if (strong) strong.animate([{ transform: "scale(1)" }, { transform: "scale(1.45)", offset: 0.35 }, { transform: "scale(1)" }], { duration: 380 });
+    playSound("ding");
+    showText(0);
+  };
 }

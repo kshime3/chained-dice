@@ -423,3 +423,4 @@ Dated log of every decision and why. Newest at the bottom.
 - 1.0.5 J2: chip stacks + flying chips in js/juice.js; vibration lengthened (owner has a Pixel 9 Pro: noted in CLAUDE.md).
 - Owner (2026-11-11): not satisfied with the J2 chip stacks; three new looks previewed in demos/stack-options.html. Rule: the largest chip is always on the bottom of a stack. J3 waits until the stack look is chosen.
 - Chip stacks: owner picked B (top-down pile, value on the top chip, largest on the bottom). New rule: 3 options for every major new image, animation or music addition.
+- Card pops: owner picked C (zip into the mult).
