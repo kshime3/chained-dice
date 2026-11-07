@@ -4,12 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Chained Dice</title>
-  <link rel="icon" type="image/svg+xml" href="img/logo.svg?v=20261109a">
-  <link rel="icon" type="image/png" sizes="32x32" href="img/icon-32.png?v=20261109a">
-  <link rel="apple-touch-icon" href="img/icon-180.png?v=20261109a">
+  <link rel="icon" type="image/svg+xml" href="img/logo.svg?v=20261109c">
+  <link rel="icon" type="image/png" sizes="32x32" href="img/icon-32.png?v=20261109c">
+  <link rel="apple-touch-icon" href="img/icon-180.png?v=20261109c">
   <link rel="manifest" href="manifest.webmanifest">
   <meta name="theme-color" content="#0d2a1a">
-  <link rel="stylesheet" href="css/style.css?v=20261109a">
+  <link rel="stylesheet" href="css/style.css?v=20261109c">
 </head>
 <body>
   <!-- Opening animation: a die rolls in leaving a blood trail, the chain snaps, the title appears, then it all fades. -->
@@ -62,7 +62,7 @@
 
   <header class="top">
     <div class="title-row">
-      <h1><img src="img/logo.svg?v=20261109a" class="title-logo" alt="">Chained Dice</h1>
+      <h1><img src="img/logo.svg?v=20261109c" class="title-logo" alt="">Chained Dice</h1>
       <div class="title-buttons">
         <button id="settings-button" class="mute-button" title="Settings">⚙</button>
         <button id="collection-button" class="how-to-play" title="Collection: everything you've unlocked">📖<span class="hide-mobile"> Collection</span></button>
@@ -156,10 +156,10 @@
         <button id="roll-button" class="big-button">Roll</button>
       </div>
       <div class="controls small-controls">
-        <button id="clear-button">Clear bets</button>
-        <button id="save-bets" title="Remember the bets on the table now">💾 Save bets</button>
-        <button id="same-bets" title="Put your saved bets back down">↻ Same bets</button>
-        <button id="odds-button" title="The chance of each total for this shooter">📊 Odds</button>
+        <button id="clear-button" title="Take your bets back (line bets stay once a point is on)"><span class="sc-icon">🧹</span><span class="sc-label">Clear bets</span></button>
+        <button id="save-bets" title="Remember the bets on the table now"><span class="sc-icon">💾</span><span class="sc-label">Save bets</span></button>
+        <button id="same-bets" title="Put your saved bets back down"><span class="sc-icon">↻</span><span class="sc-label">Same bets</span></button>
+        <button id="odds-button" title="The chance of each total for this shooter"><span class="sc-icon">📊</span><span class="sc-label">Odds</span></button>
       </div>
 
       <div id="message" class="message">You wake up chained to the table. Pick a chip, put it on the Pass Line, then roll.</div>
@@ -388,31 +388,31 @@
   </div>
 
   <!-- Load order matters: config first, then logic, then display, then main. -->
-  <script src="js/config.js?v=20261109a"></script>
-  <script src="js/numbers.js?v=20261109a"></script>
-  <script src="js/dice.js?v=20261109a"></script>
-  <script src="js/bets.js?v=20261109a"></script>
-  <script src="js/crew.js?v=20261109a"></script>
-  <script src="js/cards.js?v=20261109a"></script>
-  <script src="js/shop.js?v=20261109a"></script>
-  <script src="js/stats.js?v=20261109a"></script>
-  <script src="js/perks.js?v=20261109a"></script>
-  <script src="js/crafting.js?v=20261109a"></script>
-  <script src="js/comps.js?v=20261109a"></script>
-  <script src="js/unlocks.js?v=20261109a"></script>
-  <script src="js/rules.js?v=20261109a"></script>
-  <script src="js/save.js?v=20261109a"></script>
-  <script src="js/shift.js?v=20261109a"></script>
-  <script src="js/sound.js?v=20261109a"></script>
-  <script src="js/music.js?v=20261109a"></script>
-  <script src="js/art.js?v=20261109a"></script>
-  <script src="js/card-art.js?v=20261109a"></script>
-  <script src="js/ui.js?v=20261109a"></script>
-  <script src="js/ui-break.js?v=20261109a"></script>
-  <script src="js/ui-screens.js?v=20261109a"></script>
-  <script src="js/tutorials.js?v=20261109a"></script>
-  <script src="js/coach.js?v=20261109a"></script>
-  <script src="js/controls.js?v=20261109a"></script>
-  <script src="js/main.js?v=20261109a"></script>
+  <script src="js/config.js?v=20261109c"></script>
+  <script src="js/numbers.js?v=20261109c"></script>
+  <script src="js/dice.js?v=20261109c"></script>
+  <script src="js/bets.js?v=20261109c"></script>
+  <script src="js/crew.js?v=20261109c"></script>
+  <script src="js/cards.js?v=20261109c"></script>
+  <script src="js/shop.js?v=20261109c"></script>
+  <script src="js/stats.js?v=20261109c"></script>
+  <script src="js/perks.js?v=20261109c"></script>
+  <script src="js/crafting.js?v=20261109c"></script>
+  <script src="js/comps.js?v=20261109c"></script>
+  <script src="js/unlocks.js?v=20261109c"></script>
+  <script src="js/rules.js?v=20261109c"></script>
+  <script src="js/save.js?v=20261109c"></script>
+  <script src="js/shift.js?v=20261109c"></script>
+  <script src="js/sound.js?v=20261109c"></script>
+  <script src="js/music.js?v=20261109c"></script>
+  <script src="js/art.js?v=20261109c"></script>
+  <script src="js/card-art.js?v=20261109c"></script>
+  <script src="js/ui.js?v=20261109c"></script>
+  <script src="js/ui-break.js?v=20261109c"></script>
+  <script src="js/ui-screens.js?v=20261109c"></script>
+  <script src="js/tutorials.js?v=20261109c"></script>
+  <script src="js/coach.js?v=20261109c"></script>
+  <script src="js/controls.js?v=20261109c"></script>
+  <script src="js/main.js?v=20261109c"></script>
 </body>
 </html>

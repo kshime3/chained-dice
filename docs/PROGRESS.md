@@ -12,8 +12,13 @@ Dated session log. Newest at the top.
 - Chips stand out: the room's dark edge shading sat over the chip row (now above it), brighter chip colours with a shine, a light rim (the black $100 shows on the dark table), the picked chip lifts with a gold ring.
 - Take-back chip reads "↩ TAKE BACK" instead of ✖.
 
+**Done (B)**
+- Phones: Roll is a wide gold button fixed just above the tab bar (Table tab only), so it never moves when the message changes length.
+- The open tab is no longer gold-filled (dark with a gold edge), so only Roll looks like the big gold button.
+- To make room, Clear bets / Save bets / Same bets / Odds became compact icon buttons on the chip row (phones); chips are slightly smaller there. A normal turn fits all five test screens; the rare worst case (boss rule + challenge + big SEVEN OUT text) scrolls 10-26px on the two smallest phones, where the Break covers the screen anyway.
+
 **Exact next step**
-- Owner tests A, then "build B".
+- Owner tests B, then "build C".
 
 ## 2026-11-08: Release 1.0.3 (QoL, built from the owner's list)
 

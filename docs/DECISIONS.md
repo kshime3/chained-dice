@@ -410,3 +410,4 @@ Dated log of every decision and why. Newest at the bottom.
 ## 2026-11-09: 1.0.4 milestones
 - Owner: split 1.0.4 into milestones A-F with a code polish at the end; build one at a time on "build X".
 - The chips' "shade" was the room vignette (body::after) drawn over the chip row; the row now sits above it.
+- 1.0.4 B: Roll fixed above the tab bar on phones (owner picked this over changing the tabs); active tab restyled so it no longer looks like Roll; small buttons moved onto the chip row as icons to make room.

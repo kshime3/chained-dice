@@ -1002,3 +1002,32 @@ body.end-open .title-buttons { visibility: hidden; }
 .interest-box strong { color: #8fd3ff; }
 /* The room's dark edges (body::after) sat over the chips and dimmed them: keep the chip row above it */
 .controls { position: relative; z-index: 2; }
+
+/* 1.0.4 B: on phones, Roll is a wide button right above the tab bar, where your thumb already is.
+   It stays put (the message above can be 1-3 lines), and only shows on the Table tab. */
+@media (max-width: 760px) {
+  #roll-button, #roll-button.coach-target { position: fixed; left: 10px; right: 10px; bottom: calc(64px + env(safe-area-inset-bottom)); z-index: 9;
+    margin: 0; padding: 7px 0; font-size: 1.3rem; line-height: 1.2; letter-spacing: 1px; border-radius: 12px; }
+  body[data-tab="hand"] #roll-button, body[data-tab="crew"] #roll-button { display: none; }
+  body { padding-bottom: 106px; } /* room for Roll + the tab bar, so nothing hides behind them */
+  /* The open tab no longer looks like a gold button (it was easy to mistake for Roll) */
+  .tabbar button.active { background: #2a1e14; color: #ffd84d; border-color: #ffd84d; box-shadow: inset 0 3px 0 #ffd84d; font-weight: bold; }
+}
+/* Phones: the small buttons sit on the chip row as compact icon buttons (wraps to its own row if it doesn't fit) */
+.sc-icon { margin-right: 4px; }
+@media (max-width: 760px) {
+  .play > .controls { display: inline-flex; vertical-align: middle; margin: 3px 0 0; }
+  .play { text-align: center; }
+  .small-controls button { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; width: 36px; height: 42px;
+    padding: 0; margin: 0 1px; border-radius: 10px; line-height: 1; }
+  #chips .chip { margin: 1px; box-sizing: border-box; width: 42px; height: 42px; border-width: 3px; font-size: 0.72rem; }
+  .play > .controls { gap: 0; }
+  .play > .small-controls { margin-left: 4px; }
+  .small-controls .sc-icon { margin: 0; font-size: 0.95rem; }
+  .small-controls .sc-label { font-size: 0.45rem; margin-top: 2px; white-space: normal; max-width: 38px; }
+  #message { display: block; }
+}
+@media (max-width: 760px) {
+  .chip-take-back .tb-icon { font-size: 0.85rem; }
+  .chip-take-back .tb-label { font-size: 0.45rem; margin-top: 0; }
+}
