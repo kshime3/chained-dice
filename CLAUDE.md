@@ -15,6 +15,7 @@ The owner is a beginner coder working about an hour a day.
 - Every tunable number (buy-in, target, payouts, prices, rarity) lives in `js/config.js`.
 - Explain things in plain language. Ask before big decisions.
 - **Full addresses (owner, 2026-11-10):** when giving the owner a testing shortcut, always write the entire URL, e.g. https://kshime3.github.io/chained-dice/?unlockAll (never just `?unlockAll`).
+- **Owner's phone (2026-11-10): Google Pixel 9 Pro** (Android, Chrome; about 412px wide in the browser). Test layouts at its size too, and Android-only features (vibration) work on it.
 - **Phone layouts only (owner, 2026-11-09):** design, test and screenshot for phone screens (portrait, about 360-430px wide). The computer layout is no longer a goal; don't spend effort on it.
 - **Balance retest only when gameplay changes** (cards, comps, crew, bets, payouts, prices, debts, rules, shop, unlocks, or anything else that affects how the game plays): run `tools/simulate.js` (teach the bots any new mechanic first), compare per-shift survival with the last entry in `docs/BALANCE.md`, retune `CONFIG.shifts` if the curve drifts, and record the results there. Skip it for display, art, sound, music, wording, layout or docs changes (owner's call, 2026-10-31). The game should take many playthroughs to beat.
 - **Cache-busting:** index.html loads every CSS/JS file with `?v=YYYYMMDDx`. When committing a change to css/ or js/, bump that tag everywhere in index.html (one sed), so players' browsers fetch the new files together instead of mixing old and new.
@@ -68,6 +69,7 @@ js/ui-break.js     display: the Dealer Break in tabs (Pay, Shop, Comps, Crew), d
 js/ui-screens.js   display: full-screen views (splashes, prompts, end screen and stats, fall, tutorials, Collection, opening)
 js/tutorials.js    display: tutorial pages (intro, shop, comps, phone) and "seen" memory
 js/coach.js        display: the guided first shooter (coach bubble for brand-new players)
+js/juice.js        display: the game's feel (1.0.5): chip stacks, flying chips; later counting numbers, card pops, big-win banners
 js/controls.js     display: keyboard shortcuts (list in Settings), dragging chips on/off bets, press-and-hold help on phones
 js/main.js         wires buttons to logic and display
 js/autoplay.js     testing tool: index.html?autoplay lets a bot play whole runs and report errors (loaded only then)
@@ -89,4 +91,4 @@ Testing shortcuts: add `?target=300` to the page address to set shift 1's debt; 
 
 tests.html pins its own numbers (shift 1: $200 cash, $2,000 debt, 6 seats, everything unlocked, progress never saved) so tuning config.js doesn't break the checks. Shift cash and debts are in `CONFIG.shifts`; the current debt is `state.debt`.
 
-Scripts load with plain `<script>` tags in a set order (config, numbers, logic: dice, bets, crew, cards, shop, stats, perks, crafting, comps, unlocks, rules, save, shift; then display: sound, music, art, card-art, ui, ui-break, ui-screens, tutorials, coach, controls; then main), not ES modules, so double-clicking index.html works.
+Scripts load with plain `<script>` tags in a set order (config, numbers, logic: dice, bets, crew, cards, shop, stats, perks, crafting, comps, unlocks, rules, save, shift; then display: sound, music, art, card-art, ui, ui-break, ui-screens, tutorials, coach, juice, controls; then main), not ES modules, so double-clicking index.html works.

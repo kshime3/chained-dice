@@ -12,8 +12,14 @@ Dated session log. Newest at the top.
 
 - Fix (owner found): on wider phones (~448px) the dice spilled onto the Field when "Table min" sat beside the point; the dice now reserve room for their 3D tilt.
 
+**Done (J2)**
+- New display file js/juice.js (all 1.0.5 effects will live there).
+- Chip stacks on every bet with money: the amount drawn as up to 6 chips seen from the side, in the tray's colours (red $5, green $25, black $100; endless chips by size). Come bets that moved to a number stack on the Come tile.
+- Flying chips: tray → bet when you bet (tap, MAX, patterns); bet → tray when you take chips back or Clear bets; after a roll, losing bets are swept off the top of the table toward the dealer and winnings fly to the Cash box. A dragged chip doesn't get a second flying chip. Reduce motion keeps the stacks, nothing flies.
+- Vibration made stronger (roll tick 35ms instead of 12ms, longer win buzzes): the short ones were likely too short to feel on the owner's Pixel 9 Pro.
+
 **Exact next step**
-- Owner tests J1, then "build J2" (chips that move + stacks).
+- Owner tests J2, then "build J3" (counting numbers, Interest pulse, cards firing).
 
 ## 2026-11-09: Release 1.0.4, milestone A (quick fixes)
 

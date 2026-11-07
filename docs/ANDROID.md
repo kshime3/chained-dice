@@ -5,7 +5,7 @@
 ## Where we start
 
 - **Model:** a one-time price (owner's choice). No ads.
-- **Computer:** Windows PC. The owner's phone is an iPhone, so Android testing happens on the PC's Android emulator and on friends' Android phones.
+- **Computer:** Windows PC. The owner's phone is a **Google Pixel 9 Pro** (Android), so the owner tests the app directly; friends' Android phones for the closed test.
 - **Google Play:** developer account created 2026-11-02, ID verified 2026-11-03. Node.js and Android Studio installed on the PC.
 - **The game is ready to wrap:** plain HTML/CSS/JS, no internet needed (no outside fonts or files), about 16 MB with music, saves stay on the device, touch controls and press-and-hold help already done.
 

@@ -178,8 +178,10 @@ function endDrag(e, cancelled) {
   const target = dragTarget(e.clientX, e.clientY, d.kind);
   if (!target) return;
   if (d.kind === "chip") {
+    noFly = true; // the dragged chip is already there: don't fly another one in
     pickChip(d.value);
     placeBet(target.bet);
+    noFly = false;
   } else {
     takeOffBet(d.bet, tableMin(state));
   }

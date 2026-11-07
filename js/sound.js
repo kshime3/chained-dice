@@ -102,11 +102,11 @@ const SOUNDS = {
 // Vibration (phones): a buzz pattern for the big moments, matched to their sounds. Works even with
 // sound effects muted. Android phones and the Android app; iPhone browsers don't allow it.
 const VIBES = {
-  rattle: 12, // the dice leave your hand
-  win1: [18, 40, 18], win2: [30, 50, 30], win3: [40, 40, 40, 40, 90], win4: [60, 40, 60, 40, 160],
-  sevenOut: 320,
-  shiftWon: [50, 60, 50, 60, 140],
-  fall: [300, 90, 520],
+  rattle: 35, // the dice leave your hand (phone motors need ~30ms+ to be felt)
+  win1: [45, 60, 45], win2: [60, 60, 60], win3: [70, 50, 70, 50, 140], win4: [90, 50, 90, 50, 220],
+  sevenOut: 400,
+  shiftWon: [80, 70, 80, 70, 200],
+  fall: [350, 100, 600],
 };
 const canVibrate = typeof navigator !== "undefined" && typeof navigator.vibrate === "function";
 let vibrateOn = true;

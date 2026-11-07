@@ -74,6 +74,7 @@ function takeOffBet(betName, amount) {
   playSound("chip");
   showMessage("Took back " + money(back) + " from the " + BET_NAMES[betName] + (state.bets[betName] > 0 ? " (now " + money(state.bets[betName]) + ")." : ". It's empty now."));
   renderState(state);
+  chipsToTray(state, betName, back);
 }
 
 // Move chips from your cash onto a bet.
@@ -106,6 +107,7 @@ function placeBet(betName, max) {
     playSound("chip");
     showMessage(BET_NAMES[betName] + (betName === "fire" ? "" : " bet") + " is now " + money(state.bets[betName]) + ".");
     renderState(state);
+    chipsToBet(state, betName, amount);
     return;
   }
 
@@ -136,6 +138,7 @@ function placeBet(betName, max) {
     playSound("chip");
     showMessage(BET_NAMES[betName] + " bet is now " + money(state.bets[betName]) + "." + moved);
     renderState(state);
+    chipsToBet(state, betName, amount);
     return;
   }
 
@@ -173,6 +176,7 @@ function placeBet(betName, max) {
   playSound("chip");
   showMessage(BET_NAMES[betName] + " bet is now " + money(state.bets[betName]) + ".");
   renderState(state);
+  chipsToBet(state, betName, amount);
 }
 
 // Betting patterns (🎯): put the chosen chip on a whole set of bets at once.
@@ -187,6 +191,7 @@ function betPattern(id) {
     return;
   }
   const cost = placePattern(state, id, selectedChip);
+  p.bets.forEach((bet, i) => setTimeout(() => chipsToBet(state, bet, selectedChip), i * 70));
   playSound("chip");
   showMessage(p.name + ": " + money(selectedChip) + " on " + p.what.replace(/: .*/, "") + " (" + money(cost) + ").");
   renderState(state);
@@ -207,7 +212,10 @@ function choosePattern() {
 // Take bets back into your cash. A locked Pass Line or Don't Pass stays put.
 function clearBets() {
   if (cantAct()) return;
-  for (const bet of removableBets(state)) takeBack(state, bet, Infinity);
+  for (const bet of removableBets(state)) {
+    const back = takeBack(state, bet, Infinity);
+    if (back) chipsToTray(state, bet, back);
+  }
   playSound("chip");
   showMessage(state.point === null
     ? "Bets returned to you. Remember: a Pass Line or Don't Pass bet is needed to roll."
@@ -276,6 +284,7 @@ function finishRoll(rolled) {
   if (r.multUsed !== 1) boosts.push("Mult " + r.multUsed + "x" + (r.multWhy.length ? " (" + r.multWhy.join(", ") + ")" : ""));
   if (hasCard(state, "oddsAddict") && results.some((x) => x.bet === "odds" && x.outcome === "win")) boosts.push("Odds Addict (+" + Math.round(CONFIG.oddsAddictExtra * 100) + "% Odds)");
   showBetPopups(results);
+  settleChips(state, results);
   const notes = r.notes;
   const headline = rollHeadline(total, pointBefore, state.point, r.lineBet, sevenOut);
   showRollResult(headline, rollDetails(results) + (notes.length ? " " + notes.join(" ") : ""), sevenOut);
