@@ -100,7 +100,6 @@ function keyHelpHtml() {
 // Drag a chip onto a bet to place it (same as picking the chip and tapping the bet).
 // Drag a bet back onto the chips to take one table minimum off it. Tapping still works.
 
-const MAIN_BET_IDS = { "pass-line": "pass", "dont-pass": "dont", odds: "odds", lay: "lay", field: "field" };
 let drag = null; // { kind: "chip" | "bet", value, bet, x, y, ghost, over }
 let dragSwallow = false;
 

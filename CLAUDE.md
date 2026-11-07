@@ -47,7 +47,7 @@ js/config.js       ALL tunable numbers
 js/numbers.js      logic: writing money and mults for people ($1.25M, 4.2Mx)
 js/dice.js         logic: rolling dice
 js/bets.js         logic: settling bets
-js/shift.js        logic: shift turns, roster vs shooting order, hiring, dealer breaks and deposits, win/fall checks
+js/shift.js        logic: shift turns, roster vs shooting order, hiring, dealer breaks and deposits (plaques, take-back), betting patterns, win/fall checks
 js/crew.js         logic: each shooter's dice, mult, crew synergies, hover text (incl. hireable crew)
 js/cards.js        logic: what each shop card does
 js/shop.js         logic: shop stock, rarity, prices, buy/sell/shuffle
@@ -63,8 +63,8 @@ js/art.js          display: drawings made in code (crew portraits, SVG)
 js/card-art.js     display: card art drawn in code (style E: theme-tinted dark panel, bone symbol)
 js/music.js        display: background music (tracks listed in CONFIG.music; calm/tense playlists; credits)
 music/             music files (free licensed; credits in CONFIG.music)
-js/ui.js           display: the table (dice, bets and hints, crew, mult, roll results, popups, phone tabs)
-js/ui-break.js     display: the Dealer Break (drop box, shop, comps, dice workshop, hiring, phone call, your hand)
+js/ui.js           display: the table (dice, bets and hints, chips, betting patterns, crew, mult, roll results, popups, odds chart, phone tabs)
+js/ui-break.js     display: the Dealer Break in tabs (Pay, Shop, Comps, Crew), dice workshop, phone call, your Inventory
 js/ui-screens.js   display: full-screen views (splashes, prompts, end screen and stats, fall, tutorials, Collection, opening)
 js/tutorials.js    display: tutorial pages (intro, shop, comps, phone) and "seen" memory
 js/coach.js        display: the guided first shooter (coach bubble for brand-new players)

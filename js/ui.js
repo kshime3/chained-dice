@@ -1,5 +1,5 @@
-// Display code: the table. Dice, bets and their hints, crew, mult, roll results,
-// popups and the phone tabs. No game rules here.
+// Display code: the table. Dice, bets and their hints, chips (incl. take-back), betting patterns,
+// crew, mult, roll results, win/loss popups, the odds chart (Inventory tab) and the phone tabs. No game rules here.
 // (The Dealer Break is in ui-break.js; full-screen views in ui-screens.js.)
 
 // Which of a die's 9 spots (3 x 3 grid, read left to right) have a pip.
@@ -106,6 +106,9 @@ for (const n of [4, 5, 6, 8, 9, 10]) {
 }
 
 
+// The five main bet boxes on the table and the bet each one holds (the other bets use data-bet tiles).
+const MAIN_BET_IDS = { "pass-line": "pass", "dont-pass": "dont", odds: "odds", lay: "lay", field: "field" };
+
 // "Jinx's" or "Your", so sentences read right when it's your turn.
 function whose(name) {
   return name === "You" ? "Your" : name + "'s";
@@ -175,9 +178,8 @@ function renderPatterns(state, chip, onPattern) {
 // In take-back mode, mark the bets that have chips you're allowed to take back.
 function markTakeBack(state) {
   document.body.classList.toggle("taking-back", takeBackMode);
-  const ids = { "pass-line": "pass", "dont-pass": "dont", odds: "odds", lay: "lay", field: "field" };
   const can = (bet) => takeBackMode && state.bets[bet] > 0 && removableBets(state).includes(bet);
-  for (const [id, bet] of Object.entries(ids)) {
+  for (const [id, bet] of Object.entries(MAIN_BET_IDS)) {
     const el = document.getElementById(id);
     if (el) el.classList.toggle("can-take", can(bet));
   }
@@ -241,7 +243,7 @@ function renderState(state) {
   }
 
   // Highlight the bets a chip can go on right now; grey out the empty ones that can't take one.
-  for (const [id, bet] of [["pass-line", "pass"], ["dont-pass", "dont"], ["odds", "odds"], ["lay", "lay"], ["field", "field"]]) {
+  for (const [id, bet] of Object.entries(MAIN_BET_IDS)) {
     const open = betOpen(state, bet);
     document.getElementById(id).classList.toggle("open", open);
     document.getElementById(id).classList.toggle("disabled", !open && b[bet] === 0);
@@ -335,7 +337,7 @@ function renderMult(state) {
   if (gain) popMult(box, gain);
 }
 
-// The odds popup: the chance of each total on the next roll, a color key, and a "race" bar
+// The odds chart (top of the Inventory tab): the chance of each total on the next roll, a color key, and a "race" bar
 // that answers what players actually want to know (who wins, Pass Line or Don't Pass).
 function renderOddsPanel(state) {
   const panel = document.getElementById("odds-panel");

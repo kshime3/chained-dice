@@ -34,8 +34,18 @@ Dated session log. Newest at the top.
 - Betting patterns: Across, Inside, Outside, Iron Cross, All the Hardways. One tap puts your chosen chip on every bet in the set (once a point is on; only patterns whose bets you've unlocked show). Tall phones (800px+) get a row of pattern buttons in the empty space under the chips; shorter phones get a 🎯 Patterns button on the chip row that opens a pick list. 3-Point Molly left out: it's built over several rolls, so it can't be one tap.
 - Logic in shift.js (BET_PATTERNS, patternCheck, placePattern); 3 new rule checks (492); the autoplay bot uses patterns too.
 
+**Done (F: code polish, no visible changes)**
+- Checked every function is still used (none dead); removed styles left over from the old odds pop-up and the old deposit box.
+- One shared list of the five main bet boxes (was copied in three places); one `cantAct()` check for table actions (was copied six times); the Break's paying part split into its own function (renderPayArea).
+- File header comments and CLAUDE.md's file layout updated (Inventory, Break tabs, patterns, plaque take-back).
+- Full check: 492 rule checks, three phone sizes fit, 1.0.3 features (drag, MAX, plaques, short Break), touch dragging, Break tabs, patterns, 25 + 5 bot runs, simulator still runs.
+- Version 1.0.4 (versionCode 5); release notes in store/LISTING.md.
+
+**Waiting on the owner**
+- Test on the phone, then pull, npm run sync, build, upload 1.0.4 to the closed test.
+
 **Exact next step**
-- Owner tests E, then "build F" (code polish + version 1.0.4).
+- 1.0.5 "juice", milestone J1 (feel settings + vibration). Plan in docs/IDEAS.md.
 
 ## 2026-11-08: Release 1.0.3 (QoL, built from the owner's list)
 

@@ -56,6 +56,14 @@ Simulated gambling only: no real money, nothing to buy inside the game, no ads, 
 
 ## What's new (release notes, max 500)
 
+**1.0.4** (closed test update):
+```
+- Big Roll button right above the tabs, and brighter chips.
+- Hand is now Inventory, with the odds chart on top.
+- Dealer Break in tabs (Pay, Shop, Comps, Crew), with your cash always in view.
+- One-tap betting patterns: Across, Inside, Outside, Iron Cross, All the Hardways.
+```
+
 **1.0.3** (closed test update):
 ```
 - Drag chips onto bets, and drag a bet back to the chips to take some off.

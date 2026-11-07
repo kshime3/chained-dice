@@ -26,6 +26,11 @@ function busy() {
   return rolling || splashOpen || promptOpen || phoneOpen || fallingNow || workshopOpen;
 }
 
+// Table actions (betting, clearing, rolling, patterns) only work mid-shift, off the Break, with nothing animating.
+function cantAct() {
+  return busy() || state.status !== "playing" || state.onBreak;
+}
+
 function pickChip(value) {
   selectedChip = value;
   takeBackMode = false;
@@ -55,7 +60,7 @@ function takeBackBet(betName) {
 
 // Take up to amount off one bet (the take-back chip, or dragging a bet back to the chips).
 function takeOffBet(betName, amount) {
-  if (busy() || state.status !== "playing" || state.onBreak) return;
+  if (cantAct()) return;
   if (!(state.bets[betName] > 0)) {
     showMessage("Nothing on the " + BET_NAMES[betName] + " to take back.");
     return;
@@ -74,7 +79,7 @@ function takeOffBet(betName, amount) {
 // Move chips from your cash onto a bet.
 // max: fill Odds or Lay Odds right up to the limit (the MAX button) instead of one chip.
 function placeBet(betName, max) {
-  if (busy() || state.status !== "playing" || state.onBreak) return;
+  if (cantAct()) return;
   if (takeBackMode && !max) return takeBackBet(betName);
   let amount = max ? Infinity : selectedChip;
 
@@ -172,7 +177,7 @@ function placeBet(betName, max) {
 
 // Betting patterns (🎯): put the chosen chip on a whole set of bets at once.
 function betPattern(id) {
-  if (busy() || state.status !== "playing" || state.onBreak) return;
+  if (cantAct()) return;
   const p = BET_PATTERNS[id];
   const why = patternCheck(state, id, selectedChip);
   if (why !== "ok") {
@@ -188,7 +193,7 @@ function betPattern(id) {
 }
 
 function choosePattern() {
-  if (busy() || state.status !== "playing" || state.onBreak) return;
+  if (cantAct()) return;
   const ids = Object.keys(BET_PATTERNS).filter((id) => patternCheck(state, id, selectedChip) === "ok");
   if (!ids.length) {
     showMessage(state.point === null ? "Patterns use Place bets and Hard Ways, which open once a point is set." : "Not enough cash for a pattern with your " + money(selectedChip) + " chip.");
@@ -201,7 +206,7 @@ function choosePattern() {
 
 // Take bets back into your cash. A locked Pass Line or Don't Pass stays put.
 function clearBets() {
-  if (busy() || state.status !== "playing" || state.onBreak) return;
+  if (cantAct()) return;
   for (const bet of removableBets(state)) takeBack(state, bet, Infinity);
   playSound("chip");
   showMessage(state.point === null
@@ -211,7 +216,7 @@ function clearBets() {
 }
 
 function roll() {
-  if (busy() || state.status !== "playing" || state.onBreak) return;
+  if (cantAct()) return;
   if (!canRoll(state)) {
     showMessage("Place at least " + money(tableMin(state)) + " on the Pass Line or Don't Pass to roll.");
     return;

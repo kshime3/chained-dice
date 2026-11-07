@@ -1,5 +1,5 @@
-// Display code: the Dealer Break. Paying (drop box), the shop, comps, the dice
-// workshop, hiring, the Pit Boss phone and your hand. No game rules here.
+// Display code: the Dealer Break (tabs: Pay, Shop, Comps, Crew), the dice workshop, the Pit Boss phone
+// and your Inventory (cards, comps, perks). No game rules here.
 
 // The Break's tabs (Pay / Shop / Comps / Crew). Each Break opens at the top, on Pay when paying
 // is open (else Shop), instead of wherever the last one was scrolled to.
@@ -63,6 +63,22 @@ function renderBreak(state) {
       (state.endless && state.endlessPaid > 0 ? " this shift, plus " + Math.round(CONFIG.endlessInterestCarry * 100) + "% of the " + money(state.endlessPaid) + " paid in earlier endless shifts" : "") + stashNote + ")."
     : "Paid money earns " + rate + " interest at every Break, added to your cash.";
 
+  renderPayArea(state);
+  // Last Break: if you can pay, the button pays (leaving unpaid here means the fall).
+  document.getElementById("leave-break").textContent = isFinalBreak(state)
+    ? (canPayOff(state) ? "Pay " + money(amountOwed(state)) + " and break the link" : "Face the pit boss")
+    : "Next shooter: " + state.crew[state.shooterIndex];
+
+  renderBreakTabs(state);
+
+  const warn = !isFinalBreak(state) && totalMoney(state) < tableMin(state);
+  document.getElementById("break-warning").textContent = warn
+    ? "Warning: you need " + money(tableMin(state)) + " to bet the Pass Line. Leave now and you fall."
+    : "";
+}
+
+// The Pay tab: the drop box, plaques (and taking one back), Pay off debt, or the lock line before paying opens.
+function renderPayArea(state) {
   // Paying opens after the first shooter. Pay off debt needs the whole amount.
   const payOpen = canPay(state);
   renderDropBox(state);
@@ -82,26 +98,14 @@ function renderBreak(state) {
   back.textContent = plaques.length ? "↩ Take back a plaque (" + money(plaques[plaques.length - 1]) + ")" : "";
   // Shift 1's first Break for players who have played before: just the essentials.
   const quick = state.shift === 1 && !payOpen && !state.endless && isReturningPlayer();
-  screen.classList.toggle("quick-break", quick);
+  document.getElementById("break-screen").classList.toggle("quick-break", quick);
   if (quick) {
     document.getElementById("break-intro").textContent = "Shift 1. You owe the dealer " + money(state.debt) + ".";
-    document.getElementById("pay-closed").textContent = "🔒 The drop box opens after " + first + ".";
   }
   const payOff = document.getElementById("pay-off");
   payOff.disabled = !canPayOff(state);
   payOff.textContent = "Pay off debt (" + money(amountOwed(state)) + ")";
   payOff.title = payOff.disabled ? "You need the full amount in cash to pay off the debt." : "";
-  // Last Break: if you can pay, the button pays (leaving unpaid here means the fall).
-  document.getElementById("leave-break").textContent = isFinalBreak(state)
-    ? (canPayOff(state) ? "Pay " + money(amountOwed(state)) + " and break the link" : "Face the pit boss")
-    : "Next shooter: " + state.crew[state.shooterIndex];
-
-  renderBreakTabs(state);
-
-  const warn = !isFinalBreak(state) && totalMoney(state) < tableMin(state);
-  document.getElementById("break-warning").textContent = warn
-    ? "Warning: you need " + money(tableMin(state)) + " to bet the Pass Line. Leave now and you fall."
-    : "";
 }
 
 function showBreakMessage(text) {
